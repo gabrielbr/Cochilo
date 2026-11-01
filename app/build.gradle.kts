@@ -15,8 +15,21 @@ android {
         applicationId = "br.gabriel.cochilo"
         minSdk = 26
         targetSdk = 35
-        versionCode = 1
-        versionName = "0.1.0"
+        // CI sets these from the git tag (v0.1.0 -> 0.1.0); local builds use the literals.
+        versionCode = (project.findProperty("appVersionCode") as String?)?.toIntOrNull() ?: 1
+        versionName = (project.findProperty("appVersionName") as String?) ?: "0.1.0"
+    }
+
+    signingConfigs {
+        create("release") {
+            // Personal test builds: a key checked into the repo, so every release installs over the
+            // last one. Before sharing the app beyond the family, set the RELEASE_* secrets instead.
+            val env = { k: String -> System.getenv(k)?.takeIf { it.isNotEmpty() } }
+            storeFile = file(env("RELEASE_STORE_FILE") ?: "cochilo-test.keystore")
+            storePassword = env("RELEASE_STORE_PASSWORD") ?: "android"
+            keyAlias = env("RELEASE_KEY_ALIAS") ?: "cochilo"
+            keyPassword = env("RELEASE_KEY_PASSWORD") ?: "android"
+        }
     }
 
     buildFeatures {
@@ -25,8 +38,10 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = true
+            // Not minified until it has been tried on a phone (R8 vs Room and serialization).
+            isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            signingConfig = signingConfigs.getByName("release")
         }
         debug {
             applicationIdSuffix = ".debug"
