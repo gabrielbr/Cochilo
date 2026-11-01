@@ -1,0 +1,1 @@
+-keep class br.gabriel.cochilo.backup.** { *; }

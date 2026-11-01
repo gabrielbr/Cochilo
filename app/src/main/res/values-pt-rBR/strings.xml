@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tab_today">Hoje</string>
+    <string name="tab_history">Histórico</string>
+    <string name="tab_patterns">Padrões</string>
+    <string name="settings">Ajustes</string>
+    <string name="back">Voltar</string>
+
+    <string name="status_awake">Acordado · %1$s</string>
+    <string name="status_sleeping">Dormindo · %1$s</string>
+    <string name="status_no_data">Registre o primeiro sono</string>
+    <string name="status_weeks">Idade: %1$d sem</string>
+
+    <string name="panel_awake_for">Acordado há</string>
+    <string name="panel_asleep_nap">Na soneca há</string>
+    <string name="panel_asleep_night">Sono da noite há</string>
+    <string name="panel_since">Desde %1$s</string>
+    <string name="panel_ready">Pronto quando o bebê estiver</string>
+    <string name="action_start_sleep">Começar sono</string>
+    <string name="action_woke_up">Acordou</string>
+
+    <string name="next_nap">Próxima soneca</string>
+    <string name="next_bedtime">Hora de dormir</string>
+    <string name="prediction_window">Entre %1$s e %2$s</string>
+    <string name="prediction_why_personal">Janela de %1$s: mediana recente de %2$s (janelas registradas: %3$d), combinada com %4$s para esta idade.</string>
+    <string name="prediction_why_prior">Janela de %1$s, o usual para esta idade. Aprende com seus registros em cerca de uma semana.</string>
+    <string name="prediction_need_data">As previsões começam depois do primeiro sono registrado.</string>
+    <string name="chip_due">Na hora</string>
+    <string name="chip_past">Passou da janela</string>
+    <string name="wind_down">Hora de acalmar: luz baixa, só luz quente ou vermelha.</string>
+
+    <string name="caption_log">Registrar</string>
+    <string name="caption_running">Em andamento</string>
+    <string name="caption_timeline">Hoje</string>
+    <string name="caption_today_log">Registros de hoje</string>
+    <string name="action_finish">Terminar</string>
+    <string name="empty_today_title">Nada registrado hoje</string>
+    <string name="empty_today_line">Comece um sono ou registre uma mamada quando acontecer.</string>
+
+    <string name="type_sleep">Sono</string>
+    <string name="type_feed">Mamada</string>
+    <string name="type_pump">Ordenha</string>
+    <string name="type_diaper">Fralda</string>
+    <string name="type_daylight">Luz do dia</string>
+    <string name="type_routine">Rotina</string>
+    <string name="type_note">Nota</string>
+    <string name="sleep_nap">Soneca</string>
+    <string name="sleep_night">Sono da noite</string>
+
+    <string name="kind_breast_left">Peito esquerdo</string>
+    <string name="kind_breast_right">Peito direito</string>
+    <string name="kind_bottle">Mamadeira</string>
+    <string name="kind_solids">Sólidos</string>
+    <string name="kind_wet">Xixi</string>
+    <string name="kind_dirty">Cocô</string>
+    <string name="kind_both">Xixi e cocô</string>
+    <string name="kind_nap_routine">Rotina da soneca</string>
+    <string name="kind_bedtime_routine">Rotina da noite</string>
+    <string name="kind_outdoors">Ao ar livre</string>
+    <string name="kind_window">Perto da janela</string>
+
+    <string name="edit">Editar</string>
+    <string name="field_date">Data</string>
+    <string name="field_start">Início</string>
+    <string name="field_end">Fim</string>
+    <string name="field_time">Hora</string>
+    <string name="field_amount">Quantidade (ml)</string>
+    <string name="field_note">Nota</string>
+    <string name="field_kind">Tipo</string>
+    <string name="running_now">Ainda em andamento</string>
+    <string name="running_now_meta">Conta como cronômetro até você terminar</string>
+    <string name="save">Salvar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="delete">Apagar</string>
+    <string name="delete_confirm_title">Apagar este registro?</string>
+    <string name="delete_confirm_line">Ele sai dos registros e dos padrões.</string>
+    <string name="ok">OK</string>
+
+    <string name="welcome_title">Boas-vindas ao Cochilo</string>
+    <string name="welcome_line">Adicione seu bebê para começar. Tudo fica neste celular.</string>
+    <string name="add_baby">Adicionar bebê</string>
+    <string name="baby_name">Nome</string>
+    <string name="birth_date">Data de nascimento</string>
+    <string name="due_date">Data prevista do parto</string>
+    <string name="due_date_meta">Só se nasceu antes: as idades são corrigidas</string>
+    <string name="not_set">Não definida</string>
+    <string name="clear">Limpar</string>
+
+    <string name="title_history">Histórico</string>
+    <string name="empty_history_title">Ainda sem histórico</string>
+    <string name="empty_history_line">Os dias aparecem aqui conforme você registra.</string>
+    <string name="day_summary">Sono %1$s · sonecas: %2$d · mamadas: %3$d</string>
+
+    <string name="title_patterns">Padrões</string>
+    <string name="caption_rhythm">Ritmo, últimos 14 dias</string>
+    <string name="caption_week">Média por dia, últimos 7 dias</string>
+    <string name="rhythm_meta">Cada linha é um dia, da meia-noite à meia-noite. O sono da noite se junta nas pontas conforme o relógio biológico se forma.</string>
+    <string name="total_sleep">Sono total</string>
+    <string name="typical_range">Típico para a idade: %1$s–%2$s h (%3$s)</string>
+    <string name="night_sleep">Sono da noite</string>
+    <string name="naps">Sonecas</string>
+    <string name="naps_value">%1$.1f · %2$s</string>
+    <string name="longest_stretch">Maior período</string>
+    <string name="night_wakings">Despertares à noite</string>
+    <string name="feeds">Mamadas</string>
+    <string name="diapers">Fraldas</string>
+    <string name="daylight">Luz do dia</string>
+    <string name="daylight_meta">Luz entre 12:00 e 16:00 está ligada a um sono melhor à noite.</string>
+    <string name="per_day">%1$.1f por dia</string>
+    <string name="empty_patterns_title">Os padrões precisam de alguns dias</string>
+    <string name="empty_patterns_line">Registre o sono por dois ou três dias e eles aparecem aqui.</string>
+    <string name="timeline_summary">%1$s. Sono %2$s. Sonecas: %3$d. Mamadas: %4$d. Fraldas: %5$d.</string>
+
+    <string name="title_settings">Ajustes</string>
+    <string name="caption_baby">Bebê</string>
+    <string name="caption_appearance">Aparência</string>
+    <string name="theme">Tema</string>
+    <string name="theme_system">Sistema</string>
+    <string name="theme_light">Claro</string>
+    <string name="theme_dark">Escuro</string>
+    <string name="language">Idioma</string>
+    <string name="language_meta">English ou Português, nos ajustes de apps do celular</string>
+    <string name="caption_data">Seus dados</string>
+    <string name="export_json">Exportar backup</string>
+    <string name="export_json_meta">Tudo, em JSON, para importar depois ou em outro celular</string>
+    <string name="export_csv">Exportar planilha</string>
+    <string name="export_csv_meta">CSV para Planilhas ou Excel (só exporta)</string>
+    <string name="import_json">Importar backup</string>
+    <string name="import_json_meta">Adiciona o que é novo e mantém a edição mais recente. Nunca apaga.</string>
+    <string name="caption_about">Sobre</string>
+    <string name="safe_sleep">Sono seguro</string>
+    <string name="safe_sleep_meta">De barriga para cima em todo sono, superfície firme e plana, nada macio no berço (AAP 2022). O Cochilo não monitora segurança.</string>
+    <string name="privacy">Privacidade</string>
+    <string name="privacy_meta">Sem permissão de internet. Os registros ficam neste celular, a menos que você exporte.</string>
+    <string name="version">Versão</string>
+
+    <string name="exported">Exportado</string>
+    <string name="imported">Importado. Novos: %1$d. Atualizados: %2$d.</string>
+    <string name="import_failed">Esse arquivo não é um backup do Cochilo</string>
+    <string name="file_failed">Não deu para usar esse arquivo</string>
+    <string name="deleted">Apagado</string>
+    <string name="undo">Desfazer</string>
+
+    <string name="duration_hm">%1$dh %2$02dm</string>
+    <string name="duration_m">%1$dmin</string>
+    <string name="today">Hoje</string>
+    <string name="yesterday">Ontem</string>
+    <string name="ml">%1$d ml</string>
+</resources>

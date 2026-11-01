@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- From Gabriel Design System tokens (cochilo layer): page and panel. -->
+    <color name="page">#F2F2F2</color>
+    <color name="panel">#17161A</color>
+</resources>

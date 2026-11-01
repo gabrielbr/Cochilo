@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">Cochilo</string>
+
+    <!-- Navigation -->
+    <string name="tab_today">Today</string>
+    <string name="tab_history">History</string>
+    <string name="tab_patterns">Patterns</string>
+    <string name="settings">Settings</string>
+    <string name="back">Back</string>
+
+    <!-- Header status (one line, a state word first) -->
+    <string name="status_awake">Awake · %1$s</string>
+    <string name="status_sleeping">Sleeping · %1$s</string>
+    <string name="status_no_data">Log the first sleep</string>
+    <string name="status_weeks">Age: %1$d wk</string>
+
+    <!-- Sleep panel -->
+    <string name="panel_awake_for">Awake for</string>
+    <string name="panel_asleep_nap">Napping for</string>
+    <string name="panel_asleep_night">Night sleep for</string>
+    <string name="panel_since">Since %1$s</string>
+    <string name="panel_ready">Ready when the baby is</string>
+    <string name="action_start_sleep">Start sleep</string>
+    <string name="action_woke_up">Woke up</string>
+
+    <!-- Prediction -->
+    <string name="next_nap">Next nap</string>
+    <string name="next_bedtime">Bedtime</string>
+    <string name="prediction_window">Between %1$s and %2$s</string>
+    <string name="prediction_why_personal">Window %1$s: recent median %2$s (windows logged: %3$d), blended with %4$s for this age.</string>
+    <string name="prediction_why_prior">Window %1$s, the usual for this age. It learns from your log within about a week.</string>
+    <string name="prediction_need_data">Predictions start once the first sleep is logged.</string>
+    <string name="chip_due">Due</string>
+    <string name="chip_past">Past window</string>
+    <string name="wind_down">Wind down: dim the lights, warm or red light only.</string>
+
+    <!-- Logging -->
+    <string name="caption_log">Log</string>
+    <string name="caption_running">Running</string>
+    <string name="caption_timeline">Today</string>
+    <string name="caption_today_log">Today\'s log</string>
+    <string name="action_finish">Finish</string>
+    <string name="empty_today_title">Nothing logged today</string>
+    <string name="empty_today_line">Start a sleep or log a feed when it happens.</string>
+
+    <string name="type_sleep">Sleep</string>
+    <string name="type_feed">Feed</string>
+    <string name="type_pump">Pump</string>
+    <string name="type_diaper">Diaper</string>
+    <string name="type_daylight">Daylight</string>
+    <string name="type_routine">Routine</string>
+    <string name="type_note">Note</string>
+    <string name="sleep_nap">Nap</string>
+    <string name="sleep_night">Night sleep</string>
+
+    <string name="kind_breast_left">Left breast</string>
+    <string name="kind_breast_right">Right breast</string>
+    <string name="kind_bottle">Bottle</string>
+    <string name="kind_solids">Solids</string>
+    <string name="kind_wet">Wet</string>
+    <string name="kind_dirty">Dirty</string>
+    <string name="kind_both">Both</string>
+    <string name="kind_nap_routine">Nap routine</string>
+    <string name="kind_bedtime_routine">Bedtime routine</string>
+    <string name="kind_outdoors">Outdoors</string>
+    <string name="kind_window">By a window</string>
+
+    <!-- Sheet -->
+    <string name="edit">Edit</string>
+    <string name="field_date">Date</string>
+    <string name="field_start">Start</string>
+    <string name="field_end">End</string>
+    <string name="field_time">Time</string>
+    <string name="field_amount">Amount (ml)</string>
+    <string name="field_note">Note</string>
+    <string name="field_kind">Type</string>
+    <string name="running_now">Still going</string>
+    <string name="running_now_meta">Runs as a timer until you finish it</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
+    <string name="delete_confirm_title">Delete this entry?</string>
+    <string name="delete_confirm_line">It leaves the log and the patterns.</string>
+    <string name="ok">OK</string>
+
+    <!-- Onboarding / baby -->
+    <string name="welcome_title">Welcome to Cochilo</string>
+    <string name="welcome_line">Add your baby to start. Everything stays on this phone.</string>
+    <string name="add_baby">Add baby</string>
+    <string name="baby_name">Name</string>
+    <string name="birth_date">Birth date</string>
+    <string name="due_date">Due date</string>
+    <string name="due_date_meta">Only if born early: ages are then corrected</string>
+    <string name="not_set">Not set</string>
+    <string name="clear">Clear</string>
+
+    <!-- History -->
+    <string name="title_history">History</string>
+    <string name="empty_history_title">No history yet</string>
+    <string name="empty_history_line">Days appear here as you log them.</string>
+    <string name="day_summary">Asleep %1$s · naps: %2$d · feeds: %3$d</string>
+
+    <!-- Patterns -->
+    <string name="title_patterns">Patterns</string>
+    <string name="caption_rhythm">Rhythm, last 14 days</string>
+    <string name="caption_week">Daily average, last 7 days</string>
+    <string name="rhythm_meta">Each line is a day, midnight to midnight. Night sleep should gather on the left and right as the body clock forms.</string>
+    <string name="total_sleep">Total sleep</string>
+    <string name="typical_range">Typical for this age: %1$s–%2$s h (%3$s)</string>
+    <string name="night_sleep">Night sleep</string>
+    <string name="naps">Naps</string>
+    <string name="naps_value">%1$.1f · %2$s</string>
+    <string name="longest_stretch">Longest stretch</string>
+    <string name="night_wakings">Night wakings</string>
+    <string name="feeds">Feeds</string>
+    <string name="diapers">Diapers</string>
+    <string name="daylight">Daylight</string>
+    <string name="daylight_meta">Light between 12:00 and 16:00 is linked to better night sleep.</string>
+    <string name="per_day">%1$.1f a day</string>
+    <string name="empty_patterns_title">Patterns need a few days</string>
+    <string name="empty_patterns_line">Log sleep for two or three days and they appear here.</string>
+    <string name="timeline_summary">%1$s. Asleep %2$s. Naps: %3$d. Feeds: %4$d. Diapers: %5$d.</string>
+
+    <!-- Settings -->
+    <string name="title_settings">Settings</string>
+    <string name="caption_baby">Baby</string>
+    <string name="caption_appearance">Appearance</string>
+    <string name="theme">Theme</string>
+    <string name="theme_system">System</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="language">Language</string>
+    <string name="language_meta">English or Português, from the phone\'s app settings</string>
+    <string name="caption_data">Your data</string>
+    <string name="export_json">Export backup</string>
+    <string name="export_json_meta">Everything, as JSON, to import later or on another phone</string>
+    <string name="export_csv">Export spreadsheet</string>
+    <string name="export_csv_meta">CSV for Sheets or Excel (export only)</string>
+    <string name="import_json">Import backup</string>
+    <string name="import_json_meta">Adds what\'s new and keeps the newest edit. Never deletes.</string>
+    <string name="caption_about">About</string>
+    <string name="safe_sleep">Safe sleep</string>
+    <string name="safe_sleep_meta">On the back for every sleep, firm flat surface, nothing soft in the cot (AAP 2022). Cochilo doesn\'t monitor safety.</string>
+    <string name="privacy">Privacy</string>
+    <string name="privacy_meta">No internet permission. The log stays on this phone unless you export it.</string>
+    <string name="version">Version</string>
+
+    <!-- Snackbars -->
+    <string name="exported">Exported</string>
+    <string name="imported">Imported. New: %1$d. Updated: %2$d.</string>
+    <string name="import_failed">That file isn\'t a Cochilo backup</string>
+    <string name="file_failed">Couldn\'t use that file</string>
+    <string name="deleted">Deleted</string>
+    <string name="undo">Undo</string>
+
+    <!-- Units and dates -->
+    <string name="duration_hm">%1$dh %2$02dm</string>
+    <string name="duration_m">%1$dm</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="ml">%1$d ml</string>
+</resources>
