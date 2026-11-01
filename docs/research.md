@@ -185,14 +185,17 @@ Use **corrected age** (from due date) for priors if the baby was premature; circ
 
 ---
 
-## 8. Open questions for us
-1. Android-only, or must it work on Tatá's phone too (iOS)?
-2. Sync: home server, a cloud backend, or local-only with export?
-3. Log feeds and diapers too, or only sleep plus circadian signals for v1?
-4. Portuguese, English, or both for the UI?
-5. Want the live "sleep pressure" visualization in v1, or start with wake-window predictions?
+## 8. Decisions (2026-11-01)
 
----
+1. **Android only** (Kotlin + Jetpack Compose).
+2. **Local only**: no network, no account; JSON backup export/import (merge, never deletes) and CSV export.
+3. **Track everything**: sleep, feeds, pumping, diapers, daylight, routines, notes.
+4. **English and Brazilian Portuguese**, following the phone's per-app language.
+5. **UI on the Gabriel Design System** (new `cochilo` layer). Prediction ships as phase 1
+   (personalized wake windows); the two-process model (phase 2) comes later.
+
+Still open: a dim night mode (the design system's divergence D-11), home-screen widget and
+Quick Settings tile, daylight and wind-down reminders.
 
 ## 9. References
 
