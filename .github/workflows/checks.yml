@@ -11,7 +11,7 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: "17"
-      - uses: android-actions/setup-android@v3
+          java-version: "21"
+      # The Ubuntu runner ships the Android SDK (ANDROID_HOME); AGP fetches any missing platform.
       - uses: gradle/actions/setup-gradle@v4
       - run: ./gradlew --no-daemon :app:testDebugUnitTest :app:verifyPaparazziDebug :app:lintDebug :app:assembleDebug
