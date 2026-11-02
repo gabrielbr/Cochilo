@@ -50,6 +50,8 @@ fun SettingsScreen(
     onNightLight: (Boolean) -> Unit = {},
     /** Settings › Baby › Routine steps (docs/rituals.md). */
     onEditRitual: () -> Unit = {},
+    /** Settings › Data › Report (docs/report.md). */
+    onExportReport: () -> Unit = {},
 ) {
     val context = LocalContext.current
     val f = Format(context, zone)
@@ -128,6 +130,8 @@ fun SettingsScreen(
             ListRow(stringResource(R.string.export_json), meta = stringResource(R.string.export_json_meta), onClick = onExportJson, trailing = chevron)
             Hairline()
             ListRow(stringResource(R.string.export_csv), meta = stringResource(R.string.export_csv_meta), onClick = onExportCsv, trailing = chevron)
+            Hairline()
+            ListRow(stringResource(R.string.export_report), meta = stringResource(R.string.export_report_meta), onClick = onExportReport, trailing = chevron)
             Hairline()
             ListRow(stringResource(R.string.import_json), meta = stringResource(R.string.import_json_meta), onClick = onImport, trailing = chevron)
             Hairline()

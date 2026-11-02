@@ -389,4 +389,11 @@
         <item>Room dark and quiet</item>
         <item>A song in arms</item>
     </string-array>
+    <!-- The printable report (docs/report.md). -->
+    <string name="export_report">Report for the doctor (PDF)</string>
+    <string name="export_report_meta">One page: the week, what changed, two weeks of sleep</string>
+    <string name="report_title">%1$s · sleep report</string>
+    <string name="report_period">%1$s to %2$s</string>
+    <string name="report_rhythm">Sleep, last %1$d days</string>
+    <string name="report_footer">From the parent\'s own log in Cochilo, made %1$s. Not a medical record.</string>
 </resources>

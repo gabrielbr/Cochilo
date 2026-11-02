@@ -92,6 +92,7 @@ fun CochiloRoot(vm: MainViewModel) {
 
     val exportJson = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { it?.let(vm::exportJson) }
     val exportCsv = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("text/csv")) { it?.let(vm::exportCsv) }
+    val exportReport = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/pdf")) { it?.let(vm::exportReport) }
     val import = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { it?.let(vm::importFile) }
     val live by vm.liveNotification.collectAsState()
     val fabric = br.gabriel.cochilo.ui.kit.Fabric.of(vm.fabric.collectAsState().value)
@@ -135,6 +136,7 @@ fun CochiloRoot(vm: MainViewModel) {
                             onEditBaby = { editingBaby = true },
                             onEditLook = { editingLook = true },
                             onEditRitual = { editingRitual = true },
+                            onExportReport = { exportReport.launch("cochilo-report-${LocalDate.now(zone)}.pdf") },
                             celebrations = vm.celebrations.collectAsState().value,
                             onCelebrations = vm::setCelebrations,
                             nightLight = vm.nightLight.collectAsState().value,

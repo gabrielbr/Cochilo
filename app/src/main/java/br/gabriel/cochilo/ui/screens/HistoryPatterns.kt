@@ -83,7 +83,7 @@ fun PatternsScreen(log: List<Event>, now: Long, zone: ZoneId, ageWeeks: Int) {
             RowGroup {
                 changes.forEachIndexed { i, ch ->
                     if (i > 0) Hairline()
-                    val (head, values) = changeRow(ch, f)
+                    val (head, values) = changeText(androidx.compose.ui.platform.LocalContext.current, ch, f)
                     ListRow(head, meta = values, leading = { br.gabriel.cochilo.ui.kit.KindIcon(br.gabriel.cochilo.data.EventType.SLEEP) })
                 }
             }
@@ -153,12 +153,11 @@ fun PatternsScreen(log: List<Event>, now: Long, zone: ZoneId, ageWeeks: Int) {
     }
 }
 
-/** One change as a short neutral head ("Night sleep is longer") and its two numbers. */
-@Composable
-private fun changeRow(c: br.gabriel.cochilo.domain.Change, f: Format): Pair<String, String> {
+/** One change as a short neutral head ("Night sleep is longer") and its two numbers (also the PDF report's). */
+fun changeText(context: android.content.Context, c: br.gabriel.cochilo.domain.Change, f: Format): Pair<String, String> {
     fun d(x: Double) = f.durationMin(x.toInt())
     fun n(x: Double) = String.format(Locale.getDefault(), "%.1f", x)
-    val head = stringResource(when (c.metric) {
+    val head = context.getString(when (c.metric) {
         br.gabriel.cochilo.domain.Metric.NIGHT_SLEEP -> if (c.up) R.string.change_night_up else R.string.change_night_down
         br.gabriel.cochilo.domain.Metric.NAP_SLEEP -> if (c.up) R.string.change_naptime_up else R.string.change_naptime_down
         br.gabriel.cochilo.domain.Metric.LONGEST_STRETCH -> if (c.up) R.string.change_stretch_up else R.string.change_stretch_down
@@ -166,10 +165,10 @@ private fun changeRow(c: br.gabriel.cochilo.domain.Change, f: Format): Pair<Stri
         br.gabriel.cochilo.domain.Metric.NAPS -> if (c.up) R.string.change_naps_up else R.string.change_naps_down
     })
     val values = when (c.metric) {
-        br.gabriel.cochilo.domain.Metric.NIGHT_SLEEP, br.gabriel.cochilo.domain.Metric.LONGEST_STRETCH -> stringResource(R.string.change_values, d(c.now), d(c.before))
-        br.gabriel.cochilo.domain.Metric.NAP_SLEEP -> stringResource(R.string.change_values_day, d(c.now), d(c.before))
-        br.gabriel.cochilo.domain.Metric.NIGHT_WAKINGS -> stringResource(R.string.change_values_night, n(c.now), n(c.before))
-        br.gabriel.cochilo.domain.Metric.NAPS -> stringResource(R.string.change_values_day, n(c.now), n(c.before))
+        br.gabriel.cochilo.domain.Metric.NIGHT_SLEEP, br.gabriel.cochilo.domain.Metric.LONGEST_STRETCH -> context.getString(R.string.change_values, d(c.now), d(c.before))
+        br.gabriel.cochilo.domain.Metric.NAP_SLEEP -> context.getString(R.string.change_values_day, d(c.now), d(c.before))
+        br.gabriel.cochilo.domain.Metric.NIGHT_WAKINGS -> context.getString(R.string.change_values_night, n(c.now), n(c.before))
+        br.gabriel.cochilo.domain.Metric.NAPS -> context.getString(R.string.change_values_day, n(c.now), n(c.before))
     }
     return head to values
 }
