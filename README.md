@@ -17,7 +17,13 @@ layer). The research behind it is in [docs/research.md](docs/research.md).
 - **Today**: awake/asleep timer with one action (Start sleep / Woke up), the next nap or bedtime
   with its window and the reason for it, running timers (a feed, a walk outside), quick log
   buttons, a 24-hour timeline and the day's entries. Tap any entry to edit or delete it.
+- **Day**: one day two ways. A 24-hour ring (midnight at the top; sleep on the outer ring, feeds,
+  pumping and daylight inside, dots for diapers) with the total sleep in the middle, then every
+  entry hour by hour on a vertical rail: sleeps as bars as long as they lasted, and the awake time
+  between them. Arrows move between days; tap an entry to edit it.
 - **History**: every day with its summary, timeline and entries.
+- **"i" buttons**: each kind of entry (on the log rows, the sleep panel and each entry's sheet) has
+  an "i" that explains what it's for, in English and Portuguese.
 - **Patterns**: a 14-day actogram (the day/night rhythm forming) and 7-day averages next to the
   reference range for the baby's age.
 - **Settings**: baby's name, birth date and due date (for corrected age), theme, language

@@ -47,6 +47,21 @@ class StatsAndBackupTest {
         assertEquals(30, d.afternoonDaylightMin)
     }
 
+    @Test fun aDayHoldsItsOwnInstantsAndTheSleepsThatCrossIt() {
+        val day = LocalDate.of(2026, 10, 30)
+        val from = day.atStartOfDay(ZoneId.of("UTC")).toInstant().toEpochMilli()
+        val to = from + 86_400_000
+        val now = to + 10 * 3_600_000 // the next morning
+        fun at(h: Int) = from + h * 3_600_000L
+        // Yesterday's diaper must not show up today just because it has no end time.
+        assertEquals(false, Event(type = EventType.DIAPER, start = at(-5)).overlaps(from, to, now))
+        assertEquals(true, Event(type = EventType.DIAPER, start = at(7)).overlaps(from, to, now))
+        assertEquals(true, Event(type = EventType.SLEEP, start = at(-1), end = at(3)).overlaps(from, to, now))
+        assertEquals(false, Event(type = EventType.SLEEP, start = at(-8), end = at(-2)).overlaps(from, to, now))
+        // A timer still running yesterday reaches into today.
+        assertEquals(true, Event(type = EventType.FEED, start = at(-1)).overlaps(from, to, now))
+    }
+
     @Test fun countsNightWakings() {
         assertEquals(1, stats.nightWakings(log.filter { it.type == EventType.SLEEP }, LocalDate.of(2026, 10, 19)))
     }

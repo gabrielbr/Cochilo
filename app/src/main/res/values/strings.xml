@@ -190,4 +190,28 @@
     <string name="update_release_only">Self-update works in the release build only (%1$s / %2$s).</string>
     <string name="update_notes_default">A new version is available.</string>
     <string name="update_offline">offline</string>
+    <!-- Day tab: the 24-hour ring and the vertical timeline. -->
+    <string name="tab_day">Day</string>
+    <string name="title_day">Day</string>
+    <string name="day_previous">Previous day</string>
+    <string name="day_next">Next day</string>
+    <string name="caption_ring">The day as a clock</string>
+    <string name="caption_vertical">Hour by hour</string>
+    <string name="ring_sleep">sleep</string>
+    <string name="ring_counts">Naps: %1$d · Feeds: %2$d · Diapers: %3$d</string>
+    <string name="awake_gap">Awake %1$s</string>
+    <string name="empty_day_title">Nothing on this day</string>
+    <string name="empty_day_line">Entries you log show up here, hour by hour.</string>
+
+    <!-- The "i" buttons: what each kind of entry is for. -->
+    <string name="info_about">About %1$s</string>
+    <string name="info_sleep_panel">Tap Start sleep when the baby falls asleep and Woke up when they wake. Naps and nights are told apart by the time of day, and the next nap is learned from these.</string>
+    <string name="info_sleep">Sleep: a nap or a night, in the crib, in arms or in the sling. Log it after the fact here if you missed the timer.</string>
+    <string name="info_feed">Feed: breast (pick the side), bottle with millilitres, or solids. Run it as a timer, or log it after.</string>
+    <string name="info_pump">Pumping: how much and when. The time is kept so day milk and night milk can be told apart; night milk carries more melatonin.</string>
+    <string name="info_diaper">Diaper: wet, dirty or both. Handy when the paediatrician asks how many a day.</string>
+    <string name="info_daylight">Daylight: time outdoors or by a bright window. Light in the early afternoon helps the body clock and night sleep.</string>
+    <string name="info_routine">Routine: the steps before a nap or bedtime, like a bath, a feed, a song. The same steps each time tell the baby sleep is coming.</string>
+    <string name="info_note">Note: anything else worth remembering, such as medicine, a cold, teething or a new place.</string>
+    <string name="info_ring">Midnight is at the top and the day goes round clockwise. Sleep is the outer ring; feeds, pumping and daylight are inside; dots mark diapers.</string>
 </resources>

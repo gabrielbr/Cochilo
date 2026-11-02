@@ -176,4 +176,28 @@
     <string name="update_release_only">A atualização automática só funciona na versão de lançamento (%1$s / %2$s).</string>
     <string name="update_notes_default">Uma nova versão está disponível.</string>
     <string name="update_offline">sem conexão</string>
+    <!-- Aba Dia: o anel de 24 horas e a linha do tempo vertical. -->
+    <string name="tab_day">Dia</string>
+    <string name="title_day">Dia</string>
+    <string name="day_previous">Dia anterior</string>
+    <string name="day_next">Próximo dia</string>
+    <string name="caption_ring">O dia como um relógio</string>
+    <string name="caption_vertical">Hora a hora</string>
+    <string name="ring_sleep">de sono</string>
+    <string name="ring_counts">Sonecas: %1$d · Mamadas: %2$d · Fraldas: %3$d</string>
+    <string name="awake_gap">Acordado %1$s</string>
+    <string name="empty_day_title">Nada neste dia</string>
+    <string name="empty_day_line">Os registros aparecem aqui, hora a hora.</string>
+
+    <!-- Os botões "i": para que serve cada registro. -->
+    <string name="info_about">Sobre %1$s</string>
+    <string name="info_sleep_panel">Toque em Começar sono quando o bebê dormir e em Acordou quando ele acordar. Sonecas e noites são separadas pelo horário, e a próxima soneca é calculada a partir desses registros.</string>
+    <string name="info_sleep">Sono: uma soneca ou uma noite, no berço, no colo ou no sling. Registre aqui depois, se não usou o cronômetro.</string>
+    <string name="info_feed">Mamada: no peito (escolha o lado), mamadeira com mililitros, ou sólidos. Use o cronômetro ou registre depois.</string>
+    <string name="info_pump">Ordenha: quanto e quando. O horário fica guardado para separar o leite do dia do leite da noite; o da noite tem mais melatonina.</string>
+    <string name="info_diaper">Fralda: xixi, cocô ou os dois. Ajuda quando o pediatra pergunta quantas por dia.</string>
+    <string name="info_daylight">Luz do dia: tempo ao ar livre ou perto de uma janela clara. A luz do começo da tarde ajuda o relógio do corpo e o sono da noite.</string>
+    <string name="info_routine">Rotina: os passos antes da soneca ou da noite, como banho, mamada, música. Os mesmos passos a cada vez avisam o bebê que é hora de dormir.</string>
+    <string name="info_note">Nota: qualquer coisa que valha lembrar, como remédio, resfriado, dentes nascendo ou um lugar novo.</string>
+    <string name="info_ring">A meia-noite fica no topo e o dia gira no sentido horário. O sono é o anel de fora; mamadas, ordenha e luz do dia ficam dentro; os pontos marcam as fraldas.</string>
 </resources>

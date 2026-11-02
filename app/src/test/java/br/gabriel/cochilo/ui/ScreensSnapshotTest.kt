@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
+import br.gabriel.cochilo.domain.overlaps
 import br.gabriel.cochilo.ui.kit.Caption
 import br.gabriel.cochilo.ui.kit.CheckForUpdates
 import br.gabriel.cochilo.ui.kit.ListRow
@@ -36,6 +37,9 @@ import br.gabriel.cochilo.ui.kit.Header
 import br.gabriel.cochilo.ui.kit.IconButton
 import br.gabriel.cochilo.ui.kit.Tab
 import br.gabriel.cochilo.ui.kit.TabBar
+import br.gabriel.cochilo.ui.screens.DayScreen
+import br.gabriel.cochilo.ui.screens.QuickLog
+import br.gabriel.cochilo.ui.screens.VerticalTimeline
 import br.gabriel.cochilo.ui.screens.HistoryScreen
 import br.gabriel.cochilo.ui.screens.PatternsScreen
 import br.gabriel.cochilo.ui.screens.SettingsScreen
@@ -110,13 +114,15 @@ class ScreensSnapshotTest {
                     Box(Modifier.weight(1f)) {
                         when (tab) {
                             0 -> TodayScreen(log, p, now, zone, {}, {}, {}, {}, {})
-                            1 -> HistoryScreen(log, now, zone) {}
+                            1 -> DayScreen(log, now, zone, onOpen = {}, initialDay = LocalDateTime.of(2026, 10, 30, 12, 0).toLocalDate())
+                            2 -> HistoryScreen(log, now, zone) {}
                             else -> PatternsScreen(log, now, zone, weeks)
                         }
                     }
                     TabBar(
                         listOf(
                             Tab(stringResource(R.string.tab_today), R.drawable.gg_ic_home),
+                            Tab(stringResource(R.string.tab_day), R.drawable.gg_ic_day),
                             Tab(stringResource(R.string.tab_history), R.drawable.gg_ic_list),
                             Tab(stringResource(R.string.tab_patterns), R.drawable.gg_ic_chart),
                         ), tab,
@@ -165,10 +171,38 @@ class ScreensSnapshotTest {
     @Test fun today_dark() { dark(); paparazzi.snapshot { Chrome(true, 0) } }
     @Test fun today_sleeping_dark() { dark(); paparazzi.snapshot { Chrome(true, 0, sleepingLog) } }
     @Test fun today_ptBR_light() { pt(false); paparazzi.snapshot { Chrome(false, 0) } }
-    @Test fun history_light() { light(); paparazzi.snapshot { Chrome(false, 1) } }
-    @Test fun patterns_light() { light(); paparazzi.snapshot { Chrome(false, 2) } }
-    @Test fun patterns_dark() { dark(); paparazzi.snapshot { Chrome(true, 2) } }
-    @Test fun patterns_ptBR_dark() { pt(true); paparazzi.snapshot { Chrome(true, 2) } }
+    @Test fun history_light() { light(); paparazzi.snapshot { Chrome(false, 2) } }
+    @Test fun patterns_light() { light(); paparazzi.snapshot { Chrome(false, 3) } }
+    @Test fun patterns_dark() { dark(); paparazzi.snapshot { Chrome(true, 3) } }
+    @Test fun patterns_ptBR_dark() { pt(true); paparazzi.snapshot { Chrome(true, 3) } }
+    @Test fun day_light() { light(); paparazzi.snapshot { Chrome(false, 1) } }
+    /** The Day tab's hour-by-hour list on its own, so its start is in the picture. */
+    @Test fun day_hour_by_hour_light() {
+        light()
+        paparazzi.snapshot {
+            CochiloTheme(false) {
+                Frame {
+                    val day = LocalDateTime.of(2026, 10, 30, 0, 0).atZone(zone)
+                    val from = day.toInstant().toEpochMilli()
+                    val to = day.plusDays(1).toInstant().toEpochMilli()
+                    val f = Format(androidx.compose.ui.platform.LocalContext.current, zone, now)
+                    Column(Modifier.fillMaxSize().padding(CTokens.Spacing.space4)) {
+                        VerticalTimeline(log.filter { it.overlaps(from, to, now) }.sortedBy { it.start }, now, f, zone) {}
+                    }
+                }
+            }
+        }
+    }
+    /** The log buttons, each with its "i", in Portuguese (the longer labels). */
+    @Test fun quick_log_ptBR_light() {
+        pt(false)
+        paparazzi.snapshot {
+            CochiloTheme(false) {
+                Frame { Column(Modifier.fillMaxSize().padding(CTokens.Spacing.space4)) { QuickLog {} } }
+            }
+        }
+    }
+    @Test fun day_ptBR_dark() { pt(true); paparazzi.snapshot { Chrome(true, 1) } }
     @Test fun settings_light() { light(); paparazzi.snapshot { Chrome(false, 0, settings = true) } }
     /** Settings › About in the github build, after a manual check. */
     @Test fun about_updates_light() {
