@@ -237,4 +237,11 @@
     <string name="fabric">Tecido</string>
     <string name="fabric_meta">Envolve o cartão de Hoje num dos slings da Tatá.</string>
     <string name="fabric_plain">Liso</string>
+    <!-- O widget da tela inicial (docs/widget.md). -->
+    <string name="widget_name">Sono e mamada</string>
+    <string name="widget_description">Começar sono, Acordou e os seios, a um toque da tela inicial.</string>
+    <string name="widget_no_baby">Abra o Cochilo para cadastrar o bebê primeiro.</string>
+    <string name="widget_asleep">Dormindo desde %1$s</string>
+    <string name="widget_awake">Acordado desde %1$s</string>
+    <string name="widget_finish_side">Terminar %1$s, começou %2$s</string>
 </resources>

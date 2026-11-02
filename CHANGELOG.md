@@ -3,6 +3,13 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.11.0 — 2026-11-02
+
+**A home-screen widget: Sleep and feed.** Start sleep / Woke up and the two breasts, one tap each
+from the home screen, with "Awake since 14:20" and a running clock. The breast used last has the
+coloured dot and outline; while a breastfeed runs, its side reads Finish and the other side
+switches. Light and dark, English and Portuguese. `docs/widget.md`.
+
 ## 0.10.0 — 2026-11-02
 
 **Motion, sleep first, and a quieter "last".**

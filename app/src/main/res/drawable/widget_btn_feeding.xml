@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The breast running now: its soft feed colour, outlined. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="@color/widget_feed_soft" />
+    <stroke android:width="@dimen/widget_outline" android:color="@color/widget_feed" />
+    <corners android:radius="@dimen/widget_button_radius" />
+</shape>

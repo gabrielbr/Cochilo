@@ -262,4 +262,11 @@
     <string name="fabric_balao" translatable="false">Balão</string>
     <string name="fabric_folhagem" translatable="false">Folhagem</string>
     <string name="fabric_tropical" translatable="false">Tropical</string>
+    <!-- The home-screen widget (docs/widget.md). -->
+    <string name="widget_name">Sleep and feed</string>
+    <string name="widget_description">Start sleep, Woke up and the breasts, one tap from the home screen.</string>
+    <string name="widget_no_baby">Open Cochilo to add the baby first.</string>
+    <string name="widget_asleep">Asleep since %1$s</string>
+    <string name="widget_awake">Awake since %1$s</string>
+    <string name="widget_finish_side">Finish %1$s, started %2$s</string>
 </resources>

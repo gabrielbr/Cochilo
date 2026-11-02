@@ -20,12 +20,16 @@ class CochiloApp : Application() {
     @OptIn(FlowPreview::class)
     override fun onCreate() {
         super.onCreate()
-        // The live notification follows the log: any entry saved, edited or deleted (in the app,
+        // The live notification and the widget follow the log: any entry saved, edited or deleted (in the app,
         // from an import, or from the notification's own buttons) updates it.
         scope.launch {
             combine(db.events().observeAll(), db.baby().observe(), prefs.liveNotification) { _, _, _ -> }
                 .debounce(300)
-                .collect { LiveNotifications.refresh(this@CochiloApp) }
+                .collect {
+                    LiveNotifications.refresh(this@CochiloApp)
+                    // The home-screen widget follows the log the same way (docs/widget.md).
+                    br.gabriel.cochilo.widget.CochiloWidget.refresh(this@CochiloApp)
+                }
         }
     }
 

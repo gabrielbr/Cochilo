@@ -24,6 +24,8 @@ A "tap" is a touch on a target; a "slide" is one touch that moves sideways and l
 | Medicine, same as last | 3+ taps | **1 drag** | Log button › Medicine › its name |
 | Any of the above, from any tab, without scrolling | scroll + the row | **1 drag** | The Log button (below) |
 | Undo any of the above | — | 1 tap | Undo in the snackbar that says what was logged |
+| Start sleep / Woke up from the home screen | open app + 1 tap | **1 tap** | The widget's mint button ([widget.md](widget.md)) |
+| Breastfeed a side / switch / finish, from the home screen | open app + 1 move | **1 tap** | The widget's Left / Right; the running side reads Finish |
 | Pick a fabric for the Today card | — | 2 taps | Settings (gear), then a swatch: applied at once, no Save |
 
 ## Remember actions (project rule)
@@ -47,6 +49,7 @@ costs the fewest taps. Audit of every entry type (2026-11-02):
 | Medicine | last medicine and when ("Luftal · Today 14:20") | (no slide) | the last medicine's name | ✅ |
 | Sleep | (the Sleep panel shows awake/asleep since) | (no slide) | the last half hour, as before | ✅ |
 | Note | nothing: notes are one-offs | (no slide) | empty | ✅ |
+| Widget | the breast used last has the Last mark | — | — | — |
 | Fabric (a setting) | the Today card wears it | — | the picker opens with it ringed | — |
 
 Code: `lastOf`, `lastKind`, `lastKindAmong`, `Event.rememberedFrom` in `domain/QuickLog.kt`
@@ -153,8 +156,7 @@ bars and the ring already give sleep the full height.
 
 ## Next candidates (not built yet)
 
-- A home-screen widget or quick-settings tile for Start sleep / Woke up and the two breasts, so
-  the commonest entries don't even need the app open.
+- A quick-settings tile for Start sleep / Woke up (the home-screen widget shipped in 0.11.0).
 - Long-press on Start sleep to log a sleep that began a few minutes ago (5 / 10 / 15 min), for when
   the baby fell asleep in your arms before you could reach the phone.
 

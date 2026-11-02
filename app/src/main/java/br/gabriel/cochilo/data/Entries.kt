@@ -26,6 +26,16 @@ class Entries(private val events: EventDao) {
         if (e.end == null) events.upsert(e.copy(end = now, updatedAt = now))
     }
 
+    /**
+     * Starts a breastfeed on [side] now (the widget's Left / Right). If one is already running on
+     * that side, nothing changes; on the other side, it switches (that side ends, this one starts).
+     */
+    suspend fun startBreastfeed(side: String, now: Long = System.currentTimeMillis()): Event? {
+        val running = events.all().filter { it.type == EventType.FEED && it.end == null && otherBreast(it.kind) != null }.maxByOrNull { it.start }
+        if (running != null) return if (running.kind == side) null else switchSide(running.id, now)?.second
+        return Event(type = EventType.FEED, start = now, kind = side, updatedAt = now).also { events.upsert(it) }
+    }
+
     /** During a breastfeed: ends this side now and starts the other. Returns (ended, started). */
     suspend fun switchSide(id: String, now: Long = System.currentTimeMillis()): Pair<Event, Event>? {
         val e = events.byId(id) ?: return null

@@ -11,7 +11,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 
 /**
- * The notification's buttons, and its tick. Not exported: only the app's own PendingIntents reach it.
+ * The notification's and the home-screen widget's buttons, and the notification's tick. Not exported: only the app's own PendingIntents reach it.
  * Each button does what the same button on Today does (Entries), then the notifications update.
  */
 class NotificationActions : BroadcastReceiver() {
@@ -27,9 +27,12 @@ class NotificationActions : BroadcastReceiver() {
                     WOKE_UP -> entries.wakeUp()
                     FINISH -> id?.let { entries.finish(it) }
                     SWITCH -> id?.let { entries.switchSide(it) }
+                    FEED_LEFT -> entries.startBreastfeed(br.gabriel.cochilo.data.Kinds.BREAST_LEFT)
+                    FEED_RIGHT -> entries.startBreastfeed(br.gabriel.cochilo.data.Kinds.BREAST_RIGHT)
                     TICK -> Unit
                 }
                 LiveNotifications.refresh(app)
+                br.gabriel.cochilo.widget.CochiloWidget.refresh(app)
             } finally {
                 pending.finish()
             }
@@ -42,6 +45,9 @@ class NotificationActions : BroadcastReceiver() {
         const val FINISH = "br.gabriel.cochilo.FINISH"
         const val SWITCH = "br.gabriel.cochilo.SWITCH"
         const val TICK = "br.gabriel.cochilo.TICK"
+        /** The widget's breasts: start a breastfeed on that side (or switch to it). */
+        const val FEED_LEFT = "br.gabriel.cochilo.FEED_LEFT"
+        const val FEED_RIGHT = "br.gabriel.cochilo.FEED_RIGHT"
         const val EXTRA_ID = "id"
         private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     }
