@@ -66,6 +66,17 @@ class Prefs(context: Context) {
         }.toMap()
         set(v) = sp.edit { putString("celebrations_shown", v.entries.joinToString(";") { "${it.key.name}=${it.value}" }) }
 
+    /** The routine steps the parent wrote (docs/rituals.md), one per line, per routine kind; null = the defaults. */
+    private val _rituals = MutableStateFlow(
+        mapOf("NAP" to sp.getString("ritual_NAP", null), "BEDTIME" to sp.getString("ritual_BEDTIME", null))
+    )
+    val rituals: StateFlow<Map<String, String?>> = _rituals
+
+    fun setRitual(kind: String, text: String) {
+        sp.edit { putString("ritual_$kind", text) }
+        _rituals.value = _rituals.value + (kind to text)
+    }
+
     /** Whether the safe-babywearing check (T.I.C.K.S.) has been shown once. */
     var ticksShown: Boolean
         get() = sp.getBoolean("ticks_shown", false)

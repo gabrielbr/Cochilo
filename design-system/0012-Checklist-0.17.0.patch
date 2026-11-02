@@ -1,0 +1,195 @@
+From dab81c349c6b9c2c8b313ccc30c892c856d93c59 Mon Sep 17 00:00:00 2001
+From: Gabriel Lopes <ogabriel@gmail.com>
+Date: Mon, 2 Nov 2026 23:38:52 +0000
+Subject: [PATCH] Design system 0.17.0: the Checklist component
+
+Steps ticked one by one, for Cochilo's routine steps, with the system's
+check icon. Audit v0.17.0.
+---
+ CHANGELOG.md                         |  7 +++++
+ DESIGN.md                            |  2 +-
+ VERSION                              |  2 +-
+ audits/2026-11-02-v0.17.0-rituals.md | 41 ++++++++++++++++++++++++++++
+ docs/components.md                   |  1 +
+ generated/cochilo/CTokens.kt         |  2 +-
+ generated/pulseloop/GTokens.kt       |  2 +-
+ generated/uikit/UiTokens.java        |  2 +-
+ generated/web/cochilo.css            |  2 +-
+ generated/web/pulseloop.css          |  2 +-
+ generated/web/uikit.css              |  2 +-
+ tokens/tokens.json                   |  2 +-
+ 12 files changed, 58 insertions(+), 9 deletions(-)
+ create mode 100644 audits/2026-11-02-v0.17.0-rituals.md
+
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+index 6486727..b683acc 100644
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -3,6 +3,13 @@
+ Semantic versioning (AGENTS.md "Versioning"). Each entry says what changed for each app and what
+ the app has to do.
+ 
++## 0.17.0 — 2026-11-02
++
++The Checklist component (minor: a component; no token values change).
++
++- **Checklist** (components.md), for Cochilo's routine steps; uses the existing `gg_ic_check`.
++- Audit `audits/2026-11-02-v0.17.0-rituals.md`.
++
+ ## 0.16.0 — 2026-11-02
+ 
+ Where the baby slept (patch: a component variant; no token values change).
+diff --git a/DESIGN.md b/DESIGN.md
+index 401d90f..3c4ce48 100644
+--- a/DESIGN.md
++++ b/DESIGN.md
+@@ -1,6 +1,6 @@
+ ---
+ name: Gabriel Design System
+-version: 0.16.0
++version: 0.17.0
+ # GENERATED from tokens/tokens.json by scripts/gen_tokens.py. Edit the tokens, not this block.
+ colors:
+   page: "#F2F2F2"
+diff --git a/VERSION b/VERSION
+index 04a373e..c5523bd 100644
+--- a/VERSION
++++ b/VERSION
+@@ -1 +1 @@
+-0.16.0
++0.17.0
+diff --git a/audits/2026-11-02-v0.17.0-rituals.md b/audits/2026-11-02-v0.17.0-rituals.md
+new file mode 100644
+index 0000000..93bd2e2
+--- /dev/null
++++ b/audits/2026-11-02-v0.17.0-rituals.md
+@@ -0,0 +1,41 @@
++# Audit 0.19.0: the ritual builder
++
++Method: design review only (detector not applicable, native platform): impeccable critique and
++graphic-design-fundamentals §13, on `ritual_checklist_ptBR_light`.
++
++## graphic-design-fundamentals §13
++
++| # | Check | Result |
++|---|---|---|
++| 1 | Brief | Write the routine once, tick it each time. ✅ |
++| 2 | Concept | A checklist like a consultant's card, in her words. ✅ |
++| 3 | Hierarchy | Steps in order; a tick is a blush round with a check. ✅ |
++| 4 | Contrast | `on-selected` check on the blush 12:1; text unchanged when ticked (no strike-through, stays readable). ✅ |
++| 5 | Alignment | Rows on the group's inset. ✅ |
++| 6 | Spacing | Row group, 56dp rows. ✅ |
++| 7 | Typography | Body role. ✅ |
++| 8 | Colour | Blush for done; never teal. ✅ |
++| 9 | Consistency | Row group and the system's check icon (`gg_ic_check`). ✅ |
++| 10 | Simplicity | Slide still logs without the list. ✅ |
++| 11 | Real size | Phone width, PT. ✅ |
++| 12 | Accessibility | Rows are checkboxes for TalkBack. ✅ |
++| 13 | Production | The check icon came from the design system's set (not redrawn). ✅ |
++
++Caught during the build: a new check icon was about to replace the design system's own
++`gg_ic_check`; the system's icon was used instead.
++
++## impeccable critique
++
++| # | Heuristic | Score | Note |
++|---|---|---|---|
++| 1 | System status | 4 | Ticks show at once. |
++| 2 | Real world | 4 | Her steps, her words. |
++| 3 | Control | 4 | Edit, add, remove; untick. |
++| 4 | Consistency | 4 | Same rows, same check. |
++| 5 | Error prevention | 3 | Length and count limits. |
++| 6 | Recognition | 4 | The list is there when the routine opens. |
++| 7 | Efficiency | 4 | One tap per step; slide skips it. |
++| 8 | Aesthetic | 4 | Calm list. |
++| 9 | Error recovery | 3 | Cancel keeps the old steps. |
++| 10 | Help | 3 | One line says how. |
++| | **Total** | **37/40** | |
+diff --git a/docs/components.md b/docs/components.md
+index a9b6a8e..cffe9ed 100644
+--- a/docs/components.md
++++ b/docs/components.md
+@@ -41,6 +41,7 @@ component, the row says so.
+ | Celebration | Cochilo: one small moment when an intent is met: a `selected` blush card with a hairline under the header; the Baby avatar (happy) lifts its arms (`motion-emphasised`) beside one line (label role); gone by itself or at a tap, never blocks; at night words only, muted, no motion; polite live region. Celebrate, never scold | — | Cochilo `CelebrationCard` | 🟡 |
+ | Earlier chips | Cochilo: under the sleep panel's one action, one sentence "Fell asleep [5] [10] [15] min ago": hairline pills (32dp in 48dp targets), meta text either side; only valid choices shown; on the night panel in `on-panel` colours; each spoken in full | — | Cochilo `EarlierChips` | 🟡 |
+ | Quick-settings tile | Cochilo: "Cochilo sleep", the moon icon; inactive while awake (label Start sleep), active while asleep (label Woke up, subtitle "Asleep since 14:50"); unavailable before a baby is added | — | Cochilo `SleepTile` | 🟡 |
++| Checklist | Cochilo: steps ticked one by one in a row group; a ticked step has `gg_ic_check` in a `selected` blush round (`kind-badge`), the words unchanged (no strike); each row a checkbox | — | Cochilo `Checklist` | 🟡 |
+ | Home widget | Cochilo: a 4 × 2 home-screen widget (RemoteViews): the mark, "Asleep / Awake since 14:20" and a running clock, then one row of 48dp buttons: the one mint action (Start sleep / Woke up, wider) and the two breasts (secondary; the one used last has the Last mark; the running side lit in `event-feed-soft` with an `outline` and reads Finish). `surface` card, `radius-m`, buttons `radius-s`, `space-3` padding, `space-2` gaps. Colours copied from the tokens into resources, checked by a test | — | Cochilo `CochiloWidget` | 🟡 |
+ | Fabric frame | Cochilo: a card wrapped in a brand texture, the way a sling wraps the baby: the texture is a band (`space8` on top, `space3` elsewhere) round a card of its own colour (`radius-s` inside `radius-m`); no word ever sits on the texture. Without a texture it is the plain card | — | Cochilo `FabricFrame` | 🟡 |
+ | Fabric picker | Cochilo: the brand's textures as 48dp round swatches in one scrolling row, the name under each (meta), the next one always peeking in; one tap picks and applies; the picked one has a 2dp `ink` ring; each is a radio button for TalkBack. First choice: plain | — | Cochilo `FabricPicker` | 🟡 |
+diff --git a/generated/cochilo/CTokens.kt b/generated/cochilo/CTokens.kt
+index 7c1cb81..7f32978 100644
+--- a/generated/cochilo/CTokens.kt
++++ b/generated/cochilo/CTokens.kt
+@@ -1,4 +1,4 @@
+-// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.16.0 — do not edit.
++// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.17.0 — do not edit.
+ package br.gabriel.cochilo.ui.theme
+ 
+ import androidx.compose.ui.graphics.Color
+diff --git a/generated/pulseloop/GTokens.kt b/generated/pulseloop/GTokens.kt
+index 1ed79ca..42e74e7 100644
+--- a/generated/pulseloop/GTokens.kt
++++ b/generated/pulseloop/GTokens.kt
+@@ -1,4 +1,4 @@
+-// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.16.0 — do not edit.
++// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.17.0 — do not edit.
+ package com.pulseloop.ui.theme
+ 
+ import androidx.compose.ui.graphics.Color
+diff --git a/generated/uikit/UiTokens.java b/generated/uikit/UiTokens.java
+index 0eb79b2..53b252d 100644
+--- a/generated/uikit/UiTokens.java
++++ b/generated/uikit/UiTokens.java
+@@ -1,4 +1,4 @@
+-// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.16.0 — do not edit.
++// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.17.0 — do not edit.
+ package br.gabriel.ui;
+ 
+ /**
+diff --git a/generated/web/cochilo.css b/generated/web/cochilo.css
+index 760004e..b4c18eb 100644
+--- a/generated/web/cochilo.css
++++ b/generated/web/cochilo.css
+@@ -1,4 +1,4 @@
+-/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.16.0 — do not edit. */
++/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.17.0 — do not edit. */
+ /* Layer: cochilo. Themes: light, dark, night. */
+ 
+ :root {
+diff --git a/generated/web/pulseloop.css b/generated/web/pulseloop.css
+index e2cd784..f4d2f35 100644
+--- a/generated/web/pulseloop.css
++++ b/generated/web/pulseloop.css
+@@ -1,4 +1,4 @@
+-/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.16.0 — do not edit. */
++/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.17.0 — do not edit. */
+ /* Layer: pulseloop. Themes: dark. */
+ 
+ :root {
+diff --git a/generated/web/uikit.css b/generated/web/uikit.css
+index 340544b..b0c14f8 100644
+--- a/generated/web/uikit.css
++++ b/generated/web/uikit.css
+@@ -1,4 +1,4 @@
+-/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.16.0 — do not edit. */
++/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.17.0 — do not edit. */
+ /* Layer: uikit. Themes: light, dark. */
+ 
+ :root {
+diff --git a/tokens/tokens.json b/tokens/tokens.json
+index 6563323..3a7a75f 100644
+--- a/tokens/tokens.json
++++ b/tokens/tokens.json
+@@ -1,7 +1,7 @@
+ {
+   "$comment": "Source of truth for every app's design tokens. Edit here, run scripts/gen_tokens.py, commit tokens + generated/ + DESIGN.md together. Schema: docs/tokens.md.",
+   "name": "Gabriel Design System",
+-  "version": "0.16.0",
++  "version": "0.17.0",
+   "core": {
+     "$comment": "Shared by every app. Every layer must include every core token (scripts/check_tokens.py enforces it).",
+     "color": [
+-- 
+2.43.0
+

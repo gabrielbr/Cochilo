@@ -28,7 +28,6 @@ Each is grounded in `docs/research.md` or the Tatá Slings plans (`docs/tata-sli
 
 | Feature | Why (source) | What it is |
 |---|---|---|
-| **Ritual builder** | Preventive parent education has the strongest evidence (§4); what consultations sell (monetization §6.4) | The parent writes the steps once (feed, play, nappy, room ready, song) and ticks them off; logged as the routine |
 | **Notes from Tatá by age** | The brand voice; trust (monetization §6.5) | One short note per age band, signed, reviewed against AAP 2022 |
 | **Printable report** | Paediatrician visits (monetization §3) | A PDF made on the phone (sleep per day, feeds, the actogram), shared by the parent |
 | **Smarter prediction (phase 2)** | Two-process model (§2.1, §7.2) | Weight recent days more, separate first nap / later naps / bedtime, still showing its numbers |
@@ -66,6 +65,7 @@ Each is grounded in `docs/research.md` or the Tatá Slings plans (`docs/tata-sli
 
 ## Shipped from this plan
 
+- **0.19.0**: the ritual builder ([rituals.md](rituals.md)).
 - **0.18.0**: what changed (change detection, the week's plain sentences first) and day / night milk ([changes.md](changes.md)).
 - **0.17.0**: where the baby slept, naps by place in Patterns, the T.I.C.K.S. check ([places.md](places.md)).
 - **0.16.0**: "Fell asleep a few minutes ago" (Earlier chips) and the quick-settings tile ([flows.md](flows.md)).
@@ -79,7 +79,7 @@ Each is grounded in `docs/research.md` or the Tatá Slings plans (`docs/tata-sli
 | When | What | Why first |
 |---|---|---|
 | **Soon** | Search History; the Day ring with expected windows | Research-backed, small, and on the brand's subject |
-| **Later** | Ritual builder, notes from Tatá, printable report (the Cochilo+ set) | Needs Tatá's writing and the monetization plan's order of work |
+| **Later** | Notes from Tatá, printable report (the Cochilo+ set) | Needs Tatá's writing and the monetization plan's order of work |
 | **Exploring** | Wi-Fi sync between two phones; Wear OS; smarter prediction | Bigger builds; worth a design spike first |
 
 Each of these lands like the rest: design system first, docs with the change, screenshots looked

@@ -527,3 +527,34 @@ fun EarlierChips(
         if (after.isNotEmpty()) Text(after, style = Type.meta, color = muted, maxLines = 1)
     }
 }
+
+/**
+ * Checklist (design system, components.md): steps the parent ticks one by one, one tap each; a
+ * ticked step has the check in a `selected` blush round and its words stay readable (no strike).
+ * Each row is a checkbox for TalkBack.
+ */
+@Composable
+fun Checklist(steps: List<String>, done: Set<Int>, onToggle: (Int) -> Unit) {
+    val c = CochiloTheme.colors
+    RowGroup {
+        steps.forEachIndexed { i, step ->
+            if (i > 0) Hairline()
+            val on = i in done
+            Row(
+                Modifier.fillMaxWidth().heightIn(min = Size.rowMin)
+                    .toggleable(on, role = Role.Checkbox) { onToggle(i) }
+                    .padding(horizontal = Spacing.space4, vertical = Spacing.space3),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Box(
+                    Modifier.size(Size.kindBadge).clip(RoundedCornerShape(Radius.radiusRound))
+                        .background(animatedColor(if (on) c.selected else c.surface))
+                        .border(Size.hairline, animatedColor(if (on) c.selected else c.line), RoundedCornerShape(Radius.radiusRound)),
+                    contentAlignment = Alignment.Center,
+                ) { if (on) GIcon(br.gabriel.cochilo.R.drawable.gg_ic_check, null, c.onSelected) }
+                Spacer(Modifier.width(Spacing.space3))
+                Text(step, style = Type.body, color = c.ink, modifier = Modifier.weight(1f))
+            }
+        }
+    }
+}

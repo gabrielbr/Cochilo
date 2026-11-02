@@ -70,6 +70,10 @@ one commit on top of the design system's `main` at 0.4.0 (self-update):
 - **0.16.0:** filter chips' dark variant for the night panel. Audit
   `audits/2026-11-02-v0.16.0-places.md`.
 
+**[0012-Checklist-0.17.0.patch](0012-Checklist-0.17.0.patch)**, on top of 0011:
+
+- **0.17.0:** the Checklist component. Audit `audits/2026-11-02-v0.17.0-rituals.md`.
+
 All checked on a fresh checkout of the design system's `main`: `git am` applies it,
 `check_tokens.py` reports 0 errors, the tests pass, and `drift.py --cochilo` against this repo
 reports 0 differences.
