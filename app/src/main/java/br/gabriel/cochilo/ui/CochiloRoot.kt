@@ -200,7 +200,6 @@ fun CochiloRoot(vm: MainViewModel) {
                                     items = logMenuItems(context, f, log, prediction is Predictor.Result.Sleeping),
                                     label = stringResource(R.string.log_button),
                                     closeLabel = stringResource(R.string.log_close),
-                                    lastTag = stringResource(R.string.slide_last_tag),
                                     onItem = { item -> newOf(EventType.valueOf(item.key)) },
                                     onOption = { item, o ->
                                         val type = EventType.valueOf(item.key)

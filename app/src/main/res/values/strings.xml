@@ -240,8 +240,7 @@
     <string name="caption_notifications">Notifications</string>
     <string name="info_medicine">Medicine: what was given and when, with the name and dose in the note. Handy to know whether the last dose was long enough ago. Follow the paediatrician\'s instructions.</string>
     <!-- Remember actions: what was done last. -->
-    <string name="slide_last">last: %1$s</string>
-    <string name="slide_last_tag">LAST</string>
+    <string name="slide_last_spoken">%1$s, used last</string>
     <string name="row_last">Last: %1$s</string>
     <string name="sheet_last">Last time: %1$s · %2$s</string>
     <!-- The Log button (docs/flows.md). -->

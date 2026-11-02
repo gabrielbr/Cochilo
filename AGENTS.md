@@ -52,6 +52,12 @@ system's. Its AGENTS.md and DESIGN.md are the rules; the short version:
 - **Copy in English and Brazilian Portuguese.** Every string in `values/strings.xml` and
   `values-pt-rBR/strings.xml`; short, plain, sentence case, verb first on buttons; no plurals that
   break with 1 (write "Naps: 1").
+- **Sleep leads.** Sleep is the app's subject: wherever kinds are listed it is a size up
+  (`kind-badge-lead`, label role); `EventType.leads` says which.
+- **Last mark, not a word.** What was used last is an outline and a dot in the kind's colour
+  (`LastDot`, `LastLine`); "last" is only spoken.
+- **Motion on every action**, from `ui/kit/Motion.kt` only (two durations, system easing); every
+  new interaction gets one, and all of it snaps with Remove animations.
 - 48dp targets, TalkBack labels, a spoken summary for every chart, Remove animations honoured.
 
 ## Product rules

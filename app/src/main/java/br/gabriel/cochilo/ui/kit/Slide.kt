@@ -7,7 +7,10 @@ import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -39,6 +42,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import br.gabriel.cochilo.domain.slideOption
 import br.gabriel.cochilo.ui.theme.CTokens.Radius
+import br.gabriel.cochilo.ui.theme.CTokens.Size
 import br.gabriel.cochilo.ui.theme.CTokens.Spacing
 import br.gabriel.cochilo.ui.theme.CochiloTheme
 import br.gabriel.cochilo.ui.theme.Type
@@ -71,8 +75,13 @@ fun SlideRow(
     onTap: () -> Unit,
     onPick: (SlideOption) -> Unit,
     previewActive: Int? = null,
-    /** The word that marks the option used last time ("LAST"). */
-    lastTag: String = "",
+    /** The kind's colour: the Last mark (outline and dot) on the option used last time. */
+    accent: androidx.compose.ui.graphics.Color = CochiloTheme.colors.muted,
+    /** What was done last of this kind (right breast), shown after a Last dot; [lastSpoken] for TalkBack. */
+    last: String? = null,
+    lastSpoken: String? = null,
+    /** Sleep leads: a size up (ListRow.prominent). */
+    prominent: Boolean = false,
     trailing: (@Composable RowScope.() -> Unit)? = null,
 ) {
     val c = CochiloTheme.colors
@@ -137,25 +146,33 @@ fun SlideRow(
                 }
             }
     ) {
-        ListRow(label = label, meta = meta, leading = leading, trailing = trailing)
+        ListRow(
+            label = label, meta = meta, leading = leading, prominent = prominent,
+            last = last, lastColor = accent, lastSpoken = lastSpoken, trailing = trailing,
+        )
         val shown = if (sliding) active else previewActive
-        if (sliding || previewActive != null) {
-            Row(Modifier.matchParentSize().padding(Spacing.space1).clip(RoundedCornerShape(Radius.radiusM)).background(c.surface)) {
+        // The options fade in over the row as the finger starts to slide, and out when it lets go.
+        androidx.compose.animation.AnimatedVisibility(
+            visible = sliding || previewActive != null,
+            enter = fadeInMotion(), exit = fadeOutMotion(),
+            modifier = Modifier.matchParentSize(),
+        ) {
+            Row(Modifier.fillMaxSize().padding(Spacing.space1).clip(RoundedCornerShape(Radius.radiusM)).background(c.surface)) {
                 options.forEachIndexed { i, o ->
                     val on = i == shown
-                    Box(
-                        Modifier.weight(1f).fillMaxHeight().padding(Spacing.space1)
-                            .clip(RoundedCornerShape(Radius.radiusM))
-                            .background(if (on) c.ink else c.line),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        androidx.compose.foundation.layout.Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    // Remember actions: the option used last time has the Last mark, an outline and
+                    // a dot in the kind's colour (the word is only spoken).
+                    val shape = RoundedCornerShape(Radius.radiusM)
+                    var cell = Modifier.weight(1f).fillMaxHeight().padding(Spacing.space1).clip(shape)
+                        .background(animatedColor(if (on) c.ink else c.line))
+                    if (o.last) cell = cell.border(androidx.compose.foundation.BorderStroke(Size.outline, accent), shape)
+                    Box(cell, contentAlignment = Alignment.Center) {
+                        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(horizontal = Spacing.space2)) {
+                            if (o.last) { LastDot(if (on) c.page else accent); androidx.compose.foundation.layout.Spacer(Modifier.width(Spacing.space1)) }
                             Text(
-                                o.label, style = Type.label, color = if (on) c.page else c.ink, textAlign = TextAlign.Center,
-                                maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.padding(horizontal = Spacing.space2),
+                                o.label, style = Type.label, color = animatedColor(if (on) c.page else c.ink), textAlign = TextAlign.Center,
+                                maxLines = 1, overflow = TextOverflow.Ellipsis,
                             )
-                            // Remember actions: the option used last time is marked.
-                            if (o.last) Text(lastTag, style = Type.caption, color = if (on) c.page else c.muted)
                         }
                     }
                 }

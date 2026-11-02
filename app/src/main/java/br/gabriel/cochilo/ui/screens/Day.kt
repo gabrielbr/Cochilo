@@ -134,6 +134,7 @@ internal fun VerticalTimeline(events: List<Event>, now: Long, f: Format, zone: Z
                 meta = eventMeta(e, now, f),
                 onClick = { onOpen(e) },
                 icon = { br.gabriel.cochilo.ui.kit.KindIcon(e, zone) },
+                prominent = e.type == br.gabriel.cochilo.data.EventType.SLEEP,
             )
         }
     }

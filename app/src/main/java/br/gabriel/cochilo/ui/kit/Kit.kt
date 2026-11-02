@@ -189,7 +189,8 @@ fun Caption(text: String, top: Dp = Spacing.space10) {
 @Composable
 fun RowGroup(content: @Composable ColumnScope.() -> Unit) {
     Column(
-        Modifier.fillMaxWidth().clip(RoundedCornerShape(Radius.radiusM)).background(CochiloTheme.colors.surface),
+        // Grows with its rows: a new entry slides the list open instead of jumping in.
+        Modifier.fillMaxWidth().clip(RoundedCornerShape(Radius.radiusM)).background(CochiloTheme.colors.surface).growsWithContent(),
         content = content,
     )
 }
@@ -199,7 +200,11 @@ fun Hairline() {
     Box(Modifier.fillMaxWidth().padding(start = Spacing.space4).height(Size.hairline).background(CochiloTheme.colors.line))
 }
 
-/** A row: label and at most one meta line; one thing on the right. */
+/**
+ * A row: label and at most one meta line; one thing on the right. A [prominent] row (sleep, what
+ * Cochilo is for) has its label in the label role and a little more air. [last] is what was done
+ * last of this kind, shown after a Last dot in [lastColor]; [lastSpoken] is what TalkBack says.
+ */
 @Composable
 fun ListRow(
     label: String,
@@ -207,20 +212,26 @@ fun ListRow(
     value: String? = null,
     leading: (@Composable () -> Unit)? = null,
     onClick: (() -> Unit)? = null,
+    prominent: Boolean = false,
+    last: String? = null,
+    lastColor: Color = CochiloTheme.colors.muted,
+    lastSpoken: String? = null,
     trailing: (@Composable RowScope.() -> Unit)? = null,
 ) {
     val c = CochiloTheme.colors
     val src = remember { MutableInteractionSource() }
     val base = Modifier.fillMaxWidth().heightIn(min = Size.rowMin)
     val m = if (onClick != null) base.clickable(src, indication = null, role = Role.Button, onClick = onClick).pressScale(src) else base
-    Row(m.padding(horizontal = Spacing.space4, vertical = Spacing.space3), verticalAlignment = Alignment.CenterVertically) {
+    val vertical = if (prominent) Spacing.space4 else Spacing.space3
+    Row(m.padding(horizontal = Spacing.space4, vertical = vertical), verticalAlignment = Alignment.CenterVertically) {
         if (leading != null) {
             leading()
             Spacer(Modifier.width(Spacing.space3))
         }
         Column(Modifier.weight(1f)) {
-            Text(label, style = Type.body, color = c.ink)
+            Text(label, style = if (prominent) Type.label else Type.body, color = c.ink)
             if (meta != null) Text(meta, style = Type.meta, color = c.muted)
+            if (last != null) LastLine(last, lastColor, lastSpoken)
         }
         if (value != null) {
             Spacer(Modifier.width(Spacing.space2))
@@ -230,6 +241,29 @@ fun ListRow(
             Spacer(Modifier.width(Spacing.space2))
             trailing()
         }
+    }
+}
+
+/**
+ * Last mark (design system, components.md): a small dot in the kind's colour. Before an option it
+ * says "this one last time"; the word is only spoken (TalkBack), never written.
+ */
+@Composable
+fun LastDot(color: Color, modifier: Modifier = Modifier) {
+    Box(modifier.size(Spacing.space2).clip(RoundedCornerShape(Radius.radiusRound)).background(color))
+}
+
+/** "What was done last" as a line: the Last dot, then the words (right breast · 14:20). */
+@Composable
+fun LastLine(text: String, color: Color, spoken: String? = null, style: androidx.compose.ui.text.TextStyle = Type.meta) {
+    val c = CochiloTheme.colors
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = if (spoken != null) Modifier.semantics(mergeDescendants = true) { contentDescription = spoken } else Modifier,
+    ) {
+        LastDot(color)
+        Spacer(Modifier.width(Spacing.space1))
+        Text(text, style = style, color = c.ink)
     }
 }
 
@@ -320,20 +354,24 @@ fun <T> FilterChips(options: List<T>, selected: T?, label: (T) -> String, onSele
     androidx.compose.foundation.layout.FlowRow(horizontalArrangement = Arrangement.spacedBy(Spacing.space2)) {
         options.forEach { o ->
             val on = o == selected
+            val src = remember { MutableInteractionSource() }
             Box(
                 Modifier.heightIn(min = Spacing.space12)
-                    .selectable(on, role = Role.RadioButton) { onSelect(o) },
+                    .selectable(on, interactionSource = src, indication = null, role = Role.RadioButton) { onSelect(o) },
                 contentAlignment = Alignment.Center,
             ) {
+                // The pick cross-fades to mint; the chip dips under the finger.
+                val bg = animatedColor(if (on) c.mint else c.surface)
                 Box(
                     Modifier
+                        .pressScale(src)
                         .heightIn(min = Spacing.space8)
                         .clip(RoundedCornerShape(Radius.radiusL))
-                        .background(if (on) c.mint else c.surface)
-                        .border(Size.hairline, if (on) c.mint else c.line, RoundedCornerShape(Radius.radiusL))
+                        .background(bg)
+                        .border(Size.hairline, animatedColor(if (on) c.mint else c.line), RoundedCornerShape(Radius.radiusL))
                         .padding(horizontal = Spacing.space3),
                     contentAlignment = Alignment.Center,
-                ) { Text(label(o), style = Type.bodySmall, color = if (on) c.onMint else c.ink) }
+                ) { Text(label(o), style = Type.bodySmall, color = animatedColor(if (on) c.onMint else c.ink)) }
             }
         }
     }
@@ -419,18 +457,20 @@ fun TabBar(tabs: List<Tab>, selected: Int, onSelect: (Int) -> Unit) {
     Row(Modifier.fillMaxWidth().height(Size.tabbar).background(c.surface), verticalAlignment = Alignment.CenterVertically) {
         tabs.forEachIndexed { i, t ->
             val on = i == selected
+            val src = remember { MutableInteractionSource() }
             Column(
                 Modifier.weight(1f).heightIn(min = Spacing.space12)
-                    .selectable(on, role = Role.Tab) { onSelect(i) },
+                    .selectable(on, interactionSource = src, indication = null, role = Role.Tab) { onSelect(i) },
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
             ) {
+                // The pill cross-fades from tab to tab.
                 Box(
-                    Modifier.widthIn(min = Spacing.space12 + Spacing.space2).height(Spacing.space8)
-                        .clip(RoundedCornerShape(Radius.radiusL)).background(if (on) c.mint else Color.Transparent),
+                    Modifier.pressScale(src).widthIn(min = Spacing.space12 + Spacing.space2).height(Spacing.space8)
+                        .clip(RoundedCornerShape(Radius.radiusL)).background(animatedColor(if (on) c.mint else c.surface)),
                     contentAlignment = Alignment.Center,
-                ) { GIcon(t.icon, null, if (on) c.onMint else c.muted) }
-                Text(t.label, style = Type.caption, color = if (on) c.ink else c.muted)
+                ) { GIcon(t.icon, null, animatedColor(if (on) c.onMint else c.muted)) }
+                Text(t.label, style = Type.caption, color = animatedColor(if (on) c.ink else c.muted))
             }
         }
     }

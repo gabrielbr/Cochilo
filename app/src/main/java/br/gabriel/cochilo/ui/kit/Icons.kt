@@ -76,9 +76,9 @@ fun CTokens.Palette.kindSoft(t: EventType, night: Boolean = true): Color = when 
  * kind's name; the icon itself says nothing to TalkBack.
  */
 @Composable
-fun KindIcon(@DrawableRes icon: Int, color: Color, soft: Color, modifier: Modifier = Modifier) {
+fun KindIcon(@DrawableRes icon: Int, color: Color, soft: Color, modifier: Modifier = Modifier, size: androidx.compose.ui.unit.Dp = Size.kindBadge) {
     Box(
-        modifier.size(Size.kindBadge).clip(RoundedCornerShape(Radius.radiusRound)).background(soft),
+        modifier.size(size).clip(RoundedCornerShape(Radius.radiusRound)).background(soft),
         contentAlignment = Alignment.Center,
     ) { GIcon(icon, null, color) }
 }
@@ -87,7 +87,7 @@ fun KindIcon(@DrawableRes icon: Int, color: Color, soft: Color, modifier: Modifi
 @Composable
 fun KindIcon(t: EventType, modifier: Modifier = Modifier) {
     val c = CochiloTheme.colors
-    KindIcon(typeIcon(t), c.kindColor(t), c.kindSoft(t), modifier)
+    KindIcon(typeIcon(t), c.kindColor(t), c.kindSoft(t), modifier, kindBadgeSize(t))
 }
 
 /** An entry's own icon in its round: a bottle for a bottle feed, the nap colour for a nap. */
@@ -95,5 +95,11 @@ fun KindIcon(t: EventType, modifier: Modifier = Modifier) {
 fun KindIcon(e: Event, zone: ZoneId, modifier: Modifier = Modifier) {
     val c = CochiloTheme.colors
     val night = e.type != EventType.SLEEP || e.isNightSleep(zone)
-    KindIcon(entryIcon(e), c.kindColor(e.type, night), c.kindSoft(e.type, night), modifier)
+    KindIcon(entryIcon(e), c.kindColor(e.type, night), c.kindSoft(e.type, night), modifier, kindBadgeSize(e.type))
 }
+
+/** Sleep leads: what Cochilo is for gets the bigger round (kind-badge-lead) wherever kinds are listed. */
+fun kindBadgeSize(t: EventType): androidx.compose.ui.unit.Dp = if (t.leads) Size.kindBadgeLead else Size.kindBadge
+
+/** Sleep is the app's subject: its rows, icon and timeline marks are a size up. */
+val EventType.leads: Boolean get() = this == EventType.SLEEP

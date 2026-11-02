@@ -28,12 +28,18 @@ A "tap" is a touch on a target; a "slide" is one touch that moves sideways and l
 
 ## Remember actions (project rule)
 
+**The Last mark (0.10.0).** What was used last isn't a word any more: the option has an outline in
+its kind's colour and a small dot of that colour before its name, and the row's or sheet's "last"
+line starts with the same dot ("● right breast", "● Right breast · Today 14:20"). The colour ties it
+to the kind; the dot reads at a glance, at 3 a.m., without reading. TalkBack still says it ("Right
+breast, used last"; "Last time: …"). Replaced the LAST / ÚLTIMO caption and the "last:" prefix.
+
 What was done last is shown and offered first, so the person sees it before choosing, and a repeat
 costs the fewest taps. Audit of every entry type (2026-11-02):
 
 | Entry | The log row shows | The slide marks | The sheet opens with | "Last time" line |
 |---|---|---|---|---|
-| Feed | last breast ("last: right breast"), even if a bottle came after | that breast (LAST) | the last feed's kind: breast side, or bottle with its last amount | ✅ |
+| Feed | last breast ("● right breast"), even if a bottle came after | that breast (Last mark) | the last feed's kind: breast side, or bottle with its last amount | ✅ |
 | Diaper | last kind | that kind | the last kind | ✅ |
 | Daylight | last kind | that kind | the last kind | ✅ |
 | Routine | last kind | that kind | the last kind | ✅ |
@@ -62,8 +68,8 @@ items in `ui/screens/LogMenu.kt`) is a round button in the bottom-right corner o
    thumb: Feed, Diaper, Sleep, Medicine, Pump, Daylight, Routine, Note.
 2. **Without lifting, drag up**: the kind under the finger lights, with a tick. On a kind with
    choices, they appear beside it, to the left where the thumb can reach: Feed shows
-   Left · Right (the last breast says LAST) and the last bottle ("120 ml"); Diaper shows
-   Wet · Both · Dirty (the last one says LAST); Sleep shows Start sleep or Woke up; Medicine shows
+   Left · Right (the last breast has the Last mark) and the last bottle ("120 ml"); Diaper shows
+   Wet · Both · Dirty (the last one has the Last mark); Sleep shows Start sleep or Woke up; Medicine shows
    the last medicine's name; Pump shows Start.
 3. **Slide sideways onto a choice and let go**: logged at once, with Undo in the snackbar.
    **Let go on the kind** itself: its sheet, opened on the last choice. **Let go anywhere else**:
@@ -78,7 +84,7 @@ The design rules it keeps:
 - **The same move each time.** The order never changes, so after a few days the thumb knows that
   Feed › Right is "up a little, then left". This is a marking menu's promise: novices look at the
   menu, experts flick without looking.
-- **Remember actions.** The last breast and the last diaper kind say LAST; the bottle chip carries
+- **Remember actions.** The last breast and the last diaper kind have the Last mark; the bottle chip carries
   the last amount; Medicine repeats the last name.
 - **Amora, not teal.** The screen's one mint action (Start sleep / Woke up) stays the only teal fill.
   The Log button has its own role, `fab`: Amora, her berry fabric (navy until 0.8.0).
@@ -115,6 +121,31 @@ The rules it follows, from what the research says goes wrong with gestures:
   Swipe is not used for delete anywhere, so it never surprises.
 - **Thumb-friendly.** Rows are full width, so the thumb slides along the bottom half of the screen
   where it already rests.
+
+## Motion (0.10.0)
+
+Every action answers with a small movement, so the hand knows it worked without looking twice
+(`ui/kit/Motion.kt`, design system "Motion"):
+
+| Action | Motion |
+|---|---|
+| Any press (rows, buttons, chips, tabs, swatches, Log menu rows) | dips to 97% under the finger |
+| Open the Log button | the scrim fades in, the menu rises from the button, the plus turns into a cross; held, the button dips |
+| Drag over the Log menu or a slide row | the lit row or option cross-fades to its fill |
+| Start a slide | the options fade in over the row, and out when it lets go |
+| Log something | the list opens for the new entry instead of jumping |
+| Start sleep / Woke up | the card cross-fades to the night panel and back |
+| Switch tab, pick a chip, pick a fabric | the pill, chip or ring cross-fades; a new fabric cross-fades in |
+
+Two durations only (`motion-standard` 150ms, `motion-emphasised` 250ms) and the system's easing.
+With Remove animations on, all of it snaps. None of it adds a tap or a wait.
+
+## Sleep leads (0.10.0)
+
+Sleep is what Cochilo is for, so it's a size up wherever kinds are listed: a 44dp round
+(`kind-badge-lead`, the others 36dp) and its name in the label role (bold) in History, Today's
+lists, the Day tab's hour by hour (with a wider bar), the log rows and the Log menu. The 24-hour
+bars and the ring already give sleep the full height.
 
 ## Smart defaults
 

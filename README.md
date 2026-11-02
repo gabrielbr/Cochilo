@@ -31,6 +31,9 @@ dressed in the Tatá Slings brand (teal, plum-grey ink, Pérola, Libre Franklin,
 - **Log button**: the main action, in the bottom-right corner on every tab. Press, drag up to a
   kind and sideways to a choice (Feed › Right breast), let go: logged. Let go on the kind for its
   sheet. A tap opens it for taps.
+- **Sleep first, and motion**: sleep is a size up in every list; every action answers with a small
+  movement (off with Remove animations); what was used last has a coloured outline and dot.
+  [docs/flows.md](docs/flows.md).
 - **Her fabrics**: Settings › Appearance › Fabric wraps the Today card in one of Tatá's slings
   (eleven, photographed from her shop). [docs/tata-slings/textures.md](docs/tata-slings/textures.md).
 - **Slide to log**: on Today's log rows, slide instead of tapping. Feed: left = left breast, right =

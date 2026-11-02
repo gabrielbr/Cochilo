@@ -3,6 +3,18 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.10.0 — 2026-11-02
+
+**Motion, sleep first, and a quieter "last".**
+- Every action answers with a small movement: presses dip, the Log menu rises from its button and
+  its plus turns into a cross, lit options and chips cross-fade, the list opens for a new entry,
+  the card fades to the night panel when sleep starts. Off with the phone's Remove animations.
+- Sleep is a size up everywhere entries are listed (History, Today, the Day tab's hour by hour,
+  the log rows, the Log menu): a bigger round and a bold name, so the sleep pattern stands out.
+- "LAST" / "ÚLTIMO" is gone: the option used last has an outline in its kind's colour and a small
+  dot before its name, and the "last" lines start with the same dot. TalkBack still says "used last".
+- Design system 0.9.0 (`design-system/0004-…`). `docs/flows.md` (Motion, Sleep leads, the Last mark).
+
 ## 0.9.0 — 2026-11-02
 
 **Her fabrics.** Pick one of Tatá's real slings in Settings › Appearance › Fabric and it wraps the
