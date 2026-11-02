@@ -116,7 +116,9 @@ fun EventSheet(
     val f = Format(context, zone)
     var date by remember { mutableStateOf(localDate(initial.start, zone)) }
     var startTime by remember { mutableStateOf(timeOf(initial.start, zone)) }
-    var endTime by remember { mutableStateOf(initial.end?.let { timeOf(it, zone) } ?: timeOf(initial.start, zone)) }
+    // A running timer's end defaults to now, so switching "running" off and saving ends it now.
+    // (It used to default to the start time: a timer finished the next day saved as 0 minutes.)
+    var endTime by remember { mutableStateOf(timeOf(initial.end ?: System.currentTimeMillis(), zone)) }
     var running by remember { mutableStateOf(initial.type.hasDuration && initial.end == null) }
     var kind by remember { mutableStateOf(initial.kind) }
     var amount by remember { mutableStateOf(initial.amountMl?.toString() ?: "") }

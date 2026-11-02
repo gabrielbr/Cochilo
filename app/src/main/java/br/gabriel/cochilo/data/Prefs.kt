@@ -20,4 +20,18 @@ class Prefs(context: Context) {
         sp.edit { putString("theme", mode.name) }
         _theme.value = mode
     }
+
+    private val _live = MutableStateFlow(sp.getBoolean("live_notification", true))
+    /** Show the live notification (the current sleep or wake stretch, and running timers). */
+    val liveNotification: StateFlow<Boolean> = _live
+
+    fun setLiveNotification(on: Boolean) {
+        sp.edit { putBoolean("live_notification", on) }
+        _live.value = on
+    }
+
+    /** Whether the app has asked for the notification permission once (Android 13+). */
+    var askedNotificationPermission: Boolean
+        get() = sp.getBoolean("asked_notifications", false)
+        set(v) = sp.edit { putBoolean("asked_notifications", v) }
 }

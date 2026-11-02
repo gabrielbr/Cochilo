@@ -90,11 +90,12 @@ android {
     }
 }
 
-// The permission promise, checked on every build: play asks for none; github asks for exactly the
-// two that self-update needs. A library that sneaks in INTERNET fails the build here.
+// The permission promise, checked on every build: play asks only to post notifications; github
+// adds exactly the two that self-update needs. A library that sneaks in INTERNET fails the build here.
+val notifications = "android.permission.POST_NOTIFICATIONS" // the live notification, both builds
 val allowedPermissions = mapOf(
-    "play" to emptySet(),
-    "github" to setOf("android.permission.INTERNET", "android.permission.REQUEST_INSTALL_PACKAGES"),
+    "play" to setOf(notifications),
+    "github" to setOf(notifications, "android.permission.INTERNET", "android.permission.REQUEST_INSTALL_PACKAGES"),
 )
 androidComponents {
     onVariants { variant ->

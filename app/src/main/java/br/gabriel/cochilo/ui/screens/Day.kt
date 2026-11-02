@@ -24,6 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
+import br.gabriel.cochilo.domain.clockSpan
 import br.gabriel.cochilo.domain.overlaps
 import br.gabriel.cochilo.R
 import br.gabriel.cochilo.data.Event
@@ -120,7 +121,7 @@ internal fun VerticalTimeline(events: List<Event>, now: Long, f: Format, zone: Z
     ) {
         for (e in events) {
             if (e.type == EventType.SLEEP) {
-                lastSleepEnd?.let { end -> if (e.start > end) TimelineGap(stringResource(R.string.awake_gap, f.duration(e.start - end))) }
+                lastSleepEnd?.let { end -> if (e.start > end) TimelineGap(stringResource(R.string.awake_gap, f.duration(clockSpan(end, e.start)))) }
                 lastSleepEnd = e.end ?: now
             }
             // A sleep's bar grows 4dp for every 10 minutes, so long sleeps look long.

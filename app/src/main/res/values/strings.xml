@@ -229,4 +229,14 @@
     <!-- Brand (Tatá Slings). -->
     <string name="brand_line">Cochilo, da Tatá Slings</string>
     <string name="brand_meta">Slings, swaddles and more, made in Brazil. Opens tataslings.com.br.</string>
+    <!-- Live notification (docs/notifications.md). -->
+    <string name="notif_channel">Asleep or awake</string>
+    <string name="notif_channel_meta">A quiet notification with the current sleep or wake time, what comes next, and running timers.</string>
+    <string name="notif_awake_title">Awake</string>
+    <string name="notif_asleep_expected">Since %1$s · expected wake %2$s</string>
+    <string name="notif_awake_nap">Since %1$s · next nap %2$s</string>
+    <string name="notif_awake_bedtime">Since %1$s · bedtime %2$s</string>
+    <string name="live_notification">Live notification</string>
+    <string name="live_notification_meta">Asleep or awake, the time, what comes next, and Woke up or Start sleep, without opening the app.</string>
+    <string name="caption_notifications">Notifications</string>
 </resources>

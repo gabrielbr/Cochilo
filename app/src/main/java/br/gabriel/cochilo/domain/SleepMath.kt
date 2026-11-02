@@ -39,6 +39,15 @@ fun Event.overlaps(from: Long, to: Long, now: Long): Boolean {
     return end >= from && start < to
 }
 
+/**
+ * The time between two moments as the clock shows them: whole minutes from start's minute to end's.
+ * 01:53:40 → 01:54:10 is 1 minute (the screen says 01:53 and 01:54), not 0.
+ */
+fun clockMinutes(start: Long, end: Long): Long = (Math.floorDiv(end, MINUTE) - Math.floorDiv(start, MINUTE)).coerceAtLeast(0)
+
+/** [clockMinutes] in milliseconds, for Format.duration. */
+fun clockSpan(start: Long, end: Long): Long = clockMinutes(start, end) * MINUTE
+
 fun localDate(t: Long, zone: ZoneId): LocalDate = Instant.ofEpochMilli(t).atZone(zone).toLocalDate()
 fun startOfDay(d: LocalDate, zone: ZoneId): Long = d.atStartOfDay(zone).toInstant().toEpochMilli()
 
