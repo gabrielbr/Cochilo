@@ -148,6 +148,18 @@
 
     <!-- Snackbars -->
     <string name="exported">Exported</string>
+    <string name="import_napper">Import from Napper</string>
+    <string name="import_napper_meta">The logs CSV from Napper\'s export. Adds sleeps, feeds and diapers. Never deletes.</string>
+    <string name="imported_napper">Imported from Napper. New: %1$d. Updated: %2$d.</string>
+    <string name="import_napper_failed">That file isn\'t a Napper logs export</string>
+    <string name="napper_held">Held or worn</string>
+    <string name="napper_swing">Swing</string>
+    <string name="napper_in_bed">In bed</string>
+    <string name="napper_nursing">While nursing</string>
+    <string name="napper_breast_milk">Breast milk</string>
+    <string name="napper_formula">Formula</string>
+    <string name="napper_medicine">Medicine</string>
+    <string name="napper_sides">Left %1$d min, right %2$d min</string>
     <string name="imported">Imported. New: %1$d. Updated: %2$d.</string>
     <string name="import_failed">That file isn\'t a Cochilo backup</string>
     <string name="file_failed">Couldn\'t use that file</string>
