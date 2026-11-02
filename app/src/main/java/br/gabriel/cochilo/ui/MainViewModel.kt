@@ -34,6 +34,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     private val ctx = app as CochiloApp
     private val events = ctx.db.events()
     private val babies = ctx.db.baby()
+    private val entries = br.gabriel.cochilo.data.Entries(events)
 
     val log: StateFlow<List<Event>> = events.observeAll().stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
@@ -43,6 +44,14 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         .stateIn(viewModelScope, SharingStarted.Eagerly, BabyState.Loading)
 
     val theme: StateFlow<ThemeMode> = ctx.prefs.theme
+    val liveNotification: StateFlow<Boolean> = ctx.prefs.liveNotification
+
+    fun setLiveNotification(on: Boolean) = ctx.prefs.setLiveNotification(on)
+
+    /** Ask for the notification permission once, the first time the app has a baby (Android 13+). */
+    fun shouldAskNotifications(): Boolean = !ctx.prefs.askedNotificationPermission
+    fun askedNotifications() { ctx.prefs.askedNotificationPermission = true }
+    fun notificationsAnswered() = ctx.refreshNotifications()
 
     /** Ticks every 20 s so timers and "awake for" stay current without a per-second redraw. */
     private val _now = MutableStateFlow(System.currentTimeMillis())
@@ -73,25 +82,17 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     fun saveBaby(baby: Baby) = viewModelScope.launch { babies.upsert(baby) }
 
     fun startSleep() = viewModelScope.launch {
-        val now = System.currentTimeMillis()
-        // Only one sleep runs at a time.
-        if (log.value.none { it.type == EventType.SLEEP && it.end == null }) {
-            events.upsert(Event(type = EventType.SLEEP, start = now, updatedAt = now))
-        }
+        entries.startSleep()
         refreshNow()
     }
 
     fun wakeUp() = viewModelScope.launch {
-        val now = System.currentTimeMillis()
-        log.value.filter { it.type == EventType.SLEEP && it.end == null }.forEach {
-            events.upsert(it.copy(end = now, updatedAt = now))
-        }
+        entries.wakeUp()
         refreshNow()
     }
 
     fun finish(e: Event) = viewModelScope.launch {
-        val now = System.currentTimeMillis()
-        events.upsert(e.copy(end = now, updatedAt = now))
+        entries.finish(e.id)
         refreshNow()
     }
 
@@ -112,14 +113,9 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     /** During a breastfeed: end this side now and start the other, in one move. */
     fun switchSide(e: Event) = viewModelScope.launch {
-        val other = br.gabriel.cochilo.domain.otherBreast(e.kind) ?: return@launch
-        val now = System.currentTimeMillis()
-        val ended = e.copy(end = now, updatedAt = now)
-        val next = Event(type = EventType.FEED, start = now, kind = other, updatedAt = now)
-        events.upsert(ended)
-        events.upsert(next)
+        val (_, next) = entries.switchSide(e.id) ?: return@launch
         refreshNow()
-        _messages.send(UiMessage(str(R.string.quick_switched, Format(ctx, zone).kindName(other) ?: other), str(R.string.undo)) {
+        _messages.send(UiMessage(str(R.string.quick_switched, Format(ctx, zone).kindName(next.kind) ?: next.kind.orEmpty()), str(R.string.undo)) {
             viewModelScope.launch { events.delete(next); events.upsert(e); refreshNow() }
         })
     }

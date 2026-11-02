@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- The notification bar (a RemoteViews layout can't read CTokens): Spacing.space4 high
+         (dots overhang a track half that), Spacing.space2 above and below. -->
+    <dimen name="notif_bar_height">16dp</dimen>
+    <dimen name="notif_bar_gap">8dp</dimen>
+</resources>

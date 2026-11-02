@@ -46,7 +46,9 @@ system's. Its AGENTS.md and DESIGN.md are the rules; the short version:
 - **The baby's data never leaves the phone.** No analytics, no account, no cloud backup. Data moves
   only through Export/Import. Two builds ([docs/distribution.md](docs/distribution.md)): **play** has
   no INTERNET permission at all; **github** (the family build) has INTERNET only for the design
-  system's self-update, and `check<Variant>Permissions` fails the build if either list grows.
+  system's self-update. Both may post notifications (`POST_NOTIFICATIONS`, the live notification,
+  [docs/notifications.md](docs/notifications.md)). `check<Variant>Permissions` fails the build if
+  either list grows.
 - **Import never deletes** and keeps the newest edit of an entry (`Backup.merge`). Changing the
   backup format means bumping `BackupFile.VERSION` and still reading older files.
 - **Not a medical or safety device.** Never imply the app monitors the baby; safe-sleep text

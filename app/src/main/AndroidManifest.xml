@@ -4,6 +4,10 @@
     <!-- No INTERNET permission here: the play build has none. Only the github build adds it, for
          self-update (src/github/AndroidManifest.xml). The baby's data never leaves the phone. -->
 
+    <!-- The live notification (docs/notifications.md): asleep or awake, the timeline bar, running
+         timers. Android 13+ asks the person first. Both builds; app/build.gradle.kts allows it. -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <application
         android:name=".CochiloApp"
         android:allowBackup="false"
@@ -22,5 +26,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!-- The notification's buttons and its tick; only the app's own PendingIntents reach it. -->
+        <receiver
+            android:name=".notify.NotificationActions"
+            android:exported="false" />
     </application>
 </manifest>

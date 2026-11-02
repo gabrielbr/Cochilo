@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  The live notification's content (docs/notifications.md): title, one line, and the timeline bar.
+  Android draws the header (icon, app name, chronometer) and the buttons around it
+  (DecoratedCustomViewStyle). Text uses the system's notification styles so it reads in light
+  and dark shades; sizes come from dimens.xml (the design system's spacing).
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/TextAppearance.Compat.Notification.Title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:ellipsize="end" />
+
+    <TextView
+        android:id="@+id/text"
+        style="@style/TextAppearance.Compat.Notification"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxLines="2"
+        android:ellipsize="end" />
+
+    <ImageView
+        android:id="@+id/bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/notif_bar_height"
+        android:layout_marginTop="@dimen/notif_bar_gap"
+        android:layout_marginBottom="@dimen/notif_bar_gap"
+        android:importantForAccessibility="no"
+        android:scaleType="fitXY" />
+</LinearLayout>

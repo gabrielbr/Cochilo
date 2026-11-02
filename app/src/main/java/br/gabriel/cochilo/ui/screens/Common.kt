@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
+import br.gabriel.cochilo.domain.clockSpan
 import br.gabriel.cochilo.R
 import br.gabriel.cochilo.data.Event
 import br.gabriel.cochilo.data.EventType
@@ -73,8 +74,8 @@ fun eventLabel(e: Event, f: Format, zone: ZoneId): String {
 fun eventMeta(e: Event, now: Long, f: Format): String {
     val times = when {
         !e.type.hasDuration -> f.time(e.start)
-        e.end == null -> stringResource(R.string.panel_since, f.time(e.start)) + " · " + f.duration(e.durationMs(now))
-        else -> f.time(e.start) + "–" + f.time(e.end) + " · " + f.duration(e.durationMs(now))
+        e.end == null -> stringResource(R.string.panel_since, f.time(e.start)) + " · " + f.duration(clockSpan(e.start, now))
+        else -> f.time(e.start) + "–" + f.time(e.end) + " · " + f.duration(clockSpan(e.start, e.end))
     }
     return if (e.note.isNullOrBlank()) times else "$times · ${e.note}"
 }

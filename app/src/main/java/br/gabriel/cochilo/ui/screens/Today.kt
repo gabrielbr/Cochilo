@@ -1,5 +1,6 @@
 package br.gabriel.cochilo.ui.screens
 
+import br.gabriel.cochilo.domain.clockSpan
 import br.gabriel.cochilo.data.Kinds
 import br.gabriel.cochilo.domain.otherBreast
 import br.gabriel.cochilo.domain.suggestedBreast
@@ -89,7 +90,7 @@ fun TodayScreen(
             br.gabriel.cochilo.ui.kit.RowGroup {
                 running.forEachIndexed { i, e ->
                     if (i > 0) Hairline()
-                    val since = stringResource(R.string.panel_since, f.time(e.start)) + " · " + f.duration(e.durationMs(now))
+                    val since = stringResource(R.string.panel_since, f.time(e.start)) + " · " + f.duration(clockSpan(e.start, now))
                     val other = otherBreast(e.kind)
                     if (e.type == EventType.FEED && other != null) {
                         // A breastfeed: slide either way to end this side and start the other.

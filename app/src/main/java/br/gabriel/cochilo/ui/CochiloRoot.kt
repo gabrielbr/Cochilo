@@ -87,6 +87,14 @@ fun CochiloRoot(vm: MainViewModel) {
     val exportJson = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { it?.let(vm::exportJson) }
     val exportCsv = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("text/csv")) { it?.let(vm::exportCsv) }
     val import = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { it?.let(vm::importFile) }
+    val live by vm.liveNotification.collectAsState()
+    val askNotifications = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { vm.notificationsAnswered() }
+    fun requestNotifications() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+            vm.askedNotifications()
+            askNotifications.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+        }
+    }
 
     LaunchedEffect(Unit) {
         vm.messages.collect { m ->
@@ -96,6 +104,11 @@ fun CochiloRoot(vm: MainViewModel) {
         }
     }
     BackHandler(enabled = settings) { settings = false }
+    // Once there's a baby, ask once whether the live notification may show (Android 13+).
+    LaunchedEffect(babyState is BabyState.Ready) {
+        if (babyState is BabyState.Ready && live && vm.shouldAskNotifications() &&
+            !br.gabriel.cochilo.notify.LiveNotifications.canPost(context)) requestNotifications()
+    }
 
     val baby = (babyState as? BabyState.Ready)?.baby
     val weeks = baby?.let { ageWeeks(it.birthDate, it.dueDate, now) } ?: 0
@@ -116,6 +129,11 @@ fun CochiloRoot(vm: MainViewModel) {
                             onImport = { import.launch(arrayOf("application/json", "application/octet-stream", "text/plain")) },
                             // Napper's export is a .csv; some file pickers label it text/plain or octet-stream.
                             onImportNapper = { import.launch(arrayOf("text/csv", "text/comma-separated-values", "text/plain", "application/octet-stream")) },
+                            liveNotification = live,
+                            onLiveNotification = { on ->
+                                vm.setLiveNotification(on)
+                                if (on && !br.gabriel.cochilo.notify.LiveNotifications.canPost(context)) requestNotifications()
+                            },
                             about = { AboutUpdates() },
                         )
                     }

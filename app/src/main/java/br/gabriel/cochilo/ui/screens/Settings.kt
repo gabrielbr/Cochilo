@@ -36,6 +36,8 @@ fun SettingsScreen(
     onExportCsv: () -> Unit,
     onImport: () -> Unit,
     onImportNapper: () -> Unit,
+    liveNotification: Boolean = true,
+    onLiveNotification: (Boolean) -> Unit = {},
     /** Extra About rows from the build (the github build's "Check for updates"). */
     about: @Composable () -> Unit = {},
 ) {
@@ -77,6 +79,14 @@ fun SettingsScreen(
                     )
                 })
             }
+        }
+
+        Caption(stringResource(R.string.caption_notifications))
+        RowGroup {
+            br.gabriel.cochilo.ui.kit.SwitchRow(
+                stringResource(R.string.live_notification), stringResource(R.string.live_notification_meta),
+                liveNotification, onLiveNotification,
+            )
         }
 
         Caption(stringResource(R.string.caption_data))

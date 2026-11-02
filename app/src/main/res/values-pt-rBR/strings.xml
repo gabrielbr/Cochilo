@@ -215,4 +215,14 @@
     <!-- Marca (Tatá Slings). -->
     <string name="brand_line">Cochilo, da Tatá Slings</string>
     <string name="brand_meta">Slings, swaddles e mais, feitos no Brasil. Abre tataslings.com.br.</string>
+    <!-- Notificação ao vivo (docs/notifications.md). -->
+    <string name="notif_channel">Dormindo ou acordado</string>
+    <string name="notif_channel_meta">Uma notificação discreta com o tempo de sono ou de vigília, o que vem a seguir e os cronômetros em andamento.</string>
+    <string name="notif_awake_title">Acordado</string>
+    <string name="notif_asleep_expected">Desde %1$s · despertar previsto %2$s</string>
+    <string name="notif_awake_nap">Desde %1$s · próxima soneca %2$s</string>
+    <string name="notif_awake_bedtime">Desde %1$s · hora de dormir %2$s</string>
+    <string name="live_notification">Notificação ao vivo</string>
+    <string name="live_notification_meta">Dormindo ou acordado, o tempo, o que vem a seguir e Acordou ou Começar sono, sem abrir o app.</string>
+    <string name="caption_notifications">Notificações</string>
 </resources>

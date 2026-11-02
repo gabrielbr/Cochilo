@@ -3,6 +3,21 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.4.0 — 2026-11-02
+
+**Notifications, like Napper's.** A quiet live notification: asleep or awake, a running clock,
+"expected wake 4:47 PM" or "next nap 4:01 PM", a timeline bar for the stretch (with dots for what
+was logged meanwhile and the nap window in teal), and Woke up or Start sleep. Each running timer
+(feed, pump, walk) gets its own with Finish, and Switch side for a breastfeed. Asks permission once
+(Android 13+); Settings › Notifications turns it off. `docs/notifications.md`.
+
+**Fixes**
+- Finishing a running timer from its sheet (switching "running now" off) saved it as 0 minutes,
+  because the end defaulted to the start time. It now defaults to now, so a timer that crossed
+  midnight keeps its real length.
+- "Awake 0min" between two sleeps a minute apart: durations now follow the clock as shown
+  (01:53 → 01:54 is 1 minute), not the seconds underneath.
+
 ## 0.3.0 — 2026-11-02
 
 **Cochilo, da Tatá Slings.** The app wears the Tatá Slings brand, through the Gabriel Design
