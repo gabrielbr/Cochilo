@@ -109,17 +109,19 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     fun saveBaby(baby: Baby) = viewModelScope.launch { babies.upsert(baby) }
 
-    fun startSleep() = viewModelScope.launch {
+    /** Start sleep now, or [minutesAgo] minutes ago (the Earlier chips). */
+    fun startSleep(minutesAgo: Int = 0) = viewModelScope.launch {
         val before = predictionNow(System.currentTimeMillis())
-        val sleep = entries.startSleep()
+        val sleep = entries.startSleep(System.currentTimeMillis() - minutesAgo * 60_000L)
         refreshNow()
         if (sleep != null) celebrate(br.gabriel.cochilo.domain.Trigger.StartedSleep(sleep, before))
     }
 
-    fun wakeUp() = viewModelScope.launch {
+    /** Woke up now, or [minutesAgo] minutes ago (the Earlier chips). */
+    fun wakeUp(minutesAgo: Int = 0) = viewModelScope.launch {
         val before = predictionNow(System.currentTimeMillis())
         val running = events.all().filter { it.type == EventType.SLEEP && it.end == null }.map { it.id }
-        entries.wakeUp()
+        entries.wakeUp(System.currentTimeMillis() - minutesAgo * 60_000L)
         refreshNow()
         events.all().filter { it.id in running }.maxByOrNull { it.start }
             ?.let { celebrate(br.gabriel.cochilo.domain.Trigger.WokeUp(it, before)) }

@@ -42,9 +42,6 @@ Each is grounded in `docs/research.md` or the Tatá Slings plans (`docs/tata-sli
 ### 3.1 Onboarding: shipped in 0.13.0 ([onboarding.md](onboarding.md))
 
 ### 3.2 Logging, faster still
-- **"Fell asleep a few minutes ago"**: long-press Start sleep (or the widget) for 5 / 10 / 15 min
-  ago (flows.md next candidates).
-- **Quick-settings tile** for Start sleep / Woke up.
 - **Drag to adjust** a sleep's start or end on the Day tab's timeline, instead of opening the sheet.
 - **Wear OS tile**: Start sleep / Woke up and the breasts from the wrist, for when both hands hold
   the baby.
@@ -75,6 +72,7 @@ Each is grounded in `docs/research.md` or the Tatá Slings plans (`docs/tata-sli
 
 ## Shipped from this plan
 
+- **0.16.0**: "Fell asleep a few minutes ago" (Earlier chips) and the quick-settings tile ([flows.md](flows.md)).
 - **0.15.0**: night light, daylight nudge, wind-down in the notification ([night-light.md](night-light.md)).
 - **0.14.0**: little celebrations (1.1) ([celebrations.md](celebrations.md)).
 - **0.13.0**: onboarding and the baby's avatar (1.2, 3.1); dates in the app's language
@@ -84,7 +82,7 @@ Each is grounded in `docs/research.md` or the Tatá Slings plans (`docs/tata-sli
 
 | When | What | Why first |
 |---|---|---|
-| **Soon** | "Fell asleep a few minutes ago"; where the baby slept | Research-backed, small, and on the brand's subject |
+| **Soon** | Where the baby slept | Research-backed, small, and on the brand's subject |
 | **Later** | Ritual builder, T.I.C.K.S., notes from Tatá, printable report (the Cochilo+ set) | Needs Tatá's writing and the monetization plan's order of work |
 | **Exploring** | Wi-Fi sync between two phones; Wear OS; smarter prediction | Bigger builds; worth a design spike first |
 

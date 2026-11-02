@@ -33,6 +33,7 @@ class NotificationActions : BroadcastReceiver() {
                 }
                 LiveNotifications.refresh(app)
                 br.gabriel.cochilo.widget.CochiloWidget.refresh(app)
+                br.gabriel.cochilo.tile.SleepTile.refresh(app)
             } finally {
                 pending.finish()
             }

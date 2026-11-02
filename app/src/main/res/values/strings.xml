@@ -313,4 +313,14 @@
     <string name="daylight_nudge_meta">12:00–16:00 helps the body clock</string>
     <string name="daylight_go">Go outside</string>
     <string name="notif_wind_down">Since %1$s · bedtime %2$s · dim the lights</string>
+    <!-- Earlier (docs/flows.md): logging a sleep or a wake that happened a few minutes ago. -->
+    <string name="earlier_asleep">Fell asleep</string>
+    <string name="earlier_woke">Woke up</string>
+    <string name="earlier_min">%1$d</string>
+    <string name="earlier_after">min ago</string>
+    <string name="earlier_asleep_spoken">Fell asleep %1$d minutes ago</string>
+    <string name="earlier_woke_spoken">Woke up %1$d minutes ago</string>
+    <!-- The quick-settings tile. -->
+    <string name="tile_label">Cochilo sleep</string>
+    <string name="tile_asleep_since">Asleep since %1$s</string>
 </resources>

@@ -25,6 +25,8 @@ A "tap" is a touch on a target; a "slide" is one touch that moves sideways and l
 | Any of the above, from any tab, without scrolling | scroll + the row | **1 drag** | The Log button (below) |
 | Undo any of the above | — | 1 tap | Undo in the snackbar that says what was logged |
 | First run: add the baby | 1 tap + name + Save | name + **Next**, then **Done** or **Skip** | Two short steps; the look step is skippable ([onboarding.md](onboarding.md)) |
+| Log a sleep or wake that began a few minutes ago | open the sheet, edit the time, Save | **1 tap** | "Fell asleep 5 · 10 · 15 min ago" under the action |
+| Start sleep / Woke up from the notification shade | — | **1 tap** | The quick-settings tile |
 | Start sleep / Woke up from the home screen | open app + 1 tap | **1 tap** | The widget's mint button ([widget.md](widget.md)) |
 | Breastfeed a side / switch / finish, from the home screen | open app + 1 move | **1 tap** | The widget's Left / Right; the running side reads Finish |
 | Start a daylight walk when nudged | open the Daylight row | **1 tap** | "Go outside" on the nudge row ([night-light.md](night-light.md)) |
@@ -127,6 +129,19 @@ The rules it follows, from what the research says goes wrong with gestures:
 - **Thumb-friendly.** Rows are full width, so the thumb slides along the bottom half of the screen
   where it already rests.
 
+## Earlier, and the quick-settings tile (0.16.0)
+
+**Earlier.** The baby fell asleep in your arms, or woke, before you could reach the phone. Under
+Start sleep / Woke up, one short sentence: "Fell asleep [5] [10] [15] min ago" ("Dormiu há … min");
+one tap logs the sleep (or the wake) that long ago. Only the chips that make sense are shown: a
+sleep never starts before the last wake, and a wake never comes before the sleep began
+(`domain/Earlier.kt`, `EarlierTest`). TalkBack reads each in full ("Fell asleep 10 minutes ago").
+
+**Quick-settings tile** "Cochilo sleep" (`tile/SleepTile.kt`): add it to the phone's quick
+settings, then Start sleep / Woke up is one tap from the notification shade on any screen. Lit
+while the baby sleeps, with "Asleep since 14:50" underneath (Android 10+). It updates whenever the
+log changes and goes through `Entries`, like every other button.
+
 ## Motion (0.10.0)
 
 Every action answers with a small movement, so the hand knows it worked without looking twice
@@ -161,9 +176,7 @@ bars and the ring already give sleep the full height.
 The full plan is [roadmap.md](roadmap.md).
 
 
-- A quick-settings tile for Start sleep / Woke up (the home-screen widget shipped in 0.11.0).
-- Long-press on Start sleep to log a sleep that began a few minutes ago (5 / 10 / 15 min), for when
-  the baby fell asleep in your arms before you could reach the phone.
+- (Shipped: the widget in 0.11.0, Earlier and the tile in 0.16.0.)
 
 ## Sources
 

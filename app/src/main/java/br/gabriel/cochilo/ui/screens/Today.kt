@@ -61,8 +61,9 @@ fun TodayScreen(
     prediction: Predictor.Result,
     now: Long,
     zone: ZoneId,
-    onStartSleep: () -> Unit,
-    onWokeUp: () -> Unit,
+    /** Start sleep now (0) or that many minutes ago (the Earlier chips). */
+    onStartSleep: (Int) -> Unit,
+    onWokeUp: (Int) -> Unit,
     onFinish: (Event) -> Unit,
     onNew: (EventType) -> Unit,
     onOpen: (Event) -> Unit,
@@ -78,7 +79,7 @@ fun TodayScreen(
     ScrollPage {
         ScreenTitle(stringResource(R.string.tab_today), stringResource(R.string.tab_today))
         Spacer(Modifier.height(Spacing.space6))
-        SleepPanel(prediction, now, f, onStartSleep, onWokeUp)
+        SleepPanel(prediction, now, f, log, onStartSleep, onWokeUp)
 
         if (prediction is Predictor.Result.Awake) {
             Spacer(Modifier.height(Spacing.space4))
@@ -156,7 +157,7 @@ fun TodayScreen(
 
 /** The sleep panel: dark while the baby sleeps, a surface card while awake. One primary action. */
 @Composable
-private fun SleepPanel(p: Predictor.Result, now: Long, f: Format, onStart: () -> Unit, onWoke: () -> Unit) {
+private fun SleepPanel(p: Predictor.Result, now: Long, f: Format, log: List<Event>, onStart: (Int) -> Unit, onWoke: (Int) -> Unit) {
     val c = CochiloTheme.colors
     val sleeping = p as? Predictor.Result.Sleeping
     val awake = p as? Predictor.Result.Awake
@@ -192,9 +193,22 @@ private fun SleepPanel(p: Predictor.Result, now: Long, f: Format, onStart: () ->
         }
         Spacer(Modifier.height(Spacing.space6))
         if (sleeping != null) {
-            Button(stringResource(R.string.action_woke_up), onWoke, ButtonKind.PRIMARY, Modifier.fillMaxWidth())
+            Button(stringResource(R.string.action_woke_up), { onWoke(0) }, ButtonKind.PRIMARY, Modifier.fillMaxWidth())
         } else {
-            Button(stringResource(R.string.action_start_sleep), onStart, ButtonKind.PRIMARY, Modifier.fillMaxWidth(), icon = R.drawable.gg_ic_moon)
+            Button(stringResource(R.string.action_start_sleep), { onStart(0) }, ButtonKind.PRIMARY, Modifier.fillMaxWidth(), icon = R.drawable.gg_ic_moon)
+        }
+        // Earlier: the baby fell asleep (or woke) before you reached the phone. One tap, 5/10/15 min ago.
+        val earlier = if (sleeping != null) br.gabriel.cochilo.domain.Earlier.forWake(log, now) else br.gabriel.cochilo.domain.Earlier.forStart(log, now)
+        if (earlier.isNotEmpty()) {
+            Spacer(Modifier.height(Spacing.space2))
+            br.gabriel.cochilo.ui.kit.EarlierChips(
+                label = stringResource(if (sleeping != null) R.string.earlier_woke else R.string.earlier_asleep),
+                minutes = earlier,
+                chipLabel = { stringResource(R.string.earlier_min, it) },
+                spoken = { stringResource(if (sleeping != null) R.string.earlier_woke_spoken else R.string.earlier_asleep_spoken, it) },
+                after = stringResource(R.string.earlier_after),
+                onDark = sleeping != null,
+            ) { m -> if (sleeping != null) onWoke(m) else onStart(m) }
         }
     }
 }

@@ -29,6 +29,7 @@ class CochiloApp : Application() {
                     LiveNotifications.refresh(this@CochiloApp)
                     // The home-screen widget follows the log the same way (docs/widget.md).
                     br.gabriel.cochilo.widget.CochiloWidget.refresh(this@CochiloApp)
+                    br.gabriel.cochilo.tile.SleepTile.refresh(this@CochiloApp)
                 }
         }
     }

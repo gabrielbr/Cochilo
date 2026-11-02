@@ -30,6 +30,19 @@
         <receiver
             android:name=".notify.NotificationActions"
             android:exported="false" />
+        <!-- The quick-settings tile (docs/flows.md): Start sleep / Woke up from the shade. The
+             permission here guards the service (only the system may bind it); it isn't one the
+             app asks for. -->
+        <service
+            android:name=".tile.SleepTile"
+            android:exported="true"
+            android:icon="@drawable/gg_ic_moon"
+            android:label="@string/tile_label"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
         <!-- The home-screen widget (docs/widget.md). Exported only for the launcher's update
              broadcast; its buttons go to NotificationActions, which is not exported. -->
         <receiver

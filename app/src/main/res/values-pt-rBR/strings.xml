@@ -288,4 +288,14 @@
     <string name="daylight_nudge_meta">12:00–16:00 ajuda o relógio do corpo</string>
     <string name="daylight_go">Sair</string>
     <string name="notif_wind_down">Desde %1$s · hora de dormir %2$s · luz baixa</string>
+    <!-- Antes (docs/flows.md): registrar um sono ou um despertar de alguns minutos atrás. -->
+    <string name="earlier_asleep">Dormiu há</string>
+    <string name="earlier_woke">Acordou há</string>
+    <string name="earlier_min">%1$d</string>
+    <string name="earlier_after">min</string>
+    <string name="earlier_asleep_spoken">Dormiu há %1$d minutos</string>
+    <string name="earlier_woke_spoken">Acordou há %1$d minutos</string>
+    <!-- O bloco das configurações rápidas. -->
+    <string name="tile_label">Sono do Cochilo</string>
+    <string name="tile_asleep_since">Dormindo desde %1$s</string>
 </resources>

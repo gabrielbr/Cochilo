@@ -180,8 +180,8 @@ fun CochiloRoot(vm: MainViewModel) {
                                     when (t) {
                                         0 -> TodayScreen(
                                             log, prediction, now, zone,
-                                            onStartSleep = { vm.startSleep() },
-                                            onWokeUp = { vm.wakeUp() },
+                                            onStartSleep = { vm.startSleep(it) },
+                                            onWokeUp = { vm.wakeUp(it) },
                                             onFinish = { vm.finish(it) },
                                             onNew = { type ->
                                                 // Remember actions: the sheet opens on what was done last (the same
