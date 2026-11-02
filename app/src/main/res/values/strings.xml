@@ -323,4 +323,29 @@
     <!-- The quick-settings tile. -->
     <string name="tile_label">Cochilo sleep</string>
     <string name="tile_asleep_since">Asleep since %1$s</string>
+    <!-- Where the baby slept, and safe babywearing (docs/places.md). -->
+    <string name="kind_crib">Crib</string>
+    <string name="kind_arms">In arms</string>
+    <string name="kind_sling">Sling</string>
+    <string name="kind_pram">Pram</string>
+    <string name="kind_car">Car seat</string>
+    <string name="field_place">Where</string>
+    <string name="caption_places">Where naps happened, last 7 days</string>
+    <string name="naps_count">Naps: %1$d</string>
+    <string name="places_meta">Naps in arms and in the sling are normal in the first months.</string>
+    <string name="ticks_title">Babywearing safely: T.I.C.K.S.</string>
+    <string name="ticks_line">Five quick checks every time the baby is in the sling.</string>
+    <string name="ticks_t">Tight</string>
+    <string name="ticks_t_meta">Snug enough to hug the baby close to you.</string>
+    <string name="ticks_i">In view at all times</string>
+    <string name="ticks_i_meta">You can see the baby\'s face by looking down.</string>
+    <string name="ticks_c">Close enough to kiss</string>
+    <string name="ticks_c_meta">Tip your head forward: you can kiss the top of the head.</string>
+    <string name="ticks_k">Keep the chin off the chest</string>
+    <string name="ticks_k_meta">A finger\'s width under the chin, so breathing stays easy.</string>
+    <string name="ticks_s">Supported back</string>
+    <string name="ticks_s_meta">The back in its natural curve, legs in a frog position.</string>
+    <string name="ticks_source">The UK Sling Consortium\'s T.I.C.K.S. rule. Cochilo doesn\'t watch the baby: you do.</string>
+    <string name="ticks_ok">Got it</string>
+    <string name="ticks_guide">Tatá\'s guides</string>
 </resources>

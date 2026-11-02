@@ -86,7 +86,7 @@ fun SettingsScreen(
                     ThemeMode.LIGHT to stringResource(R.string.theme_light),
                     ThemeMode.DARK to stringResource(R.string.theme_dark),
                 )
-                FilterChips(ThemeMode.entries, theme, { labels.getValue(it) }, onTheme)
+                FilterChips(ThemeMode.entries, theme, { labels.getValue(it) }, onSelect = onTheme)
             }
             Hairline()
             br.gabriel.cochilo.ui.kit.SwitchRow(stringResource(R.string.night_light), stringResource(R.string.night_light_meta), nightLight, onNightLight)

@@ -3,6 +3,14 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.17.0 — 2026-11-02
+
+**Where the baby slept.** Crib, in arms, sling, pram or car seat: each sleep remembers the last
+place, and while the baby sleeps the panel shows "Where" to change it in one tap. Patterns shows
+where naps happened this week, side by side ("Naps in arms and in the sling are normal in the first
+months"). The first time you pick the sling, Cochilo shows the five T.I.C.K.S. checks for safe
+babywearing, once. `docs/places.md`.
+
 ## 0.16.0 — 2026-11-02
 
 **"Fell asleep a few minutes ago."** Under Start sleep / Woke up: "Fell asleep 5 · 10 · 15 min ago",

@@ -1,0 +1,197 @@
+From c24096ebc1c464b95db653053c07c9a20db56bde Mon Sep 17 00:00:00 2001
+From: Gabriel Lopes <ogabriel@gmail.com>
+Date: Mon, 2 Nov 2026 23:22:32 +0000
+Subject: [PATCH] Design system 0.16.0: filter chips on the night panel
+
+A dark variant of filter chips for Cochilo's sleep panel (where the baby
+sleeps). Audit v0.16.0.
+---
+ CHANGELOG.md                        |  8 ++++++
+ DESIGN.md                           |  2 +-
+ VERSION                             |  2 +-
+ audits/2026-11-02-v0.16.0-places.md | 41 +++++++++++++++++++++++++++++
+ docs/components.md                  |  2 +-
+ generated/cochilo/CTokens.kt        |  2 +-
+ generated/pulseloop/GTokens.kt      |  2 +-
+ generated/uikit/UiTokens.java       |  2 +-
+ generated/web/cochilo.css           |  2 +-
+ generated/web/pulseloop.css         |  2 +-
+ generated/web/uikit.css             |  2 +-
+ tokens/tokens.json                  |  2 +-
+ 12 files changed, 59 insertions(+), 10 deletions(-)
+ create mode 100644 audits/2026-11-02-v0.16.0-places.md
+
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+index 350db14..6486727 100644
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -3,6 +3,14 @@
+ Semantic versioning (AGENTS.md "Versioning"). Each entry says what changed for each app and what
+ the app has to do.
+ 
++## 0.16.0 — 2026-11-02
++
++Where the baby slept (patch: a component variant; no token values change).
++
++- Filter chips: a dark variant for the night panel (outlines in `on-panel-muted`, text `on-panel`;
++  picked stays the `selected` blush).
++- Audit `audits/2026-11-02-v0.16.0-places.md` (T.I.C.K.S. wording: the parent watches, never the app).
++
+ ## 0.15.0 — 2026-11-02
+ 
+ Earlier chips and the quick-settings tile (minor: two components; no token values change).
+diff --git a/DESIGN.md b/DESIGN.md
+index 66e32c4..401d90f 100644
+--- a/DESIGN.md
++++ b/DESIGN.md
+@@ -1,6 +1,6 @@
+ ---
+ name: Gabriel Design System
+-version: 0.15.0
++version: 0.16.0
+ # GENERATED from tokens/tokens.json by scripts/gen_tokens.py. Edit the tokens, not this block.
+ colors:
+   page: "#F2F2F2"
+diff --git a/VERSION b/VERSION
+index a551051..04a373e 100644
+--- a/VERSION
++++ b/VERSION
+@@ -1 +1 @@
+-0.15.0
++0.16.0
+diff --git a/audits/2026-11-02-v0.16.0-places.md b/audits/2026-11-02-v0.16.0-places.md
+new file mode 100644
+index 0000000..6a17160
+--- /dev/null
++++ b/audits/2026-11-02-v0.16.0-places.md
+@@ -0,0 +1,41 @@
++# Audit 0.17.0: where the baby slept, and T.I.C.K.S.
++
++Method: design review only (detector not applicable, native platform): impeccable critique and
++graphic-design-fundamentals §13, on `today_sleeping_in_the_sling_light`, `patterns_places_ptBR_light`,
++`ticks_sheet_light`.
++
++## graphic-design-fundamentals §13
++
++| # | Check | Result |
++|---|---|---|
++| 1 | Brief | Sling and arms naps seen without guilt; safe babywearing at the right moment. ✅ |
++| 2 | Concept | The brand's subject, in the data. ✅ |
++| 3 | Hierarchy | "Where" sits under the timer, above the one action. ✅ |
++| 4 | Contrast | Unpicked chips on the night panel were white pills (too heavy); now outlines in `on-panel-muted` with `on-panel` text. ✅ after fix |
++| 5 | Alignment | Chips wrap on the card's axis. ✅ |
++| 6 | Spacing | Tokens. ✅ |
++| 7 | Typography | Existing roles; T.I.C.K.S. rows are label + one meta line. ✅ |
++| 8 | Colour | Teal only on Woke up / Got it. ✅ |
++| 9 | Consistency | Same filter chips, a dark variant. ✅ |
++| 10 | Simplicity | Five places; the check shows once. ✅ |
++| 11 | Real size | Phone width, EN and PT. ✅ |
++| 12 | Accessibility | Chips are radio buttons; the check is plain text. ✅ |
++| 13 | Production | No migration (kind text); no new permission. ✅ |
++
++Safety: the T.I.C.K.S. text says the parent watches the baby, never the app (AAP 2022 rule).
++
++## impeccable critique
++
++| # | Heuristic | Score | Note |
++|---|---|---|---|
++| 1 | System status | 4 | The place is visible while asleep. |
++| 2 | Real world | 4 | "In arms", "Car seat", "No colo", "Cadeirinha". |
++| 3 | Control | 4 | One tap to change, also in the sheet. |
++| 4 | Consistency | 4 | Remembered like every other kind. |
++| 5 | Error prevention | n/a | |
++| 6 | Recognition | 4 | Words, the last one picked. |
++| 7 | Efficiency | 4 | Zero extra taps when the place is the same. |
++| 8 | Aesthetic | 4 | Calm on the panel after the fix. |
++| 9 | Error recovery | 3 | Change it any time. |
++| 10 | Help | 4 | T.I.C.K.S. when it matters, once. |
++| | **Total** | **35/36** | |
+diff --git a/docs/components.md b/docs/components.md
+index 2a44204..a9b6a8e 100644
+--- a/docs/components.md
++++ b/docs/components.md
+@@ -20,7 +20,7 @@ component, the row says so.
+ | Button | 52dp (Cochilo: a pill, `radius-round`); PRIMARY mint (one per screen), SECONDARY ink outline, DANGER coral-text outline + confirm, STOP solid coral with `on-coral` label | `Ui.button` | Material `Button`/`FilledTonalButton`; one filled accent per screen (Actions) | ✅ |
+ | Icon button | 48dp target, 22dp icon, content description | `Ui.iconButton` | `IconButton` | ✅ |
+ | Chip | read-only state; MINT / CORAL (text on tint) / MUTED | `Ui.chip` | chips with dither ground | ✅ |
+-| Filter chips / segmented | 32dp pills, selection semantics | `Ui.filterChips` | `PulseSegmented` | ✅ |
++| Filter chips / segmented | 32dp pills, selection semantics. Cochilo: picked = `selected` blush; a dark variant on the night panel (outlines in `on-panel-muted`, text `on-panel`) | `Ui.filterChips` | `PulseSegmented` | ✅ |
+ | Field | 52dp, radius 4, line border; search clears | `Ui.field` | `OutlinedTextField` | ✅ |
+ | Snackbar | ink ground, page text, `snackbar-action` action, 8 s | `Ui.snackbar` | `SnackbarHost` (⬜ replace remaining Toasts) | 🟡 |
+ | Sheet | title, one line, primary + secondary; confirms and permission reasons | `Ui.sheet` | `ModalBottomSheet` / `LogSheet` | ✅ |
+diff --git a/generated/cochilo/CTokens.kt b/generated/cochilo/CTokens.kt
+index c06b573..7c1cb81 100644
+--- a/generated/cochilo/CTokens.kt
++++ b/generated/cochilo/CTokens.kt
+@@ -1,4 +1,4 @@
+-// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.15.0 — do not edit.
++// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.16.0 — do not edit.
+ package br.gabriel.cochilo.ui.theme
+ 
+ import androidx.compose.ui.graphics.Color
+diff --git a/generated/pulseloop/GTokens.kt b/generated/pulseloop/GTokens.kt
+index 9daad9e..1ed79ca 100644
+--- a/generated/pulseloop/GTokens.kt
++++ b/generated/pulseloop/GTokens.kt
+@@ -1,4 +1,4 @@
+-// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.15.0 — do not edit.
++// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.16.0 — do not edit.
+ package com.pulseloop.ui.theme
+ 
+ import androidx.compose.ui.graphics.Color
+diff --git a/generated/uikit/UiTokens.java b/generated/uikit/UiTokens.java
+index 78bb734..0eb79b2 100644
+--- a/generated/uikit/UiTokens.java
++++ b/generated/uikit/UiTokens.java
+@@ -1,4 +1,4 @@
+-// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.15.0 — do not edit.
++// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.16.0 — do not edit.
+ package br.gabriel.ui;
+ 
+ /**
+diff --git a/generated/web/cochilo.css b/generated/web/cochilo.css
+index 176a3b9..760004e 100644
+--- a/generated/web/cochilo.css
++++ b/generated/web/cochilo.css
+@@ -1,4 +1,4 @@
+-/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.15.0 — do not edit. */
++/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.16.0 — do not edit. */
+ /* Layer: cochilo. Themes: light, dark, night. */
+ 
+ :root {
+diff --git a/generated/web/pulseloop.css b/generated/web/pulseloop.css
+index 0cf2a80..e2cd784 100644
+--- a/generated/web/pulseloop.css
++++ b/generated/web/pulseloop.css
+@@ -1,4 +1,4 @@
+-/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.15.0 — do not edit. */
++/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.16.0 — do not edit. */
+ /* Layer: pulseloop. Themes: dark. */
+ 
+ :root {
+diff --git a/generated/web/uikit.css b/generated/web/uikit.css
+index e53d2fd..340544b 100644
+--- a/generated/web/uikit.css
++++ b/generated/web/uikit.css
+@@ -1,4 +1,4 @@
+-/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.15.0 — do not edit. */
++/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.16.0 — do not edit. */
+ /* Layer: uikit. Themes: light, dark. */
+ 
+ :root {
+diff --git a/tokens/tokens.json b/tokens/tokens.json
+index d745856..6563323 100644
+--- a/tokens/tokens.json
++++ b/tokens/tokens.json
+@@ -1,7 +1,7 @@
+ {
+   "$comment": "Source of truth for every app's design tokens. Edit here, run scripts/gen_tokens.py, commit tokens + generated/ + DESIGN.md together. Schema: docs/tokens.md.",
+   "name": "Gabriel Design System",
+-  "version": "0.15.0",
++  "version": "0.16.0",
+   "core": {
+     "$comment": "Shared by every app. Every layer must include every core token (scripts/check_tokens.py enforces it).",
+     "color": [
+-- 
+2.43.0
+

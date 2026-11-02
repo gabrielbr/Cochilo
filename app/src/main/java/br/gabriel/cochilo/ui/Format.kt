@@ -84,6 +84,11 @@ class Format(
         Kinds.BEDTIME_ROUTINE -> context.getString(R.string.kind_bedtime_routine)
         Kinds.OUTDOORS -> context.getString(R.string.kind_outdoors)
         Kinds.WINDOW -> context.getString(R.string.kind_window)
+        Kinds.CRIB -> context.getString(R.string.kind_crib)
+        Kinds.ARMS -> context.getString(R.string.kind_arms)
+        Kinds.SLING -> context.getString(R.string.kind_sling)
+        Kinds.PRAM -> context.getString(R.string.kind_pram)
+        Kinds.CAR -> context.getString(R.string.kind_car)
         else -> null
     }
 }

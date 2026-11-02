@@ -160,7 +160,26 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         })
     }
 
+    // The safe-babywearing check (T.I.C.K.S., docs/places.md): once, the first time "sling" is picked.
+    private val _ticks = MutableStateFlow(false)
+    val ticks: StateFlow<Boolean> = _ticks
+    fun ticksSeen() { _ticks.value = false }
+    private fun maybeTicks(kind: String?) {
+        if (kind == br.gabriel.cochilo.data.Kinds.SLING && !ctx.prefs.ticksShown) {
+            ctx.prefs.ticksShown = true
+            _ticks.value = true
+        }
+    }
+
+    /** Where the running sleep is happening (the panel's place chips), one tap. */
+    fun setPlace(e: Event, kind: String) = viewModelScope.launch {
+        events.upsert(e.copy(kind = kind, updatedAt = System.currentTimeMillis()))
+        refreshNow()
+        maybeTicks(kind)
+    }
+
     fun save(e: Event) = viewModelScope.launch {
+        if (e.type == EventType.SLEEP) maybeTicks(e.kind)
         events.upsert(e.copy(updatedAt = System.currentTimeMillis()))
         refreshNow()
         celebrate(br.gabriel.cochilo.domain.Trigger.Logged(e))

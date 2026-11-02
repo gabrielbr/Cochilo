@@ -1,5 +1,7 @@
 package br.gabriel.cochilo.ui
 
+import br.gabriel.cochilo.domain.isNightSleep
+import br.gabriel.cochilo.ui.screens.TicksBody
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -238,6 +240,21 @@ class ScreensSnapshotTest {
     @Test fun today_night_light_sleeping() { dark(); paparazzi.snapshot { Chrome(true, 0, sleepingLog, night = true) } }
     @Test fun day_night_light_ptBR() { pt(true); paparazzi.snapshot { Chrome(true, 1, night = true) } }
     @Test fun today_daylight_nudge_light() { light(); paparazzi.snapshot { Chrome(false, 0, log.filter { it.type != EventType.DAYLIGHT }) } }
+    @Test fun today_sleeping_in_the_sling_light() {
+        light()
+        paparazzi.snapshot { Chrome(false, 0, log + Event(type = EventType.SLEEP, start = at(31, 14, 50), kind = Kinds.SLING)) }
+    }
+    @Test fun patterns_places_ptBR_light() {
+        pt(false)
+        val places = listOf(Kinds.SLING, Kinds.CRIB, Kinds.SLING, Kinds.ARMS)
+        var i = 0
+        val withPlaces = log.map { if (it.type == EventType.SLEEP && !it.isNightSleep(zone)) it.copy(kind = places[i++ % places.size]) else it }
+        paparazzi.snapshot { Chrome(false, 3, withPlaces) }
+    }
+    @Test fun ticks_sheet_light() {
+        light()
+        paparazzi.snapshot { CochiloTheme(false) { br.gabriel.cochilo.ui.kit.Frame { androidx.compose.foundation.layout.Column(Modifier.padding(br.gabriel.cochilo.ui.theme.CTokens.Spacing.space6)) { TicksBody() } } } }
+    }
     @Test fun settings_light() { light(); paparazzi.snapshot { Chrome(false, 0, settings = true) } }
     @Test fun today_fabric_balao_light() { light(); paparazzi.snapshot { Fabric(br.gabriel.cochilo.ui.kit.Fabric.BALAO) { Chrome(false, 0) } } }
     @Test fun today_sleeping_fabric_tropical_dark() { dark(); paparazzi.snapshot { Fabric(br.gabriel.cochilo.ui.kit.Fabric.TROPICAL) { Chrome(true, 0, sleepingLog) } } }

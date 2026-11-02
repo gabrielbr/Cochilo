@@ -298,4 +298,29 @@
     <!-- O bloco das configurações rápidas. -->
     <string name="tile_label">Sono do Cochilo</string>
     <string name="tile_asleep_since">Dormindo desde %1$s</string>
+    <!-- Onde o bebê dormiu e o uso seguro do sling (docs/places.md). -->
+    <string name="kind_crib">Berço</string>
+    <string name="kind_arms">No colo</string>
+    <string name="kind_sling">Sling</string>
+    <string name="kind_pram">Carrinho</string>
+    <string name="kind_car">Cadeirinha</string>
+    <string name="field_place">Onde</string>
+    <string name="caption_places">Onde as sonecas aconteceram, últimos 7 dias</string>
+    <string name="naps_count">Sonecas: %1$d</string>
+    <string name="places_meta">Sonecas no colo e no sling são normais nos primeiros meses.</string>
+    <string name="ticks_title">Sling com segurança: T.I.C.K.S.</string>
+    <string name="ticks_line">Cinco checagens rápidas toda vez que o bebê estiver no sling.</string>
+    <string name="ticks_t">Justo</string>
+    <string name="ticks_t_meta">Firme o bastante para abraçar o bebê junto a você.</string>
+    <string name="ticks_i">Sempre à vista</string>
+    <string name="ticks_i_meta">Você vê o rosto do bebê olhando para baixo.</string>
+    <string name="ticks_c">Perto para beijar</string>
+    <string name="ticks_c_meta">Incline a cabeça: você alcança o topo da cabeça dele com um beijo.</string>
+    <string name="ticks_k">Queixo longe do peito</string>
+    <string name="ticks_k_meta">Um dedo de espaço sob o queixo, para respirar com facilidade.</string>
+    <string name="ticks_s">Costas apoiadas</string>
+    <string name="ticks_s_meta">As costas na curva natural, pernas em posição de sapinho.</string>
+    <string name="ticks_source">A regra T.I.C.K.S. do UK Sling Consortium. O Cochilo não vigia o bebê: você sim.</string>
+    <string name="ticks_ok">Entendi</string>
+    <string name="ticks_guide">Os guias da Tatá</string>
 </resources>

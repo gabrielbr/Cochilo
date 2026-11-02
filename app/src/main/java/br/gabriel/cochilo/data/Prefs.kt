@@ -66,6 +66,11 @@ class Prefs(context: Context) {
         }.toMap()
         set(v) = sp.edit { putString("celebrations_shown", v.entries.joinToString(";") { "${it.key.name}=${it.value}" }) }
 
+    /** Whether the safe-babywearing check (T.I.C.K.S.) has been shown once. */
+    var ticksShown: Boolean
+        get() = sp.getBoolean("ticks_shown", false)
+        set(v) = sp.edit { putBoolean("ticks_shown", v) }
+
     /** Whether the app has asked for the notification permission once (Android 13+). */
     var askedNotificationPermission: Boolean
         get() = sp.getBoolean("asked_notifications", false)
