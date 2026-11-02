@@ -200,4 +200,16 @@
     <string name="info_routine">Rotina: os passos antes da soneca ou da noite, como banho, mamada, música. Os mesmos passos a cada vez avisam o bebê que é hora de dormir.</string>
     <string name="info_note">Nota: qualquer coisa que valha lembrar, como remédio, resfriado, dentes nascendo ou um lugar novo.</string>
     <string name="info_ring">A meia-noite fica no topo e o dia gira no sentido horário. O sono é o anel de fora; mamadas, ordenha e luz do dia ficam dentro; os pontos marcam as fraldas.</string>
+    <!-- Atalhos de deslizar nas linhas de registro. -->
+    <string name="slide_hint">Deslize: %1$s</string>
+    <string name="slide_next">próximo: %1$s</string>
+    <string name="slide_left">Esquerdo</string>
+    <string name="slide_right">Direito</string>
+    <string name="slide_start">Começar</string>
+    <string name="slide_switch">Trocar para %1$s</string>
+    <string name="slide_switch_hint">Deslize para trocar de lado</string>
+    <string name="a11y_log">Registrar %1$s</string>
+    <string name="quick_started">Começou: %1$s</string>
+    <string name="quick_logged">Registrado: %1$s</string>
+    <string name="quick_switched">Trocou para %1$s</string>
 </resources>

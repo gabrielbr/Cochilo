@@ -1,5 +1,10 @@
 package br.gabriel.cochilo.ui.screens
 
+import br.gabriel.cochilo.data.Kinds
+import br.gabriel.cochilo.domain.otherBreast
+import br.gabriel.cochilo.domain.suggestedBreast
+import br.gabriel.cochilo.ui.kit.SlideOption
+import br.gabriel.cochilo.ui.kit.SlideRow
 import br.gabriel.cochilo.domain.overlaps
 import br.gabriel.cochilo.ui.kit.InfoButton
 import androidx.compose.foundation.background
@@ -56,6 +61,8 @@ fun TodayScreen(
     onFinish: (Event) -> Unit,
     onNew: (EventType) -> Unit,
     onOpen: (Event) -> Unit,
+    onQuick: (EventType, String?) -> Unit = { _, _ -> },
+    onSwitch: (Event) -> Unit = {},
 ) {
     val f = Format(LocalContext.current, zone, now)
     val today = localDate(now, zone)
@@ -82,18 +89,33 @@ fun TodayScreen(
             br.gabriel.cochilo.ui.kit.RowGroup {
                 running.forEachIndexed { i, e ->
                     if (i > 0) Hairline()
-                    br.gabriel.cochilo.ui.kit.ListRow(
-                        label = eventLabel(e, f, zone),
-                        meta = stringResource(R.string.panel_since, f.time(e.start)) + " · " + f.duration(e.durationMs(now)),
-                        leading = { br.gabriel.cochilo.ui.kit.Swatch(CochiloTheme.colors.eventColorOf(e, zone)) },
-                        onClick = { onOpen(e) },
-                    ) { Button(stringResource(R.string.action_finish), { onFinish(e) }) }
+                    val since = stringResource(R.string.panel_since, f.time(e.start)) + " · " + f.duration(e.durationMs(now))
+                    val other = otherBreast(e.kind)
+                    if (e.type == EventType.FEED && other != null) {
+                        // A breastfeed: slide either way to end this side and start the other.
+                        val switchTo = stringResource(R.string.slide_switch, f.kindName(other) ?: "")
+                        SlideRow(
+                            label = eventLabel(e, f, zone),
+                            meta = since + "\n" + stringResource(R.string.slide_switch_hint),
+                            icon = null,
+                            options = listOf(SlideOption(other, switchTo, switchTo)),
+                            onTap = { onOpen(e) },
+                            onPick = { onSwitch(e) },
+                        ) { Button(stringResource(R.string.action_finish), { onFinish(e) }) }
+                    } else {
+                        br.gabriel.cochilo.ui.kit.ListRow(
+                            label = eventLabel(e, f, zone),
+                            meta = since,
+                            leading = { br.gabriel.cochilo.ui.kit.Swatch(CochiloTheme.colors.eventColorOf(e, zone)) },
+                            onClick = { onOpen(e) },
+                        ) { Button(stringResource(R.string.action_finish), { onFinish(e) }) }
+                    }
                 }
             }
         }
 
         Caption(stringResource(R.string.caption_log))
-        QuickLog(onNew)
+        QuickLog(onNew, onQuick, suggestedBreast(log))
 
         Caption(stringResource(R.string.caption_timeline))
         Timeline(todays, from, to, now, zone, daySummary(f, today, todays, from, to, now, zone))
@@ -184,18 +206,54 @@ private fun PredictionCard(p: Predictor.Result.Awake, now: Long, f: Format) {
 
 /** Every other log type: secondary outlines, two to a row (the one mint action is Start sleep). */
 @Composable
-internal fun QuickLog(onNew: (EventType) -> Unit) {
+internal fun QuickLog(
+    onNew: (EventType) -> Unit,
+    onQuick: (EventType, String?) -> Unit = { _, _ -> },
+    nextBreast: String? = null,
+    previewActive: Pair<EventType, Int>? = null,
+) {
     val f = Format(LocalContext.current)
     val types = listOf(EventType.FEED, EventType.DIAPER, EventType.SLEEP, EventType.PUMP, EventType.DAYLIGHT, EventType.ROUTINE, EventType.NOTE)
-    // One row per kind of entry: tap the row to log it; the "i" says what it is for.
+    // One row per kind of entry. Tap: the full sheet. Slide: log at once (feed left or right,
+    // diaper wet/both/dirty…), so the most common entries cost one move, not three taps.
     br.gabriel.cochilo.ui.kit.RowGroup {
         types.forEachIndexed { i, t ->
             if (i > 0) Hairline()
-            br.gabriel.cochilo.ui.kit.ListRow(
+            val options = slideOptions(t, f)
+            val hint = if (options.isEmpty()) null else buildString {
+                append(stringResource(R.string.slide_hint, options.joinToString(" · ") { it.label }))
+                if (t == EventType.FEED && nextBreast != null) {
+                    append(" · ")
+                    append(stringResource(R.string.slide_next, options.first { it.key == nextBreast }.label.lowercase()))
+                }
+            }
+            SlideRow(
                 label = f.typeName(t),
-                leading = { br.gabriel.cochilo.ui.kit.GIcon(if (t == EventType.DAYLIGHT) R.drawable.gg_ic_sun else R.drawable.gg_ic_plus, null) },
-                onClick = { onNew(t) },
+                meta = hint,
+                icon = if (t == EventType.DAYLIGHT) R.drawable.gg_ic_sun else R.drawable.gg_ic_plus,
+                options = options,
+                onTap = { onNew(t) },
+                onPick = { o -> onQuick(t, o.key.takeIf { it.isNotEmpty() }) },
+                previewActive = previewActive?.takeIf { it.first == t }?.second,
             ) { InfoButton(f.typeName(t), stringResource(infoText(t))) }
         }
+    }
+}
+
+/** What a slide on each log row can log, left to right. */
+@Composable
+private fun slideOptions(t: EventType, f: Format): List<SlideOption> {
+    val ctx = LocalContext.current
+    fun opt(kind: String, label: String) = SlideOption(kind, label, ctx.getString(R.string.a11y_log, listOfNotNull(f.typeName(t), f.kindName(kind)).joinToString(" · ")))
+    return when (t) {
+        EventType.FEED -> listOf(
+            opt(Kinds.BREAST_LEFT, stringResource(R.string.slide_left)),
+            opt(Kinds.BREAST_RIGHT, stringResource(R.string.slide_right)),
+        )
+        EventType.DIAPER -> listOf(Kinds.WET, Kinds.BOTH, Kinds.DIRTY).map { opt(it, f.kindName(it) ?: it) }
+        EventType.DAYLIGHT -> listOf(Kinds.OUTDOORS, Kinds.WINDOW).map { opt(it, f.kindName(it) ?: it) }
+        EventType.ROUTINE -> listOf(Kinds.NAP_ROUTINE, Kinds.BEDTIME_ROUTINE).map { opt(it, f.kindName(it) ?: it) }
+        EventType.PUMP -> listOf(SlideOption("", stringResource(R.string.slide_start), stringResource(R.string.a11y_log, f.typeName(t))))
+        else -> emptyList()
     }
 }

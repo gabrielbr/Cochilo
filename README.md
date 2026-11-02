@@ -22,6 +22,9 @@ layer). The research behind it is in [docs/research.md](docs/research.md).
   entry hour by hour on a vertical rail: sleeps as bars as long as they lasted, and the awake time
   between them. Arrows move between days; tap an entry to edit it.
 - **History**: every day with its summary, timeline and entries.
+- **Slide to log**: on Today's log rows, slide instead of tapping. Feed: left = left breast, right =
+  right breast. Diaper: Wet · Both · Dirty. Slide a running breastfeed to switch side. Tap still
+  opens the full sheet. How many taps each entry costs, and why: [docs/flows.md](docs/flows.md).
 - **"i" buttons**: each kind of entry (on the log rows, the sleep panel and each entry's sheet) has
   an "i" that explains what it's for, in English and Portuguese.
 - **Patterns**: a 14-day actogram (the day/night rhythm forming) and 7-day averages next to the

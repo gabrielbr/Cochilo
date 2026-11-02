@@ -95,6 +95,35 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         refreshNow()
     }
 
+    /**
+     * The slide shortcut: logs [type] with [kind] now, with no sheet. A timer type starts running.
+     * The snackbar says what was logged and offers Undo, so a slip costs one tap to take back.
+     */
+    fun quickLog(type: EventType, kind: String?) = viewModelScope.launch {
+        val now = System.currentTimeMillis()
+        val e = br.gabriel.cochilo.ui.screens.newEvent(type, now).copy(kind = kind, updatedAt = now)
+        events.upsert(e)
+        refreshNow()
+        val name = Format(ctx, zone).let { f -> listOfNotNull(f.typeName(type), f.kindName(kind)).joinToString(" · ") }
+        _messages.send(UiMessage(str(if (type.hasDuration) R.string.quick_started else R.string.quick_logged, name), str(R.string.undo)) {
+            viewModelScope.launch { events.delete(e); refreshNow() }
+        })
+    }
+
+    /** During a breastfeed: end this side now and start the other, in one move. */
+    fun switchSide(e: Event) = viewModelScope.launch {
+        val other = br.gabriel.cochilo.domain.otherBreast(e.kind) ?: return@launch
+        val now = System.currentTimeMillis()
+        val ended = e.copy(end = now, updatedAt = now)
+        val next = Event(type = EventType.FEED, start = now, kind = other, updatedAt = now)
+        events.upsert(ended)
+        events.upsert(next)
+        refreshNow()
+        _messages.send(UiMessage(str(R.string.quick_switched, Format(ctx, zone).kindName(other) ?: other), str(R.string.undo)) {
+            viewModelScope.launch { events.delete(next); events.upsert(e); refreshNow() }
+        })
+    }
+
     fun save(e: Event) = viewModelScope.launch {
         events.upsert(e.copy(updatedAt = System.currentTimeMillis()))
         refreshNow()

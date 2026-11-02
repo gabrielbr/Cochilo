@@ -214,4 +214,16 @@
     <string name="info_routine">Routine: the steps before a nap or bedtime, like a bath, a feed, a song. The same steps each time tell the baby sleep is coming.</string>
     <string name="info_note">Note: anything else worth remembering, such as medicine, a cold, teething or a new place.</string>
     <string name="info_ring">Midnight is at the top and the day goes round clockwise. Sleep is the outer ring; feeds, pumping and daylight are inside; dots mark diapers.</string>
+    <!-- Slide-to-log shortcuts on the log rows. -->
+    <string name="slide_hint">Slide: %1$s</string>
+    <string name="slide_next">next: %1$s</string>
+    <string name="slide_left">Left</string>
+    <string name="slide_right">Right</string>
+    <string name="slide_start">Start</string>
+    <string name="slide_switch">Switch to %1$s</string>
+    <string name="slide_switch_hint">Slide to switch side</string>
+    <string name="a11y_log">Log %1$s</string>
+    <string name="quick_started">Started: %1$s</string>
+    <string name="quick_logged">Logged: %1$s</string>
+    <string name="quick_switched">Switched to %1$s</string>
 </resources>
