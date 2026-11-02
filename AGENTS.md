@@ -61,6 +61,8 @@ system's. Its AGENTS.md and DESIGN.md are the rules; the short version:
   both themes; it asks how the baby looks, never race; gender changes details only, never colour.
 - **Audit every release.** Each feature ends with an impeccable critique and the
   graphic-design-fundamentals checklist in `docs/audits/<version>-<topic>.md`; fix what fails first.
+- **Celebrate, never scold.** Celebrations (`domain/Celebrations.kt`) describe what happened,
+  never promise, never shame a miss; at most three a day; words only at night.
 - **Sleep leads.** Sleep is the app's subject: wherever kinds are listed it is a size up
   (`kind-badge-lead`, label role); `EventType.leads` says which.
 - **Last mark, not a word.** What was used last is an outline and a dot in the kind's colour

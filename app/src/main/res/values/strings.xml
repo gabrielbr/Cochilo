@@ -297,4 +297,13 @@
     <string name="gender_unsaid">Rather not say</string>
     <string name="avatar_of">Drawing of %1$s</string>
     <string name="look_row_meta">Skin tone, hair, girl or boy</string>
+    <!-- Celebrations (docs/celebrations.md): warm, short, never a promise. %1$s is the baby's name. -->
+    <string name="cheer_full_nap">A full nap. Well done, both of you.</string>
+    <string name="cheer_on_time">Right on time for %1$s.</string>
+    <string name="cheer_longest_night">%1$s\'s longest night this week.</string>
+    <string name="cheer_daylight">Daylight done for today.</string>
+    <string name="cheer_routine">Routine done. Good night.</string>
+    <string name="cheer_week">A whole week logged. The suggestions know %1$s better now.</string>
+    <string name="celebrations">Little celebrations</string>
+    <string name="celebrations_meta">A few warm words and the baby, when a nap goes well</string>
 </resources>

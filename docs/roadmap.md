@@ -13,57 +13,7 @@ app monitors the baby** (AAP 2022), and **document everything**.
 
 ## 1. The owner's suggestions
 
-### 1.1 Celebrations: a small "parabéns" when what she was trying for happens
-
-**The idea (owner):** when a parent's intent is met, for example the baby slept as long as
-expected, Cochilo answers with one short congratulations animation: a few warm words and an
-animated baby.
-
-**Why it's right.** Tracking a baby's sleep is mostly logging what went wrong at 3 a.m. Peak-end
-(impeccable's emotional-journey lens): people remember the best moment and the last one. A small,
-earned celebration turns the end of a good nap into a peak. It also rewards the *logging*, which
-is what makes the predictions good (research §1.7: apps need about a week of data).
-
-**What counts as "intent met" (each from data the app already has):**
-
-| Moment | Trigger | Example words (EN / PT) |
-|---|---|---|
-| Nap as long as expected | Woke up at or after the predicted wake (`expectedWake`), nap ≥ 30 min | "A full nap. Well done, both of you." / "Uma soneca inteira. Muito bem, vocês dois." |
-| Nap started in the window | Start sleep inside the predicted window | "Right on time." / "Na hora certinha." |
-| Longest night stretch this week | A night sleep segment longer than any in the last 7 nights | "His longest stretch this week." / "O maior sono da semana." |
-| Daylight done | ≥ 30 min daylight logged between 12:00 and 16:00 (research §2.3) | "Daylight in the bag." / "Luz do dia: feito." |
-| Routine before bed | A bedtime routine logged before the night sleep | "Routine done. Good night." / "Rotina feita. Boa noite." |
-| A week of logging | Entries on 7 days in a row | "A whole week logged. Predictions get sharper now." / "Uma semana inteira registrada. As previsões ficam mais certeiras." |
-
-**How it looks and moves.**
-- One moment, not confetti everywhere: the baby avatar (1.2) rises from the bottom of the card
-  that changed (the sleep panel, the row just logged), does one small happy motion (a stretch, a
-  smile, arms up), with one line of text beside it, then settles away. About 1.2–1.6 s,
-  `motion-emphasised` easing, from an already-visible default (craft floor).
-- Colours from her fabrics (the event colour of what was celebrated), never teal (teal is the
-  action).
-- Tap anywhere to dismiss; it never blocks a tap or waits for one (fewest taps).
-- **At night it is quieter:** between bedtime and morning, no bright flash and no movement on the
-  dark screen; the words only, dim, for 1 s. Light at night is the one thing research says to
-  avoid (§2.3).
-- **Remove animations on:** a still picture of the baby and the words, then gone.
-- TalkBack: the words are announced once (polite live region).
-
-**Rules so it stays kind.**
-- **Celebrate, never scold.** No "missed", no streaks that break, no red. A day without a
-  celebration is just a day.
-- **Never a promise.** "A full nap" describes what happened; it never says "she will sleep through
-  tonight" (brand voice).
-- **Rare enough to mean something:** at most one celebration per moment kind per day, and at most
-  three per day overall.
-- **A switch in Settings** ("Little celebrations" / "Pequenas comemorações"), on by default.
-- Copy reviewed by Tatá (brand voice: warm, short, from one mother to another).
-
-**Build notes.** A pure `Celebrations` rule set in `domain/` (input: log, prediction, now; output:
-the moment or none), unit-tested like `Predictor`. One `Celebration` component in `ui/kit`
-(design system first: component + motion spec). Animation drawn in Compose (vector parts on a
-Canvas, transforms from `Motion.kt`), no new animation library. Screenshot tests of the resting
-frame in light, dark and night.
+### 1.1 Celebrations: shipped in 0.14.0 ([celebrations.md](celebrations.md))
 
 ### 1.2 The baby's avatar: shipped in 0.13.0
 
@@ -128,6 +78,7 @@ Each is grounded in `docs/research.md` or the Tatá Slings plans (`docs/tata-sli
 
 ## Shipped from this plan
 
+- **0.14.0**: little celebrations (1.1) ([celebrations.md](celebrations.md)).
 - **0.13.0**: onboarding and the baby's avatar (1.2, 3.1); dates in the app's language
   ([onboarding.md](onboarding.md)).
 
@@ -135,7 +86,6 @@ Each is grounded in `docs/research.md` or the Tatá Slings plans (`docs/tata-sli
 
 | When | What | Why first |
 |---|---|---|
-| **Then (0.14)** | Celebrations (1.1) on the avatar | Builds on 0.13; the first "peak" moment |
 | **Soon** | Night light theme; "fell asleep a few minutes ago"; where the baby slept | Research-backed, small, and on the brand's subject |
 | **Later** | Ritual builder, T.I.C.K.S., notes from Tatá, printable report (the Cochilo+ set) | Needs Tatá's writing and the monetization plan's order of work |
 | **Exploring** | Wi-Fi sync between two phones; Wear OS; smarter prediction | Bigger builds; worth a design spike first |

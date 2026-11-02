@@ -272,4 +272,13 @@
     <string name="gender_unsaid">Prefiro não dizer</string>
     <string name="avatar_of">Desenho de %1$s</string>
     <string name="look_row_meta">Tom de pele, cabelo, menina ou menino</string>
+    <!-- Comemorações (docs/celebrations.md): calorosas, curtas, nunca uma promessa. %1$s é o nome do bebê. -->
+    <string name="cheer_full_nap">Uma soneca inteira. Muito bem, vocês dois.</string>
+    <string name="cheer_on_time">Na hora certinha para %1$s.</string>
+    <string name="cheer_longest_night">A noite mais longa de %1$s na semana.</string>
+    <string name="cheer_daylight">Luz do dia: feito por hoje.</string>
+    <string name="cheer_routine">Rotina feita. Boa noite.</string>
+    <string name="cheer_week">Uma semana inteira registrada. As sugestões conhecem %1$s melhor agora.</string>
+    <string name="celebrations">Pequenas comemorações</string>
+    <string name="celebrations_meta">Algumas palavras carinhosas e o bebê, quando uma soneca vai bem</string>
 </resources>

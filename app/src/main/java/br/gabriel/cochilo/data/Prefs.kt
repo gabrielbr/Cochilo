@@ -39,6 +39,24 @@ class Prefs(context: Context) {
         _fabric.value = key
     }
 
+    private val _celebrate = MutableStateFlow(sp.getBoolean("celebrations", true))
+    /** Little celebrations when what she was trying for happens (docs/celebrations.md). */
+    val celebrations: StateFlow<Boolean> = _celebrate
+
+    fun setCelebrations(on: Boolean) {
+        sp.edit { putBoolean("celebrations", on) }
+        _celebrate.value = on
+    }
+
+    /** When each celebration was last shown ("FULL_NAP=2026-11-02;…"), for the once-a-day caps. */
+    var celebrationsShown: Map<br.gabriel.cochilo.domain.Moment, java.time.LocalDate>
+        get() = (sp.getString("celebrations_shown", null) ?: "").split(';').mapNotNull { part ->
+            val (k, v) = part.split('=').takeIf { it.size == 2 } ?: return@mapNotNull null
+            val m = br.gabriel.cochilo.domain.Moment.entries.firstOrNull { it.name == k } ?: return@mapNotNull null
+            runCatching { m to java.time.LocalDate.parse(v) }.getOrNull()
+        }.toMap()
+        set(v) = sp.edit { putString("celebrations_shown", v.entries.joinToString(";") { "${it.key.name}=${it.value}" }) }
+
     /** Whether the app has asked for the notification permission once (Android 13+). */
     var askedNotificationPermission: Boolean
         get() = sp.getBoolean("asked_notifications", false)
