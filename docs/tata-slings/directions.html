@@ -1,0 +1,181 @@
+<title>Cochilo, mais dela</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: a short intro, then three directions side by side (stacked on a phone), each a phone specimen + its icon row + what changes. */
+:root{
+  --bg:#FBF7F2; --fg:#13293D; --muted:#5F6B78; --line:#E9E2D8; --card:#FFFFFF; --accent:#1E6E68;
+  --sans:"Libre Franklin",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#10161C;--fg:#EDF1F4;--muted:#A3B0BC;--line:#26303A;--card:#171D24;--accent:#7FD6CF;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#10161C;--fg:#EDF1F4;--muted:#A3B0BC;--line:#26303A;--card:#171D24;--accent:#7FD6CF;color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:15px;line-height:1.5}
+.wrap{max-width:1180px;margin:0 auto;padding-block:32px 56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1{font-size:clamp(28px,5vw,40px);line-height:1.1;font-weight:800;letter-spacing:-.01em;margin:0 0 8px;text-wrap:balance}
+.lede{max-width:64ch;color:var(--muted);margin:0 0 8px}
+.lede b{color:var(--fg);font-weight:600}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:24px;margin-top:28px}
+.dir{display:flex;flex-direction:column;gap:14px;min-width:0}
+.dir header{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.tag{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.dir h2{font-size:22px;margin:0;font-weight:800}
+.dir p{margin:0;color:var(--muted);max-width:60ch}
+.dir ul{margin:0;padding-left:18px;color:var(--muted);display:grid;gap:4px}
+.dir ul b{color:var(--fg);font-weight:600}
+.icons{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px}
+.icons figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;color:var(--muted);text-align:center}
+.foot{margin-top:36px;padding-top:20px;border-top:1px solid var(--line);color:var(--muted);max-width:72ch}
+.foot b{color:var(--fg)}
+
+/* The phone specimen: its colours are the direction's own, in light, so the three compare fairly. */
+.phone{--ph-bg:#fff;border-radius:28px;padding:10px;background:#0E1620;max-width:340px;width:100%;margin:0 auto;box-shadow:0 12px 30px rgba(19,41,61,.18)}
+.screen{border-radius:20px;overflow:hidden;background:var(--ph-page);color:var(--ph-ink);position:relative;height:560px;font-family:var(--sans)}
+.ph-head{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--ph-surface)}
+.mark{width:30px;height:30px;border-radius:9px;background:var(--ph-mark);display:grid;place-items:center}
+.ph-head b{display:block;font-size:14px;line-height:1.1}
+.ph-head small{font-size:11px;color:var(--ph-muted)}
+.ph-body{padding:14px}
+.panel{border-radius:var(--ph-r);background:var(--ph-surface);padding:14px;display:grid;gap:8px}
+.panel .eyebrow{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ph-muted)}
+.panel .big{font-size:34px;font-weight:800;line-height:1}
+.cta{border-radius:var(--ph-r);background:var(--ph-mint);color:var(--ph-onmint);font-weight:700;font-size:13px;text-align:center;padding:10px}
+.tl{margin-top:12px;border-radius:var(--ph-r);background:var(--ph-surface);padding:12px 14px;display:grid;gap:8px}
+.tl .bar{height:14px;border-radius:7px;background:var(--ph-line);position:relative;overflow:hidden}
+.tl .bar i{position:absolute;top:0;bottom:0;border-radius:7px}
+.tl .legend{display:flex;flex-wrap:wrap;gap:4px 10px;font-size:10px;color:var(--ph-muted)}
+.tl .legend span{display:inline-flex;align-items:center;gap:4px}
+.tl .legend i{width:8px;height:8px;border-radius:4px;display:inline-block}
+.scrim{position:absolute;inset:0;background:var(--ph-scrim)}
+.menu{position:absolute;right:12px;bottom:74px;display:flex;flex-direction:column;align-items:flex-end;gap:7px;left:12px}
+.mrow{display:flex;gap:6px;align-items:center;justify-content:flex-end;width:100%}
+.item{display:flex;align-items:center;gap:7px;padding:6px 12px 6px 6px;border-radius:var(--ph-pill);background:var(--ph-surface);border:1px solid var(--ph-line);font-size:12.5px;font-weight:700;white-space:nowrap}
+.item.on{background:var(--ph-on);color:var(--ph-onon);border-color:var(--ph-on)}
+.chip{padding:7px 11px;border-radius:var(--ph-pill);background:var(--ph-surface);border:1px solid var(--ph-line);font-size:12px;font-weight:700;text-align:center;line-height:1.1;white-space:nowrap}
+.chip small{display:block;font-size:8.5px;letter-spacing:.06em;color:var(--ph-muted)}
+.chip.on{background:var(--ph-on);color:var(--ph-onon);border-color:var(--ph-on)}
+.fab{position:absolute;right:12px;bottom:14px;width:50px;height:50px;border-radius:25px;background:var(--ph-fab);display:grid;place-items:center;box-shadow:0 4px 12px rgba(0,0,0,.15)}
+.ib{width:28px;height:28px;border-radius:14px;display:grid;place-items:center;flex:none}
+@media (prefers-reduced-motion:no-preference){.item,.chip{transition:transform .2s}.phone:hover .item.on{transform:translateX(-2px)}}
+</style>
+
+<div class="wrap">
+  <h1>Cochilo, mais dela</h1>
+  <p class="lede">Today Cochilo is navy lines on cream: calm, but cold and a little masculine. Three directions to make it warmer and more hers. All three keep the <b>Tatá Slings brand</b> (teal mark, Libre Franklin) and every rule we have: icon always beside its word, one teal action per screen, contrast checked. The colours come from <b>her own fabrics</b> (Rosa Chá, Lavanda, Mel, Trevo, Amora, Cereja), so the app looks like the slings.</p>
+  <p class="lede">Each phone shows the same moment: the Log button open, finger on Feed › Right.</p>
+
+  <div class="grid" id="grid"></div>
+
+  <div class="foot">
+    <p><b>What any of them changes in the code:</b> the design system gets the new colour roles and the icon set first (brand <code>tata-slings</code>), then <code>CTokens.kt</code> is regenerated here; the icons move from one-colour lines to two layers (line + soft fill), each kind in its fabric colour. The timeline's data colours move to the same fabric family, re-checked so the eight kinds are still told apart (and always next to a word).</p>
+    <p><b>Icon sources looked at:</b> Phosphor duotone (MIT), IconPark TwoTone (Apache 2.0), Tabler (MIT, lines only), Fluent Emoji flat (MIT, illustrated). None has a diaper, a breast pump and a sling together, so the proposal is our own set: the shapes we already have, given a fill layer, all under the design system's licence.</p>
+  </div>
+</div>
+
+<script>
+// Icon shapes: the design system's current line set (24×24). Each kind: [fill paths], [line paths].
+const SHAPES = {
+  feed:   {f:["M12,3.5 C12,3.5 6.5,9.6 6.5,14 A5.5,5.5 0 0,0 17.5,14 C17.5,9.6 12,3.5 12,3.5 Z"], l:["M12,3.5 C12,3.5 6.5,9.6 6.5,14 A5.5,5.5 0 0,0 17.5,14 C17.5,9.6 12,3.5 12,3.5 Z","M9.6,14.2 a2.6,2.6 0 0,0 2.2,2.4"]},
+  bottle: {f:["M10,8.5 h4 A1.5,1.5 0 0,1 15.5,10 V19.5 A1.5,1.5 0 0,1 14,21 h-4 A1.5,1.5 0 0,1 8.5,19.5 V10 A1.5,1.5 0 0,1 10,8.5 Z"], l:["M10.5,6.5 C10.5,4.3 11.2,3 12,3 C12.8,3 13.5,4.3 13.5,6.5","M9.5,6.5 h5","M10,8.5 h4 A1.5,1.5 0 0,1 15.5,10 V19.5 A1.5,1.5 0 0,1 14,21 h-4 A1.5,1.5 0 0,1 8.5,19.5 V10 A1.5,1.5 0 0,1 10,8.5 Z","M8.5,13 h2.5","M8.5,16 h2.5"]},
+  sleep:  {f:["M12,3a6,6 0,0 0,9 9a9,9 0,1 1,-9 -9z"], l:["M12,3a6,6 0,0 0,9 9a9,9 0,1 1,-9 -9z"]},
+  diaper: {f:["M4,7 h16 v3 C20,15 16.5,18.5 12,18.5 C7.5,18.5 4,15 4,10 Z"], l:["M4,7 h16 v3 C20,15 16.5,18.5 12,18.5 C7.5,18.5 4,15 4,10 Z","M4,10.5 h3","M17,10.5 h3"]},
+  pump:   {f:["M9,11 h6 a1,1 0 0,1 1,1 v8 a1,1 0 0,1 -1,1 h-6 a1,1 0 0,1 -1,-1 v-8 a1,1 0 0,1 1,-1 Z","M6.5,3.5 h11 l-3.5,5.5 h-4 Z"], l:["M6.5,3.5 h11 l-3.5,5.5 h-4 Z","M10.5,9 v2","M13.5,9 v2","M9,11 h6 a1,1 0 0,1 1,1 v8 a1,1 0 0,1 -1,1 h-6 a1,1 0 0,1 -1,-1 v-8 a1,1 0 0,1 1,-1 Z"]},
+  medicine:{f:["M7.76,16.24 a4.5,4.5 0 0,1 0,-6.36 l2.83,-2.83 l6.36,6.36 l-2.83,2.83 a4.5,4.5 0 0,1 -6.36,0 Z"], l:["M7.76,16.24 a4.5,4.5 0 0,1 0,-6.36 l5.66,-5.66 a4.5,4.5 0 0,1 6.36,6.36 l-5.66,5.66 a4.5,4.5 0 0,1 -6.36,0 Z","M10.59,7.05 l6.36,6.36"]},
+  daylight:{f:["M12,8a4,4 0,1 0,0,8a4,4 0,1 0,0,-8z"], l:["M12,8a4,4 0,1 0,0,8a4,4 0,1 0,0,-8z","M12,2v2","M12,20v2","M4.93,4.93l1.41,1.41","M17.66,17.66l1.41,1.41","M2,12h2","M20,12h2","M6.34,17.66l-1.41,1.41","M19.07,4.93l-1.41,1.41"]},
+  routine:{f:["M3.5,12 h17 v2 a5,5 0 0,1 -5,5 h-7 a5,5 0 0,1 -5,-5 Z"], l:["M3.5,12 h17 v2 a5,5 0 0,1 -5,5 h-7 a5,5 0 0,1 -5,-5 Z","M7,19 l-1,2","M17,19 l1,2","M6,12 V6.5 a2,2 0 0,1 4,0"]},
+  note:   {f:["M15,4.5 l4.5,4.5 L9,19.5 H4.5 V15 Z"], l:["M15,4.5 l4.5,4.5 L9,19.5 H4.5 V15 Z","M12.5,7 l4.5,4.5"]},
+};
+const NAMES = {feed:"Feed",bottle:"Bottle",sleep:"Sleep",diaper:"Diaper",pump:"Pump",medicine:"Medicine",daylight:"Daylight",routine:"Routine",note:"Note"};
+
+// mode: "line" = today's one-colour line; "duo" = line + soft fill; "solid" = filled shape, line on top in a deeper tone.
+function icon(kind, line, fill, mode, size=20){
+  const s = SHAPES[kind];
+  const fills = mode==="line" ? "" : s.f.map(d=>`<path d="${d}" fill="${fill}" ${mode==="duo"?'opacity=".9"':''}/>`).join("");
+  const lines = s.l.map(d=>`<path d="${d}" fill="none" stroke="${line}" stroke-width="${mode==="solid"?1.6:1.7}" stroke-linecap="round" stroke-linejoin="round"/>`).join("");
+  return `<svg width="${size}" height="${size}" viewBox="0 0 24 24" aria-hidden="true">${fills}${lines}</svg>`;
+}
+const moonMark = c => `<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M13,4a6,6 0,0 0,7 8a8,8 0,1 1,-7 -8z" fill="${c}"/></svg>`;
+const plus = c => `<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M12,5v14M5,12h14" stroke="${c}" stroke-width="2" stroke-linecap="round"/></svg>`;
+
+// Fabric colours: [deep line, soft fill] per kind.
+const FABRIC = {
+  feed:["#A3473A","#F4CFC6"], bottle:["#A3473A","#F4CFC6"], sleep:["#5B4B8A","#DCD3EE"], diaper:["#3E6B4B","#CFE3D4"],
+  pump:["#8A3566","#EBCADD"], medicine:["#B5473A","#F8D4CE"], daylight:["#8C6A00","#F6E2B0"], routine:["#1E6E68","#CDEDEA"], note:["#6E5240","#E8DACD"],
+};
+const DIRS = [
+  {
+    key:"today", tag:"Now", name:"Linha (today)",
+    blurb:"For reference: navy lines, cream page, one colour for everything.",
+    c:{page:"#FBF7F2",surface:"#FFFFFF",ink:"#13293D",muted:"#5F6B78",line:"#E9E2D8",mint:"#5DC2BB",onmint:"#13293D",on:"#13293D",onon:"#FBF7F2",fab:"#13293D",fabIcon:"#FBF7F2",mark:"#5DC2BB",markInk:"#13293D",scrim:"rgba(251,247,242,.94)",r:"12px",pill:"12px"},
+    icon:(k)=>icon(k,"#13293D","none","line"), badge:false,
+    data:["#5B4BDB","#1C7ED6","#C2570C","#B8407A","#8C6A00"],
+    notes:[],
+  },
+  {
+    key:"tecidos", tag:"Direction A", name:"Tecidos",
+    blurb:"Each kind of entry wears one of her fabrics: the icon gets a soft fill and sits in a little round of its colour. The page stays Pérola, corners get rounder, the Log button turns teal-dark to Amora. Calm, colourful, still tidy.",
+    c:{page:"#FBF5F1",surface:"#FFFFFF",ink:"#2B2233",muted:"#6E6475",line:"#EEDFD8",mint:"#5DC2BB",onmint:"#13293D",on:"#8A3566",onon:"#FFF7FA",fab:"#8A3566",fabIcon:"#FFF7FA",mark:"#5DC2BB",markInk:"#13293D",scrim:"rgba(251,245,241,.94)",r:"18px",pill:"22px"},
+    icon:(k,on)=>icon(k,on?"#FFF7FA":FABRIC[k][0],on?"rgba(255,255,255,.25)":FABRIC[k][1],"duo"), badge:true,
+    data:["#5B4B8A","#8E7CC3","#C8735E","#3E6B4B","#B98A1C"],
+    notes:["<b>Ink</b> moves from navy to a warm plum-grey (#2B2233), still 13:1 on the page.","<b>Icons</b>: line + soft fill, each kind in its fabric (Rosa Chá feed, Lavanda sleep, Trevo diaper, Amora pump, Mel daylight).","<b>Shape</b>: radius 12 → 18, chips are pills.","<b>Log button</b>: Amora. Start sleep stays the one teal action."],
+  },
+  {
+    key:"rosa", tag:"Direction B", name:"Rosa Chá",
+    blurb:"The whole app blushes: a pink-tinted page, plum ink, rose accents, icons in one rosé family. The most feminine of the three, and the most different from today.",
+    c:{page:"#FCF1EE",surface:"#FFFAF8",ink:"#4A2340",muted:"#80657A",line:"#F1DAD4",mint:"#5DC2BB",onmint:"#13293D",on:"#C2577A",onon:"#FFFFFF",fab:"#4A2340",fabIcon:"#FCF1EE",mark:"#5DC2BB",markInk:"#13293D",scrim:"rgba(252,241,238,.94)",r:"20px",pill:"24px"},
+    icon:(k,on)=>icon(k,on?"#FFFFFF":"#A8406A",on?"rgba(255,255,255,.3)":"#F7D3DD","duo"), badge:false,
+    data:["#7A4E9C","#C2577A","#E08A6E","#5E8F78","#D2A13C"],
+    notes:["<b>Page</b> tints pink (#FCF1EE); <b>ink</b> is Amora plum (#4A2340), 12:1.","<b>Icons</b>: all rosé, line + blush fill; the word and the timeline colour tell kinds apart.","<b>Shape</b>: softest corners (20), pill chips.","<b>Risk</b>: teal on blush is a bolder clash; fathers using it may feel it isn't theirs."],
+  },
+  {
+    key:"aquarela", tag:"Direction C", name:"Aquarela",
+    blurb:"Illustrated: solid two-tone icons, like little stickers, in the fabric colours, with a deeper line on top. The most playful and the easiest to spot at 3 a.m.; less 'tool', more 'baby book'.",
+    c:{page:"#FFF9F4",surface:"#FFFFFF",ink:"#2B2233",muted:"#6E6475",line:"#F0E3DA",mint:"#5DC2BB",onmint:"#13293D",on:"#2B2233",onon:"#FFF9F4",fab:"#E07A6B",fabIcon:"#FFFFFF",mark:"#5DC2BB",markInk:"#13293D",scrim:"rgba(255,249,244,.94)",r:"20px",pill:"22px"},
+    icon:(k,on)=>icon(k,FABRIC[k][0],on?"#FFFFFF":FABRIC[k][1].replace(/^#(..)(..)(..)$/,(m,r,g,b)=>"#"+[r,g,b].map(h=>Math.max(0,parseInt(h,16)-40).toString(16).padStart(2,"0")).join("")),"solid",22), badge:false,
+    data:["#5B4B8A","#8E7CC3","#C8735E","#3E6B4B","#B98A1C"],
+    notes:["<b>Icons</b>: filled shapes in deeper fabric tones, 22dp, line on top.","<b>Log button</b>: Cereja coral, warm and easy to find.","<b>Shape</b>: rounder (20), pill chips.","<b>Risk</b>: busier screens; must stay calm at night (dark theme mutes the fills)."],
+  },
+];
+
+function phone(d){
+  const c=d.c;
+  const items=["note","routine","daylight","pump","medicine","sleep","diaper","feed"];
+  const rows=items.map(k=>{
+    const on=k==="feed";
+    const ic = d.badge
+      ? `<span class="ib" style="background:${on?"rgba(255,255,255,.18)":FABRIC[k][1]}">${d.icon(k,on)}</span>`
+      : `<span class="ib">${d.icon(k,on)}</span>`;
+    const item=`<span class="item${on?" on":""}" style="${on?"":""}">${ic}${NAMES[k]}</span>`;
+    if(!on) return `<div class="mrow">${item}</div>`;
+    const chips=`<span class="chip">Left<small>LAST</small></span><span class="chip on">Right</span><span class="chip" style="display:inline-flex;gap:4px;align-items:center">${d.icon("bottle",false)}120 ml</span>`;
+    return `<div class="mrow">${chips}${item}</div>`;
+  }).join("");
+  const bars=[[2,22,0],[30,12,2],[47,5,3],[58,14,1],[78,4,4]];
+  const legendNames=["Night","Feed","Diaper","Nap","Daylight"];
+  return `<div class="phone" role="img" aria-label="${d.name}: the Log button open on Feed, Right breast highlighted">
+  <div class="screen" style="--ph-page:${c.page};--ph-surface:${c.surface};--ph-ink:${c.ink};--ph-muted:${c.muted};--ph-line:${c.line};--ph-mint:${c.mint};--ph-onmint:${c.onmint};--ph-on:${c.on};--ph-onon:${c.onon};--ph-fab:${c.fab};--ph-mark:${c.mark};--ph-scrim:${c.scrim};--ph-r:${c.r};--ph-pill:${c.pill}">
+    <div class="ph-head"><span class="mark">${moonMark(c.markInk)}</span><span><b>Bebê</b><small>Awake · 40m</small></span></div>
+    <div class="ph-body">
+      <div class="panel"><span class="eyebrow">Awake for</span><span class="big">40m</span><span class="cta">Start sleep</span></div>
+      <div class="tl"><span class="eyebrow" style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:${c.muted}">Today</span>
+        <div class="bar">${[[0,22,0],[30,3,2],[38,2,3],[52,14,1],[72,10,4],[88,3,2]].map(([x,w,i])=>`<i style="left:${x}%;width:${w}%;background:${d.data[[0,2,3,1,4][i]]}"></i>`).join("")}</div>
+        <div class="legend">${legendNames.map((n,i)=>`<span><i style="background:${d.data[[0,2,3,1,4][i]]}"></i>${n}</span>`).join("")}</div>
+      </div>
+    </div>
+    <div class="scrim"></div>
+    <div class="menu">${rows}</div>
+    <div class="fab">${plus(c.fabIcon)}</div>
+  </div></div>`;
+}
+function iconRow(d){
+  const ks=["feed","sleep","diaper","pump","medicine","bottle","daylight","routine","note"];
+  return `<div class="icons" style="background:${d.c.surface};border-color:${d.c.line}">${ks.slice(0,5).map(k=>`<figure>${d.badge?`<span class="ib" style="width:36px;height:36px;border-radius:18px;background:${FABRIC[k][1]}">${d.icon(k,false)}</span>`:`<span class="ib" style="width:36px;height:36px">${d.icon(k,false)}</span>`}<figcaption style="color:${d.c.muted}">${NAMES[k]}</figcaption></figure>`).join("")}</div>`;
+}
+document.getElementById("grid").innerHTML = DIRS.map(d=>`
+  <section class="dir" aria-labelledby="h-${d.key}">
+    <header><span class="tag">${d.tag}</span><h2 id="h-${d.key}">${d.name}</h2></header>
+    ${phone(d)}
+    ${iconRow(d)}
+    <p>${d.blurb}</p>
+    ${d.notes.length?`<ul>${d.notes.map(n=>`<li>${n}</li>`).join("")}</ul>`:""}
+  </section>`).join("");
+</script>

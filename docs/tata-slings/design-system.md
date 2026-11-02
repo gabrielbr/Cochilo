@@ -4,7 +4,7 @@
 > CSS and logo), Tatá's product language and the [voice guide](brand-voice.md). A visual preview
 > is in [`preview.html`](preview.html).
 
-## Status: what the app ships (Cochilo 0.3.0)
+## Status: what the app ships (Cochilo 0.8.0)
 
 Cochilo wears this brand through the Gabriel Design System's **brands** concept (design system
 0.6.0, `docs/brands.md` there; the change waits as a patch in
@@ -13,12 +13,12 @@ the mark, and nothing else, so the app follows every Gabriel standard and looks 
 
 | Part of this proposal | In the app? |
 |---|---|
-| §3 brand palette (teal accent, navy ink, Pérola page, Cereja alerts, navy night panel), both themes | ✅ `brands.tata-slings` → `CTokens.kt` |
+| §3 brand palette (teal accent, Pérola page, Cereja alerts), both themes | ✅ `brands.tata-slings` → `CTokens.kt`. Since 0.8.0 ("Tecidos") ink is plum-grey and the night panel plum, not navy; see §3a |
 | §4 Libre Franklin as the one family | ✅ `res/font/libre_franklin_*.ttf`, `Theme.kt`; tabular figures for times |
 | §7 the mark: crescent moon in a sling, navy on teal | ✅ launcher icon and header mark (`mark_cochilo.xml`) |
 | §7 "Cochilo, da Tatá Slings" endorsement | ✅ Settings › About row, opens tataslings.com.br (UTM-tagged) |
-| §5 softer radii (8/12/20) | ✗ The system's radii stay (4/8/16): radii are a Gabriel standard a brand doesn't change |
-| §3 fabric palette (Mel, Trevo, Imensidão…) | ⬜ Marketing and future Cochilo+ themes only |
+| §5 softer radii | ✅ 0.8.0: Cochilo's layer uses 8 for buttons and chips, 16 for cards, round pills in the Log menu (the system's own values; the brand still doesn't change radii) |
+| §3 fabric palette (Mel, Trevo, Imensidão…) | ✅ 0.8.0: each kind of entry's data colour and icon round (§3a). Still never UI state |
 | §3 `eventCarry`, a data colour for sling naps | ⬜ Waits for the "where the baby slept" log (data colours are the system's) |
 | §6 the woven texture ("trama") | ⬜ Not built |
 | §8 tip card on `tealSoft` | ⬜ The "i" tooltips use the system's panel colours |
@@ -55,7 +55,44 @@ keeps the teal (recognition), adds the warm side from the fabrics, and fixes con
 
 ## 3. Colour
 
-### Brand palette
+### 3a. "Tecidos" (Cochilo 0.8.0): warmer, made for her
+
+The first build read cold and masculine (navy lines on cream), and the people who log a baby's day
+are mostly mothers. Three directions were compared side by side ("Linha" today, A "Tecidos",
+B "Rosa Chá", C "Aquarela", side by side in [`directions.html`](directions.html)); the owner chose **A**. What changed:
+
+| | Before | Tecidos |
+|---|---|---|
+| Ink (text, lines) | navy `#13293D` | plum-grey `#2B2233` (14.1:1 on page) |
+| Page | Pérola `#FBF7F2` | Pérola with a blush `#FBF5F1`; dark `#141017` plum-black |
+| Hairline | `#E9E2D8` | rosé `#EEDFD8` |
+| Sleep panel | navy | plum night `#2E2238` |
+| Log button | navy (`ink`) | **Amora** `#8A3566` (new role `fab`; `on-fab` 7.2:1) |
+| Entry icons | one-colour navy lines | each kind's line in its fabric colour on a soft round of it (`KindIcon`, 36dp) |
+| Data colours | blue/orange/violet set | her fabrics (below), every kind has one |
+| Corners | 4 / 8 / 16 | 8 / 16 / round pills |
+
+Teal is still the one action per screen, the frame and the mark. The fabric data colours (light /
+dark; the line on its soft round is ≥ 3.9:1, on the page ≥ 4.7:1):
+
+| Kind | Fabric | Colour | Soft round |
+|---|---|---|---|
+| Night sleep | Lavanda | `#5B4B8A` / `#B7A6E6` | `#E4DDF2` / `#2E2747` |
+| Nap | Imensidão | `#3D6FA3` / `#8FB8E8` | `#D9E6F3` / `#1F3046` |
+| Feed | Rosa Chá | `#B0503F` / `#F0A898` | `#F6D9D1` / `#47261F` |
+| Pump | Amora | `#8A3566` / `#E59AC6` | `#F1D5E4` / `#43213A` |
+| Diaper | Trevo | `#3E7350` / `#8CCB9F` | `#D6E9DB` / `#1F3A28` |
+| Daylight | Mel | `#8C6A00` / `#FFD25C` | `#F5E6BC` / `#3D3110` |
+| Routine | Turquesa | `#1E6E68` / `#7FD6CF` | `#D3EFEC` / `#173A38` |
+| Medicine | Cereja | `#A3324A` / `#FF94A8` | `#F6D3DA` / `#48202A` |
+| Note | Capuccino | `#7A5A44` / `#D6B9A2` | `#EBDFD4` / `#3A2E25` |
+
+Icon sets looked at first: Phosphor duotone (MIT), IconPark TwoTone (Apache 2.0), Tabler (MIT,
+lines only), Fluent Emoji flat (MIT, illustrated). None has a diaper, a breast pump and a sling
+together, so Cochilo keeps the design system's own line set and gives it colour and a round.
+Design system 0.7.0 (patch `design-system/0002-…`), audit `audits/2026-11-02-v0.7.0-tecidos.md` there.
+
+### Brand palette (as first proposed; see 3a for what ships)
 
 | Token | Light | Dark | Use | Contrast |
 |---|---|---|---|---|

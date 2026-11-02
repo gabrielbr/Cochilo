@@ -33,7 +33,7 @@ fun logMenuItems(context: Context, f: Format, log: List<Event>, sleeping: Boolea
     }
     val lastBottle = log.filter { it.type == EventType.FEED && it.kind == Kinds.BOTTLE && it.amountMl != null }.maxByOrNull { it.start }
     val lastMedicine = lastOf(log, EventType.MEDICINE)?.note?.takeIf { it.isNotBlank() }
-    fun item(t: EventType, options: List<SlideOption>) = LogMenuItem(t.name, f.typeName(t), typeIcon(t), options)
+    fun item(t: EventType, options: List<SlideOption>) = LogMenuItem(t.name, f.typeName(t), typeIcon(t), options, t)
     return listOf(
         item(EventType.FEED, kinds(EventType.FEED, listOf(Kinds.BREAST_LEFT, Kinds.BREAST_RIGHT)) { k ->
             context.getString(if (k == Kinds.BREAST_LEFT) R.string.slide_left else R.string.slide_right)

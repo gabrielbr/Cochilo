@@ -152,7 +152,7 @@ private fun androidx.compose.foundation.layout.BoxScope.HourLabel(text: String, 
  * A lasting entry (sleep, a feed) is a bar as tall as [barHeight]; an instant is a dot.
  */
 @Composable
-fun TimelineRow(time: String, color: Color, barHeight: Dp?, label: String, meta: String?, onClick: () -> Unit, @androidx.annotation.DrawableRes icon: Int? = null) {
+fun TimelineRow(time: String, color: Color, barHeight: Dp?, label: String, meta: String?, onClick: () -> Unit, icon: (@Composable () -> Unit)? = null) {
     val c = CochiloTheme.colors
     val src = remember { MutableInteractionSource() }
     val base = Modifier.fillMaxWidth()
@@ -173,7 +173,7 @@ fun TimelineRow(time: String, color: Color, barHeight: Dp?, label: String, meta:
         Column(Modifier.weight(1f).padding(start = Spacing.space2, end = Spacing.space2)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 if (icon != null) {
-                    GIcon(icon, null, color)
+                    icon()
                     Spacer(Modifier.width(Spacing.space2))
                 }
                 Text(label, style = Type.body, color = c.ink)

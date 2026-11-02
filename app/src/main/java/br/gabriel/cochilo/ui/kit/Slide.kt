@@ -65,7 +65,8 @@ data class SlideOption(
 fun SlideRow(
     label: String,
     meta: String?,
-    @DrawableRes icon: Int?,
+    /** The kind's icon (a KindIcon), shown before the label. */
+    leading: (@Composable () -> Unit)?,
     options: List<SlideOption>,
     onTap: () -> Unit,
     onPick: (SlideOption) -> Unit,
@@ -136,7 +137,7 @@ fun SlideRow(
                 }
             }
     ) {
-        ListRow(label = label, meta = meta, leading = icon?.let { { GIcon(it, null) } }, trailing = trailing)
+        ListRow(label = label, meta = meta, leading = leading, trailing = trailing)
         val shown = if (sliding) active else previewActive
         if (sliding || previewActive != null) {
             Row(Modifier.matchParentSize().padding(Spacing.space1).clip(RoundedCornerShape(Radius.radiusM)).background(c.surface)) {

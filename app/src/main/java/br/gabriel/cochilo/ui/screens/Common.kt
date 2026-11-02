@@ -88,7 +88,7 @@ fun EventList(events: List<Event>, now: Long, f: Format, zone: ZoneId, onOpen: (
             ListRow(
                 label = eventLabel(e, f, zone),
                 meta = eventMeta(e, now, f),
-                leading = { br.gabriel.cochilo.ui.kit.GIcon(br.gabriel.cochilo.ui.kit.entryIcon(e), null, CochiloTheme.colors.eventColorOf(e, zone)) },
+                leading = { br.gabriel.cochilo.ui.kit.KindIcon(e, zone) },
                 onClick = { onOpen(e) },
             )
         }

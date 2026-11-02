@@ -7,7 +7,7 @@ and import yourself.
 
 **Cochilo, da Tatá Slings**: a [Tatá Slings](https://tataslings.com.br) product. Built on the
 [Gabriel Design System](https://github.com/gabrielbr/Gabriel-Deisgn-System) (`cochilo` layer),
-dressed in the Tatá Slings brand (teal, navy, Pérola, Libre Franklin, the moon-in-a-sling mark;
+dressed in the Tatá Slings brand (teal, plum-grey ink, Pérola, Libre Franklin, the moon-in-a-sling mark, and each kind of entry in one of her fabric colours;
 [docs/tata-slings/](docs/tata-slings/README.md)). The research behind it is in
 [docs/research.md](docs/research.md). What changed in each release: [CHANGELOG.md](CHANGELOG.md).
 
