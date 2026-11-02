@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import br.gabriel.cochilo.domain.overlaps
 import br.gabriel.cochilo.R
 import br.gabriel.cochilo.data.Event
 import br.gabriel.cochilo.domain.Reference
@@ -44,7 +45,7 @@ fun HistoryScreen(log: List<Event>, now: Long, zone: ZoneId, onOpen: (Event) -> 
         days.forEachIndexed { i, d ->
             val from = startOfDay(d, zone)
             val to = startOfDay(d.plusDays(1), zone)
-            val dayEvents = log.filter { (it.end ?: now) >= from && it.start < to }
+            val dayEvents = log.filter { it.overlaps(from, to, now) }
             val s = stats.day(log, d, now)
             Caption(f.day(d), top = if (i == 0) Spacing.space8 else Spacing.space10)
             Text(
@@ -81,7 +82,7 @@ fun PatternsScreen(log: List<Event>, now: Long, zone: ZoneId, ageWeeks: Int) {
         val summaries = days.map { d ->
             val from = startOfDay(d, zone)
             val to = startOfDay(d.plusDays(1), zone)
-            daySummary(f, d, log.filter { (it.end ?: now) >= from && it.start < to }, from, to, now, zone)
+            daySummary(f, d, log.filter { it.overlaps(from, to, now) }, from, to, now, zone)
         }
         Actogram(rows, log, now, zone, summaries)
         Spacer(Modifier.height(Spacing.space3))

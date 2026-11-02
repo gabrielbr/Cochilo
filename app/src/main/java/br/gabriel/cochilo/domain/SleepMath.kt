@@ -30,6 +30,15 @@ fun isNightStart(t: Long, zone: ZoneId): Boolean {
 fun Event.isNightSleep(zone: ZoneId) = type == EventType.SLEEP && isNightStart(start, zone)
 fun Event.isNap(zone: ZoneId) = type == EventType.SLEEP && !isNightStart(start, zone)
 
+/**
+ * True when the entry touches [from, to): a sleep or feed by its span (a running one lasts until
+ * [now]), a diaper or note by its moment. An instant has no end, so it must not borrow [now].
+ */
+fun Event.overlaps(from: Long, to: Long, now: Long): Boolean {
+    val end = if (type.hasDuration) end ?: now else start
+    return end >= from && start < to
+}
+
 fun localDate(t: Long, zone: ZoneId): LocalDate = Instant.ofEpochMilli(t).atZone(zone).toLocalDate()
 fun startOfDay(d: LocalDate, zone: ZoneId): Long = d.atStartOfDay(zone).toInstant().toEpochMilli()
 

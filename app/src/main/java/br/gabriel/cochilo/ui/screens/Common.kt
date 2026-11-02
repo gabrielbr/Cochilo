@@ -45,6 +45,17 @@ fun ScrollPage(content: @Composable ColumnScope.() -> Unit) {
     }
 }
 
+/** What the "i" beside an entry type says. */
+fun infoText(t: EventType): Int = when (t) {
+    EventType.SLEEP -> R.string.info_sleep
+    EventType.FEED -> R.string.info_feed
+    EventType.PUMP -> R.string.info_pump
+    EventType.DIAPER -> R.string.info_diaper
+    EventType.DAYLIGHT -> R.string.info_daylight
+    EventType.ROUTINE -> R.string.info_routine
+    EventType.NOTE -> R.string.info_note
+}
+
 fun CTokens.Palette.eventColorOf(e: Event, zone: ZoneId): Color = eventColor(e, zone)
 
 /** "Nap", "Feed · Left breast", "Pump · 90 ml". */

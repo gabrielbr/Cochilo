@@ -1,5 +1,7 @@
 package br.gabriel.cochilo.ui.screens
 
+import br.gabriel.cochilo.domain.overlaps
+import br.gabriel.cochilo.ui.kit.InfoButton
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -59,7 +61,7 @@ fun TodayScreen(
     val today = localDate(now, zone)
     val from = startOfDay(today, zone)
     val to = startOfDay(today.plusDays(1), zone)
-    val todays = log.filter { (it.end ?: now) >= from && it.start < to }
+    val todays = log.filter { it.overlaps(from, to, now) }
 
     ScrollPage {
         ScreenTitle(stringResource(R.string.tab_today), stringResource(R.string.tab_today))
@@ -127,7 +129,10 @@ private fun SleepPanel(p: Predictor.Result, now: Long, f: Format, onStart: () ->
             awake != null -> stringResource(R.string.panel_awake_for)
             else -> stringResource(R.string.panel_ready)
         }
-        Text(label.uppercase(), style = Type.caption, color = fgMuted)
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(label.uppercase(), style = Type.caption, color = fgMuted, modifier = Modifier.weight(1f))
+            InfoButton(stringResource(R.string.type_sleep), stringResource(R.string.info_sleep_panel), tint = fgMuted)
+        }
         val since = sleeping?.since ?: awake?.since
         if (since != null) {
             Text(
@@ -179,20 +184,18 @@ private fun PredictionCard(p: Predictor.Result.Awake, now: Long, f: Format) {
 
 /** Every other log type: secondary outlines, two to a row (the one mint action is Start sleep). */
 @Composable
-private fun QuickLog(onNew: (EventType) -> Unit) {
+internal fun QuickLog(onNew: (EventType) -> Unit) {
     val f = Format(LocalContext.current)
     val types = listOf(EventType.FEED, EventType.DIAPER, EventType.SLEEP, EventType.PUMP, EventType.DAYLIGHT, EventType.ROUTINE, EventType.NOTE)
-    Column(verticalArrangement = Arrangement.spacedBy(Spacing.space2)) {
-        types.chunked(2).forEach { pair ->
-            Row(horizontalArrangement = Arrangement.spacedBy(Spacing.space2)) {
-                pair.forEach { t ->
-                    Button(
-                        f.typeName(t), { onNew(t) }, ButtonKind.SECONDARY, Modifier.weight(1f),
-                        icon = if (t == EventType.DAYLIGHT) R.drawable.gg_ic_sun else R.drawable.gg_ic_plus,
-                    )
-                }
-                if (pair.size == 1) Spacer(Modifier.weight(1f))
-            }
+    // One row per kind of entry: tap the row to log it; the "i" says what it is for.
+    br.gabriel.cochilo.ui.kit.RowGroup {
+        types.forEachIndexed { i, t ->
+            if (i > 0) Hairline()
+            br.gabriel.cochilo.ui.kit.ListRow(
+                label = f.typeName(t),
+                leading = { br.gabriel.cochilo.ui.kit.GIcon(if (t == EventType.DAYLIGHT) R.drawable.gg_ic_sun else R.drawable.gg_ic_plus, null) },
+                onClick = { onNew(t) },
+            ) { InfoButton(f.typeName(t), stringResource(infoText(t))) }
         }
     }
 }

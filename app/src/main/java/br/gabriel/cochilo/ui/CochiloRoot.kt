@@ -49,6 +49,7 @@ import br.gabriel.cochilo.ui.kit.ScreenTitle
 import br.gabriel.cochilo.ui.kit.Tab
 import br.gabriel.cochilo.ui.kit.TabBar
 import br.gabriel.cochilo.ui.screens.BabySheet
+import br.gabriel.cochilo.ui.screens.DayScreen
 import br.gabriel.cochilo.ui.screens.EventSheet
 import br.gabriel.cochilo.ui.screens.HistoryScreen
 import br.gabriel.cochilo.ui.screens.PatternsScreen
@@ -155,7 +156,8 @@ fun CochiloRoot(vm: MainViewModel) {
                                             onNew = { type -> editing = Editing(newEvent(type, System.currentTimeMillis()), true) },
                                             onOpen = { editing = Editing(it, false) },
                                         )
-                                        1 -> HistoryScreen(log, now, zone) { editing = Editing(it, false) }
+                                        1 -> DayScreen(log, now, zone, onOpen = { editing = Editing(it, false) })
+                                        2 -> HistoryScreen(log, now, zone) { editing = Editing(it, false) }
                                         else -> PatternsScreen(log, now, zone, weeks)
                                     }
                                 }
@@ -166,6 +168,7 @@ fun CochiloRoot(vm: MainViewModel) {
                         TabBar(
                             listOf(
                                 Tab(stringResource(R.string.tab_today), R.drawable.gg_ic_home),
+                                Tab(stringResource(R.string.tab_day), R.drawable.gg_ic_day),
                                 Tab(stringResource(R.string.tab_history), R.drawable.gg_ic_list),
                                 Tab(stringResource(R.string.tab_patterns), R.drawable.gg_ic_chart),
                             ),

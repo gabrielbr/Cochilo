@@ -1,5 +1,8 @@
 package br.gabriel.cochilo.ui.screens
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.ui.Alignment
+import br.gabriel.cochilo.ui.kit.InfoButton
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -152,7 +155,10 @@ fun EventSheet(
     }
 
     Sheet(onDismiss) {
-        SheetTitle(if (isNew) f.typeName(t) else stringResource(R.string.edit) + " · " + f.typeName(t))
+        Row(verticalAlignment = Alignment.Top) {
+            Box(Modifier.weight(1f)) { SheetTitle(if (isNew) f.typeName(t) else stringResource(R.string.edit) + " · " + f.typeName(t)) }
+            InfoButton(f.typeName(t), stringResource(infoText(t)))
+        }
 
         val kinds = Kinds.forType(t)
         if (kinds.isNotEmpty()) {
