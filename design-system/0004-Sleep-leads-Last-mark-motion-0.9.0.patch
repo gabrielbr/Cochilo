@@ -1,0 +1,248 @@
+From 593f45d915bcef59ec4172fa50597417fe627c24 Mon Sep 17 00:00:00 2001
+From: Gabriel Lopes <ogabriel@gmail.com>
+Date: Mon, 2 Nov 2026 21:32:11 +0000
+Subject: [PATCH] Design system 0.9.0: sleep leads, the Last mark, Cochilo's
+ motion
+
+kind-badge-lead (44px) and outline (2px) in the cochilo layer; the Last
+mark component (an outline and a dot in the kind's colour, the word only
+spoken); Cochilo's motion written down. Audit v0.9.0.
+---
+ CHANGELOG.md                             | 16 ++++++++++
+ DESIGN.md                                |  2 +-
+ VERSION                                  |  2 +-
+ audits/2026-11-02-v0.9.0-sleep-motion.md | 40 ++++++++++++++++++++++++
+ docs/components.md                       | 10 +++++-
+ generated/cochilo/CTokens.kt             |  4 ++-
+ generated/pulseloop/GTokens.kt           |  2 +-
+ generated/uikit/UiTokens.java            |  2 +-
+ generated/web/cochilo.css                |  4 ++-
+ generated/web/pulseloop.css              |  2 +-
+ generated/web/uikit.css                  |  2 +-
+ tokens/tokens.json                       |  6 ++--
+ 12 files changed, 81 insertions(+), 11 deletions(-)
+ create mode 100644 audits/2026-11-02-v0.9.0-sleep-motion.md
+
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+index 9c4e703..b035121 100644
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -3,6 +3,22 @@
+ Semantic versioning (AGENTS.md "Versioning"). Each entry says what changed for each app and what
+ the app has to do.
+ 
++## 0.9.0 — 2026-11-02
++
++Cochilo: sleep leads, the last-used mark and motion (minor: two size tokens and a component).
++
++- `kind-badge-lead` 44px: sleep's icon round, a size up from `kind-badge`, so sleep leads lists,
++  menus and timelines (sleep is what Cochilo is for).
++- `outline` 2px: the last-used option's outline and the picked swatch's ring.
++- Component **Last mark**: the option used last time has an `outline` in its kind's `event-*`
++  colour and a `space-2` dot of that colour before its name; the word "last" is only spoken
++  (TalkBack), never shown. Replaces the LAST caption.
++- Motion in Cochilo (docs/components.md, "Motion"): press scale on every target, the Log menu
++  rising from its button, colour cross-fades on every state change, lists that grow instead of
++  jumping; `motion-standard` / `motion-emphasised` only, all off with Remove animations.
++- **Cochilo:** copy `CTokens.kt`; draw the Last mark; sleep rows use `kind-badge-lead` and the
++  label role.
++
+ ## 0.8.0 — 2026-11-02
+ 
+ Brand textures: Cochilo can wrap its Today card in one of Tatá's real fabrics (minor: assets and
+diff --git a/DESIGN.md b/DESIGN.md
+index 4cd7de7..42c3828 100644
+--- a/DESIGN.md
++++ b/DESIGN.md
+@@ -1,6 +1,6 @@
+ ---
+ name: Gabriel Design System
+-version: 0.8.0
++version: 0.9.0
+ # GENERATED from tokens/tokens.json by scripts/gen_tokens.py. Edit the tokens, not this block.
+ colors:
+   page: "#F2F2F2"
+diff --git a/VERSION b/VERSION
+index a3df0a6..ac39a10 100644
+--- a/VERSION
++++ b/VERSION
+@@ -1 +1 @@
+-0.8.0
++0.9.0
+diff --git a/audits/2026-11-02-v0.9.0-sleep-motion.md b/audits/2026-11-02-v0.9.0-sleep-motion.md
+new file mode 100644
+index 0000000..84c3e0c
+--- /dev/null
++++ b/audits/2026-11-02-v0.9.0-sleep-motion.md
+@@ -0,0 +1,40 @@
++# Audit: sleep leads, the Last mark, motion (0.9.0)
++
++Date: 2026-11-02 · PR: patch from the Cochilo repo (`design-system/0004-…`) · Auditor: Claude, from Cochilo's screenshots
++
++## Scope
++
++Size tokens `kind-badge-lead` (44px) and `outline` (2px) in the `cochilo` layer; component Last
++mark; Cochilo's motion documented (components.md "Motion"). No colour changes.
++
++## graphic-design-fundamentals (§13 checklist)
++
++| # | Question | Result |
++|---|---|---|
++| 1 | Brief | Sleep is the main goal: make it lead; make "last" read as a mark, not a word; give every action feedback. ✅ |
++| 2 | Concept | One size up for the subject; the kind's own colour says "this one, last time". ✅ |
++| 3 | Hierarchy | Sleep rows: bigger round, label role; other kinds unchanged. ✅ |
++| 4 | Contrast | The dot and outline use `event-*` (≥ 4.7:1 on page, ≥ 3:1 graphic needed); on a lit option the dot is `on-fab`. ✅ |
++| 5 | Alignment and grid | The bigger round keeps the label's start aligned within a list (rows align on their text). ✅ |
++| 6 | Spacing | Sleep rows add `space-4` vertical padding instead of `space-3`; timeline rows grow to their words. ✅ |
++| 7 | Typography | Existing roles only (label for sleep). ✅ |
++| 8 | Colour | Colour never alone: the dot sits before a name, and TalkBack says "used last". ✅ |
++| 9 | Consistency | One Last mark in the slide strip, the Log menu, the rows and the sheet. ✅ |
++| 10 | Simplicity | A caption removed; nothing added that needs reading. ✅ |
++| 11 | Real-size test | Paparazzi: Log menu (light, pt-BR dark), slide strip, History, Day hour by hour. ✅ |
++| 12 | Accessibility and ergonomics | Motion snaps with Remove animations; no animation delays an action. ✅ |
++| 13 | Production | Two tokens; motion uses the existing two durations only. ✅ |
++
++Issue fixed during the audit: the Day tab's hour-by-hour rows were as tall as their bar, so a
++sleep row's bigger round clipped its times; rows now grow to their content.
++
++## impeccable (audit, native / Android)
++
++| # | Dimension | Score | Key finding |
++|---|---|---|---|
++| 1 | Accessibility | 4 | "Used last" spoken; Remove animations honoured everywhere. |
++| 2 | Performance | 4 | Colour and size animations only; no layout thrash beyond animateContentSize. |
++| 3 | Appearance & theming | 4 | Works in light and dark. |
++| 4 | Platform conformance | 4 | Press scale and fades match Material's feel. |
++| 5 | Adaptivity | 4 | Rows grow with content and font scale. |
++| | **Total** | **20/20** | |
+diff --git a/docs/components.md b/docs/components.md
+index 078d2e3..3bd74d7 100644
+--- a/docs/components.md
++++ b/docs/components.md
+@@ -34,12 +34,20 @@ component, the row says so.
+ | Sleep panel | Cochilo: `panel` block, state word over the `timer` role, one PRIMARY (Start sleep / Woke up) | — | Cochilo `SleepPanel` | 🟡 |
+ | Timeline / actogram | Cochilo: 24h bar, `timeline` 24dp high, `event-*` blocks on `line`, hour labels muted, spoken summary | — | Cochilo `Timeline`, `Actogram` | 🟡 |
+ | Slide row | Cochilo: a row that also slides; past the touch slop it becomes its options side by side, the one under the finger in `ink` with a haptic tick; letting go logs, back to start cancels; the last-used option says LAST; tap still opens the sheet; each option is a TalkBack action | — | Cochilo `SlideRow` | 🟡 |
+-| Kind icon | Cochilo: an entry kind's 22dp line icon in its `event-*` colour, on a `kind-badge` (36dp) round of `event-*-soft`; always beside the kind's name; on a highlighted row the round is `on-fab` at 18% and the line `on-fab` | — | Cochilo `KindIcon` | 🟡 |
++| Kind icon | Cochilo: an entry kind's 22dp line icon in its `event-*` colour, on a `kind-badge` (36dp) round of `event-*-soft` (sleep: `kind-badge-lead`, 44dp, with its name in the label role, because sleep leads); always beside the kind's name; on a highlighted row the round is `on-fab` at 18% and the line `on-fab` | — | Cochilo `KindIcon` | 🟡 |
++| Last mark | Cochilo: the option used last time: an `outline` (2dp) in its kind's `event-*` colour and a `space-2` dot of that colour before its name; on a lit option the dot is `on-fab`. Spoken as "last" by TalkBack, never written. Also before the "last time" line of a row or sheet | — | Cochilo `LastDot`, `SlideOption.last` | 🟡 |
+ | Fabric frame | Cochilo: a card wrapped in a brand texture, the way a sling wraps the baby: the texture is a band (`space8` on top, `space3` elsewhere) round a card of its own colour (`radius-s` inside `radius-m`); no word ever sits on the texture. Without a texture it is the plain card | — | Cochilo `FabricFrame` | 🟡 |
+ | Fabric picker | Cochilo: the brand's textures as 48dp round swatches in one scrolling row, the name under each (meta), the next one always peeking in; one tap picks and applies; the picked one has a 2dp `ink` ring; each is a radio button for TalkBack. First choice: plain | — | Cochilo `FabricPicker` | 🟡 |
+ | Log button | Cochilo: the main action in the thumb's corner (bottom-end, `space4` in, `button` size, `fab` circle (Amora under the brand), plus that turns to a cross). Press: the entry kinds rise above it, most frequent nearest; drag up to a kind, sideways onto a choice; let go logs (choice) or opens the sheet (kind); elsewhere cancels. A tap opens it for taps and TalkBack. Scrim `page` at 94%. Never mint: the screen's one mint action stays | — | Cochilo `LogButton` | 🟡 |
+ | Fairy transformation | once, over everything; glow, wand, sparkles, "Tatá, te amo!"; 4.2s (1.4s reduced) — [fairy-mode.md](fairy-mode.md) | ⬜ | `FairyTransformOverlay` | 🟡 |
+ 
++**Motion (Cochilo, 0.9.0).** Every target scales to 97% while pressed (`motion-standard`); the
++Log menu fades and rises from its button and its plus turns to a cross (`motion-emphasised`);
++every state change of colour cross-fades (`motion-standard`): a lit option, a chip, a tab, the
++sleep panel going to night (`motion-emphasised`); lists grow and shrink instead of jumping
++(`motion-emphasised`); a new fabric cross-fades. Easing is the system's. With Remove animations
++on, every one of them snaps.
++
+ Rules for every component: built from tokens only; 48dp targets; TalkBack reads label + value +
+ state; states (default, pressed, disabled, loading, empty, error) defined before it ships; a new
+ component, or a change to one, is added to this table in the same PR.
+diff --git a/generated/cochilo/CTokens.kt b/generated/cochilo/CTokens.kt
+index 0850655..dce89f4 100644
+--- a/generated/cochilo/CTokens.kt
++++ b/generated/cochilo/CTokens.kt
+@@ -1,4 +1,4 @@
+-// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.8.0 — do not edit.
++// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.9.0 — do not edit.
+ package br.gabriel.cochilo.ui.theme
+ 
+ import androidx.compose.ui.graphics.Color
+@@ -153,6 +153,8 @@ object CTokens {
+         val rowMin = 56.dp
+         val timeline = 24.dp
+         val kindBadge = 36.dp
++        val kindBadgeLead = 44.dp
++        val outline = 2.dp
+     }
+ 
+     /** Durations in ms. */
+diff --git a/generated/pulseloop/GTokens.kt b/generated/pulseloop/GTokens.kt
+index 1c8bf95..0f8351b 100644
+--- a/generated/pulseloop/GTokens.kt
++++ b/generated/pulseloop/GTokens.kt
+@@ -1,4 +1,4 @@
+-// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.8.0 — do not edit.
++// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.9.0 — do not edit.
+ package com.pulseloop.ui.theme
+ 
+ import androidx.compose.ui.graphics.Color
+diff --git a/generated/uikit/UiTokens.java b/generated/uikit/UiTokens.java
+index 659fc2e..1741d6d 100644
+--- a/generated/uikit/UiTokens.java
++++ b/generated/uikit/UiTokens.java
+@@ -1,4 +1,4 @@
+-// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.8.0 — do not edit.
++// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.9.0 — do not edit.
+ package br.gabriel.ui;
+ 
+ /**
+diff --git a/generated/web/cochilo.css b/generated/web/cochilo.css
+index aed4670..be5b1ff 100644
+--- a/generated/web/cochilo.css
++++ b/generated/web/cochilo.css
+@@ -1,4 +1,4 @@
+-/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.8.0 — do not edit. */
++/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.9.0 — do not edit. */
+ /* Layer: cochilo. Themes: light, dark. */
+ 
+ :root {
+@@ -142,6 +142,8 @@
+   --gds-row-min: 56px;
+   --gds-timeline: 24px;
+   --gds-kind-badge: 36px;
++  --gds-kind-badge-lead: 44px;
++  --gds-outline: 2px;
+   --gds-motion-standard: 150ms;
+   --gds-motion-emphasised: 250ms;
+   --gds-text-display: 700 30px/36px var(--gds-font);
+diff --git a/generated/web/pulseloop.css b/generated/web/pulseloop.css
+index 9115b44..4ef2a26 100644
+--- a/generated/web/pulseloop.css
++++ b/generated/web/pulseloop.css
+@@ -1,4 +1,4 @@
+-/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.8.0 — do not edit. */
++/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.9.0 — do not edit. */
+ /* Layer: pulseloop. Themes: dark. */
+ 
+ :root {
+diff --git a/generated/web/uikit.css b/generated/web/uikit.css
+index adace70..3b673d3 100644
+--- a/generated/web/uikit.css
++++ b/generated/web/uikit.css
+@@ -1,4 +1,4 @@
+-/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.8.0 — do not edit. */
++/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.9.0 — do not edit. */
+ /* Layer: uikit. Themes: light, dark. */
+ 
+ :root {
+diff --git a/tokens/tokens.json b/tokens/tokens.json
+index 5bd8cb8..53cb421 100644
+--- a/tokens/tokens.json
++++ b/tokens/tokens.json
+@@ -1,7 +1,7 @@
+ {
+   "$comment": "Source of truth for every app's design tokens. Edit here, run scripts/gen_tokens.py, commit tokens + generated/ + DESIGN.md together. Schema: docs/tokens.md.",
+   "name": "Gabriel Design System",
+-  "version": "0.8.0",
++  "version": "0.9.0",
+   "core": {
+     "$comment": "Shared by every app. Every layer must include every core token (scripts/check_tokens.py enforces it).",
+     "color": [
+@@ -227,7 +227,9 @@
+         "@hairline",
+         {"name": "row-min", "value": "56px", "usage": "Minimum row height: a one-handed tap at 3am."},
+         {"name": "timeline", "value": "24px", "usage": "Height of the 24-hour timeline bar and of one day in the actogram."},
+-        {"name": "kind-badge", "value": "36px", "usage": "The round of colour behind an entry kind's icon (the icon stays 22dp inside)."}
++        {"name": "kind-badge", "value": "36px", "usage": "The round of colour behind an entry kind's icon (the icon stays 22dp inside)."},
++        {"name": "kind-badge-lead", "value": "44px", "usage": "Sleep's round, a size up from kind-badge: sleep is what Cochilo is for, so it leads every list, menu and timeline (0.9.0)."},
++        {"name": "outline", "value": "2px", "usage": "A strong outline: the option used last time (in its kind's colour) and the picked fabric swatch."}
+       ],
+       "motion": ["@motion-standard", "@motion-emphasised"]
+     }
+-- 
+2.43.0
+

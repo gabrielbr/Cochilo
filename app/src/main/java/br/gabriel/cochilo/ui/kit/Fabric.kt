@@ -86,6 +86,15 @@ fun fabricBrush(@DrawableRes texture: Int): Brush {
  */
 @Composable
 fun FabricFrame(inner: Color, padding: Dp, modifier: Modifier = Modifier, fabric: Fabric = LocalFabric.current, content: @Composable () -> Unit) {
+    // A new fabric cross-fades in (motion-emphasised; a snap with Remove animations).
+    androidx.compose.animation.Crossfade(fabric, modifier, animationSpec = motionSpec(emphasised = true), label = "fabric") { f ->
+        FabricFrameNow(inner, padding, f, content)
+    }
+}
+
+@Composable
+private fun FabricFrameNow(inner: Color, padding: Dp, fabric: Fabric, content: @Composable () -> Unit) {
+    val modifier = Modifier
     val texture = fabric.texture
     if (texture == null) {
         Column(modifier.fillMaxWidth().clip(RoundedCornerShape(Radius.radiusM)).background(inner).padding(padding)) { content() }
@@ -111,15 +120,17 @@ fun FabricPicker(selected: Fabric, onPick: (Fabric) -> Unit) {
     ) {
         Fabric.entries.forEach { f ->
             val on = f == selected
+            val src = remember { androidx.compose.foundation.interaction.MutableInteractionSource() }
             Column(
                 Modifier.width(Size.button + Spacing.space3)
-                    .selectable(on, role = Role.RadioButton) { onPick(f) },
+                    .selectable(on, interactionSource = src, indication = null, role = Role.RadioButton) { onPick(f) },
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                val ring = if (on) c.ink else c.line
+                // The ring cross-fades to the picked swatch; the swatch dips under the finger.
+                val ring = animatedColor(if (on) c.ink else c.line)
                 val swatch = Modifier.size(Size.button).clip(RoundedCornerShape(Radius.radiusRound))
                 Box(
-                    Modifier.size(Size.button).border(if (on) Spacing.space1 / 2 else Size.hairline, ring, RoundedCornerShape(Radius.radiusRound))
+                    Modifier.pressScale(src).size(Size.button).border(if (on) Size.outline else Size.hairline, ring, RoundedCornerShape(Radius.radiusRound))
                         .padding(if (on) Spacing.space1 else Size.hairline),
                     contentAlignment = Alignment.Center,
                 ) {
@@ -128,7 +139,7 @@ fun FabricPicker(selected: Fabric, onPick: (Fabric) -> Unit) {
                     else Box(swatch.background(c.page))
                 }
                 Text(
-                    stringResource(f.label), style = Type.meta, color = if (on) c.ink else c.muted,
+                    stringResource(f.label), style = Type.meta, color = animatedColor(if (on) c.ink else c.muted),
                     maxLines = 1, overflow = TextOverflow.Ellipsis, textAlign = TextAlign.Center,
                     modifier = Modifier.padding(top = Spacing.space1),
                 )

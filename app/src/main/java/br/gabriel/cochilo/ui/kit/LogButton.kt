@@ -33,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
@@ -81,7 +82,6 @@ fun BoxScope.LogButton(
     items: List<LogMenuItem>,
     label: String,
     closeLabel: String,
-    lastTag: String,
     onItem: (LogMenuItem) -> Unit,
     onOption: (LogMenuItem, SlideOption) -> Unit,
     /** Screenshots only: draw the menu open with this hover. */
@@ -122,15 +122,21 @@ fun BoxScope.LogButton(
         return null
     }
 
-    if (open) {
-        // The scrim: the screen steps back so the menu reads; a tap on it closes.
+    // The scrim: the screen steps back so the menu reads; a tap on it closes. It fades in and out.
+    androidx.compose.animation.AnimatedVisibility(open, enter = fadeInMotion(), exit = fadeOutMotion()) {
         Box(
             Modifier.fillMaxSize().background(c.page.copy(alpha = SCRIM_ALPHA))
                 .clickable(remember { MutableInteractionSource() }, indication = null, onClickLabel = closeLabel) { close() }
         )
+    }
+    // The menu rises from the button and sinks back into it.
+    androidx.compose.animation.AnimatedVisibility(
+        open, enter = riseIn(), exit = sinkOut(),
+        modifier = Modifier.align(Alignment.BottomEnd).fillMaxWidth()
+            .padding(start = Spacing.space4, end = Spacing.space4, bottom = Spacing.space4 + Size.button + Spacing.space3),
+    ) {
         Column(
-            Modifier.align(Alignment.BottomEnd).fillMaxWidth()
-                .padding(start = Spacing.space4, end = Spacing.space4, bottom = Spacing.space4 + Size.button + Spacing.space3),
+            Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.End,
             verticalArrangement = Arrangement.spacedBy(Spacing.space2),
         ) {
@@ -142,31 +148,38 @@ fun BoxScope.LogButton(
                     // The choices share what's left of the row at their own widths; only an overflow shrinks the last.
                     if (showChoices) Row(Modifier.weight(1f, fill = false), horizontalArrangement = Arrangement.spacedBy(Spacing.space1), verticalAlignment = Alignment.CenterVertically) { item.options.forEachIndexed { j, o ->
                         val on = hover?.option == j
+                        // The Last mark: the option used last time is outlined in the kind's colour.
+                        val edge = when {
+                            on -> BorderStroke(Size.hairline, c.fab)
+                            o.last -> BorderStroke(Size.outline, c.kindColor(item.type))
+                            else -> BorderStroke(Size.hairline, c.line)
+                        }
+                        val press = remember { MutableInteractionSource() }
                         Box(
-                            Modifier.defaultMinSize(minHeight = Size.button).clip(RoundedCornerShape(Radius.radiusRound))
-                                .background(if (on) c.fab else c.surface)
-                                .border(BorderStroke(Size.hairline, if (on) c.fab else c.line), RoundedCornerShape(Radius.radiusRound))
+                            Modifier.pressScale(press).defaultMinSize(minHeight = Size.button).clip(RoundedCornerShape(Radius.radiusRound))
+                                .background(animatedColor(if (on) c.fab else c.surface))
+                                .border(edge, RoundedCornerShape(Radius.radiusRound))
                                 .onGloballyPositioned { rects["$i:$j"] = it.boundsInRoot() }
-                                .clickable(role = Role.Button, onClickLabel = o.a11y) { commit(LogHover(i, j)) }
+                                .clickable(press, indication = null, role = Role.Button, onClickLabel = o.a11y) { commit(LogHover(i, j)) }
                                 .padding(horizontal = Spacing.space2, vertical = Spacing.space2),
                             contentAlignment = Alignment.Center,
                         ) {
-                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    if (o.icon != null) { GIcon(o.icon, null, if (on) c.onFab else c.kindColor(item.type)); Spacer(Modifier.width(Spacing.space1)) }
-                                    Text(o.label, style = Type.label, color = if (on) c.onFab else c.ink, maxLines = 1, overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis)
-                                }
-                                if (o.last) Text(lastTag, style = Type.caption, color = if (on) c.onFab else c.muted, maxLines = 1, softWrap = false)
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                // …and a dot of that colour before its name; the word is only spoken.
+                                if (o.last) { LastDot(if (on) c.onFab else c.kindColor(item.type)); Spacer(Modifier.width(Spacing.space1)) }
+                                if (o.icon != null) { GIcon(o.icon, null, if (on) c.onFab else c.kindColor(item.type)); Spacer(Modifier.width(Spacing.space1)) }
+                                Text(o.label, style = Type.label, color = animatedColor(if (on) c.onFab else c.ink), maxLines = 1, overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis)
                             }
                         }
                     } }
                     val on = hover?.item == i && hover?.option == null
+                    val press = remember { MutableInteractionSource() }
                     Row(
-                        Modifier.defaultMinSize(minHeight = Size.button).clip(RoundedCornerShape(Radius.radiusRound))
-                            .background(if (on) c.fab else c.surface)
-                            .border(BorderStroke(Size.hairline, if (on) c.fab else c.line), RoundedCornerShape(Radius.radiusRound))
+                        Modifier.pressScale(press).defaultMinSize(minHeight = Size.button).clip(RoundedCornerShape(Radius.radiusRound))
+                            .background(animatedColor(if (on) c.fab else c.surface))
+                            .border(BorderStroke(Size.hairline, animatedColor(if (on) c.fab else c.line)), RoundedCornerShape(Radius.radiusRound))
                             .onGloballyPositioned { rects["$i"] = it.boundsInRoot() }
-                            .clickable(role = Role.Button) {
+                            .clickable(press, indication = null, role = Role.Button) {
                                 // Tap mode: the first tap shows the choices, the second opens the sheet.
                                 if (hover?.item == i || item.options.isEmpty()) commit(LogHover(i)) else hover = LogHover(i)
                             }
@@ -174,10 +187,12 @@ fun BoxScope.LogButton(
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         // The kind's colours; on the lit row, the round fades into the Amora fill.
-                        if (on) KindIcon(item.icon, c.onFab, c.onFab.copy(alpha = LIT_ROUND_ALPHA))
-                        else KindIcon(item.icon, c.kindColor(item.type), c.kindSoft(item.type))
+                        // Sleep leads: its round is a size up.
+                        val badge = kindBadgeSize(item.type)
+                        if (on) KindIcon(item.icon, c.onFab, c.onFab.copy(alpha = LIT_ROUND_ALPHA), size = badge)
+                        else KindIcon(item.icon, c.kindColor(item.type), c.kindSoft(item.type), size = badge)
                         Spacer(Modifier.width(Spacing.space2))
-                        Text(item.label, style = Type.label, color = if (on) c.onFab else c.ink, maxLines = 1, softWrap = false)
+                        Text(item.label, style = Type.label, color = animatedColor(if (on) c.onFab else c.ink), maxLines = 1, softWrap = false)
                     }
                 }
             }
@@ -187,6 +202,7 @@ fun BoxScope.LogButton(
     // The button: `fab` (Amora under the brand), the one filled shape that isn't the screen's teal action.
     Box(
         Modifier.align(Alignment.BottomEnd).padding(Spacing.space4).size(Size.button)
+            .scale(androidx.compose.animation.core.animateFloatAsState(if (dragging && !CochiloTheme.reduceMotion) PRESSED_SCALE else 1f, motionSpec(), label = "held").value)
             .clip(RoundedCornerShape(Radius.radiusRound)).background(c.fab)
             .onGloballyPositioned { fab = it }
             .semantics {
@@ -228,12 +244,16 @@ fun BoxScope.LogButton(
         contentAlignment = Alignment.Center,
     ) {
         // A plus that turns into a cross while the menu is open.
-        Box(Modifier.rotate(if (open) 45f else 0f)) { GIcon(R.drawable.gg_ic_plus, null, c.onFab) }
+        val turn by androidx.compose.animation.core.animateFloatAsState(if (open) 45f else 0f, motionSpec(emphasised = true), label = "turn")
+        Box(Modifier.rotate(turn)) { GIcon(R.drawable.gg_ic_plus, null, c.onFab) }
     }
 }
 
 /** How much of the screen shows through behind the open menu. */
 private const val SCRIM_ALPHA = 0.94f
+
+/** The button dips under a held thumb, like every pressed target (pressScale). */
+private const val PRESSED_SCALE = 0.97f
 
 /** How much of on-fab tints the kind's round on the lit row (components.md, Kind icon: 18%). */
 private const val LIT_ROUND_ALPHA = 0.18f

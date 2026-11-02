@@ -90,6 +90,8 @@ fun EventList(events: List<Event>, now: Long, f: Format, zone: ZoneId, onOpen: (
                 meta = eventMeta(e, now, f),
                 leading = { br.gabriel.cochilo.ui.kit.KindIcon(e, zone) },
                 onClick = { onOpen(e) },
+                // Sleep leads: what Cochilo is for is a size up in every list.
+                prominent = e.type == br.gabriel.cochilo.data.EventType.SLEEP,
             )
         }
     }

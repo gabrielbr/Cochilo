@@ -123,7 +123,7 @@ class ScreensSnapshotTest {
                         }
                         LogButton(
                             logMenuItems(androidx.compose.ui.platform.LocalContext.current, f, log, p is Predictor.Result.Sleeping),
-                            stringResource(R.string.log_button), stringResource(R.string.log_close), stringResource(R.string.slide_last_tag),
+                            stringResource(R.string.log_button), stringResource(R.string.log_close),
                             {}, { _, _ -> }, preview = logHover,
                         )
                     }

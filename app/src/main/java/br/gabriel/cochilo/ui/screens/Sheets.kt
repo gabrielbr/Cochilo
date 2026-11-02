@@ -1,5 +1,6 @@
 package br.gabriel.cochilo.ui.screens
 
+import br.gabriel.cochilo.ui.kit.kindColor
 import androidx.compose.foundation.layout.Box
 import androidx.compose.ui.Alignment
 import br.gabriel.cochilo.ui.kit.InfoButton
@@ -166,10 +167,14 @@ fun EventSheet(
         if (last != null) {
             val what = listOfNotNull(f.kindName(last.kind), last.amountMl?.let { stringResource(R.string.ml, it) }, last.note?.takeIf { t == EventType.MEDICINE })
                 .joinToString(" · ").ifEmpty { f.typeName(t) }
-            Text(
-                stringResource(R.string.sheet_last, what, f.dayTime(last.start)), style = Type.meta, color = CochiloTheme.colors.muted,
-                modifier = Modifier.padding(bottom = Spacing.space4),
-            )
+            // The Last mark: a dot in the kind's colour, then what and when; "Last time" is spoken.
+            androidx.compose.foundation.layout.Box(Modifier.padding(bottom = Spacing.space4)) {
+                br.gabriel.cochilo.ui.kit.LastLine(
+                    "$what · ${f.dayTime(last.start)}",
+                    CochiloTheme.colors.kindColor(t),
+                    spoken = stringResource(R.string.sheet_last, what, f.dayTime(last.start)),
+                )
+            }
         }
 
         val kinds = Kinds.forType(t)

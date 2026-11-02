@@ -152,18 +152,20 @@ private fun androidx.compose.foundation.layout.BoxScope.HourLabel(text: String, 
  * A lasting entry (sleep, a feed) is a bar as tall as [barHeight]; an instant is a dot.
  */
 @Composable
-fun TimelineRow(time: String, color: Color, barHeight: Dp?, label: String, meta: String?, onClick: () -> Unit, icon: (@Composable () -> Unit)? = null) {
+fun TimelineRow(time: String, color: Color, barHeight: Dp?, label: String, meta: String?, onClick: () -> Unit, icon: (@Composable () -> Unit)? = null, prominent: Boolean = false) {
     val c = CochiloTheme.colors
     val src = remember { MutableInteractionSource() }
     val base = Modifier.fillMaxWidth()
-    val sized = if (barHeight != null) base.height(maxOf(barHeight, Size.rowMin)) else base.heightIn(min = Size.rowMin).height(IntrinsicSize.Min)
+    // At least as tall as the bar, and as tall as its words need (sleep's bigger round and two lines).
+    val sized = base.heightIn(min = if (barHeight != null) maxOf(barHeight, Size.rowMin) else Size.rowMin).height(IntrinsicSize.Min)
     Row(sized.clickable(src, indication = null, role = Role.Button, onClick = onClick).pressScale(src)) {
         Text(time, style = Type.meta, color = c.muted, textAlign = TextAlign.End, maxLines = 1, modifier = Modifier.width(Spacing.space16 + Spacing.space2).padding(top = Spacing.space1))
         Box(Modifier.width(Spacing.space8).fillMaxHeight(), contentAlignment = Alignment.TopCenter) {
             Box(Modifier.width(Size.hairline).fillMaxHeight().background(c.line))
             if (barHeight != null) {
+                // Sleep leads: its bar is wider than a feed's or a walk's.
                 Box(
-                    Modifier.padding(vertical = Spacing.space1).width(Spacing.space2).fillMaxHeight()
+                    Modifier.padding(vertical = Spacing.space1).width(if (prominent) Spacing.space3 else Spacing.space2).fillMaxHeight()
                         .clip(RoundedCornerShape(Radius.radiusS)).background(color)
                 )
             } else {
@@ -176,7 +178,7 @@ fun TimelineRow(time: String, color: Color, barHeight: Dp?, label: String, meta:
                     icon()
                     Spacer(Modifier.width(Spacing.space2))
                 }
-                Text(label, style = Type.body, color = c.ink)
+                Text(label, style = if (prominent) Type.label else Type.body, color = c.ink)
             }
             if (meta != null) Text(meta, style = Type.meta, color = c.muted)
             Spacer(Modifier.height(Spacing.space3))

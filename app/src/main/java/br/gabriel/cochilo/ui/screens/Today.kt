@@ -7,6 +7,8 @@ import br.gabriel.cochilo.domain.lastKindAmong
 import br.gabriel.cochilo.domain.lastOf
 import br.gabriel.cochilo.ui.kit.SlideOption
 import br.gabriel.cochilo.ui.kit.SlideRow
+import br.gabriel.cochilo.ui.kit.kindColor
+import br.gabriel.cochilo.ui.kit.leads
 import br.gabriel.cochilo.domain.overlaps
 import br.gabriel.cochilo.ui.kit.InfoButton
 import androidx.compose.foundation.background
@@ -110,6 +112,7 @@ fun TodayScreen(
                             meta = since,
                             leading = { br.gabriel.cochilo.ui.kit.KindIcon(e, zone) },
                             onClick = { onOpen(e) },
+                            prominent = e.type.leads,
                         ) { Button(stringResource(R.string.action_finish), { onFinish(e) }) }
                     }
                 }
@@ -145,9 +148,10 @@ private fun SleepPanel(p: Predictor.Result, now: Long, f: Format, onStart: () ->
     val c = CochiloTheme.colors
     val sleeping = p as? Predictor.Result.Sleeping
     val awake = p as? Predictor.Result.Awake
-    val bg = if (sleeping != null) c.panel else c.surface
-    val fg = if (sleeping != null) c.onPanel else c.ink
-    val fgMuted = if (sleeping != null) c.onPanelMuted else c.muted
+    // Start sleep and the card cross-fades to the night panel; Woke up and it fades back to day.
+    val bg = br.gabriel.cochilo.ui.kit.animatedColor(if (sleeping != null) c.panel else c.surface, emphasised = true)
+    val fg = br.gabriel.cochilo.ui.kit.animatedColor(if (sleeping != null) c.onPanel else c.ink, emphasised = true)
+    val fgMuted = br.gabriel.cochilo.ui.kit.animatedColor(if (sleeping != null) c.onPanelMuted else c.muted, emphasised = true)
     // Wrapped in the fabric she picked (Settings › Fabric); the words stay on the card's colour.
     br.gabriel.cochilo.ui.kit.FabricFrame(bg, Spacing.space6) {
         val label = when {
@@ -232,21 +236,20 @@ internal fun QuickLog(
             val base = slideOptions(t, f)
             // The last of this row's own options: for Feed, the last breast, even if a bottle came after.
             val lastOption = lastKinds[t]
-            val options = base.map { it.copy(last = lastOption != null && it.key == lastOption) }
+            val spokenLast = stringResource(R.string.slide_last_spoken, "%s")
+            val options = base.map {
+                val isLast = lastOption != null && it.key == lastOption
+                // The Last mark is seen (outline and dot); TalkBack says it.
+                it.copy(last = isLast, a11y = if (isLast) spokenLast.replace("%s", it.a11y) else it.a11y)
+            }
             val lastWords = when {
                 lastOption != null && base.any { it.key == lastOption } -> (f.kindName(lastOption) ?: lastOption).lowercase()
                 t == EventType.PUMP -> prev?.amountMl?.let { stringResource(R.string.ml, it) }
                 t == EventType.MEDICINE -> prev?.let { e -> listOfNotNull(e.note, f.dayTime(e.start)).joinToString(" · ") }
                 else -> null
             }
-            val hint = when {
-                options.isNotEmpty() -> buildString {
-                    append(stringResource(R.string.slide_hint, options.joinToString(" · ") { it.label }))
-                    if (lastWords != null) { append(" · "); append(stringResource(R.string.slide_last, lastWords)) }
-                }
-                lastWords != null -> stringResource(R.string.row_last, lastWords)
-                else -> null
-            }
+            // The slide hint; what was done last gets its own line after a Last dot.
+            val hint = if (options.isNotEmpty()) stringResource(R.string.slide_hint, options.joinToString(" · ") { it.label }) else null
             SlideRow(
                 label = f.typeName(t),
                 meta = hint,
@@ -255,7 +258,10 @@ internal fun QuickLog(
                 onTap = { onNew(t) },
                 onPick = { o -> onQuick(t, o.key.takeIf { it.isNotEmpty() }) },
                 previewActive = previewActive?.takeIf { it.first == t }?.second,
-                lastTag = stringResource(R.string.slide_last_tag),
+                accent = CochiloTheme.colors.kindColor(t),
+                last = lastWords,
+                lastSpoken = lastWords?.let { stringResource(R.string.row_last, it) },
+                prominent = t.leads,
             ) { InfoButton(f.typeName(t), stringResource(infoText(t))) }
         }
     }

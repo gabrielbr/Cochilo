@@ -29,7 +29,11 @@ fun logMenuItems(context: Context, f: Format, log: List<Event>, sleeping: Boolea
     fun a11y(t: EventType, what: String?) = context.getString(R.string.a11y_log, listOfNotNull(f.typeName(t), what).joinToString(" · "))
     fun kinds(t: EventType, keys: List<String>, label: (String) -> String): List<SlideOption> {
         val last = lastKindAmong(log, t, keys.toSet())
-        return keys.map { k -> SlideOption(k, label(k), a11y(t, f.kindName(k)), last = k == last) }
+        // The Last mark is seen (outline and dot); TalkBack says "used last".
+        return keys.map { k ->
+            val spoken = a11y(t, f.kindName(k))
+            SlideOption(k, label(k), if (k == last) context.getString(R.string.slide_last_spoken, spoken) else spoken, last = k == last)
+        }
     }
     val lastBottle = log.filter { it.type == EventType.FEED && it.kind == Kinds.BOTTLE && it.amountMl != null }.maxByOrNull { it.start }
     val lastMedicine = lastOf(log, EventType.MEDICINE)?.note?.takeIf { it.isNotBlank() }
@@ -49,7 +53,7 @@ fun logMenuItems(context: Context, f: Format, log: List<Event>, sleeping: Boolea
             if (sleeping) SlideOption(LogKeys.WOKE_UP, context.getString(R.string.action_woke_up), context.getString(R.string.action_woke_up))
             else SlideOption(LogKeys.START_SLEEP, context.getString(R.string.action_start_sleep), context.getString(R.string.action_start_sleep))
         )),
-        item(EventType.MEDICINE, listOfNotNull(lastMedicine?.let { SlideOption(LogKeys.REPEAT_MEDICINE, it, a11y(EventType.MEDICINE, it), last = true) })),
+        item(EventType.MEDICINE, listOfNotNull(lastMedicine?.let { SlideOption(LogKeys.REPEAT_MEDICINE, it, context.getString(R.string.slide_last_spoken, a11y(EventType.MEDICINE, it)), last = true) })),
         item(EventType.PUMP, listOf(SlideOption(LogKeys.START, context.getString(R.string.slide_start), a11y(EventType.PUMP, null)))),
         item(EventType.DAYLIGHT, kinds(EventType.DAYLIGHT, listOf(Kinds.OUTDOORS, Kinds.WINDOW)) { f.kindName(it) ?: it }),
         item(EventType.ROUTINE, kinds(EventType.ROUTINE, listOf(Kinds.NAP_ROUTINE, Kinds.BEDTIME_ROUTINE)) { f.kindName(it) ?: it }),

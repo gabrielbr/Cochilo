@@ -29,6 +29,12 @@ one commit on top of the design system's `main` at 0.4.0 (self-update):
   and permission beside them), the rule that no text sits on a texture (docs/brands.md), and the
   Fabric frame and Fabric picker components. Audit `audits/2026-11-02-v0.8.0-textures.md`.
 
+**[0004-Sleep-leads-Last-mark-motion-0.9.0.patch](0004-Sleep-leads-Last-mark-motion-0.9.0.patch)**, on top of 0003:
+
+- **0.9.0:** `kind-badge-lead` (sleep's 44dp round) and `outline` (2dp) size tokens, the Last mark
+  component, and Cochilo's motion written down (components.md "Motion"). Audit
+  `audits/2026-11-02-v0.9.0-sleep-motion.md`.
+
 All checked on a fresh checkout of the design system's `main`: `git am` applies it,
 `check_tokens.py` reports 0 errors, the tests pass, and `drift.py --cochilo` against this repo
 reports 0 differences.
