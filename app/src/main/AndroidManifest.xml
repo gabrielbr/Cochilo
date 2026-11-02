@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- No INTERNET permission: nothing leaves the phone. -->
+    <!-- No INTERNET permission here: the play build has none. Only the github build adds it, for
+         self-update (src/github/AndroidManifest.xml). The baby's data never leaves the phone. -->
 
     <application
         android:name=".CochiloApp"

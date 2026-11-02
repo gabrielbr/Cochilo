@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+      The github (family) build updates itself from GitHub releases, the design system's
+      self-update. INTERNET is used for nothing else: one unauthenticated request to GitHub's
+      public releases API and the download of the new APK. The baby's data never leaves the phone.
+      REQUEST_INSTALL_PACKAGES lets Android show "Do you want to update this app?".
+      The play build has neither; app/build.gradle.kts checks both lists on every build.
+    -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+
+    <application>
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.updates"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/update_paths" />
+        </provider>
+    </application>
+</manifest>

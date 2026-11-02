@@ -34,6 +34,22 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true
+    }
+
+    // Two builds from one code base (docs/distribution.md):
+    // - github: the family build from GitHub releases. Updates itself (the design system's
+    //   self-update); the only flavor with INTERNET, used for nothing but that check.
+    // - play: for Google Play. No INTERNET at all; Play updates it.
+    flavorDimensions += "distribution"
+    productFlavors {
+        create("github") {
+            dimension = "distribution"
+            buildConfigField("String", "GITHUB_REPO", "\"gabrielbr/Cochilo\"")
+        }
+        create("play") {
+            dimension = "distribution"
+        }
     }
 
     buildTypes {
@@ -69,6 +85,36 @@ android {
 
     lint {
         checkReleaseBuilds = false
+    }
+}
+
+// The permission promise, checked on every build: play asks for none; github asks for exactly the
+// two that self-update needs. A library that sneaks in INTERNET fails the build here.
+val allowedPermissions = mapOf(
+    "play" to emptySet(),
+    "github" to setOf("android.permission.INTERNET", "android.permission.REQUEST_INSTALL_PACKAGES"),
+)
+androidComponents {
+    onVariants { variant ->
+        val flavor = variant.flavorName ?: return@onVariants
+        val allowed = allowedPermissions.getValue(flavor)
+        val cap = variant.name.replaceFirstChar { it.uppercase() }
+        val manifest = variant.artifacts.get(com.android.build.api.artifact.SingleArtifact.MERGED_MANIFEST)
+        val check = tasks.register("check${cap}Permissions") {
+            group = "verification"
+            description = "Fails if the merged ${variant.name} manifest asks for a permission outside the allowed set."
+            inputs.file(manifest)
+            doLast {
+                val text = manifest.get().asFile.readText()
+                val found = Regex("""<uses-permission(?:-sdk-23)?\s[^>]*android:name="([^"]+)"""")
+                    .findAll(text).map { it.groupValues[1] }
+                    // AndroidX adds this signature-level permission to protect its own receivers.
+                    .filterNot { it.endsWith(".DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION") }
+                    .toSet()
+                check(found == allowed) { "${variant.name} permissions are $found, expected exactly $allowed" }
+            }
+        }
+        tasks.matching { it.name == "assemble$cap" || it.name == "test${cap}UnitTest" }.configureEach { dependsOn(check) }
     }
 }
 

@@ -25,8 +25,10 @@ layer `cochilo`. Its AGENTS.md and DESIGN.md are the rules; the short version:
 
 ## Product rules
 
-- **Nothing leaves the phone.** No INTERNET permission, no analytics, no cloud backup. Data moves
-  only through Export/Import.
+- **The baby's data never leaves the phone.** No analytics, no account, no cloud backup. Data moves
+  only through Export/Import. Two builds ([docs/distribution.md](docs/distribution.md)): **play** has
+  no INTERNET permission at all; **github** (the family build) has INTERNET only for the design
+  system's self-update, and `check<Variant>Permissions` fails the build if either list grows.
 - **Import never deletes** and keeps the newest edit of an entry (`Backup.merge`). Changing the
   backup format means bumping `BackupFile.VERSION` and still reading older files.
 - **Not a medical or safety device.** Never imply the app monitors the baby; safe-sleep text
@@ -37,8 +39,10 @@ layer `cochilo`. Its AGENTS.md and DESIGN.md are the rules; the short version:
 ## Before you push
 
 ```sh
-./gradlew :app:testDebugUnitTest :app:assembleDebug :app:lintDebug
+./gradlew :app:testGithubDebugUnitTest :app:testPlayDebugUnitTest \
+  :app:assembleGithubDebug :app:assemblePlayDebug :app:lintGithubDebug :app:lintPlayDebug
 ```
 
-After a UI change, re-record the screenshots (`./gradlew :app:recordPaparazziDebug`), look at
+After a UI change, re-record the screenshots (`./gradlew :app:recordPaparazziGithubDebug`,
+then `:app:verifyPaparazziPlayDebug` must pass too), look at
 every image, and commit them with the change.

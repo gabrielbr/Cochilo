@@ -143,7 +143,7 @@
     <string name="safe_sleep">Safe sleep</string>
     <string name="safe_sleep_meta">On the back for every sleep, firm flat surface, nothing soft in the cot (AAP 2022). Cochilo doesn\'t monitor safety.</string>
     <string name="privacy">Privacy</string>
-    <string name="privacy_meta">No internet permission. The log stays on this phone unless you export it.</string>
+    <string name="privacy_meta">The log stays on this phone unless you export it.</string>
     <string name="version">Version</string>
 
     <!-- Snackbars -->
@@ -160,4 +160,22 @@
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
     <string name="ml">%1$d ml</string>
+    <!-- Self-update (github build only; wording from the design system's docs/self-update.md). -->
+    <string name="update_available">Update available · %1$s</string>
+    <string name="update_action">Update · %1$s</string>
+    <string name="update_later">Later</string>
+    <string name="update_cancel">Cancel</string>
+    <string name="update_downloading">Downloading… %1$d%%</string>
+    <string name="update_check">Check for updates</string>
+    <string name="update_check_meta">Asks GitHub if there is a newer version. Nothing else is sent.</string>
+    <string name="update_checking">Checking…</string>
+    <string name="update_latest">You\'re on the latest version (%1$s).</string>
+    <string name="update_check_failed">Couldn\'t check for updates (%1$s). Try again.</string>
+    <string name="update_download_failed">Download failed. Try again.</string>
+    <string name="update_checksum_failed">The download didn\'t match the release\'s checksum, so it wasn\'t installed.</string>
+    <string name="update_signature_failed">The download isn\'t signed like this app, so it wasn\'t installed.</string>
+    <string name="update_allow_installs">Allow installs from this app, then tap Update again.</string>
+    <string name="update_release_only">Self-update works in the release build only (%1$s / %2$s).</string>
+    <string name="update_notes_default">A new version is available.</string>
+    <string name="update_offline">offline</string>
 </resources>

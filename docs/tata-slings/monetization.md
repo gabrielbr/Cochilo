@@ -68,7 +68,8 @@ The free app has to be good on its own, or nobody keeps it long enough to come b
 
 ## 4. How the unlock stays offline
 
-Cochilo has no INTERNET permission and must keep it that way. Two unlock paths keep that true:
+The Play build (the one Tatá Slings customers get) has no INTERNET permission and must keep it that
+way ([distribution.md](../distribution.md)). Two unlock paths keep that true:
 
 1. **Card in the box (main path).** Each order ships with a card (Tatá already orders printed cards
    in thousands). It carries a QR code and a short code like `TATA-7K2M-9QXR`. The code is a

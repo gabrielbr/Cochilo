@@ -131,7 +131,7 @@
     <string name="safe_sleep">Sono seguro</string>
     <string name="safe_sleep_meta">De barriga para cima em todo sono, superfície firme e plana, nada macio no berço (AAP 2022). O Cochilo não monitora segurança.</string>
     <string name="privacy">Privacidade</string>
-    <string name="privacy_meta">Sem permissão de internet. Os registros ficam neste celular, a menos que você exporte.</string>
+    <string name="privacy_meta">Os registros ficam neste celular, a menos que você exporte.</string>
     <string name="version">Versão</string>
 
     <string name="exported">Exportado</string>
@@ -146,4 +146,22 @@
     <string name="today">Hoje</string>
     <string name="yesterday">Ontem</string>
     <string name="ml">%1$d ml</string>
+    <!-- Atualização automática (só na versão do GitHub). -->
+    <string name="update_available">Atualização disponível · %1$s</string>
+    <string name="update_action">Atualizar · %1$s</string>
+    <string name="update_later">Mais tarde</string>
+    <string name="update_cancel">Cancelar</string>
+    <string name="update_downloading">Baixando… %1$d%%</string>
+    <string name="update_check">Procurar atualizações</string>
+    <string name="update_check_meta">Pergunta ao GitHub se há uma versão nova. Nada mais é enviado.</string>
+    <string name="update_checking">Procurando…</string>
+    <string name="update_latest">Você está na versão mais recente (%1$s).</string>
+    <string name="update_check_failed">Não foi possível procurar atualizações (%1$s). Tente de novo.</string>
+    <string name="update_download_failed">O download falhou. Tente de novo.</string>
+    <string name="update_checksum_failed">O download não confere com a soma de verificação da versão, então não foi instalado.</string>
+    <string name="update_signature_failed">O download não tem a mesma assinatura deste app, então não foi instalado.</string>
+    <string name="update_allow_installs">Permita instalações deste app e toque em Atualizar de novo.</string>
+    <string name="update_release_only">A atualização automática só funciona na versão de lançamento (%1$s / %2$s).</string>
+    <string name="update_notes_default">Uma nova versão está disponível.</string>
+    <string name="update_offline">sem conexão</string>
 </resources>

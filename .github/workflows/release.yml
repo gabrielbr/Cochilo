@@ -5,8 +5,11 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: "Version to release, e.g. 0.1.0 (creates the tag v<version> on the chosen branch)"
+        description: "Version to release, e.g. 0.2.0 (creates the tag v<version> on the chosen branch)"
         required: true
+      notes:
+        description: "What's new, in a sentence or two. The family build shows it in its Update available sheet."
+        required: false
 permissions:
   contents: write
 jobs:
@@ -29,13 +32,26 @@ jobs:
           echo "NAME=$NAME" >> "$GITHUB_ENV"
           echo "TAG=v$NAME" >> "$GITHUB_ENV"
           echo "CODE=${{ github.run_number }}" >> "$GITHUB_ENV"
+      # Two builds (docs/distribution.md): github, the family APK that updates itself from these
+      # releases, and play, the bundle for Google Play with no INTERNET permission.
       - name: Test and build
-        run: ./gradlew --no-daemon :app:testDebugUnitTest :app:assembleRelease -PappVersionName="$NAME" -PappVersionCode="$CODE"
+        run: >
+          ./gradlew --no-daemon
+          :app:testGithubDebugUnitTest :app:testPlayDebugUnitTest
+          :app:assembleGithubRelease :app:bundlePlayRelease
+          -PappVersionName="$NAME" -PappVersionCode="$CODE"
+      # A full release (not a pre-release), so installed family builds offer it; SHA256SUMS.txt is
+      # required, since self-update installs nothing whose checksum it can't match.
       - name: Publish release
         env:
           GH_TOKEN: ${{ github.token }}
+          NOTES_INPUT: ${{ inputs.notes }}
         run: |
-          cp app/build/outputs/apk/release/app-release.apk "cochilo-$NAME.apk"
-          gh release create "$TAG" "cochilo-$NAME.apk" --target "$GITHUB_SHA" \
-            --title "Cochilo $NAME" --prerelease \
-            --notes "Test build for the family. Install cochilo-$NAME.apk on the phone (allow installs from this source). Data stays on the phone; use Settings › Export backup before uninstalling."
+          cp app/build/outputs/apk/github/release/app-github-release.apk "cochilo-$NAME.apk"
+          cp app/build/outputs/bundle/playRelease/app-play-release.aab "cochilo-play-$NAME.aab"
+          sha256sum "cochilo-$NAME.apk" "cochilo-play-$NAME.aab" > SHA256SUMS.txt
+          cat SHA256SUMS.txt
+          NOTES="${NOTES_INPUT:-Cochilo $NAME.}"
+          printf '%s\n\nInstall cochilo-%s.apk on the phone (allow installs from this source); after that, the app offers each new version itself. cochilo-play-%s.aab is the Google Play build, without internet access. The baby'"'"'s data stays on the phone.\n' "$NOTES" "$NAME" "$NAME" > notes.md
+          gh release create "$TAG" "cochilo-$NAME.apk" "cochilo-play-$NAME.aab" SHA256SUMS.txt \
+            --target "$GITHUB_SHA" --title "Cochilo $NAME" --latest --notes-file notes.md

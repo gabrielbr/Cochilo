@@ -14,4 +14,12 @@ jobs:
           java-version: "21"
       # The Ubuntu runner ships the Android SDK (ANDROID_HOME); AGP fetches any missing platform.
       - uses: gradle/actions/setup-gradle@v4
-      - run: ./gradlew --no-daemon :app:testDebugUnitTest :app:verifyPaparazziDebug :app:lintDebug :app:assembleDebug
+      # Both builds (docs/distribution.md). assemble*/test* also run the permission check: play may ask
+      # for no permission at all, github only for INTERNET and REQUEST_INSTALL_PACKAGES.
+      - run: >
+          ./gradlew --no-daemon
+          :app:testGithubDebugUnitTest :app:testPlayDebugUnitTest
+          :app:verifyPaparazziGithubDebug :app:verifyPaparazziPlayDebug
+          :app:lintGithubDebug :app:lintPlayDebug
+          :app:assembleGithubDebug :app:assemblePlayDebug
+          :app:checkGithubReleasePermissions :app:checkPlayReleasePermissions

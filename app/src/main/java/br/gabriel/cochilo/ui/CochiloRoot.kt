@@ -39,6 +39,8 @@ import br.gabriel.cochilo.data.EventType
 import br.gabriel.cochilo.domain.Predictor
 import br.gabriel.cochilo.domain.ageWeeks
 import br.gabriel.cochilo.ui.kit.BackHeader
+import br.gabriel.cochilo.update.AboutUpdates
+import br.gabriel.cochilo.update.UpdatePrompt
 import br.gabriel.cochilo.ui.kit.EmptyState
 import br.gabriel.cochilo.ui.kit.Frame
 import br.gabriel.cochilo.ui.kit.Header
@@ -110,6 +112,7 @@ fun CochiloRoot(vm: MainViewModel) {
                             onExportJson = { exportJson.launch("cochilo-${LocalDate.now(zone)}.json") },
                             onExportCsv = { exportCsv.launch("cochilo-${LocalDate.now(zone)}.csv") },
                             onImport = { import.launch(arrayOf("application/json", "application/octet-stream", "text/plain")) },
+                            about = { AboutUpdates() },
                         )
                     }
                 } else {
@@ -199,4 +202,6 @@ fun CochiloRoot(vm: MainViewModel) {
     if (editingBaby) {
         BabySheet(baby, zone, onSave = { vm.saveBaby(it); editingBaby = false }, onDismiss = { editingBaby = false })
     }
+    // The github build offers its own updates here; the play build draws nothing.
+    UpdatePrompt()
 }
