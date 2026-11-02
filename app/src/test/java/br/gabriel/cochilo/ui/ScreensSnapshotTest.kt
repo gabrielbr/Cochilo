@@ -104,7 +104,7 @@ class ScreensSnapshotTest {
                 Column(Modifier.fillMaxSize()) {
                     if (settings) {
                         BackHeader(stringResource(R.string.title_settings), stringResource(R.string.back)) {}
-                        Box(Modifier.weight(1f)) { SettingsScreen(baby, ThemeMode.SYSTEM, zone, {}, {}, {}, {}, {}, {}) }
+                        Box(Modifier.weight(1f)) { SettingsScreen(baby, ThemeMode.SYSTEM, zone, {}, {}, {}, {}, {}, {}, fabric = br.gabriel.cochilo.ui.kit.LocalFabric.current) }
                         return@Column
                     }
                     val f = Format(androidx.compose.ui.platform.LocalContext.current, zone, now)
@@ -235,6 +235,14 @@ class ScreensSnapshotTest {
     @Test fun log_button_open_ptBR_dark() { pt(true); paparazzi.snapshot { Chrome(true, 0, logHover = br.gabriel.cochilo.ui.kit.LogHover(1)) } }
     @Test fun day_ptBR_dark() { pt(true); paparazzi.snapshot { Chrome(true, 1) } }
     @Test fun settings_light() { light(); paparazzi.snapshot { Chrome(false, 0, settings = true) } }
+    @Test fun today_fabric_balao_light() { light(); paparazzi.snapshot { Fabric(br.gabriel.cochilo.ui.kit.Fabric.BALAO) { Chrome(false, 0) } } }
+    @Test fun today_sleeping_fabric_tropical_dark() { dark(); paparazzi.snapshot { Fabric(br.gabriel.cochilo.ui.kit.Fabric.TROPICAL) { Chrome(true, 0, sleepingLog) } } }
+    @Test fun fabric_picker_ptBR_light() { pt(false); paparazzi.snapshot { Fabric(br.gabriel.cochilo.ui.kit.Fabric.ROSA_CHA) { Chrome(false, 0, settings = true) } } }
+
+    /** The fabric she picked, as MainActivity provides it. */
+    @Composable
+    private fun Fabric(f: br.gabriel.cochilo.ui.kit.Fabric, content: @Composable () -> Unit) =
+        androidx.compose.runtime.CompositionLocalProvider(br.gabriel.cochilo.ui.kit.LocalFabric provides f, content = content)
     /** Settings › About in the github build, after a manual check. */
     @Test fun about_updates_light() {
         light()

@@ -32,7 +32,11 @@ class MainActivity : ComponentActivity() {
                 else SystemBarStyle.light(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT)
                 enableEdgeToEdge(statusBarStyle = style, navigationBarStyle = style)
             }
-            CochiloTheme(dark) { CochiloRoot(vm) }
+            CochiloTheme(dark) {
+                // The fabric she picked wraps the Today card (Settings › Fabric).
+                val fabric by vm.fabric.collectAsState()
+                androidx.compose.runtime.CompositionLocalProvider(br.gabriel.cochilo.ui.kit.LocalFabric provides br.gabriel.cochilo.ui.kit.Fabric.of(fabric)) { CochiloRoot(vm) }
+            }
         }
     }
 

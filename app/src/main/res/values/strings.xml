@@ -248,4 +248,19 @@
     <string name="log_button">Log an entry: hold and drag to a kind, then to a choice</string>
     <string name="log_close">Close</string>
     <string name="diaper_both_short">Both</string>
+    <!-- Fabric: Tatá's slings, picked in Settings, wrap the Today card. The fabric names are her product names, the same in both languages. -->
+    <string name="fabric">Fabric</string>
+    <string name="fabric_meta">Wraps the Today card in one of Tatá\'s slings.</string>
+    <string name="fabric_plain">Plain</string>
+    <string name="fabric_perola" translatable="false">Pérola</string>
+    <string name="fabric_rosa_cha" translatable="false">Rosa Chá</string>
+    <string name="fabric_capuccino" translatable="false">Capuccino</string>
+    <string name="fabric_mel" translatable="false">Mel</string>
+    <string name="fabric_trevo" translatable="false">Trevo</string>
+    <string name="fabric_cereja" translatable="false">Cereja</string>
+    <string name="fabric_crepusculo" translatable="false">Crepúsculo</string>
+    <string name="fabric_chumbo" translatable="false">Chumbo</string>
+    <string name="fabric_balao" translatable="false">Balão</string>
+    <string name="fabric_folhagem" translatable="false">Folhagem</string>
+    <string name="fabric_tropical" translatable="false">Tropical</string>
 </resources>

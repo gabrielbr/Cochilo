@@ -148,9 +148,8 @@ private fun SleepPanel(p: Predictor.Result, now: Long, f: Format, onStart: () ->
     val bg = if (sleeping != null) c.panel else c.surface
     val fg = if (sleeping != null) c.onPanel else c.ink
     val fgMuted = if (sleeping != null) c.onPanelMuted else c.muted
-    Column(
-        Modifier.fillMaxWidth().clip(RoundedCornerShape(Radius.radiusM)).background(bg).padding(Spacing.space6)
-    ) {
+    // Wrapped in the fabric she picked (Settings › Fabric); the words stay on the card's colour.
+    br.gabriel.cochilo.ui.kit.FabricFrame(bg, Spacing.space6) {
         val label = when {
             sleeping != null && sleeping.isNight -> stringResource(R.string.panel_asleep_night)
             sleeping != null -> stringResource(R.string.panel_asleep_nap)

@@ -42,6 +42,8 @@ system's. Its AGENTS.md and DESIGN.md are the rules; the short version:
   the `mint` role is Tatá teal; it's a fill, never text. Everything else is a secondary outline, a
   row or a chip. Text on it is `onMint`.
 - **Event colours are data colours.** Use them only on data, always next to a word.
+- **No text on a texture.** Her fabrics (`ui/kit/Fabric.kt`) show only as a Fabric frame's band
+  or a picker swatch ([docs/tata-slings/textures.md](docs/tata-slings/textures.md)).
 - **Brand voice.** Words follow [docs/tata-slings/brand-voice.md](docs/tata-slings/brand-voice.md):
   quiet and short in the app, warm in marketing, never a promise about how the baby will sleep.
 - **Every kind of entry has an icon** (`ui/kit/Icons.kt`, the design system's line set), shown

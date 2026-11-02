@@ -30,6 +30,15 @@ class Prefs(context: Context) {
         _live.value = on
     }
 
+    private val _fabric = MutableStateFlow(sp.getString("fabric", null))
+    /** The key of the fabric that wraps the Today card (ui.kit.Fabric), or null for plain. */
+    val fabric: StateFlow<String?> = _fabric
+
+    fun setFabric(key: String) {
+        sp.edit { putString("fabric", key) }
+        _fabric.value = key
+    }
+
     /** Whether the app has asked for the notification permission once (Android 13+). */
     var askedNotificationPermission: Boolean
         get() = sp.getBoolean("asked_notifications", false)
