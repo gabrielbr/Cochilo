@@ -99,7 +99,7 @@ fun TodayScreen(
                         SlideRow(
                             label = eventLabel(e, f, zone),
                             meta = since + "\n" + stringResource(R.string.slide_switch_hint),
-                            icon = br.gabriel.cochilo.ui.kit.entryIcon(e),
+                            leading = { br.gabriel.cochilo.ui.kit.KindIcon(e, zone) },
                             options = listOf(SlideOption(other, switchTo, switchTo)),
                             onTap = { onOpen(e) },
                             onPick = { onSwitch(e) },
@@ -108,7 +108,7 @@ fun TodayScreen(
                         br.gabriel.cochilo.ui.kit.ListRow(
                             label = eventLabel(e, f, zone),
                             meta = since,
-                            leading = { br.gabriel.cochilo.ui.kit.GIcon(br.gabriel.cochilo.ui.kit.entryIcon(e), null, CochiloTheme.colors.eventColorOf(e, zone)) },
+                            leading = { br.gabriel.cochilo.ui.kit.KindIcon(e, zone) },
                             onClick = { onOpen(e) },
                         ) { Button(stringResource(R.string.action_finish), { onFinish(e) }) }
                     }
@@ -251,7 +251,7 @@ internal fun QuickLog(
             SlideRow(
                 label = f.typeName(t),
                 meta = hint,
-                icon = br.gabriel.cochilo.ui.kit.typeIcon(t),
+                leading = { br.gabriel.cochilo.ui.kit.KindIcon(t) },
                 options = options,
                 onTap = { onNew(t) },
                 onPick = { o -> onQuick(t, o.key.takeIf { it.isNotEmpty() }) },

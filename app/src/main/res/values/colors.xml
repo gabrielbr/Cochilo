@@ -2,6 +2,6 @@
 <resources>
     <!-- Window and launcher colours, from the design system's cochilo layer in the Tatá Slings brand
          (CTokens.Light): page and the brand accent (the mint role, Tatá teal). -->
-    <color name="page">#FBF7F2</color>
+    <color name="page">#FBF5F1</color>
     <color name="brand">#5DC2BB</color>
 </resources>

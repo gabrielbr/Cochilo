@@ -3,6 +3,17 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.8.0 — 2026-11-02
+
+**Tecidos: warmer, more colourful, made for her.** Cochilo looked cold and masculine (navy lines on
+cream). Now each kind of entry wears one of Tatá's fabrics: its icon sits in a soft round of its
+colour (Rosa Chá for a feed, Lavanda for night sleep, Imensidão for a nap, Trevo for a diaper,
+Amora for pumping, Mel for daylight, Turquesa for a routine, Cereja for medicine, Capuccino for a
+note), in every list, the Log menu, the Day tab and the timelines. Text is a warm plum-grey instead
+of navy, the page has a blush, the sleep panel is a plum night, corners are rounder, and the Log
+button is Amora. Teal stays the one action. Light and dark, contrast checked. Design system 0.7.0;
+`docs/tata-slings/design-system.md` §3a.
+
 ## 0.7.0 — 2026-11-02
 
 **The Log button.** Logging no longer sits below the fold: a navy button in the bottom-right

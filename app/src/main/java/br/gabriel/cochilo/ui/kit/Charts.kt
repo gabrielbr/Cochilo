@@ -34,14 +34,8 @@ import br.gabriel.cochilo.ui.theme.Type
 import java.time.ZoneId
 
 /** The data colour for an event. Data colours only ever appear on data, next to a word. */
-fun CTokens.Palette.eventColor(e: Event, zone: ZoneId): Color = when (e.type) {
-    EventType.SLEEP -> if (e.isNightSleep(zone)) eventNight else eventNap
-    EventType.FEED -> eventFeed
-    EventType.PUMP -> eventPump
-    EventType.DIAPER -> eventDiaper
-    EventType.DAYLIGHT -> eventDaylight
-    EventType.ROUTINE, EventType.NOTE, EventType.MEDICINE -> muted
-}
+fun CTokens.Palette.eventColor(e: Event, zone: ZoneId): Color =
+    kindColor(e.type, e.type != EventType.SLEEP || e.isNightSleep(zone))
 
 /**
  * One day as a 24-hour bar: sleep fills the bar, feeds and pumping mark the top third, diapers and

@@ -55,7 +55,14 @@ import br.gabriel.cochilo.ui.theme.Type
 import kotlin.math.abs
 
 /** One kind of entry in the Log button's menu, and the choices a slide can make on it. */
-data class LogMenuItem(val key: String, val label: String, @DrawableRes val icon: Int, val options: List<SlideOption>)
+data class LogMenuItem(
+    val key: String,
+    val label: String,
+    @DrawableRes val icon: Int,
+    val options: List<SlideOption>,
+    /** The kind of entry, for its colours (KindIcon). */
+    val type: br.gabriel.cochilo.data.EventType,
+)
 
 /** What the finger is over: an item, or one of its options. */
 data class LogHover(val item: Int, val option: Int? = null)
@@ -133,52 +140,54 @@ fun BoxScope.LogButton(
                 val showChoices = hover?.item == i
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.space2)) {
                     // The choices share what's left of the row at their own widths; only an overflow shrinks the last.
-                    if (showChoices) Row(Modifier.weight(1f, fill = false), horizontalArrangement = Arrangement.spacedBy(Spacing.space2), verticalAlignment = Alignment.CenterVertically) { item.options.forEachIndexed { j, o ->
+                    if (showChoices) Row(Modifier.weight(1f, fill = false), horizontalArrangement = Arrangement.spacedBy(Spacing.space1), verticalAlignment = Alignment.CenterVertically) { item.options.forEachIndexed { j, o ->
                         val on = hover?.option == j
                         Box(
-                            Modifier.defaultMinSize(minHeight = Size.button).clip(RoundedCornerShape(Radius.radiusL))
-                                .background(if (on) c.ink else c.surface)
-                                .border(BorderStroke(Size.hairline, if (on) c.ink else c.line), RoundedCornerShape(Radius.radiusL))
+                            Modifier.defaultMinSize(minHeight = Size.button).clip(RoundedCornerShape(Radius.radiusRound))
+                                .background(if (on) c.fab else c.surface)
+                                .border(BorderStroke(Size.hairline, if (on) c.fab else c.line), RoundedCornerShape(Radius.radiusRound))
                                 .onGloballyPositioned { rects["$i:$j"] = it.boundsInRoot() }
                                 .clickable(role = Role.Button, onClickLabel = o.a11y) { commit(LogHover(i, j)) }
-                                .padding(horizontal = Spacing.space3, vertical = Spacing.space2),
+                                .padding(horizontal = Spacing.space2, vertical = Spacing.space2),
                             contentAlignment = Alignment.Center,
                         ) {
                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                 Row(verticalAlignment = Alignment.CenterVertically) {
-                                    if (o.icon != null) { GIcon(o.icon, null, if (on) c.page else c.ink); Spacer(Modifier.width(Spacing.space1)) }
-                                    Text(o.label, style = Type.label, color = if (on) c.page else c.ink, maxLines = 1, overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis)
+                                    if (o.icon != null) { GIcon(o.icon, null, if (on) c.onFab else c.kindColor(item.type)); Spacer(Modifier.width(Spacing.space1)) }
+                                    Text(o.label, style = Type.label, color = if (on) c.onFab else c.ink, maxLines = 1, overflow = androidx.compose.ui.text.style.TextOverflow.Ellipsis)
                                 }
-                                if (o.last) Text(lastTag, style = Type.caption, color = if (on) c.page else c.muted, maxLines = 1, softWrap = false)
+                                if (o.last) Text(lastTag, style = Type.caption, color = if (on) c.onFab else c.muted, maxLines = 1, softWrap = false)
                             }
                         }
                     } }
                     val on = hover?.item == i && hover?.option == null
                     Row(
-                        Modifier.defaultMinSize(minHeight = Size.button).clip(RoundedCornerShape(Radius.radiusL))
-                            .background(if (on) c.ink else c.surface)
-                            .border(BorderStroke(Size.hairline, if (on) c.ink else c.line), RoundedCornerShape(Radius.radiusL))
+                        Modifier.defaultMinSize(minHeight = Size.button).clip(RoundedCornerShape(Radius.radiusRound))
+                            .background(if (on) c.fab else c.surface)
+                            .border(BorderStroke(Size.hairline, if (on) c.fab else c.line), RoundedCornerShape(Radius.radiusRound))
                             .onGloballyPositioned { rects["$i"] = it.boundsInRoot() }
                             .clickable(role = Role.Button) {
                                 // Tap mode: the first tap shows the choices, the second opens the sheet.
                                 if (hover?.item == i || item.options.isEmpty()) commit(LogHover(i)) else hover = LogHover(i)
                             }
-                            .padding(horizontal = Spacing.space4, vertical = Spacing.space2),
+                            .padding(start = Spacing.space2, end = Spacing.space4, top = Spacing.space1, bottom = Spacing.space1),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        GIcon(item.icon, null, if (on) c.page else c.ink)
+                        // The kind's colours; on the lit row, the round fades into the Amora fill.
+                        if (on) KindIcon(item.icon, c.onFab, c.onFab.copy(alpha = LIT_ROUND_ALPHA))
+                        else KindIcon(item.icon, c.kindColor(item.type), c.kindSoft(item.type))
                         Spacer(Modifier.width(Spacing.space2))
-                        Text(item.label, style = Type.label, color = if (on) c.page else c.ink, maxLines = 1, softWrap = false)
+                        Text(item.label, style = Type.label, color = if (on) c.onFab else c.ink, maxLines = 1, softWrap = false)
                     }
                 }
             }
         }
     }
 
-    // The button: navy (the brand's ink), the one filled shape that isn't the screen's teal action.
+    // The button: `fab` (Amora under the brand), the one filled shape that isn't the screen's teal action.
     Box(
         Modifier.align(Alignment.BottomEnd).padding(Spacing.space4).size(Size.button)
-            .clip(RoundedCornerShape(Radius.radiusRound)).background(c.ink)
+            .clip(RoundedCornerShape(Radius.radiusRound)).background(c.fab)
             .onGloballyPositioned { fab = it }
             .semantics {
                 role = Role.Button
@@ -219,9 +228,12 @@ fun BoxScope.LogButton(
         contentAlignment = Alignment.Center,
     ) {
         // A plus that turns into a cross while the menu is open.
-        Box(Modifier.rotate(if (open) 45f else 0f)) { GIcon(R.drawable.gg_ic_plus, null, c.page) }
+        Box(Modifier.rotate(if (open) 45f else 0f)) { GIcon(R.drawable.gg_ic_plus, null, c.onFab) }
     }
 }
 
 /** How much of the screen shows through behind the open menu. */
 private const val SCRIM_ALPHA = 0.94f
+
+/** How much of on-fab tints the kind's round on the lit row (components.md, Kind icon: 18%). */
+private const val LIT_ROUND_ALPHA = 0.18f

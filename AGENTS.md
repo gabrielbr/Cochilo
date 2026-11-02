@@ -29,7 +29,7 @@ then [docs/research.md](docs/research.md) for the science the features rest on.
 The UI follows the [Gabriel Design System](https://github.com/gabrielbr/Gabriel-Deisgn-System),
 layer `cochilo`, dressed in the **Tatá Slings brand** (`brands.tata-slings`, the design system's
 `docs/brands.md`): Cochilo is a Tatá Slings product. The brand sets the colour values (teal accent,
-navy ink, Pérola page), the one family (Libre Franklin) and the mark; every other standard is the
+plum-grey ink, Pérola page, Amora Log button since 0.8.0 "Tecidos"), the one family (Libre Franklin) and the mark; every other standard is the
 system's. Its AGENTS.md and DESIGN.md are the rules; the short version:
 
 - **Tokens only.** Every colour, size, radius, duration and type role comes from

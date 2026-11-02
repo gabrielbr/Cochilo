@@ -52,7 +52,7 @@ weren't on the other tabs at all. Wunderlist's lesson was to put the main action
 already is: its big add button sat in the bottom corner, in reach without moving the grip. Most
 people hold a phone one-handed with the thumb doing the work, and the bottom of the screen,
 towards the thumb's side, is the easy zone (Hoober). So the **Log button** (`ui/kit/LogButton.kt`,
-items in `ui/screens/LogMenu.kt`) is a navy circle in the bottom-right corner of every tab.
+items in `ui/screens/LogMenu.kt`) is a round button in the bottom-right corner of every tab (navy in 0.7.0, Amora since 0.8.0).
 
 **One move, with a cadence:**
 
@@ -78,8 +78,8 @@ The design rules it keeps:
   menu, experts flick without looking.
 - **Remember actions.** The last breast and the last diaper kind say LAST; the bottle chip carries
   the last amount; Medicine repeats the last name.
-- **Navy, not teal.** The screen's one mint action (Start sleep / Woke up) stays the only teal fill.
-  The Log button is the brand's ink, like the snackbar.
+- **Amora, not teal.** The screen's one mint action (Start sleep / Woke up) stays the only teal fill.
+  The Log button has its own role, `fab`: Amora, her berry fabric (navy until 0.8.0).
 - **The old rows stay.** Today's slide rows still work for whoever has scrolled there; the button
   is the shortcut, not a replacement.
 
