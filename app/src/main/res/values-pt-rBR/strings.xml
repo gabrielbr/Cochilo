@@ -281,4 +281,11 @@
     <string name="cheer_week">Uma semana inteira registrada. As sugestões conhecem %1$s melhor agora.</string>
     <string name="celebrations">Pequenas comemorações</string>
     <string name="celebrations_meta">Algumas palavras carinhosas e o bebê, quando uma soneca vai bem</string>
+    <!-- Luz noturna, lembrete de luz do dia e hora de acalmar (docs/night-light.md). -->
+    <string name="night_light">Luz noturna</string>
+    <string name="night_light_meta">Das 19:00 às 07:00: âmbar quente no preto, sem luz azul</string>
+    <string name="daylight_nudge">Ainda sem luz do dia</string>
+    <string name="daylight_nudge_meta">12:00–16:00 ajuda o relógio do corpo</string>
+    <string name="daylight_go">Sair</string>
+    <string name="notif_wind_down">Desde %1$s · hora de dormir %2$s · luz baixa</string>
 </resources>

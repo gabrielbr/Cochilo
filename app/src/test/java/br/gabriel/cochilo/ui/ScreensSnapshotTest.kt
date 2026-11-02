@@ -96,8 +96,9 @@ class ScreensSnapshotTest {
     private fun Chrome(
         dark: Boolean, tab: Int, log: List<Event> = this.log, settings: Boolean = false,
         logHover: br.gabriel.cochilo.ui.kit.LogHover? = null,
+        night: Boolean = false,
     ) {
-        CochiloTheme(dark) {
+        CochiloTheme(dark, night) {
             val weeks = ageWeeks(baby.birthDate, null, now)
             val p = Predictor(zone).predict(log, weeks, now)
             Frame {
@@ -234,6 +235,9 @@ class ScreensSnapshotTest {
     @Test fun log_button_feed_right_light() { light(); paparazzi.snapshot { Chrome(false, 0, logHover = br.gabriel.cochilo.ui.kit.LogHover(0, 1)) } }
     @Test fun log_button_open_ptBR_dark() { pt(true); paparazzi.snapshot { Chrome(true, 0, logHover = br.gabriel.cochilo.ui.kit.LogHover(1)) } }
     @Test fun day_ptBR_dark() { pt(true); paparazzi.snapshot { Chrome(true, 1) } }
+    @Test fun today_night_light_sleeping() { dark(); paparazzi.snapshot { Chrome(true, 0, sleepingLog, night = true) } }
+    @Test fun day_night_light_ptBR() { pt(true); paparazzi.snapshot { Chrome(true, 1, night = true) } }
+    @Test fun today_daylight_nudge_light() { light(); paparazzi.snapshot { Chrome(false, 0, log.filter { it.type != EventType.DAYLIGHT }) } }
     @Test fun settings_light() { light(); paparazzi.snapshot { Chrome(false, 0, settings = true) } }
     @Test fun today_fabric_balao_light() { light(); paparazzi.snapshot { Fabric(br.gabriel.cochilo.ui.kit.Fabric.BALAO) { Chrome(false, 0) } } }
     @Test fun today_sleeping_fabric_tropical_dark() { dark(); paparazzi.snapshot { Fabric(br.gabriel.cochilo.ui.kit.Fabric.TROPICAL) { Chrome(true, 0, sleepingLog) } } }

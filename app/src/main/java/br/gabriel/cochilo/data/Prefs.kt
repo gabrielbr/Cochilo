@@ -39,6 +39,15 @@ class Prefs(context: Context) {
         _fabric.value = key
     }
 
+    private val _nightLight = MutableStateFlow(sp.getBoolean("night_light", true))
+    /** The night light: amber on warm black from 19:00 to 07:00 (docs/night-light.md). */
+    val nightLight: StateFlow<Boolean> = _nightLight
+
+    fun setNightLight(on: Boolean) {
+        sp.edit { putBoolean("night_light", on) }
+        _nightLight.value = on
+    }
+
     private val _celebrate = MutableStateFlow(sp.getBoolean("celebrations", true))
     /** Little celebrations when what she was trying for happens (docs/celebrations.md). */
     val celebrations: StateFlow<Boolean> = _celebrate

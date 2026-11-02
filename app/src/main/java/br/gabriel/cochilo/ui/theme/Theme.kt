@@ -64,17 +64,29 @@ object CochiloTheme {
     val colors: CTokens.Palette @Composable get() = LocalPalette.current
     val reduceMotion: Boolean @Composable get() = LocalReduceMotion.current
     val isDark: Boolean @Composable get() = LocalIsDark.current
+    val isNight: Boolean @Composable get() = LocalIsNight.current
 }
 
+/** True while the night light is on (docs/night-light.md): amber on warm black, no blue or teal. */
+val LocalIsNight = staticCompositionLocalOf { false }
+
+/**
+ * [night]: the night light (from 19:00 to 07:00 when it's on): the design system's night theme,
+ * warm amber and red on near-black, because light at night is what the research says to dim.
+ */
 @Composable
-fun CochiloTheme(dark: Boolean, content: @Composable () -> Unit) {
-    val p = if (dark) CTokens.Dark else CTokens.Light
+fun CochiloTheme(dark: Boolean, night: Boolean = false, content: @Composable () -> Unit) {
+    val p = when {
+        night -> CTokens.Night
+        dark -> CTokens.Dark
+        else -> CTokens.Light
+    }
     val context = LocalContext.current
     val reduce = remember {
         Settings.Global.getFloat(context.contentResolver, Settings.Global.ANIMATOR_DURATION_SCALE, 1f) == 0f
     }
     // Material components (sheets, pickers) read their colours from these roles.
-    val scheme = (if (dark) darkColorScheme() else lightColorScheme()).copy(
+    val scheme = (if (dark || night) darkColorScheme() else lightColorScheme()).copy(
         primary = p.mint, onPrimary = p.onMint,
         primaryContainer = p.mint, onPrimaryContainer = p.onMint,
         secondary = p.ink, onSecondary = p.page,
@@ -102,7 +114,8 @@ fun CochiloTheme(dark: Boolean, content: @Composable () -> Unit) {
     }
     CompositionLocalProvider(
         LocalPalette provides p,
-        LocalIsDark provides dark,
+        LocalIsDark provides (dark || night),
+        LocalIsNight provides night,
         LocalReduceMotion provides reduce,
     ) {
         MaterialTheme(colorScheme = scheme, typography = typography, content = content)

@@ -55,6 +55,11 @@ one commit on top of the design system's `main` at 0.4.0 (self-update):
 
 - **0.13.0:** the Celebration component. Audit `audits/2026-11-02-v0.13.0-celebrations.md`.
 
+**[0009-Night-light-0.14.0.patch](0009-Night-light-0.14.0.patch)**, on top of 0008:
+
+- **0.14.0:** a third theme for Cochilo, night, with `theme_fallback`. Audit
+  `audits/2026-11-02-v0.14.0-night.md`.
+
 All checked on a fresh checkout of the design system's `main`: `git am` applies it,
 `check_tokens.py` reports 0 errors, the tests pass, and `drift.py --cochilo` against this repo
 reports 0 differences.

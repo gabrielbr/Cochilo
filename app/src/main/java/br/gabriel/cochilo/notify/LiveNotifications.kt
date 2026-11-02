@@ -119,8 +119,14 @@ object LiveNotifications {
         } else {
             val a = p as Predictor.Result.Awake
             title = context.getString(R.string.notif_awake_title)
+            // In the hour before bedtime the line adds the wind-down (research §2.3): dim the lights.
+            val windDown = a.next == Predictor.Next.BEDTIME && a.at - now in 0..60 * 60_000L
             text = context.getString(
-                if (a.next == Predictor.Next.BEDTIME) R.string.notif_awake_bedtime else R.string.notif_awake_nap,
+                when {
+                    windDown -> R.string.notif_wind_down
+                    a.next == Predictor.Next.BEDTIME -> R.string.notif_awake_bedtime
+                    else -> R.string.notif_awake_nap
+                },
                 f.time(s.since), f.time(a.at),
             )
             action = NotificationCompat.Action(0, context.getString(R.string.action_start_sleep), actionIntent(context, NotificationActions.START_SLEEP))
