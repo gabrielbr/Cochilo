@@ -2,6 +2,7 @@ package br.gabriel.cochilo.domain
 
 import br.gabriel.cochilo.data.Event
 import br.gabriel.cochilo.data.EventType
+import br.gabriel.cochilo.data.Kinds
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -27,8 +28,13 @@ fun isNightStart(t: Long, zone: ZoneId): Boolean {
     return h >= NIGHT_START_HOUR || h < NIGHT_END_HOUR
 }
 
-fun Event.isNightSleep(zone: ZoneId) = type == EventType.SLEEP && isNightStart(start, zone)
-fun Event.isNap(zone: ZoneId) = type == EventType.SLEEP && !isNightStart(start, zone)
+/** A sleep's own nap/night label wins; without one, the time it started decides. */
+fun Event.isNightSleep(zone: ZoneId) = type == EventType.SLEEP && when (kind) {
+    Kinds.NIGHT_SLEEP -> true
+    Kinds.NAP_SLEEP -> false
+    else -> isNightStart(start, zone)
+}
+fun Event.isNap(zone: ZoneId) = type == EventType.SLEEP && !isNightSleep(zone)
 
 fun localDate(t: Long, zone: ZoneId): LocalDate = Instant.ofEpochMilli(t).atZone(zone).toLocalDate()
 fun startOfDay(d: LocalDate, zone: ZoneId): Long = d.atStartOfDay(zone).toInstant().toEpochMilli()

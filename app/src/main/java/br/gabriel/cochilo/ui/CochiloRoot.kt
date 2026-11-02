@@ -70,6 +70,7 @@ fun CochiloRoot(vm: MainViewModel) {
     val babyState by vm.baby.collectAsState()
     val theme by vm.theme.collectAsState()
     val now by vm.now.collectAsState()
+    val pendingImport by vm.pendingImport.collectAsState()
     val zone = vm.zone
     val context = LocalContext.current
     val f = Format(context, zone, now)
@@ -82,7 +83,7 @@ fun CochiloRoot(vm: MainViewModel) {
 
     val exportJson = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { it?.let(vm::exportJson) }
     val exportCsv = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("text/csv")) { it?.let(vm::exportCsv) }
-    val import = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { it?.let(vm::importJson) }
+    val import = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { it?.let { uri -> vm.prepareImport(listOf(uri)) } }
 
     LaunchedEffect(Unit) {
         vm.messages.collect { m ->
@@ -109,7 +110,7 @@ fun CochiloRoot(vm: MainViewModel) {
                             onTheme = vm::setTheme,
                             onExportJson = { exportJson.launch("cochilo-${LocalDate.now(zone)}.json") },
                             onExportCsv = { exportCsv.launch("cochilo-${LocalDate.now(zone)}.csv") },
-                            onImport = { import.launch(arrayOf("application/json", "application/octet-stream", "text/plain")) },
+                            onImport = { import.launch(arrayOf("application/json", "text/csv", "text/comma-separated-values", "text/plain", "application/octet-stream")) },
                         )
                     }
                 } else {
@@ -195,6 +196,9 @@ fun CochiloRoot(vm: MainViewModel) {
             onDelete = { vm.delete(it); editing = null },
             onDismiss = { editing = null },
         )
+    }
+    pendingImport?.let { p ->
+        br.gabriel.cochilo.ui.screens.ImportSheet(p, zone, onImport = { vm.confirmImport() }, onDismiss = { vm.cancelImport() })
     }
     if (editingBaby) {
         BabySheet(baby, zone, onSave = { vm.saveBaby(it); editingBaby = false }, onDismiss = { editingBaby = false })

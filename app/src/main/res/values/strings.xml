@@ -137,8 +137,8 @@
     <string name="export_json_meta">Everything, as JSON, to import later or on another phone</string>
     <string name="export_csv">Export spreadsheet</string>
     <string name="export_csv_meta">CSV for Sheets or Excel (export only)</string>
-    <string name="import_json">Import backup</string>
-    <string name="import_json_meta">Adds what\'s new and keeps the newest edit. Never deletes.</string>
+    <string name="import_json">Import</string>
+    <string name="import_json_meta">A Cochilo backup or a Napper export (CSV). Adds what\'s new and keeps the newest edit. Never deletes.</string>
     <string name="caption_about">About</string>
     <string name="safe_sleep">Safe sleep</string>
     <string name="safe_sleep_meta">On the back for every sleep, firm flat surface, nothing soft in the cot (AAP 2022). Cochilo doesn\'t monitor safety.</string>
@@ -160,4 +160,22 @@
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
     <string name="ml">%1$d ml</string>
+
+    <!-- Import (Napper and backups) -->
+    <string name="type_medicine">Medicine</string>
+    <string name="kind_breast_both">Both breasts</string>
+    <string name="import_napper_title">Import from Napper</string>
+    <string name="import_backup_title">Import backup</string>
+    <string name="import_counts">Sleeps: %1$d · Feeds: %2$d · Diapers: %3$d · Medicine: %4$d · Other: %5$d</string>
+    <string name="import_range">From %1$s to %2$s</string>
+    <string name="import_skipped">Left out: %1$d (a bedtime with no wake-up, or a type Cochilo doesn\'t have)</string>
+    <string name="import_action">Import</string>
+    <string name="import_measurements">That\'s Napper\'s measurements file. Cochilo doesn\'t track growth yet; share the logs file instead.</string>
+    <string name="import_nothing">Nothing to import in that file</string>
+    <string name="asleep_swing">Fell asleep in the swing</string>
+    <string name="asleep_held">Fell asleep in arms</string>
+    <string name="asleep_bed">Fell asleep in bed</string>
+    <string name="asleep_nursing">Fell asleep nursing</string>
+    <string name="pauses_note">Pauses: %1$d</string>
+    <string name="pauses_note_min">Pauses: %1$d (%2$d min)</string>
 </resources>

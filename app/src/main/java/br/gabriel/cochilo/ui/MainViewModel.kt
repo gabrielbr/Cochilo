@@ -7,6 +7,8 @@ import androidx.lifecycle.viewModelScope
 import br.gabriel.cochilo.CochiloApp
 import br.gabriel.cochilo.R
 import br.gabriel.cochilo.backup.Backup
+import br.gabriel.cochilo.backup.FileKind
+import br.gabriel.cochilo.backup.NapperImport
 import br.gabriel.cochilo.data.Baby
 import br.gabriel.cochilo.data.Event
 import br.gabriel.cochilo.data.EventType
@@ -122,21 +124,84 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         _messages.send(UiMessage(str(if (ok) R.string.exported else R.string.file_failed)))
     }
 
-    fun importJson(uri: Uri) = viewModelScope.launch {
+    private val _pendingImport = MutableStateFlow<PendingImport?>(null)
+    /** A file someone shared or opened, read and waiting for "Import" in the sheet. */
+    val pendingImport: StateFlow<PendingImport?> = _pendingImport
+
+    private val napperLabels = object : NapperImport.Labels {
+        override fun fellAsleep(code: String): String? = when (code) {
+            "SWING" -> str(R.string.asleep_swing)
+            "WORN_OR_HELD" -> str(R.string.asleep_held)
+            "IN_BED" -> str(R.string.asleep_bed)
+            "NURSING" -> str(R.string.asleep_nursing)
+            else -> null
+        }
+        override fun pauses(count: Int, minutes: Int?) =
+            if (minutes != null && minutes > 0) str(R.string.pauses_note_min, count, minutes) else str(R.string.pauses_note, count)
+    }
+
+    /**
+     * Reads shared or opened files (a Cochilo backup, or Napper's logs CSV) and shows what they hold.
+     * Nothing is saved until [confirmImport].
+     */
+    fun prepareImport(uris: List<Uri>) = viewModelScope.launch {
+        val result = withContext(Dispatchers.IO) {
+            var source: ImportSource? = null
+            val found = mutableListOf<Event>()
+            var baby: Baby? = null
+            var skipped = 0
+            var problem: Int? = null
+            for (uri in uris) {
+                val text = runCatching {
+                    ctx.contentResolver.openInputStream(uri)!!.use { it.readBytes().decodeToString() }
+                }.getOrNull()
+                if (text == null) { problem = R.string.file_failed; continue }
+                when (NapperImport.detect(text)) {
+                    FileKind.COCHILO_BACKUP -> runCatching { Backup.fromJson(text) }
+                        .onSuccess { found += it.events; baby = baby ?: it.baby; source = source ?: ImportSource.BACKUP }
+                        .onFailure { problem = R.string.import_failed }
+                    FileKind.NAPPER_LOGS -> {
+                        val r = NapperImport.parseLogs(text, napperLabels)
+                        found += r.events; skipped += r.skipped; source = ImportSource.NAPPER
+                    }
+                    FileKind.NAPPER_MEASUREMENTS -> if (problem == null) problem = R.string.import_measurements
+                    FileKind.UNKNOWN -> problem = R.string.import_failed
+                }
+            }
+            if (found.isEmpty()) Result.failure(IllegalStateException(str(problem ?: R.string.import_nothing)))
+            else Result.success(PendingImport(source ?: ImportSource.BACKUP, found.distinctBy { it.id }, baby, skipped))
+        }
+        result.onSuccess { _pendingImport.value = it }.onFailure { _messages.send(UiMessage(it.message ?: str(R.string.import_failed))) }
+    }
+
+    fun cancelImport() { _pendingImport.value = null }
+
+    /** Merges the pending file: adds what's new, keeps the newest edit, never deletes. */
+    fun confirmImport() = viewModelScope.launch {
+        val pending = _pendingImport.value ?: return@launch
+        _pendingImport.value = null
         val msg = withContext(Dispatchers.IO) {
-            val text = runCatching {
-                ctx.contentResolver.openInputStream(uri)!!.use { it.readBytes().decodeToString() }
-            }.getOrElse { return@withContext str(R.string.file_failed) }
-            val file = runCatching { Backup.fromJson(text) }.getOrElse { return@withContext str(R.string.import_failed) }
-            val result = Backup.merge(events.all(), file.events)
-            val changed = result.merged.filter { m -> file.events.any { it.id == m.id } }
-            events.upsertAll(changed)
-            if (babies.get() == null && file.baby != null) babies.upsert(file.baby)
+            val result = Backup.merge(events.all(), pending.events)
+            val ids = pending.events.map { it.id }.toSet()
+            events.upsertAll(result.merged.filter { it.id in ids })
+            if (babies.get() == null && pending.baby != null) babies.upsert(pending.baby)
             str(R.string.imported, result.added, result.updated)
         }
         refreshNow()
         _messages.send(UiMessage(msg))
     }
+}
+
+enum class ImportSource { BACKUP, NAPPER }
+
+data class PendingImport(val source: ImportSource, val events: List<Event>, val baby: Baby?, val skipped: Int) {
+    val sleeps get() = events.count { it.type == EventType.SLEEP }
+    val feeds get() = events.count { it.type == EventType.FEED }
+    val diapers get() = events.count { it.type == EventType.DIAPER }
+    val medicine get() = events.count { it.type == EventType.MEDICINE }
+    val other get() = events.size - sleeps - feeds - diapers - medicine
+    val from get() = events.minOf { it.start }
+    val to get() = events.maxOf { it.end ?: it.start }
 }
 
 sealed interface BabyState {

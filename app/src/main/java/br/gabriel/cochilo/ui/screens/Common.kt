@@ -53,7 +53,9 @@ fun eventLabel(e: Event, f: Format, zone: ZoneId): String {
     val base = if (e.type == EventType.SLEEP) {
         stringResource(if (e.isNightSleep(zone)) R.string.sleep_night else R.string.sleep_nap)
     } else f.typeName(e.type)
-    val parts = listOfNotNull(base, f.kindName(e.kind), e.amountMl?.let { stringResource(R.string.ml, it) })
+    // A sleep's kind is already its name (Nap / Night sleep).
+    val kind = if (e.type == EventType.SLEEP) null else f.kindName(e.kind)
+    val parts = listOfNotNull(base, kind, e.amountMl?.let { stringResource(R.string.ml, it) })
     return parts.joinToString(" · ")
 }
 

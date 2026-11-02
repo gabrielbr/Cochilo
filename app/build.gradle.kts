@@ -16,8 +16,8 @@ android {
         minSdk = 26
         targetSdk = 35
         // CI sets these from the git tag (v0.1.0 -> 0.1.0); local builds use the literals.
-        versionCode = (project.findProperty("appVersionCode") as String?)?.toIntOrNull() ?: 1
-        versionName = (project.findProperty("appVersionName") as String?) ?: "0.1.0"
+        versionCode = (project.findProperty("appVersionCode") as String?)?.toIntOrNull() ?: 2
+        versionName = (project.findProperty("appVersionName") as String?) ?: "0.2.0"
     }
 
     signingConfigs {

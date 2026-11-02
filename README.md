@@ -1,7 +1,7 @@
 # Cochilo
 
 A personal Android app for tracking a baby's sleep: one tap to start and stop a sleep, logs for
-feeds, pumping, diapers, daylight, routines and notes, and a prediction of the next nap or bedtime
+feeds, pumping, diapers, daylight, medicine, routines and notes, and a prediction of the next nap or bedtime
 learned from the baby's own history. Everything stays on the phone; backups are files you export
 and import yourself.
 
@@ -32,6 +32,25 @@ baby's own windows over the last 14 days and blends it with an age-based prior,
 weighted median of recent bedtimes; when the next nap would land within 45 minutes of it, the app
 shows bedtime instead. The card always says which numbers it used. Code:
 [`domain/Predictor.kt`](app/src/main/java/br/gabriel/cochilo/domain/Predictor.kt).
+
+### Moving from Napper
+
+In Napper, export the logs and tap **Share**, then pick **Cochilo**. You can also save the file and
+use Settings › Import. Cochilo shows what the file holds (dates, sleeps, feeds, diapers, medicine)
+and saves nothing until you tap Import. How Napper's entries map:
+
+| Napper | Cochilo |
+|---|---|
+| NAP | Nap (labelled as a nap even when it starts before 07:00), with how the baby fell asleep and pauses in the note |
+| BED_TIME, NIGHT_WAKING, WOKE_UP | Night sleep: the stretches between bedtime, each waking and the wake-up |
+| NURSING | Feed: left, right or both breasts |
+| BOTTLE | Feed: bottle, with the amount when Napper has one |
+| CHANGED_DIAPER | Diaper: wet / both |
+| MEDICINE | Medicine, with Napper's comment as the note |
+
+Each imported entry gets an id built from its Napper row, so sharing the same export again (or a
+longer one that overlaps) adds only what's new. Napper's measurements file isn't imported: Cochilo
+doesn't track growth yet.
 
 ### Your data
 

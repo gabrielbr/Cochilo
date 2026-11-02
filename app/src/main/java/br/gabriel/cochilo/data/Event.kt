@@ -8,7 +8,7 @@ import java.util.UUID
 
 /** Everything we log is one row: a sleep, a feed, a diaper, a walk in the sun… */
 @Serializable
-enum class EventType { SLEEP, FEED, PUMP, DIAPER, DAYLIGHT, ROUTINE, NOTE;
+enum class EventType { SLEEP, FEED, PUMP, DIAPER, DAYLIGHT, ROUTINE, NOTE, MEDICINE;
 
     /** Types that last a while and can run as a timer (end = null while running). */
     val hasDuration: Boolean get() = this == SLEEP || this == FEED || this == PUMP || this == DAYLIGHT
@@ -16,9 +16,13 @@ enum class EventType { SLEEP, FEED, PUMP, DIAPER, DAYLIGHT, ROUTINE, NOTE;
 
 /** Sub-kinds, stored as text so new ones don't need a migration. */
 object Kinds {
+    // SLEEP: an explicit nap or night. Null means "decide by the time it started" (19:00–07:00 is night).
+    const val NAP_SLEEP = "NAP_SLEEP"
+    const val NIGHT_SLEEP = "NIGHT_SLEEP"
     // FEED
     const val BREAST_LEFT = "BREAST_LEFT"
     const val BREAST_RIGHT = "BREAST_RIGHT"
+    const val BREAST_BOTH = "BREAST_BOTH"
     const val BOTTLE = "BOTTLE"
     const val SOLIDS = "SOLIDS"
     // DIAPER
@@ -33,7 +37,8 @@ object Kinds {
     const val WINDOW = "WINDOW"
 
     fun forType(type: EventType): List<String> = when (type) {
-        EventType.FEED -> listOf(BREAST_LEFT, BREAST_RIGHT, BOTTLE, SOLIDS)
+        EventType.SLEEP -> listOf(NAP_SLEEP, NIGHT_SLEEP)
+        EventType.FEED -> listOf(BREAST_LEFT, BREAST_RIGHT, BREAST_BOTH, BOTTLE, SOLIDS)
         EventType.DIAPER -> listOf(WET, DIRTY, BOTH)
         EventType.ROUTINE -> listOf(NAP_ROUTINE, BEDTIME_ROUTINE)
         EventType.DAYLIGHT -> listOf(OUTDOORS, WINDOW)

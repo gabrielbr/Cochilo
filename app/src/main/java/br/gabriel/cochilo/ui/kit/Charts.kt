@@ -40,7 +40,7 @@ fun CTokens.Palette.eventColor(e: Event, zone: ZoneId): Color = when (e.type) {
     EventType.PUMP -> eventPump
     EventType.DIAPER -> eventDiaper
     EventType.DAYLIGHT -> eventDaylight
-    EventType.ROUTINE, EventType.NOTE -> muted
+    EventType.ROUTINE, EventType.NOTE, EventType.MEDICINE -> muted
 }
 
 /**

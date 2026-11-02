@@ -181,7 +181,7 @@ private fun PredictionCard(p: Predictor.Result.Awake, now: Long, f: Format) {
 @Composable
 private fun QuickLog(onNew: (EventType) -> Unit) {
     val f = Format(LocalContext.current)
-    val types = listOf(EventType.FEED, EventType.DIAPER, EventType.SLEEP, EventType.PUMP, EventType.DAYLIGHT, EventType.ROUTINE, EventType.NOTE)
+    val types = listOf(EventType.FEED, EventType.DIAPER, EventType.SLEEP, EventType.PUMP, EventType.DAYLIGHT, EventType.MEDICINE, EventType.ROUTINE, EventType.NOTE)
     Column(verticalArrangement = Arrangement.spacedBy(Spacing.space2)) {
         types.chunked(2).forEach { pair ->
             Row(horizontalArrangement = Arrangement.spacedBy(Spacing.space2)) {

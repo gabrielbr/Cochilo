@@ -19,7 +19,8 @@ data class BackupFile(
 ) {
     companion object {
         const val FORMAT = "cochilo-backup"
-        const val VERSION = 1
+        // 2: MEDICINE events and sleep/feed kinds added (0.2.0). Version 1 files still read.
+        const val VERSION = 2
     }
 }
 

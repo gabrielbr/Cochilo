@@ -251,3 +251,34 @@ fun BabySheet(initial: Baby?, zone: ZoneId, onSave: (Baby) -> Unit, onDismiss: (
         "due" -> DatePickerSheet(due ?: birth, ok, cancel, { due = it }, { picking = null })
     }
 }
+
+/** What a shared or opened file holds, before anything is saved: Import or Cancel. */
+@Composable
+fun ImportSheet(pending: br.gabriel.cochilo.ui.PendingImport, zone: ZoneId, onImport: () -> Unit, onDismiss: () -> Unit) {
+    val f = Format(LocalContext.current, zone)
+    val c = CochiloTheme.colors
+    Sheet(onDismiss) {
+        SheetTitle(stringResource(
+            if (pending.source == br.gabriel.cochilo.ui.ImportSource.NAPPER) R.string.import_napper_title else R.string.import_backup_title
+        ))
+        Text(
+            stringResource(R.string.import_range, f.day(localDate(pending.from, zone)), f.day(localDate(pending.to, zone))),
+            style = Type.body, color = c.ink,
+        )
+        Spacer(Modifier.height(Spacing.space2))
+        Text(
+            stringResource(R.string.import_counts, pending.sleeps, pending.feeds, pending.diapers, pending.medicine, pending.other),
+            style = Type.bodySmall, color = c.ink,
+        )
+        if (pending.skipped > 0) {
+            Spacer(Modifier.height(Spacing.space2))
+            Text(stringResource(R.string.import_skipped, pending.skipped), style = Type.meta, color = c.muted)
+        }
+        Spacer(Modifier.height(Spacing.space2))
+        Text(stringResource(R.string.import_json_meta), style = Type.meta, color = c.muted)
+        Spacer(Modifier.height(Spacing.space6))
+        Button(stringResource(R.string.import_action), onImport, ButtonKind.PRIMARY, Modifier.fillMaxWidth())
+        Spacer(Modifier.height(Spacing.space2))
+        Button(stringResource(R.string.cancel), onDismiss, ButtonKind.SECONDARY, Modifier.fillMaxWidth())
+    }
+}

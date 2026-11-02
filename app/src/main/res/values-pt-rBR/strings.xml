@@ -125,8 +125,8 @@
     <string name="export_json_meta">Tudo, em JSON, para importar depois ou em outro celular</string>
     <string name="export_csv">Exportar planilha</string>
     <string name="export_csv_meta">CSV para Planilhas ou Excel (só exporta)</string>
-    <string name="import_json">Importar backup</string>
-    <string name="import_json_meta">Adiciona o que é novo e mantém a edição mais recente. Nunca apaga.</string>
+    <string name="import_json">Importar</string>
+    <string name="import_json_meta">Um backup do Cochilo ou uma exportação do Napper (CSV). Adiciona o que é novo e mantém a edição mais recente. Nunca apaga.</string>
     <string name="caption_about">Sobre</string>
     <string name="safe_sleep">Sono seguro</string>
     <string name="safe_sleep_meta">De barriga para cima em todo sono, superfície firme e plana, nada macio no berço (AAP 2022). O Cochilo não monitora segurança.</string>
@@ -146,4 +146,22 @@
     <string name="today">Hoje</string>
     <string name="yesterday">Ontem</string>
     <string name="ml">%1$d ml</string>
+
+    <!-- Import (Napper and backups) -->
+    <string name="type_medicine">Remédio</string>
+    <string name="kind_breast_both">Os dois peitos</string>
+    <string name="import_napper_title">Importar do Napper</string>
+    <string name="import_backup_title">Importar backup</string>
+    <string name="import_counts">Sonos: %1$d · Mamadas: %2$d · Fraldas: %3$d · Remédios: %4$d · Outros: %5$d</string>
+    <string name="import_range">De %1$s a %2$s</string>
+    <string name="import_skipped">Deixados de fora: %1$d (hora de dormir sem despertar, ou um tipo que o Cochilo não tem)</string>
+    <string name="import_action">Importar</string>
+    <string name="import_measurements">Esse é o arquivo de medidas do Napper. O Cochilo ainda não registra crescimento; compartilhe o arquivo de registros.</string>
+    <string name="import_nothing">Nada para importar nesse arquivo</string>
+    <string name="asleep_swing">Dormiu no balanço</string>
+    <string name="asleep_held">Dormiu no colo</string>
+    <string name="asleep_bed">Dormiu na cama</string>
+    <string name="asleep_nursing">Dormiu mamando</string>
+    <string name="pauses_note">Pausas: %1$d</string>
+    <string name="pauses_note_min">Pausas: %1$d (%2$d min)</string>
 </resources>
