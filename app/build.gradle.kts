@@ -81,6 +81,8 @@ android {
 
     testOptions {
         unitTests.isReturnDefaultValues = true
+        // NapperImportTest's real-file check runs only when NAPPER_CSV points at an export.
+        unitTests.all { test -> System.getenv("NAPPER_CSV")?.let { test.environment("NAPPER_CSV", it) } }
     }
 
     lint {

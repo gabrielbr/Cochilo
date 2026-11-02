@@ -43,6 +43,10 @@ shows bedtime instead. The card always says which numbers it used. Code:
   file: new entries are added, an entry you edited more recently replaces the older copy, and
   nothing is ever deleted, so importing the same file twice changes nothing.
 - **Export spreadsheet** writes a CSV for Sheets or Excel (export only).
+- **Import from Napper** reads Napper's logs export (the `…-logs-….csv` file): naps, nights (each
+  bedtime to the next wake-up, split around night wakings), feeds, bottles, diapers and medicine
+  notes. Like a backup import it never deletes, and importing the same file twice adds nothing.
+  Napper's measurements file isn't read (Cochilo doesn't track growth).
 
 ## Build
 

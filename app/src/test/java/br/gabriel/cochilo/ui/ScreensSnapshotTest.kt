@@ -97,7 +97,7 @@ class ScreensSnapshotTest {
                 Column(Modifier.fillMaxSize()) {
                     if (settings) {
                         BackHeader(stringResource(R.string.title_settings), stringResource(R.string.back)) {}
-                        Box(Modifier.weight(1f)) { SettingsScreen(baby, ThemeMode.SYSTEM, zone, {}, {}, {}, {}, {}) }
+                        Box(Modifier.weight(1f)) { SettingsScreen(baby, ThemeMode.SYSTEM, zone, {}, {}, {}, {}, {}, {}) }
                         return@Column
                     }
                     val f = Format(androidx.compose.ui.platform.LocalContext.current, zone, now)

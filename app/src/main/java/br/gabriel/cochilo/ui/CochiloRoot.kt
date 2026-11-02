@@ -84,7 +84,7 @@ fun CochiloRoot(vm: MainViewModel) {
 
     val exportJson = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { it?.let(vm::exportJson) }
     val exportCsv = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("text/csv")) { it?.let(vm::exportCsv) }
-    val import = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { it?.let(vm::importJson) }
+    val import = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { it?.let(vm::importFile) }
 
     LaunchedEffect(Unit) {
         vm.messages.collect { m ->
@@ -112,6 +112,8 @@ fun CochiloRoot(vm: MainViewModel) {
                             onExportJson = { exportJson.launch("cochilo-${LocalDate.now(zone)}.json") },
                             onExportCsv = { exportCsv.launch("cochilo-${LocalDate.now(zone)}.csv") },
                             onImport = { import.launch(arrayOf("application/json", "application/octet-stream", "text/plain")) },
+                            // Napper's export is a .csv; some file pickers label it text/plain or octet-stream.
+                            onImportNapper = { import.launch(arrayOf("text/csv", "text/comma-separated-values", "text/plain", "application/octet-stream")) },
                             about = { AboutUpdates() },
                         )
                     }

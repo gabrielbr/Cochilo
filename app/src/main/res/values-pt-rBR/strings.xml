@@ -135,6 +135,18 @@
     <string name="version">Versão</string>
 
     <string name="exported">Exportado</string>
+    <string name="import_napper">Importar do Napper</string>
+    <string name="import_napper_meta">O CSV de registros exportado pelo Napper. Adiciona sonos, mamadas e fraldas. Nunca apaga.</string>
+    <string name="imported_napper">Importado do Napper. Novos: %1$d. Atualizados: %2$d.</string>
+    <string name="import_napper_failed">Esse arquivo não é uma exportação de registros do Napper</string>
+    <string name="napper_held">No colo ou no sling</string>
+    <string name="napper_swing">Balanço</string>
+    <string name="napper_in_bed">Na cama</string>
+    <string name="napper_nursing">Mamando</string>
+    <string name="napper_breast_milk">Leite materno</string>
+    <string name="napper_formula">Fórmula</string>
+    <string name="napper_medicine">Remédio</string>
+    <string name="napper_sides">Esquerdo %1$d min, direito %2$d min</string>
     <string name="imported">Importado. Novos: %1$d. Atualizados: %2$d.</string>
     <string name="import_failed">Esse arquivo não é um backup do Cochilo</string>
     <string name="file_failed">Não deu para usar esse arquivo</string>

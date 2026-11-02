@@ -7,6 +7,9 @@ import androidx.lifecycle.viewModelScope
 import br.gabriel.cochilo.CochiloApp
 import br.gabriel.cochilo.R
 import br.gabriel.cochilo.backup.Backup
+import br.gabriel.cochilo.backup.MergeResult
+import br.gabriel.cochilo.backup.NapperImport
+import br.gabriel.cochilo.backup.NapperLabels
 import br.gabriel.cochilo.data.Baby
 import br.gabriel.cochilo.data.Event
 import br.gabriel.cochilo.data.EventType
@@ -122,21 +125,45 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         _messages.send(UiMessage(str(if (ok) R.string.exported else R.string.file_failed)))
     }
 
-    fun importJson(uri: Uri) = viewModelScope.launch {
+    /** Either import row takes either file: a Cochilo backup (JSON) or Napper's logs export (CSV). */
+    fun importFile(uri: Uri) = viewModelScope.launch {
         val msg = withContext(Dispatchers.IO) {
             val text = runCatching {
                 ctx.contentResolver.openInputStream(uri)!!.use { it.readBytes().decodeToString() }
             }.getOrElse { return@withContext str(R.string.file_failed) }
+            if (NapperImport.looksLikeNapper(text)) {
+                val parsed = runCatching { NapperImport.parse(text, napperLabels()) }
+                    .getOrElse { return@withContext str(R.string.import_napper_failed) }
+                val result = mergeIn(parsed.events)
+                return@withContext str(R.string.imported_napper, result.added, result.updated)
+            }
             val file = runCatching { Backup.fromJson(text) }.getOrElse { return@withContext str(R.string.import_failed) }
-            val result = Backup.merge(events.all(), file.events)
-            val changed = result.merged.filter { m -> file.events.any { it.id == m.id } }
-            events.upsertAll(changed)
+            val result = mergeIn(file.events)
             if (babies.get() == null && file.baby != null) babies.upsert(file.baby)
             str(R.string.imported, result.added, result.updated)
         }
         refreshNow()
         _messages.send(UiMessage(msg))
     }
+
+    /** Import never deletes: only the added and newer entries are written. */
+    private suspend fun mergeIn(incoming: List<br.gabriel.cochilo.data.Event>): MergeResult {
+        val result = Backup.merge(events.all(), incoming)
+        val ids = incoming.mapTo(HashSet()) { it.id }
+        events.upsertAll(result.merged.filter { it.id in ids })
+        return result
+    }
+
+    private fun napperLabels() = NapperLabels(
+        heldOrWorn = str(R.string.napper_held),
+        swing = str(R.string.napper_swing),
+        inBed = str(R.string.napper_in_bed),
+        nursing = str(R.string.napper_nursing),
+        breastMilk = str(R.string.napper_breast_milk),
+        formula = str(R.string.napper_formula),
+        medicine = str(R.string.napper_medicine),
+        sides = str(R.string.napper_sides),
+    )
 }
 
 sealed interface BabyState {

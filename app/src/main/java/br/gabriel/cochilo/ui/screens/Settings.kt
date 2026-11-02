@@ -35,6 +35,7 @@ fun SettingsScreen(
     onExportJson: () -> Unit,
     onExportCsv: () -> Unit,
     onImport: () -> Unit,
+    onImportNapper: () -> Unit,
     /** Extra About rows from the build (the github build's "Check for updates"). */
     about: @Composable () -> Unit = {},
 ) {
@@ -85,6 +86,8 @@ fun SettingsScreen(
             ListRow(stringResource(R.string.export_csv), meta = stringResource(R.string.export_csv_meta), onClick = onExportCsv, trailing = chevron)
             Hairline()
             ListRow(stringResource(R.string.import_json), meta = stringResource(R.string.import_json_meta), onClick = onImport, trailing = chevron)
+            Hairline()
+            ListRow(stringResource(R.string.import_napper), meta = stringResource(R.string.import_napper_meta), onClick = onImportNapper, trailing = chevron)
         }
 
         Caption(stringResource(R.string.caption_about))
