@@ -3,6 +3,16 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.6.0 — 2026-11-02
+
+**Remember actions** (now a project rule, with "fewest taps"). What was done last is shown and
+offered first: the Feed row says which breast was last and the slide marks it (LAST), so you can
+decide whether to continue on that side; Diaper, Daylight and Routine say and mark their last kind;
+Pump shows the last amount; Medicine shows the last medicine and when. Every sheet opens on the last
+choice (breast side or bottle with its amount, diaper kind, pump amount, medicine name) and says
+"Last time: Right breast · Today 14:20". Replaces the "next: other breast" suggestion.
+Audit per entry type: `docs/flows.md`.
+
 ## 0.5.0 — 2026-11-02
 
 **Icons for every kind of entry**, so entries are known at a glance: a drop for a breastfeed, a

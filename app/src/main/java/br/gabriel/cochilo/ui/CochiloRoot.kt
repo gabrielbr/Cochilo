@@ -33,7 +33,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import br.gabriel.cochilo.domain.suggestedBreast
+import br.gabriel.cochilo.domain.lastOf
+import br.gabriel.cochilo.domain.rememberedFrom
 import br.gabriel.cochilo.R
 import br.gabriel.cochilo.data.Event
 import br.gabriel.cochilo.data.EventType
@@ -173,9 +174,9 @@ fun CochiloRoot(vm: MainViewModel) {
                                             onWokeUp = { vm.wakeUp() },
                                             onFinish = { vm.finish(it) },
                                             onNew = { type ->
-                                                // The sheet opens on the breast to offer next, so the usual feed is one tap + Save.
-                                                val e = newEvent(type, System.currentTimeMillis())
-                                                editing = Editing(if (type == EventType.FEED) e.copy(kind = suggestedBreast(log) ?: e.kind) else e, true)
+                                                // Remember actions: the sheet opens on what was done last (the same
+                                                // breast, diaper kind, bottle amount, medicine), so a repeat is one tap + Save.
+                                                editing = Editing(newEvent(type, System.currentTimeMillis()).rememberedFrom(log), true)
                                             },
                                             onQuick = vm::quickLog,
                                             onSwitch = vm::switchSide,
@@ -224,6 +225,7 @@ fun CochiloRoot(vm: MainViewModel) {
     editing?.let { ed ->
         EventSheet(
             initial = ed.event, isNew = ed.isNew, zone = zone,
+            last = if (ed.isNew) lastOf(log, ed.event.type) else null,
             onSave = { vm.save(it); editing = null },
             onDelete = { vm.delete(it); editing = null },
             onDismiss = { editing = null },

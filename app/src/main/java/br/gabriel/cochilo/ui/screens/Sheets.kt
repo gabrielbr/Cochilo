@@ -108,6 +108,8 @@ fun EventSheet(
     initial: Event,
     isNew: Boolean,
     zone: ZoneId,
+    /** For a new entry: the last one of its type, shown as "Last time: Right breast · 14:20". */
+    last: Event? = null,
     onSave: (Event) -> Unit,
     onDelete: (Event) -> Unit,
     onDismiss: () -> Unit,
@@ -160,6 +162,14 @@ fun EventSheet(
         Row(verticalAlignment = Alignment.Top) {
             Box(Modifier.weight(1f)) { SheetTitle(if (isNew) f.typeName(t) else stringResource(R.string.edit) + " · " + f.typeName(t)) }
             InfoButton(f.typeName(t), stringResource(infoText(t)))
+        }
+        if (last != null) {
+            val what = listOfNotNull(f.kindName(last.kind), last.amountMl?.let { stringResource(R.string.ml, it) }, last.note?.takeIf { t == EventType.MEDICINE })
+                .joinToString(" · ").ifEmpty { f.typeName(t) }
+            Text(
+                stringResource(R.string.sheet_last, what, f.dayTime(last.start)), style = Type.meta, color = CochiloTheme.colors.muted,
+                modifier = Modifier.padding(bottom = Spacing.space4),
+            )
         }
 
         val kinds = Kinds.forType(t)

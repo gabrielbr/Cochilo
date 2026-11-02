@@ -12,6 +12,15 @@ then [docs/research.md](docs/research.md) for the science the features rest on.
 - **Always merge and release.** Once a PR's CI is green and it has no open review threads, merge it
   (squash) and run the Release workflow with the next version and a one-line note in English and
   Portuguese. Never leave a finished PR waiting.
+- **Fewest taps.** Every action costs the fewest taps it can: the common entries are one move
+  (slide to log, one-tap buttons, notification buttons); details stay one tap away, never in the way;
+  undo instead of "are you sure?" where it's safe. Every change that adds or changes a flow updates
+  the tap audit in [docs/flows.md](docs/flows.md) and must not make a common entry cost more.
+- **Remember actions.** What was done last is shown and offered first: the last breast is marked
+  (so she can decide whether to continue on that side), the sheet opens on the last choice (diaper
+  kind, daylight, routine), the last bottle and pump amounts and the last medicine are filled in, and
+  the sheet says "Last time: … · 14:20". New entry types and kinds follow it, and the audit in
+  docs/flows.md lists what each type remembers.
 - **Never guess a repo or project.** Work in Cochilo. If a request seems to point at another repo
   (PulseLoop, the design system…), ask before opening it.
 

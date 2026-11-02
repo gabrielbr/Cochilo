@@ -45,7 +45,7 @@ import br.gabriel.cochilo.ui.theme.Type
 import kotlin.math.abs
 
 /** One thing a slide can log, e.g. "Left" for a left-breast feed. [a11y] is what TalkBack offers. */
-data class SlideOption(val key: String, val label: String, val a11y: String)
+data class SlideOption(val key: String, val label: String, val a11y: String, val last: Boolean = false)
 
 /**
  * A log row with a shortcut, after marking menus: tap opens the full sheet; slide sideways and the
@@ -63,6 +63,8 @@ fun SlideRow(
     onTap: () -> Unit,
     onPick: (SlideOption) -> Unit,
     previewActive: Int? = null,
+    /** The word that marks the option used last time ("LAST"). */
+    lastTag: String = "",
     trailing: (@Composable RowScope.() -> Unit)? = null,
 ) {
     val c = CochiloTheme.colors
@@ -139,10 +141,14 @@ fun SlideRow(
                             .background(if (on) c.ink else c.line),
                         contentAlignment = Alignment.Center,
                     ) {
-                        Text(
-                            o.label, style = Type.label, color = if (on) c.page else c.ink, textAlign = TextAlign.Center,
-                            maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.padding(horizontal = Spacing.space2),
-                        )
+                        androidx.compose.foundation.layout.Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Text(
+                                o.label, style = Type.label, color = if (on) c.page else c.ink, textAlign = TextAlign.Center,
+                                maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.padding(horizontal = Spacing.space2),
+                            )
+                            // Remember actions: the option used last time is marked.
+                            if (o.last) Text(lastTag, style = Type.caption, color = if (on) c.page else c.muted)
+                        }
                     }
                 }
             }

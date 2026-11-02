@@ -3,7 +3,8 @@ package br.gabriel.cochilo.ui.screens
 import br.gabriel.cochilo.domain.clockSpan
 import br.gabriel.cochilo.data.Kinds
 import br.gabriel.cochilo.domain.otherBreast
-import br.gabriel.cochilo.domain.suggestedBreast
+import br.gabriel.cochilo.domain.lastKindAmong
+import br.gabriel.cochilo.domain.lastOf
 import br.gabriel.cochilo.ui.kit.SlideOption
 import br.gabriel.cochilo.ui.kit.SlideRow
 import br.gabriel.cochilo.domain.overlaps
@@ -116,7 +117,11 @@ fun TodayScreen(
         }
 
         Caption(stringResource(R.string.caption_log))
-        QuickLog(onNew, onQuick, suggestedBreast(log))
+        QuickLog(
+            onNew, onQuick,
+            last = EventType.entries.associateWith { lastOf(log, it) },
+            lastKinds = EventType.entries.associateWith { t -> lastKindAmong(log, t, slideKinds(t)) },
+        )
 
         Caption(stringResource(R.string.caption_timeline))
         Timeline(todays, from, to, now, zone, daySummary(f, today, todays, from, to, now, zone))
@@ -210,23 +215,38 @@ private fun PredictionCard(p: Predictor.Result.Awake, now: Long, f: Format) {
 internal fun QuickLog(
     onNew: (EventType) -> Unit,
     onQuick: (EventType, String?) -> Unit = { _, _ -> },
-    nextBreast: String? = null,
+    /** The last entry of each type: remember actions (AGENTS.md). */
+    last: Map<EventType, Event?> = emptyMap(),
+    /** The last kind used among each row's slide options (e.g. the last breast). */
+    lastKinds: Map<EventType, String?> = emptyMap(),
     previewActive: Pair<EventType, Int>? = null,
 ) {
     val f = Format(LocalContext.current)
     val types = listOf(EventType.FEED, EventType.DIAPER, EventType.SLEEP, EventType.MEDICINE, EventType.PUMP, EventType.DAYLIGHT, EventType.ROUTINE, EventType.NOTE)
-    // One row per kind of entry. Tap: the full sheet. Slide: log at once (feed left or right,
-    // diaper wet/both/dirty…), so the most common entries cost one move, not three taps.
+    // One row per kind of entry. Tap: the full sheet, opened on what was done last. Slide: log at
+    // once (feed left or right, diaper wet/both/dirty…). Each row says what was done last, and
+    // the slide marks that option, so the person sees it before choosing.
     br.gabriel.cochilo.ui.kit.RowGroup {
         types.forEachIndexed { i, t ->
             if (i > 0) Hairline()
-            val options = slideOptions(t, f)
-            val hint = if (options.isEmpty()) null else buildString {
-                append(stringResource(R.string.slide_hint, options.joinToString(" · ") { it.label }))
-                if (t == EventType.FEED && nextBreast != null) {
-                    append(" · ")
-                    append(stringResource(R.string.slide_next, options.first { it.key == nextBreast }.label.lowercase()))
+            val prev = last[t]
+            val base = slideOptions(t, f)
+            // The last of this row's own options: for Feed, the last breast, even if a bottle came after.
+            val lastOption = lastKinds[t]
+            val options = base.map { it.copy(last = lastOption != null && it.key == lastOption) }
+            val lastWords = when {
+                lastOption != null && base.any { it.key == lastOption } -> (f.kindName(lastOption) ?: lastOption).lowercase()
+                t == EventType.PUMP -> prev?.amountMl?.let { stringResource(R.string.ml, it) }
+                t == EventType.MEDICINE -> prev?.let { e -> listOfNotNull(e.note, f.dayTime(e.start)).joinToString(" · ") }
+                else -> null
+            }
+            val hint = when {
+                options.isNotEmpty() -> buildString {
+                    append(stringResource(R.string.slide_hint, options.joinToString(" · ") { it.label }))
+                    if (lastWords != null) { append(" · "); append(stringResource(R.string.slide_last, lastWords)) }
                 }
+                lastWords != null -> stringResource(R.string.row_last, lastWords)
+                else -> null
             }
             SlideRow(
                 label = f.typeName(t),
@@ -236,9 +256,19 @@ internal fun QuickLog(
                 onTap = { onNew(t) },
                 onPick = { o -> onQuick(t, o.key.takeIf { it.isNotEmpty() }) },
                 previewActive = previewActive?.takeIf { it.first == t }?.second,
+                lastTag = stringResource(R.string.slide_last_tag),
             ) { InfoButton(f.typeName(t), stringResource(infoText(t))) }
         }
     }
+}
+
+/** The kinds each log row's slide offers (keys of slideOptions). */
+internal fun slideKinds(t: EventType): Set<String> = when (t) {
+    EventType.FEED -> setOf(Kinds.BREAST_LEFT, Kinds.BREAST_RIGHT)
+    EventType.DIAPER -> setOf(Kinds.WET, Kinds.BOTH, Kinds.DIRTY)
+    EventType.DAYLIGHT -> setOf(Kinds.OUTDOORS, Kinds.WINDOW)
+    EventType.ROUTINE -> setOf(Kinds.NAP_ROUTINE, Kinds.BEDTIME_ROUTINE)
+    else -> emptySet()
 }
 
 /** What a slide on each log row can log, left to right. */
