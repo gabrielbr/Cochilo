@@ -202,7 +202,6 @@
     <string name="info_ring">A meia-noite fica no topo e o dia gira no sentido horário. O sono é o anel de fora; mamadas, ordenha e luz do dia ficam dentro; os pontos marcam as fraldas.</string>
     <!-- Atalhos de deslizar nas linhas de registro. -->
     <string name="slide_hint">Deslize: %1$s</string>
-    <string name="slide_next">próximo: %1$s</string>
     <string name="slide_left">Esquerdo</string>
     <string name="slide_right">Direito</string>
     <string name="slide_start">Começar</string>
@@ -226,4 +225,9 @@
     <string name="live_notification_meta">Dormindo ou acordado, o tempo, o que vem a seguir e Acordou ou Começar sono, sem abrir o app.</string>
     <string name="caption_notifications">Notificações</string>
     <string name="info_medicine">Remédio: o que foi dado e quando, com o nome e a dose na nota. Ajuda a saber se a última dose foi há tempo suficiente. Siga as orientações do pediatra.</string>
+    <!-- Lembrar ações: o que foi feito por último. -->
+    <string name="slide_last">último: %1$s</string>
+    <string name="slide_last_tag">ÚLTIMO</string>
+    <string name="row_last">Último: %1$s</string>
+    <string name="sheet_last">Da última vez: %1$s · %2$s</string>
 </resources>

@@ -10,12 +10,33 @@ import org.junit.Test
 class QuickLogTest {
     private fun feed(start: Long, kind: String) = Event(type = EventType.FEED, start = start, end = start + 600_000, kind = kind)
 
-    @Test fun offersTheOtherBreastFromTheLastBreastfeed() {
-        assertNull(suggestedBreast(emptyList()))
-        assertEquals(Kinds.BREAST_RIGHT, suggestedBreast(listOf(feed(1, Kinds.BREAST_RIGHT), feed(2, Kinds.BREAST_LEFT))))
-        assertEquals(Kinds.BREAST_LEFT, suggestedBreast(listOf(feed(2, Kinds.BREAST_RIGHT), feed(1, Kinds.BREAST_LEFT))))
-        // A bottle afterwards doesn't change which breast is next.
-        assertEquals(Kinds.BREAST_LEFT, suggestedBreast(listOf(feed(1, Kinds.BREAST_RIGHT), feed(5, Kinds.BOTTLE))))
+    @Test fun remembersTheLastBreast() {
+        // Right was last: it's what the row marks and the sheet opens on.
+        val log = listOf(feed(1, Kinds.BREAST_LEFT), feed(2, Kinds.BREAST_RIGHT))
+        assertEquals(Kinds.BREAST_RIGHT, lastKind(log, EventType.FEED))
+        assertNull(lastKind(emptyList(), EventType.FEED))
+        // The row remembers the last breast even when a bottle came after.
+        val withBottle = log + feed(3, Kinds.BOTTLE)
+        assertEquals(Kinds.BREAST_RIGHT, lastKindAmong(withBottle, EventType.FEED, setOf(Kinds.BREAST_LEFT, Kinds.BREAST_RIGHT)))
+        val fresh = Event(type = EventType.FEED, start = 10, kind = Kinds.BREAST_LEFT)
+        assertEquals(Kinds.BREAST_RIGHT, fresh.rememberedFrom(log).kind)
+    }
+
+    @Test fun remembersTheBottleAmountAndTheMedicine() {
+        val log = listOf(
+            Event(type = EventType.FEED, start = 1, end = 2, kind = Kinds.BOTTLE, amountMl = 120),
+            Event(type = EventType.MEDICINE, start = 3, note = "Luftal"),
+            Event(type = EventType.PUMP, start = 4, end = 5, amountMl = 90),
+            Event(type = EventType.DIAPER, start = 6, kind = Kinds.BOTH),
+        )
+        val bottle = Event(type = EventType.FEED, start = 10, kind = Kinds.BREAST_LEFT).rememberedFrom(log)
+        assertEquals(Kinds.BOTTLE, bottle.kind)
+        assertEquals(120, bottle.amountMl)
+        assertEquals("Luftal", Event(type = EventType.MEDICINE, start = 10).rememberedFrom(log).note)
+        assertEquals(90, Event(type = EventType.PUMP, start = 10).rememberedFrom(log).amountMl)
+        assertEquals(Kinds.BOTH, Event(type = EventType.DIAPER, start = 10, kind = Kinds.WET).rememberedFrom(log).kind)
+        // A note isn't repeated: notes are one-offs.
+        assertNull(Event(type = EventType.NOTE, start = 10).rememberedFrom(log + Event(type = EventType.NOTE, start = 8, note = "x")).note)
     }
 
     @Test fun otherBreastIsOnlyForBreasts() {

@@ -10,7 +10,7 @@ A "tap" is a touch on a target; a "slide" is one touch that moves sideways and l
 | Entry | Before | Now | How |
 |---|---|---|---|
 | Start / end a sleep | 1 tap / 1 tap | same | Start sleep / Woke up on Today (already one action) |
-| Breastfeed, suggested side | 2 taps (Feed, Save) | **1 slide**, or 2 taps | Slide Feed toward the side; the sheet also opens on the side to offer next |
+| Breastfeed, same side as last | 2 taps (Feed, Save) | **1 slide**, or 2 taps | Slide Feed toward the side; the sheet opens on the last side, marked |
 | Breastfeed, other side | 3 taps (Feed, side, Save) | **1 slide** | Slide left = left breast, right = right breast |
 | Switch side mid-feed | 4 taps (Finish, Feed, side, Save) | **1 slide** | Slide the running feed: this side ends, the other starts |
 | End a feed / walk / pump | 1 tap | same | Finish on the running row |
@@ -21,6 +21,26 @@ A "tap" is a touch on a target; a "slide" is one touch that moves sideways and l
 | Pumping | 2 taps | **1 slide** | Slide either way: the timer starts |
 | Bottle with ml, note, past entry | 4+ taps | same | Tap the row: the sheet, where typing belongs |
 | Undo any of the above | — | 1 tap | Undo in the snackbar that says what was logged |
+
+## Remember actions (project rule)
+
+What was done last is shown and offered first, so the person sees it before choosing, and a repeat
+costs the fewest taps. Audit of every entry type (2026-11-02):
+
+| Entry | The log row shows | The slide marks | The sheet opens with | "Last time" line |
+|---|---|---|---|---|
+| Feed | last breast ("last: right breast"), even if a bottle came after | that breast (LAST) | the last feed's kind: breast side, or bottle with its last amount | ✅ |
+| Diaper | last kind | that kind | the last kind | ✅ |
+| Daylight | last kind | that kind | the last kind | ✅ |
+| Routine | last kind | that kind | the last kind | ✅ |
+| Pump | last amount ("last: 90 ml") | (one option) | the last amount | ✅ |
+| Medicine | last medicine and when ("Luftal · Today 14:20") | (no slide) | the last medicine's name | ✅ |
+| Sleep | (the Sleep panel shows awake/asleep since) | (no slide) | the last half hour, as before | ✅ |
+| Note | nothing: notes are one-offs | (no slide) | empty | ✅ |
+
+Code: `lastOf`, `lastKind`, `lastKindAmong`, `Event.rememberedFrom` in `domain/QuickLog.kt`
+(tested in `QuickLogTest`); the rows in `Today.kt` (`QuickLog`); the sheet's line in `Sheets.kt`.
+This replaced the earlier "next: other breast" suggestion: the app shows what happened, she decides.
 
 ## The gesture
 
@@ -45,12 +65,10 @@ The rules it follows, from what the research says goes wrong with gestures:
 
 ## Smart defaults
 
-- The breast to offer next is the other side from the last breastfeed (`suggestedBreast`). The Feed
-  row says so, and tapping Feed opens the sheet on that side.
+- See "Remember actions" above: every sheet opens on what was done last.
 
 ## Next candidates (not built yet)
 
-- Remember the last bottle amount as the sheet's default.
 - A home-screen widget or quick-settings tile for Start sleep / Woke up and the two breasts, so
   the commonest entries don't even need the app open.
 - Long-press on Start sleep to log a sleep that began a few minutes ago (5 / 10 / 15 min), for when

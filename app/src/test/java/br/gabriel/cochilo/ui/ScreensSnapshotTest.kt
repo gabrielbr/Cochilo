@@ -159,6 +159,13 @@ class ScreensSnapshotTest {
         }
     }
 
+    /** What was logged last of each type, as Today passes it (remember actions). */
+    private val lastEntries get() = EventType.entries.associateWith { t -> log.filter { it.type == t }.maxByOrNull { it.start } }
+
+    private val lastKinds get() = EventType.entries.associateWith { t ->
+        br.gabriel.cochilo.domain.lastKindAmong(log, t, br.gabriel.cochilo.ui.screens.slideKinds(t))
+    }
+
     private val sleepingLog get() = log + Event(type = EventType.SLEEP, start = at(31, 14, 50))
 
     private fun light() = paparazzi.unsafeUpdateConfig(DeviceConfig.PIXEL_5.copy(nightMode = NightMode.NOTNIGHT))
@@ -198,7 +205,7 @@ class ScreensSnapshotTest {
         pt(false)
         paparazzi.snapshot {
             CochiloTheme(false) {
-                Frame { Column(Modifier.fillMaxSize().padding(CTokens.Spacing.space4)) { QuickLog({}, nextBreast = br.gabriel.cochilo.data.Kinds.BREAST_RIGHT) } }
+                Frame { Column(Modifier.fillMaxSize().padding(CTokens.Spacing.space4)) { QuickLog({}, last = lastEntries, lastKinds = lastKinds) } }
             }
         }
     }
@@ -209,7 +216,7 @@ class ScreensSnapshotTest {
             CochiloTheme(false) {
                 Frame {
                     Column(Modifier.fillMaxSize().padding(CTokens.Spacing.space4)) {
-                        QuickLog({}, nextBreast = br.gabriel.cochilo.data.Kinds.BREAST_RIGHT, previewActive = EventType.FEED to 1)
+                        QuickLog({}, last = lastEntries, lastKinds = lastKinds, previewActive = EventType.FEED to 1)
                     }
                 }
             }
