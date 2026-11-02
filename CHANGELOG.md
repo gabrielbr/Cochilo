@@ -3,6 +3,14 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.14.0 — 2026-11-02
+
+**Little celebrations.** When what you were trying for happens (a full nap, a sleep right on time,
+the longest night of the week, daylight done, the routine before bed, a whole week logged), the
+baby you drew lifts its arms in a soft pink card with a few warm words, then goes away by itself.
+Never a scolding, never a promise; at most three a day; just the words, dim, at night. Settings ›
+Notifications › Little celebrations turns it off. `docs/celebrations.md`.
+
 ## 0.13.0 — 2026-11-02
 
 **Meet the baby.** A warm first run: welcome, the baby's name and birth date, then how the baby

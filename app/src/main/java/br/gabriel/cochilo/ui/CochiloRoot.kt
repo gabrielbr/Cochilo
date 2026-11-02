@@ -133,6 +133,8 @@ fun CochiloRoot(vm: MainViewModel) {
                             baby, theme, zone,
                             onEditBaby = { editingBaby = true },
                             onEditLook = { editingLook = true },
+                            celebrations = vm.celebrations.collectAsState().value,
+                            onCelebrations = vm::setCelebrations,
                             onTheme = vm::setTheme,
                             onExportJson = { exportJson.launch("cochilo-${LocalDate.now(zone)}.json") },
                             onExportCsv = { exportCsv.launch("cochilo-${LocalDate.now(zone)}.csv") },
@@ -192,6 +194,23 @@ fun CochiloRoot(vm: MainViewModel) {
                                         2 -> HistoryScreen(log, now, zone) { editing = Editing(it, false) }
                                         else -> PatternsScreen(log, now, zone, weeks)
                                     }
+                                }
+                                // A little celebration when what she was trying for happens (docs/celebrations.md).
+                                val cheer = vm.celebration.collectAsState().value
+                                if (cheer != null) {
+                                    val who = baby?.name ?: ""
+                                    val words = when (cheer.moment) {
+                                        br.gabriel.cochilo.domain.Moment.FULL_NAP -> stringResource(R.string.cheer_full_nap)
+                                        br.gabriel.cochilo.domain.Moment.ON_TIME -> stringResource(R.string.cheer_on_time, who)
+                                        br.gabriel.cochilo.domain.Moment.LONGEST_NIGHT -> stringResource(R.string.cheer_longest_night, who)
+                                        br.gabriel.cochilo.domain.Moment.DAYLIGHT -> stringResource(R.string.cheer_daylight)
+                                        br.gabriel.cochilo.domain.Moment.ROUTINE_BEFORE_BED -> stringResource(R.string.cheer_routine)
+                                        br.gabriel.cochilo.domain.Moment.WEEK_LOGGED -> stringResource(R.string.cheer_week, who)
+                                    }
+                                    br.gabriel.cochilo.ui.kit.CelebrationCard(
+                                        words, look, cheer.quiet, onDone = vm::celebrationSeen,
+                                        modifier = Modifier.align(Alignment.TopCenter).padding(br.gabriel.cochilo.ui.theme.CTokens.Spacing.space4),
+                                    )
                                 }
                                 // The Log button: the main action, under the right thumb, on every tab
                                 // (docs/flows.md). Press, drag to a kind, slide to a choice, let go.

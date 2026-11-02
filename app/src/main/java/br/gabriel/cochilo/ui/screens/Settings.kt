@@ -44,6 +44,8 @@ fun SettingsScreen(
     about: @Composable () -> Unit = {},
     /** Settings › Baby › Appearance: the look picker. */
     onEditLook: () -> Unit = {},
+    celebrations: Boolean = true,
+    onCelebrations: (Boolean) -> Unit = {},
 ) {
     val context = LocalContext.current
     val f = Format(context, zone)
@@ -105,6 +107,11 @@ fun SettingsScreen(
             br.gabriel.cochilo.ui.kit.SwitchRow(
                 stringResource(R.string.live_notification), stringResource(R.string.live_notification_meta),
                 liveNotification, onLiveNotification,
+            )
+            Hairline()
+            br.gabriel.cochilo.ui.kit.SwitchRow(
+                stringResource(R.string.celebrations), stringResource(R.string.celebrations_meta),
+                celebrations, onCelebrations,
             )
         }
 

@@ -78,6 +78,27 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     fun refreshNow() { _now.value = System.currentTimeMillis() }
 
+    // Celebrations (docs/celebrations.md): after the tap, the pure rules decide; the root shows it.
+    private val _celebration = MutableStateFlow<br.gabriel.cochilo.domain.Celebration?>(null)
+    val celebration: StateFlow<br.gabriel.cochilo.domain.Celebration?> = _celebration
+    val celebrations: StateFlow<Boolean> = ctx.prefs.celebrations
+    fun setCelebrations(on: Boolean) = ctx.prefs.setCelebrations(on)
+    fun celebrationSeen() { _celebration.value = null }
+
+    private suspend fun celebrate(trigger: br.gabriel.cochilo.domain.Trigger) {
+        if (!ctx.prefs.celebrations.value) return
+        val now = System.currentTimeMillis()
+        val c = br.gabriel.cochilo.domain.Celebrations.after(trigger, events.all(), zone, now, ctx.prefs.celebrationsShown) ?: return
+        ctx.prefs.celebrationsShown = ctx.prefs.celebrationsShown + (c.moment to java.time.Instant.ofEpochMilli(now).atZone(zone).toLocalDate())
+        _celebration.value = c
+    }
+
+    /** The prediction as it stood before a tap (for "on time" and "a full nap"). */
+    private suspend fun predictionNow(now: Long): br.gabriel.cochilo.domain.Predictor.Result {
+        val b = babies.get() ?: return br.gabriel.cochilo.domain.Predictor.Result.NeedData
+        return br.gabriel.cochilo.domain.Predictor(zone).predict(events.all(), br.gabriel.cochilo.domain.ageWeeks(b.birthDate, b.dueDate, now), now)
+    }
+
     // With no arguments, read the text as it is: Context.getString(id, *emptyArray()) still
     // formats, and throws on a template like "Left %1${'$'}d min" that is filled in later.
     private fun str(id: Int, vararg args: Any) = if (args.isEmpty()) ctx.getString(id) else ctx.getString(id, *args)
@@ -87,18 +108,25 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     fun saveBaby(baby: Baby) = viewModelScope.launch { babies.upsert(baby) }
 
     fun startSleep() = viewModelScope.launch {
-        entries.startSleep()
+        val before = predictionNow(System.currentTimeMillis())
+        val sleep = entries.startSleep()
         refreshNow()
+        if (sleep != null) celebrate(br.gabriel.cochilo.domain.Trigger.StartedSleep(sleep, before))
     }
 
     fun wakeUp() = viewModelScope.launch {
+        val before = predictionNow(System.currentTimeMillis())
+        val running = events.all().filter { it.type == EventType.SLEEP && it.end == null }.map { it.id }
         entries.wakeUp()
         refreshNow()
+        events.all().filter { it.id in running }.maxByOrNull { it.start }
+            ?.let { celebrate(br.gabriel.cochilo.domain.Trigger.WokeUp(it, before)) }
     }
 
     fun finish(e: Event) = viewModelScope.launch {
         entries.finish(e.id)
         refreshNow()
+        events.byId(e.id)?.let { celebrate(br.gabriel.cochilo.domain.Trigger.Logged(it)) }
     }
 
     /**
@@ -116,6 +144,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         _messages.send(UiMessage(str(if (type.hasDuration) R.string.quick_started else R.string.quick_logged, name), str(R.string.undo)) {
             viewModelScope.launch { events.delete(e); refreshNow() }
         })
+        celebrate(br.gabriel.cochilo.domain.Trigger.Logged(e))
     }
 
     /** During a breastfeed: end this side now and start the other, in one move. */
@@ -130,6 +159,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     fun save(e: Event) = viewModelScope.launch {
         events.upsert(e.copy(updatedAt = System.currentTimeMillis()))
         refreshNow()
+        celebrate(br.gabriel.cochilo.domain.Trigger.Logged(e))
     }
 
     fun delete(e: Event) = viewModelScope.launch {

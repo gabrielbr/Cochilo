@@ -48,6 +48,27 @@ class AvatarSnapshotTest {
         }
     }
 
+    @Test fun celebration_full_nap_light() {
+        paparazzi.snapshot {
+            CochiloTheme(false) {
+                Column(Modifier.fillMaxSize().background(CochiloTheme.colors.page).padding(CTokens.Spacing.space4)) {
+                    br.gabriel.cochilo.ui.kit.CelebrationCard("A full nap. Well done, both of you.", BabyLook(4, Hair.CURLY, HairColor.BLACK, BabyGender.GIRL), quiet = false, onDone = {}, preview = true)
+                }
+            }
+        }
+    }
+
+    @Test fun celebration_quiet_ptBR_dark() {
+        paparazzi.unsafeUpdateConfig(DeviceConfig.PIXEL_5.copy(nightMode = NightMode.NIGHT, locale = "pt-rBR"))
+        paparazzi.snapshot {
+            CochiloTheme(true) {
+                Column(Modifier.fillMaxSize().background(CochiloTheme.colors.page).padding(CTokens.Spacing.space4)) {
+                    br.gabriel.cochilo.ui.kit.CelebrationCard("Rotina feita. Boa noite.", BabyLook(), quiet = true, onDone = {}, preview = true)
+                }
+            }
+        }
+    }
+
     @Test fun onboarding_meet_light() {
         paparazzi.unsafeUpdateConfig(DeviceConfig.PIXEL_5.copy(nightMode = NightMode.NOTNIGHT))
         paparazzi.snapshot { CochiloTheme(false) { br.gabriel.cochilo.ui.kit.Frame { Onboarding(ZoneId.systemDefault(), {}, previewName = "Dante") } } }
