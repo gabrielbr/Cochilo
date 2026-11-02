@@ -234,4 +234,8 @@
     <string name="log_button">Registrar: segure e arraste até um tipo, depois até uma opção</string>
     <string name="log_close">Fechar</string>
     <string name="diaper_both_short">Os dois</string>
+    <!-- Fabric: Tatá's slings, picked in Settings, wrap the Today card. The fabric names are her product names, the same in both languages. -->
+    <string name="fabric">Tecido</string>
+    <string name="fabric_meta">Envolve o cartão de Hoje num dos slings da Tatá.</string>
+    <string name="fabric_plain">Liso</string>
 </resources>

@@ -23,7 +23,13 @@ one commit on top of the design system's `main` at 0.4.0 (self-update):
   brand), rounder corners (core values), and the brand's ink, page, line and panel warm to plum.
   New contrast pairs pass. Audit `audits/2026-11-02-v0.7.0-tecidos.md`.
 
-Both checked on a fresh checkout of the design system's `main`: `git am` applies it,
+**[0003-Tata-fabrics-as-textures-0.8.0.patch](0003-Tata-fabrics-as-textures-0.8.0.patch)**, on top of 0002:
+
+- **0.8.0, brand textures:** eleven crops of her slings in `assets/textures/tata-slings/` (source
+  and permission beside them), the rule that no text sits on a texture (docs/brands.md), and the
+  Fabric frame and Fabric picker components. Audit `audits/2026-11-02-v0.8.0-textures.md`.
+
+All checked on a fresh checkout of the design system's `main`: `git am` applies it,
 `check_tokens.py` reports 0 errors, the tests pass, and `drift.py --cochilo` against this repo
 reports 0 differences.
 
@@ -32,7 +38,7 @@ To merge it there:
 ```sh
 cd Gabriel-Deisgn-System
 git checkout -b cochilo-tata
-git am ../Cochilo/design-system/0001-*.patch ../Cochilo/design-system/0002-*.patch
+git am ../Cochilo/design-system/000*.patch
 python3 scripts/check_tokens.py && python3 -m unittest discover -s tests
 python3 scripts/drift.py --cochilo ../Cochilo
 git push -u origin cochilo-tata   # then open the PR with the repo's template

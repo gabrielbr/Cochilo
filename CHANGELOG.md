@@ -3,6 +3,14 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.9.0 — 2026-11-02
+
+**Her fabrics.** Pick one of Tatá's real slings in Settings › Appearance › Fabric and it wraps the
+Today card, the way a sling wraps the baby: Pérola, Rosa Chá, Capuccino, Mel, Trevo, Cereja,
+Crepúsculo, Chumbo, and the prints Balão, Folhagem and Tropical, photographed from her shop. One
+tap, applied at once; Plain is the default. No text ever sits on a fabric. Design system 0.8.0;
+`docs/tata-slings/textures.md`.
+
 ## 0.8.0 — 2026-11-02
 
 **Tecidos: warmer, more colourful, made for her.** Cochilo looked cold and masculine (navy lines on

@@ -20,7 +20,7 @@ the mark, and nothing else, so the app follows every Gabriel standard and looks 
 | §5 softer radii | ✅ 0.8.0: Cochilo's layer uses 8 for buttons and chips, 16 for cards, round pills in the Log menu (the system's own values; the brand still doesn't change radii) |
 | §3 fabric palette (Mel, Trevo, Imensidão…) | ✅ 0.8.0: each kind of entry's data colour and icon round (§3a). Still never UI state |
 | §3 `eventCarry`, a data colour for sling naps | ⬜ Waits for the "where the baby slept" log (data colours are the system's) |
-| §6 the woven texture ("trama") | ⬜ Not built |
+| §6 the woven texture ("trama") | ⬜ Not built; instead (0.9.0) her real fabrics wrap the Today card, picked in Settings ([textures.md](textures.md)) |
 | §8 tip card on `tealSoft` | ⬜ The "i" tooltips use the system's panel colours |
 
 ## 1. What the brand looks like today (measured)
@@ -174,6 +174,9 @@ The logo's serif is **only the logo**. Don't set headings in a look-alike.
   animations.
 
 ## 6. Texture and imagery
+
+- **Her fabrics (Cochilo 0.9.0):** photos of her slings wrap the Today card, picked by the person;
+  never behind text. [textures.md](textures.md).
 
 - **Trama (weave):** the diagonal hatching from the logo letters, 45°, 1 px lines at 4 px pitch, in
   `teal` at 25% over `page`. Use on the insert card, guide covers, Play feature graphic and the

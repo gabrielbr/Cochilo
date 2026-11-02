@@ -38,6 +38,8 @@ fun SettingsScreen(
     onImportNapper: () -> Unit,
     liveNotification: Boolean = true,
     onLiveNotification: (Boolean) -> Unit = {},
+    fabric: br.gabriel.cochilo.ui.kit.Fabric = br.gabriel.cochilo.ui.kit.Fabric.PLAIN,
+    onFabric: (br.gabriel.cochilo.ui.kit.Fabric) -> Unit = {},
     /** Extra About rows from the build (the github build's "Check for updates"). */
     about: @Composable () -> Unit = {},
 ) {
@@ -70,6 +72,12 @@ fun SettingsScreen(
                     ThemeMode.DARK to stringResource(R.string.theme_dark),
                 )
                 FilterChips(ThemeMode.entries, theme, { labels.getValue(it) }, onTheme)
+            }
+            Hairline()
+            Column(Modifier.padding(horizontal = Spacing.space4, vertical = Spacing.space3)) {
+                androidx.compose.material3.Text(stringResource(R.string.fabric), style = br.gabriel.cochilo.ui.theme.Type.body, color = CochiloTheme.colors.ink)
+                androidx.compose.material3.Text(stringResource(R.string.fabric_meta), style = br.gabriel.cochilo.ui.theme.Type.meta, color = CochiloTheme.colors.muted)
+                br.gabriel.cochilo.ui.kit.FabricPicker(fabric, onFabric)
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 Hairline()

@@ -92,6 +92,7 @@ fun CochiloRoot(vm: MainViewModel) {
     val exportCsv = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("text/csv")) { it?.let(vm::exportCsv) }
     val import = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { it?.let(vm::importFile) }
     val live by vm.liveNotification.collectAsState()
+    val fabric = br.gabriel.cochilo.ui.kit.Fabric.of(vm.fabric.collectAsState().value)
     val askNotifications = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { vm.notificationsAnswered() }
     fun requestNotifications() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
@@ -138,6 +139,8 @@ fun CochiloRoot(vm: MainViewModel) {
                                 vm.setLiveNotification(on)
                                 if (on && !br.gabriel.cochilo.notify.LiveNotifications.canPost(context)) requestNotifications()
                             },
+                            fabric = fabric,
+                            onFabric = { vm.setFabric(it.key) },
                             about = { AboutUpdates() },
                         )
                     }

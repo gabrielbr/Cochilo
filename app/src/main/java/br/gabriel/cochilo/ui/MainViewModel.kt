@@ -48,6 +48,11 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     fun setLiveNotification(on: Boolean) = ctx.prefs.setLiveNotification(on)
 
+    /** The fabric that wraps the Today card (remembered: the picker opens on it). */
+    val fabric: StateFlow<String?> = ctx.prefs.fabric
+
+    fun setFabric(key: String) = ctx.prefs.setFabric(key)
+
     /** Ask for the notification permission once, the first time the app has a baby (Android 13+). */
     fun shouldAskNotifications(): Boolean = !ctx.prefs.askedNotificationPermission
     fun askedNotifications() { ctx.prefs.askedNotificationPermission = true }
