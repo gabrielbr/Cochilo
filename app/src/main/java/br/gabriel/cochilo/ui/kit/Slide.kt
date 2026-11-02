@@ -45,7 +45,14 @@ import br.gabriel.cochilo.ui.theme.Type
 import kotlin.math.abs
 
 /** One thing a slide can log, e.g. "Left" for a left-breast feed. [a11y] is what TalkBack offers. */
-data class SlideOption(val key: String, val label: String, val a11y: String, val last: Boolean = false)
+data class SlideOption(
+    val key: String,
+    val label: String,
+    val a11y: String,
+    val last: Boolean = false,
+    /** An icon beside the label where a word alone would be long (the bottle in "🍼 120 ml"). */
+    @DrawableRes val icon: Int? = null,
+)
 
 /**
  * A log row with a shortcut, after marking menus: tap opens the full sheet; slide sideways and the

@@ -230,4 +230,8 @@
     <string name="slide_last_tag">ÚLTIMO</string>
     <string name="row_last">Último: %1$s</string>
     <string name="sheet_last">Da última vez: %1$s · %2$s</string>
+    <!-- O botão Registrar (docs/flows.md). -->
+    <string name="log_button">Registrar: segure e arraste até um tipo, depois até uma opção</string>
+    <string name="log_close">Fechar</string>
+    <string name="diaper_both_short">Os dois</string>
 </resources>
