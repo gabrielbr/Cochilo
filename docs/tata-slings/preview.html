@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cochilo da Tatá: design preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --page:#FBF7F2;--surface:#FFFFFF;--ink:#13293D;--muted:#5F6B78;--line:#E9E2D8;
+  --teal:#5DC2BB;--on-teal:#13293D;--teal-text:#1E6E68;--teal-soft:#DFF3F1;
+  --cereja:#E07A6B;--cereja-text:#B5473A;--cereja-soft:#FBE9E5;
+  --panel:#13293D;--on-panel:#FBF7F2;--on-panel-muted:#A3B0BC;
+  --night:#5B4BDB;--nap:#1C7ED6;--feed:#C2570C;--carry:#1E8C84;--daylight:#8C6A00;
+  --r-s:8px;--r-m:12px;--r-l:20px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --page:#10161C;--surface:#171D24;--ink:#EDF1F4;--muted:#A3B0BC;--line:#26303A;
+  --on-teal:#10161C;--teal-text:#7FD6CF;--teal-soft:#173A38;--cereja:#FF9C8E;--cereja-text:#FF9C8E;--cereja-soft:#3A2220;
+  --panel:#0B1A27;--on-panel:#EDF1F4;--night:#9A8CFF;--nap:#5BA8FF;--feed:#FF9A5C;--carry:#5DC2BB;--daylight:#FFD25C;}}
+:root[data-theme="dark"]{
+  --page:#10161C;--surface:#171D24;--ink:#EDF1F4;--muted:#A3B0BC;--line:#26303A;
+  --on-teal:#10161C;--teal-text:#7FD6CF;--teal-soft:#173A38;--cereja:#FF9C8E;--cereja-text:#FF9C8E;--cereja-soft:#3A2220;
+  --panel:#0B1A27;--on-panel:#EDF1F4;--night:#9A8CFF;--nap:#5BA8FF;--feed:#FF9A5C;--carry:#5DC2BB;--daylight:#FFD25C;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--ink);font:400 16px/24px "Libre Franklin",system-ui,sans-serif}
+main{max-width:1040px;margin:0 auto;padding:32px 16px 64px}
+h1{font-size:30px;line-height:36px;margin:0 0 4px}
+h2{font-size:12px;line-height:16px;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);margin:48px 0 16px}
+.lede{color:var(--muted);margin:0 0 8px;max-width:60ch}
+.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+.sw{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-l);overflow:hidden}
+.sw div{height:72px}
+.sw p{margin:0;padding:8px 12px;font-size:13px;line-height:20px}
+.sw b{display:block;font-size:14px}
+.trama{background-image:repeating-linear-gradient(45deg,color-mix(in srgb,var(--teal) 25%,transparent) 0 1px,transparent 1px 4px)}
+.row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.btn{font-family:inherit;font-weight:600;font-size:16px;line-height:22px;min-height:52px;padding:0 24px;border-radius:999px;border:0;cursor:pointer}
+.primary{background:var(--teal);color:var(--on-teal)}
+.secondary{background:transparent;color:var(--ink);border:1.5px solid var(--ink)}
+.chip{font-size:14px;padding:6px 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface);display:inline-flex;gap:8px;align-items:center}
+.chip.on{background:var(--teal-soft);color:var(--teal-text);border-color:transparent;font-weight:600}
+.dot{width:10px;height:10px;border-radius:50%}
+.phones{display:grid;gap:24px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.phone{border:4px solid var(--teal);border-radius:28px;background:var(--page);padding:16px;max-width:340px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-l);padding:16px;margin-top:12px}
+.card h3{margin:0;font-size:22px;line-height:28px}
+.small{font-size:14px;line-height:22px;color:var(--muted);margin:4px 0 0}
+.tip{background:var(--teal-soft);border-radius:var(--r-l);padding:12px 16px;margin-top:12px;font-size:14px;line-height:22px}
+.tip a{color:var(--teal-text);font-weight:600}
+.panel{background:var(--panel);color:var(--on-panel);border-radius:var(--r-l);padding:20px}
+.panel .t{font-size:56px;line-height:64px;font-weight:700;letter-spacing:-1px;font-variant-numeric:tabular-nums}
+.panel .m{color:var(--on-panel-muted);font-size:14px}
+.timeline{display:flex;height:24px;border-radius:var(--r-s);overflow:hidden;margin-top:12px;background:var(--line)}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:13px;margin-top:8px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.voice{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.voice div{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-m);padding:12px 16px}
+.voice s{color:var(--muted)}
+.cover{border-radius:var(--r-l);padding:28px;background:var(--teal-soft);position:relative;overflow:hidden}
+.cover .trama{position:absolute;inset:0}
+.cover *{position:relative}
+.cover p{margin:0;font-size:14px;color:var(--teal-text);font-weight:600}
+.cover strong{display:block;font-size:30px;line-height:36px}
+.err{background:var(--cereja-soft);color:var(--cereja-text);font-weight:700;font-size:12px;letter-spacing:.5px;text-transform:uppercase;padding:4px 10px;border-radius:999px}
+.toggle{float:right}
+@media (max-width:480px){.panel .t{font-size:44px;line-height:52px}}
+</style>
+</head>
+<body>
+<main>
+<button class="btn secondary toggle" id="theme" type="button">Tema escuro</button>
+<h1>Cochilo, da Tatá Slings</h1>
+<p class="lede">A preview of the proposed design system: the site's teal, warm Pérola pages, navy ink and Libre Franklin. Draft 0.1, for Tatá to approve.</p>
+
+<section class="cover" style="margin-top:24px">
+  <div class="trama"></div>
+  <p>Cochilo · da Tatá Slings</p>
+  <strong>Toda soneca conta. Até no colo.</strong>
+</section>
+
+<h2>Brand colours</h2>
+<div class="grid">
+  <div class="sw"><div style="background:#5DC2BB"></div><p><b>Teal</b>#5DC2BB · fill only</p></div>
+  <div class="sw"><div style="background:#13293D"></div><p><b>Navy (ink, night)</b>#13293D</p></div>
+  <div class="sw"><div style="background:#FBF7F2"></div><p><b>Pérola (page)</b>#FBF7F2</p></div>
+  <div class="sw"><div style="background:#1E6E68"></div><p><b>Teal text</b>#1E6E68 · 5.7:1</p></div>
+  <div class="sw"><div style="background:#DFF3F1"></div><p><b>Teal soft</b>#DFF3F1</p></div>
+  <div class="sw"><div style="background:#E07A6B"></div><p><b>Cereja</b>#E07A6B · stop</p></div>
+  <div class="sw"><div style="background:#5F6B78"></div><p><b>Muted</b>#5F6B78 · 5.1:1</p></div>
+  <div class="sw"><div class="trama" style="background-color:#FBF7F2"></div><p><b>Trama</b>woven texture</p></div>
+</div>
+
+<h2>Fabric palette (marketing and themes)</h2>
+<div class="grid">
+  <div class="sw"><div style="background:#D9A441"></div><p><b>Mel</b>#D9A441</p></div>
+  <div class="sw"><div style="background:#B08B6E"></div><p><b>Capuccino</b>#B08B6E</p></div>
+  <div class="sw"><div style="background:#5B3E31"></div><p><b>Chocolate</b>#5B3E31</p></div>
+  <div class="sw"><div style="background:#E8B4A8"></div><p><b>Rosa Chá</b>#E8B4A8</p></div>
+  <div class="sw"><div style="background:#B8323F"></div><p><b>Cereja</b>#B8323F</p></div>
+  <div class="sw"><div style="background:#6E9C7A"></div><p><b>Trevo</b>#6E9C7A</p></div>
+  <div class="sw"><div style="background:#2F5D8A"></div><p><b>Imensidão</b>#2F5D8A</p></div>
+  <div class="sw"><div style="background:#B7A6D6"></div><p><b>Lavanda</b>#B7A6D6</p></div>
+  <div class="sw"><div style="background:#4A4F55"></div><p><b>Chumbo</b>#4A4F55</p></div>
+</div>
+
+<h2>Controls</h2>
+<div class="row">
+  <button class="btn primary" type="button">Começar soneca</button>
+  <button class="btn secondary" type="button">Registrar mamada</button>
+  <span class="chip on">Sling</span><span class="chip">Berço</span><span class="chip">Colo</span>
+  <span class="chip"><span class="dot" style="background:var(--carry)"></span>Soneca no sling</span>
+  <span class="err">Interrompida</span>
+</div>
+
+<h2>Screens</h2>
+<div class="phones">
+  <div class="phone">
+    <h1>Hoje</h1>
+    <div class="small">Dante · 12 semanas</div>
+    <div class="card">
+      <div class="small" style="margin:0">ACORDADO HÁ 1H20</div>
+      <h3>Próxima soneca por volta das 14:20</h3>
+      <p class="small">Nos últimos 7 dias, a segunda janela do dia foi de 1h45 (6 registros), perto da faixa para 3 meses.</p>
+    </div>
+    <div class="tip">No sling, rosto sempre visível e queixo longe do peito. Cabe um dedo entre eles? Então está bom. <a href="#">Ver o vídeo da Tatá</a></div>
+    <div style="margin-top:16px"><button class="btn primary" style="width:100%" type="button">Começar soneca</button></div>
+    <div class="timeline" aria-label="Linha do tempo: noite até 6h, soneca no berço às 8h, soneca no sling às 11h, passeio às 13h">
+      <span style="flex:6;background:var(--night)"></span><span style="flex:2"></span><span style="flex:1;background:var(--nap)"></span><span style="flex:2"></span><span style="flex:1;background:var(--carry)"></span><span style="flex:1"></span><span style="flex:1;background:var(--daylight)"></span><span style="flex:10"></span>
+    </div>
+    <div class="legend"><span><i class="dot" style="background:var(--night)"></i>Noite</span><span><i class="dot" style="background:var(--nap)"></i>Soneca no berço</span><span><i class="dot" style="background:var(--carry)"></i>Soneca no sling</span><span><i class="dot" style="background:var(--daylight)"></i>Luz do dia</span></div>
+  </div>
+  <div class="phone">
+    <div class="panel">
+      <div class="m">Dormindo no sling</div>
+      <div class="t">0:42</div>
+      <div class="m">Começou às 13:38</div>
+    </div>
+    <div style="margin-top:16px"><button class="btn primary" style="width:100%" type="button">Acordou</button></div>
+    <div class="card">
+      <h3>Sonecas: 3</h3>
+      <p class="small">Berço: 1 · Sling: 2 · Total: 2h50</p>
+    </div>
+    <div class="card" style="display:flex;justify-content:space-between;align-items:center">
+      <div><b>Loja Tatá Slings</b><div class="small" style="margin:0">Slings, swaddle e acessórios feitos no Brasil</div></div><span aria-hidden="true">↗</span>
+    </div>
+  </div>
+</div>
+
+<h2>Voice</h2>
+<div class="voice">
+  <div><s>Iniciar sono</s><br><b>Começar soneca</b></div>
+  <div><s>Next nap 14:20 (window 1h45)</s><br><b>Próxima soneca por volta das 14:20</b></div>
+  <div><s>Importação concluída com sucesso!</s><br><b>Pronto. 128 registros novos, nada foi apagado.</b></div>
+  <div><s>Prezado cliente, seu app está disponível</s><br><b>Seu sling chegou com um presente: o Cochilo+.</b></div>
+</div>
+</main>
+<script>
+const b=document.getElementById('theme'),r=document.documentElement;
+const dark=()=>r.dataset.theme?r.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches;
+const label=()=>{b.textContent=dark()?'Tema claro':'Tema escuro'};label();
+b.onclick=()=>{r.dataset.theme=dark()?'light':'dark';label()};
+</script>
+</body>
+</html>
