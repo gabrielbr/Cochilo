@@ -255,6 +255,22 @@ class ScreensSnapshotTest {
         light()
         paparazzi.snapshot { CochiloTheme(false) { br.gabriel.cochilo.ui.kit.Frame { androidx.compose.foundation.layout.Column(Modifier.padding(br.gabriel.cochilo.ui.theme.CTokens.Spacing.space6)) { TicksBody() } } } }
     }
+    @Test fun patterns_changes_light() {
+        light()
+        // 21 whole days: nights of 9h, then the last week 10h30 with fewer wakings: "What changed" appears.
+        val today = java.time.Instant.ofEpochMilli(now).atZone(zone).toLocalDate()
+        val synthetic = buildList {
+            for (back in 0..22) {
+                val d = today.minusDays(back.toLong())
+                val hours = if (back <= 7) 10.5 else 9.0
+                val start = d.minusDays(1).atTime(20, 0).atZone(zone).toInstant().toEpochMilli()
+                add(Event(type = EventType.SLEEP, start = start, end = start + (hours * 3_600_000).toLong()))
+                if (back > 0) for (i in 0..1) add(Event(type = EventType.SLEEP, start = d.atTime(10 + 3 * i, 0).atZone(zone).toInstant().toEpochMilli(), end = d.atTime(11 + 3 * i, 0).atZone(zone).toInstant().toEpochMilli()))
+                add(Event(type = EventType.PUMP, start = d.atTime(if (back % 2 == 0) 22 else 9, 0).atZone(zone).toInstant().toEpochMilli(), end = d.atTime(if (back % 2 == 0) 22 else 9, 15).atZone(zone).toInstant().toEpochMilli(), amountMl = 90))
+            }
+        }
+        paparazzi.snapshot { Chrome(false, 3, synthetic) }
+    }
     @Test fun settings_light() { light(); paparazzi.snapshot { Chrome(false, 0, settings = true) } }
     @Test fun today_fabric_balao_light() { light(); paparazzi.snapshot { Fabric(br.gabriel.cochilo.ui.kit.Fabric.BALAO) { Chrome(false, 0) } } }
     @Test fun today_sleeping_fabric_tropical_dark() { dark(); paparazzi.snapshot { Fabric(br.gabriel.cochilo.ui.kit.Fabric.TROPICAL) { Chrome(true, 0, sleepingLog) } } }

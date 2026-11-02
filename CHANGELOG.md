@@ -3,6 +3,14 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.18.0 — 2026-11-02
+
+**What changed.** Patterns now opens with what really changed in the last week against the two
+before it ("Night sleep is longer · 10h 30m · 9h 00m before"), only when the change is real, in
+neutral words: changes, not problems, and never a "regression". **Day and night milk:** pumped
+milk says whether it was expressed by day or at night, and Patterns shows the week's split, so
+night bottles can be night milk. `docs/changes.md`.
+
 ## 0.17.0 — 2026-11-02
 
 **Where the baby slept.** Crib, in arms, sling, pram or car seat: each sleep remembers the last
