@@ -69,6 +69,17 @@ class AvatarSnapshotTest {
         }
     }
 
+    @Test fun ritual_checklist_ptBR_light() {
+        paparazzi.unsafeUpdateConfig(DeviceConfig.PIXEL_5.copy(nightMode = NightMode.NOTNIGHT, locale = "pt-rBR"))
+        paparazzi.snapshot {
+            CochiloTheme(false) {
+                Column(Modifier.fillMaxSize().background(CochiloTheme.colors.page).padding(CTokens.Spacing.space6)) {
+                    br.gabriel.cochilo.ui.kit.Checklist(listOf("Banho", "Fralda e pijama", "Luz baixa", "Mamada", "Uma música no colo"), setOf(0, 1, 2)) {}
+                }
+            }
+        }
+    }
+
     @Test fun onboarding_meet_light() {
         paparazzi.unsafeUpdateConfig(DeviceConfig.PIXEL_5.copy(nightMode = NightMode.NOTNIGHT))
         paparazzi.snapshot { CochiloTheme(false) { br.gabriel.cochilo.ui.kit.Frame { Onboarding(ZoneId.systemDefault(), {}, previewName = "Dante") } } }

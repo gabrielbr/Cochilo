@@ -111,6 +111,8 @@ fun EventSheet(
     zone: ZoneId,
     /** For a new entry: the last one of its type, shown as "Last time: Right breast · 14:20". */
     last: Event? = null,
+    /** The routine steps the parent wrote (docs/rituals.md), ticked in a new routine. */
+    rituals: Map<String, String?> = emptyMap(),
     onSave: (Event) -> Unit,
     onDelete: (Event) -> Unit,
     onDismiss: () -> Unit,
@@ -128,8 +130,12 @@ fun EventSheet(
     var note by remember { mutableStateOf(initial.note ?: "") }
     var picking by remember { mutableStateOf<String?>(null) }
     var confirmDelete by remember { mutableStateOf(false) }
+    // A new routine shows its ritual as a checklist; the ticked steps become its note.
+    var ticked by remember(kind) { mutableStateOf(setOf<Int>()) }
 
     val t = initial.type
+    val ritualSteps = if (t == EventType.ROUTINE) ritualFor(kind, rituals) else emptyList()
+    val ritualNote = br.gabriel.cochilo.domain.Ritual.note(ritualSteps, ticked)
     val ok = stringResource(R.string.ok)
     val cancel = stringResource(R.string.cancel)
 
@@ -144,7 +150,7 @@ fun EventSheet(
             start = start, end = end, kind = kind,
             amountMl = amount.filter { it.isDigit() }.toIntOrNull(),
             expressedAt = if (t == EventType.PUMP) start else initial.expressedAt,
-            note = note.trim().ifEmpty { null },
+            note = note.trim().ifEmpty { null } ?: ritualNote,
         )
     }
 
@@ -181,6 +187,11 @@ fun EventSheet(
         if (kinds.isNotEmpty()) {
             Text(stringResource(if (t == EventType.SLEEP) R.string.field_place else R.string.field_kind), style = Type.meta, color = CochiloTheme.colors.muted)
             FilterChips(kinds, kind, { f.kindName(it) ?: it }) { kind = it }
+            Spacer(Modifier.height(Spacing.space4))
+        }
+        if (t == EventType.ROUTINE && isNew && ritualSteps.isNotEmpty()) {
+            Text(stringResource(R.string.ritual_steps), style = Type.meta, color = CochiloTheme.colors.muted)
+            br.gabriel.cochilo.ui.kit.Checklist(ritualSteps, ticked) { i -> ticked = if (i in ticked) ticked - i else ticked + i }
             Spacer(Modifier.height(Spacing.space4))
         }
 

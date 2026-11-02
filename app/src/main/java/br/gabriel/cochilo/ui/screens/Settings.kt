@@ -48,6 +48,8 @@ fun SettingsScreen(
     onCelebrations: (Boolean) -> Unit = {},
     nightLight: Boolean = true,
     onNightLight: (Boolean) -> Unit = {},
+    /** Settings › Baby › Routine steps (docs/rituals.md). */
+    onEditRitual: () -> Unit = {},
 ) {
     val context = LocalContext.current
     val f = Format(context, zone)
@@ -66,6 +68,8 @@ fun SettingsScreen(
                     leading = { br.gabriel.cochilo.ui.kit.BabyAvatar(br.gabriel.cochilo.domain.BabyLook.decode(baby.look), size = br.gabriel.cochilo.ui.theme.CTokens.Size.kindBadgeLead) },
                     onClick = onEditLook, trailing = chevron,
                 )
+                Hairline()
+                ListRow(stringResource(R.string.ritual_title), meta = stringResource(R.string.ritual_row_meta), onClick = onEditRitual, trailing = chevron)
             }
             Hairline()
             ListRow(stringResource(R.string.birth_date), value = baby?.let { f.day(localDate(it.birthDate, zone)) } ?: stringResource(R.string.not_set), onClick = onEditBaby, trailing = chevron)

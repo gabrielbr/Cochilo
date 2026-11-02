@@ -83,6 +83,8 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     val celebration: StateFlow<br.gabriel.cochilo.domain.Celebration?> = _celebration
     val celebrations: StateFlow<Boolean> = ctx.prefs.celebrations
     val nightLight: StateFlow<Boolean> = ctx.prefs.nightLight
+    val rituals: StateFlow<Map<String, String?>> = ctx.prefs.rituals
+    fun setRitual(kind: String, steps: List<String>) = ctx.prefs.setRitual(kind, br.gabriel.cochilo.domain.Ritual.encode(steps))
     fun setNightLight(on: Boolean) = ctx.prefs.setNightLight(on)
     fun setCelebrations(on: Boolean) = ctx.prefs.setCelebrations(on)
     fun celebrationSeen() { _celebration.value = null }

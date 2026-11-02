@@ -87,6 +87,7 @@ fun CochiloRoot(vm: MainViewModel) {
     var editing by remember { mutableStateOf<Editing?>(null) }
     var editingBaby by remember { mutableStateOf(false) }
     var editingLook by remember { mutableStateOf(false) }
+    var editingRitual by remember { mutableStateOf(false) }
     val snackbar = remember { SnackbarHostState() }
 
     val exportJson = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { it?.let(vm::exportJson) }
@@ -133,6 +134,7 @@ fun CochiloRoot(vm: MainViewModel) {
                             baby, theme, zone,
                             onEditBaby = { editingBaby = true },
                             onEditLook = { editingLook = true },
+                            onEditRitual = { editingRitual = true },
                             celebrations = vm.celebrations.collectAsState().value,
                             onCelebrations = vm::setCelebrations,
                             nightLight = vm.nightLight.collectAsState().value,
@@ -279,6 +281,7 @@ fun CochiloRoot(vm: MainViewModel) {
         EventSheet(
             initial = ed.event, isNew = ed.isNew, zone = zone,
             last = if (ed.isNew) lastOf(log, ed.event.type) else null,
+            rituals = vm.rituals.collectAsState().value,
             onSave = { vm.save(it); editing = null },
             onDelete = { vm.delete(it); editing = null },
             onDismiss = { editing = null },
@@ -286,6 +289,9 @@ fun CochiloRoot(vm: MainViewModel) {
     }
     if (vm.ticks.collectAsState().value) {
         br.gabriel.cochilo.ui.screens.TicksSheet(onDismiss = vm::ticksSeen)
+    }
+    if (editingRitual) {
+        br.gabriel.cochilo.ui.screens.RitualSheet(vm.rituals.collectAsState().value, onSave = vm::setRitual, onDismiss = { editingRitual = false })
     }
     if (editingLook && baby != null) {
         br.gabriel.cochilo.ui.screens.LookSheet(baby, onSave = { vm.saveBaby(it); editingLook = false }, onDismiss = { editingLook = false })

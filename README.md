@@ -31,6 +31,8 @@ dressed in the Tatá Slings brand (teal, plum-grey ink, Pérola, Libre Franklin,
 - **Log button**: the main action, in the bottom-right corner on every tab. Press, drag up to a
   kind and sideways to a choice (Feed › Right breast), let go: logged. Let go on the kind for its
   sheet. A tap opens it for taps.
+- **Routine steps**: write the nap and bedtime steps once, tick them each time.
+  [docs/rituals.md](docs/rituals.md).
 - **What changed**: real changes in the last week, in neutral words; day / night milk.
   [docs/changes.md](docs/changes.md).
 - **Where the baby slept**: crib, arms, sling, pram, car, remembered; naps by place in Patterns;

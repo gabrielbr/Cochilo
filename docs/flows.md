@@ -30,6 +30,7 @@ A "tap" is a touch on a target; a "slide" is one touch that moves sideways and l
 | Start sleep / Woke up from the home screen | open app + 1 tap | **1 tap** | The widget's mint button ([widget.md](widget.md)) |
 | Breastfeed a side / switch / finish, from the home screen | open app + 1 move | **1 tap** | The widget's Left / Right; the running side reads Finish |
 | Start a daylight walk when nudged | open the Daylight row | **1 tap** | "Go outside" on the nudge row ([night-light.md](night-light.md)) |
+| A routine with its steps ticked | — | tap Routine, a tap per step, Save | The checklist in the sheet ([rituals.md](rituals.md)); sliding still logs without it |
 | Pick a fabric for the Today card | — | 2 taps | Settings (gear), then a swatch: applied at once, no Save |
 
 ## Remember actions (project rule)

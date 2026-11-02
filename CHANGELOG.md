@@ -3,6 +3,12 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.19.0 — 2026-11-02
+
+**Routine steps.** Write the bedtime and nap steps once (Settings › Baby › Routine steps; there are
+gentle defaults to start from), then tick them as you go when you open a routine; the ticked steps
+are saved with it. Sliding the Routine row still logs at once. `docs/rituals.md`.
+
 ## 0.18.0 — 2026-11-02
 
 **What changed.** Patterns now opens with what really changed in the last week against the two

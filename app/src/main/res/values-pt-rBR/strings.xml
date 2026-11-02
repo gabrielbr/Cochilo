@@ -344,4 +344,24 @@
     <string name="pumped_week">Ordenhado, últimos 7 dias</string>
     <string name="pumped_week_meta">Leite da noite (19:00–07:00) para as mamadeiras da noite</string>
     <string name="pumped_split">Dia %1$d ml · noite %2$d ml</string>
+    <!-- O montador de rituais (docs/rituals.md). -->
+    <string name="ritual_title">Passos da rotina</string>
+    <string name="ritual_row_meta">Escreva uma vez; marque durante a rotina</string>
+    <string name="ritual_line">Os mesmos passos, na mesma ordem, toda vez. Marque conforme for fazendo.</string>
+    <string name="ritual_steps">Passos</string>
+    <string name="ritual_new_step">Novo passo</string>
+    <string name="ritual_add">Adicionar</string>
+    <string name="ritual_remove">Remover</string>
+    <string-array name="ritual_bedtime">
+        <item>Banho</item>
+        <item>Fralda e pijama</item>
+        <item>Luz baixa</item>
+        <item>Mamada</item>
+        <item>Uma música no colo</item>
+    </string-array>
+    <string-array name="ritual_nap">
+        <item>Fralda</item>
+        <item>Quarto escuro e quieto</item>
+        <item>Uma música no colo</item>
+    </string-array>
 </resources>

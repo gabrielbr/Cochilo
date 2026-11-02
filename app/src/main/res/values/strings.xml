@@ -369,4 +369,24 @@
     <string name="pumped_week">Pumped, last 7 days</string>
     <string name="pumped_week_meta">Night milk (19:00–07:00) for night bottles</string>
     <string name="pumped_split">Day %1$d ml · night %2$d ml</string>
+    <!-- The ritual builder (docs/rituals.md). -->
+    <string name="ritual_title">Routine steps</string>
+    <string name="ritual_row_meta">Write them once; tick them in the routine</string>
+    <string name="ritual_line">The same steps, in the same order, every time. Tick them as you go.</string>
+    <string name="ritual_steps">Steps</string>
+    <string name="ritual_new_step">New step</string>
+    <string name="ritual_add">Add</string>
+    <string name="ritual_remove">Remove</string>
+    <string-array name="ritual_bedtime">
+        <item>Bath</item>
+        <item>Diaper and pyjamas</item>
+        <item>Dim the lights</item>
+        <item>Feed</item>
+        <item>A song in arms</item>
+    </string-array>
+    <string-array name="ritual_nap">
+        <item>Diaper</item>
+        <item>Room dark and quiet</item>
+        <item>A song in arms</item>
+    </string-array>
 </resources>
