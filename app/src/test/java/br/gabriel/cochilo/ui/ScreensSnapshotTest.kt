@@ -1,6 +1,20 @@
 package br.gabriel.cochilo.ui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clip
+import br.gabriel.cochilo.ui.kit.Caption
+import br.gabriel.cochilo.ui.kit.CheckForUpdates
+import br.gabriel.cochilo.ui.kit.ListRow
+import br.gabriel.cochilo.ui.kit.RowGroup
+import br.gabriel.cochilo.ui.kit.Hairline
+import br.gabriel.cochilo.ui.kit.UpdateSheetBody
+import br.gabriel.cochilo.ui.screens.SheetTitle
+import br.gabriel.cochilo.ui.theme.CTokens
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -73,7 +87,9 @@ class ScreensSnapshotTest {
     }
 
     @Composable
-    private fun Chrome(dark: Boolean, tab: Int, log: List<Event> = this.log, settings: Boolean = false) {
+    private fun Chrome(
+        dark: Boolean, tab: Int, log: List<Event> = this.log, settings: Boolean = false,
+    ) {
         CochiloTheme(dark) {
             val weeks = ageWeeks(baby.birthDate, null, now)
             val p = Predictor(zone).predict(log, weeks, now)
@@ -110,6 +126,33 @@ class ScreensSnapshotTest {
         }
     }
 
+    /** The update sheet as it rises over Today (the github build only; same pixels in both builds). */
+    @Composable
+    private fun UpdateSheetShot(dark: Boolean, progress: Float?, notes: String) {
+        CochiloTheme(dark) {
+            Frame {
+                Box(Modifier.fillMaxSize().background(CochiloTheme.colors.page), contentAlignment = Alignment.BottomCenter) {
+                    Column(
+                        Modifier.fillMaxWidth()
+                            .clip(RoundedCornerShape(topStart = CTokens.Radius.radiusL, topEnd = CTokens.Radius.radiusL))
+                            .background(CochiloTheme.colors.surface)
+                            .padding(CTokens.Spacing.space6)
+                    ) {
+                        SheetTitle(stringResource(R.string.update_available, "0.2.0"))
+                        UpdateSheetBody(
+                            version = "0.2.0",
+                            notes = notes,
+                            sizeLabel = "6.8 MB",
+                            progress = progress,
+                            message = null,
+                            onUpdate = {}, onLater = {}, onCancel = {},
+                        )
+                    }
+                }
+            }
+        }
+    }
+
     private val sleepingLog get() = log + Event(type = EventType.SLEEP, start = at(31, 14, 50))
 
     private fun light() = paparazzi.unsafeUpdateConfig(DeviceConfig.PIXEL_5.copy(nightMode = NightMode.NOTNIGHT))
@@ -127,5 +170,33 @@ class ScreensSnapshotTest {
     @Test fun patterns_dark() { dark(); paparazzi.snapshot { Chrome(true, 2) } }
     @Test fun patterns_ptBR_dark() { pt(true); paparazzi.snapshot { Chrome(true, 2) } }
     @Test fun settings_light() { light(); paparazzi.snapshot { Chrome(false, 0, settings = true) } }
+    /** Settings › About in the github build, after a manual check. */
+    @Test fun about_updates_light() {
+        light()
+        paparazzi.snapshot {
+            CochiloTheme(false) {
+                Frame {
+                    Column(Modifier.fillMaxSize().padding(CTokens.Spacing.space4)) {
+                        Caption(stringResource(R.string.caption_about), top = CTokens.Spacing.space1)
+                        RowGroup {
+                            ListRow(stringResource(R.string.privacy), meta = stringResource(R.string.privacy_meta))
+                            Hairline()
+                            ListRow(stringResource(R.string.version), value = "0.2.0")
+                            Hairline()
+                            CheckForUpdates(checking = false, result = stringResource(R.string.update_latest, "0.2.0"), releaseOnlyNote = null) {}
+                        }
+                    }
+                }
+            }
+        }
+    }
+    @Test fun update_sheet_light() {
+        light()
+        paparazzi.snapshot { UpdateSheetShot(false, null, "Cochilo now updates itself: it tells you when a new version is out and installs it after Android asks.") }
+    }
+    @Test fun update_sheet_downloading_ptBR_dark() {
+        pt(true)
+        paparazzi.snapshot { UpdateSheetShot(true, 0.41f, "O Cochilo agora se atualiza sozinho: avisa quando sai uma versão nova e instala depois que o Android pergunta.") }
+    }
     @Test fun empty_today_light() { light(); paparazzi.snapshot { Chrome(false, 0, emptyList()) } }
 }

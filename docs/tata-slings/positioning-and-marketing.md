@@ -35,7 +35,7 @@ their cloud, hide how they predict, and treat contact naps as a habit to break.
 |---|---|---|
 | **Colo conta** | "Toda soneca conta. Até no colo." | "Onde dormiu?" log (berço, colo, sling…); contact naps on the timeline and in Patterns in their own colour |
 | **Explica o porquê** | "A gente mostra a conta." | Prediction card shows the numbers it used; research in [docs/research.md](../research.md) |
-| **Fica no seu celular** | "Seus dados ficam com você. Sem conta, sem nuvem." | No INTERNET permission; export/import files only |
+| **Fica no seu celular** | "Seus dados ficam com você. Sem conta, sem nuvem." | The Play build has no INTERNET permission; export/import files only |
 | **Feito por quem entende** | "Feito em casa, por uma terapeuta ocupacional e mãe, e pelo pai do Dante." | Tatá's credentials and notes; the family story |
 
 **Tagline (pick one with Tatá):**

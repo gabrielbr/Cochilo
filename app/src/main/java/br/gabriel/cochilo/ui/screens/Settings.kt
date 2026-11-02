@@ -35,6 +35,8 @@ fun SettingsScreen(
     onExportJson: () -> Unit,
     onExportCsv: () -> Unit,
     onImport: () -> Unit,
+    /** Extra About rows from the build (the github build's "Check for updates"). */
+    about: @Composable () -> Unit = {},
 ) {
     val context = LocalContext.current
     val f = Format(context, zone)
@@ -93,6 +95,7 @@ fun SettingsScreen(
             Hairline()
             val version = runCatching { context.packageManager.getPackageInfo(context.packageName, 0).versionName }.getOrNull() ?: ""
             ListRow(stringResource(R.string.version), value = version)
+            about()
         }
     }
 }

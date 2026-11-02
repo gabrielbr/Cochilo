@@ -35,7 +35,10 @@ shows bedtime instead. The card always says which numbers it used. Code:
 
 ### Your data
 
-- No internet permission, no account, no cloud backup (Android's auto backup is off).
+- No account, no cloud backup (Android's auto backup is off), no analytics.
+- Two builds ([docs/distribution.md](docs/distribution.md)): the **family build** from GitHub
+  releases updates itself, so it may reach GitHub to ask for a newer version and download it, and
+  nothing else; the **Play build** has no internet permission at all.
 - **Export backup** writes everything (baby + every entry) as JSON. **Import backup** merges a
   file: new entries are added, an entry you edited more recently replaces the older copy, and
   nothing is ever deleted, so importing the same file twice changes nothing.
@@ -46,9 +49,10 @@ shows bedtime instead. The card always says which numbers it used. Code:
 Needs JDK 17+ and the Android SDK (platform 35).
 
 ```sh
-./gradlew :app:testDebugUnitTest        # unit tests + screenshot checks
-./gradlew :app:recordPaparazziDebug     # re-record screenshots after a UI change
-./gradlew :app:assembleDebug            # app/build/outputs/apk/debug/app-debug.apk
+./gradlew :app:testGithubDebugUnitTest :app:testPlayDebugUnitTest   # unit tests + screenshot checks
+./gradlew :app:recordPaparazziGithubDebug                            # re-record screenshots after a UI change
+./gradlew :app:assembleGithubDebug    # app/build/outputs/apk/github/debug/app-github-debug.apk
+./gradlew :app:assemblePlayDebug      # the Play build, no internet permission
 ```
 
 The debug build installs as `br.gabriel.cochilo.debug`, beside a release build.

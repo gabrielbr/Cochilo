@@ -15,12 +15,15 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.ModalBottomSheetDefaults
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -53,14 +56,22 @@ import java.time.LocalDate
 import java.time.LocalTime
 import java.time.ZoneId
 
-/** The system's sheet: surface, radius 16 on top, a title, then content. */
+/**
+ * The system's sheet: surface, radius 16 on top, a title, then content. While [dismissible] is
+ * false (an update downloading), a tap outside, a drag or Back leaves it where it is.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Sheet(onDismiss: () -> Unit, content: @Composable () -> Unit) {
+fun Sheet(onDismiss: () -> Unit, dismissible: Boolean = true, content: @Composable () -> Unit) {
     val c = CochiloTheme.colors
+    val canClose by rememberUpdatedState(dismissible)
     ModalBottomSheet(
-        onDismissRequest = onDismiss,
-        sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+        onDismissRequest = { if (canClose) onDismiss() },
+        sheetState = rememberModalBottomSheetState(
+            skipPartiallyExpanded = true,
+            confirmValueChange = { it != SheetValue.Hidden || canClose },
+        ),
+        properties = ModalBottomSheetDefaults.properties(shouldDismissOnBackPress = dismissible),
         containerColor = c.surface,
         contentColor = c.ink,
         shape = RoundedCornerShape(topStart = Radius.radiusL, topEnd = Radius.radiusL),
@@ -73,7 +84,7 @@ fun Sheet(onDismiss: () -> Unit, content: @Composable () -> Unit) {
 }
 
 @Composable
-private fun SheetTitle(text: String) {
+fun SheetTitle(text: String) {
     Text(text, style = Type.title, color = CochiloTheme.colors.ink, modifier = Modifier.semantics { heading() })
     Spacer(Modifier.height(Spacing.space6))
 }
