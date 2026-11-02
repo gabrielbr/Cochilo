@@ -150,7 +150,8 @@ object LiveNotifications {
 
     private fun timerNotification(context: Context, e: Event, f: Format, c: CTokens.Palette, zone: ZoneId): Pair<Int, android.app.Notification> {
         val label = listOfNotNull(f.typeName(e.type), f.kindName(e.kind)).joinToString(" · ")
-        val b = base(context, c)
+        // The status-bar icon is the entry's own (drop, bottle, pump, sun…), so timers tell apart.
+        val b = base(context, c, br.gabriel.cochilo.ui.kit.entryIcon(e))
             .setContentTitle(label)
             .setContentText(context.getString(R.string.panel_since, f.time(e.start)))
             .setWhen(e.start).setUsesChronometer(true).setShowWhen(true)
@@ -161,8 +162,8 @@ object LiveNotifications {
         return timerId(e) to b.build()
     }
 
-    private fun base(context: Context, c: CTokens.Palette) = NotificationCompat.Builder(context, CHANNEL)
-        .setSmallIcon(R.drawable.ic_notification)
+    private fun base(context: Context, c: CTokens.Palette, icon: Int = R.drawable.ic_notification) = NotificationCompat.Builder(context, CHANNEL)
+        .setSmallIcon(icon)
         .setColor(c.mint.toArgb())
         .setOngoing(true)
         .setOnlyAlertOnce(true)

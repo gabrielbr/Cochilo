@@ -50,6 +50,7 @@
     <string name="type_diaper">Diaper</string>
     <string name="type_daylight">Daylight</string>
     <string name="type_routine">Routine</string>
+    <string name="type_medicine">Medicine</string>
     <string name="type_note">Note</string>
     <string name="sleep_nap">Nap</string>
     <string name="sleep_night">Night sleep</string>
@@ -158,7 +159,6 @@
     <string name="napper_nursing">While nursing</string>
     <string name="napper_breast_milk">Breast milk</string>
     <string name="napper_formula">Formula</string>
-    <string name="napper_medicine">Medicine</string>
     <string name="napper_sides">Left %1$d min, right %2$d min</string>
     <string name="imported">Imported. New: %1$d. Updated: %2$d.</string>
     <string name="import_failed">That file isn\'t a Cochilo backup</string>
@@ -239,4 +239,5 @@
     <string name="live_notification">Live notification</string>
     <string name="live_notification_meta">Asleep or awake, the time, what comes next, and Woke up or Start sleep, without opening the app.</string>
     <string name="caption_notifications">Notifications</string>
+    <string name="info_medicine">Medicine: what was given and when, with the name and dose in the note. Handy to know whether the last dose was long enough ago. Follow the paediatrician\'s instructions.</string>
 </resources>

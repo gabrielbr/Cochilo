@@ -19,7 +19,11 @@ data class BackupFile(
 ) {
     companion object {
         const val FORMAT = "cochilo-backup"
-        const val VERSION = 1
+        /**
+         * 2: entries may be MEDICINE (0.5.0). Version-1 files still read: they have no MEDICINE.
+         * A version-2 file in an older app is refused as "made by a newer Cochilo".
+         */
+        const val VERSION = 2
     }
 }
 

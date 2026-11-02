@@ -98,7 +98,7 @@ fun TodayScreen(
                         SlideRow(
                             label = eventLabel(e, f, zone),
                             meta = since + "\n" + stringResource(R.string.slide_switch_hint),
-                            icon = null,
+                            icon = br.gabriel.cochilo.ui.kit.entryIcon(e),
                             options = listOf(SlideOption(other, switchTo, switchTo)),
                             onTap = { onOpen(e) },
                             onPick = { onSwitch(e) },
@@ -107,7 +107,7 @@ fun TodayScreen(
                         br.gabriel.cochilo.ui.kit.ListRow(
                             label = eventLabel(e, f, zone),
                             meta = since,
-                            leading = { br.gabriel.cochilo.ui.kit.Swatch(CochiloTheme.colors.eventColorOf(e, zone)) },
+                            leading = { br.gabriel.cochilo.ui.kit.GIcon(br.gabriel.cochilo.ui.kit.entryIcon(e), null, CochiloTheme.colors.eventColorOf(e, zone)) },
                             onClick = { onOpen(e) },
                         ) { Button(stringResource(R.string.action_finish), { onFinish(e) }) }
                     }
@@ -214,7 +214,7 @@ internal fun QuickLog(
     previewActive: Pair<EventType, Int>? = null,
 ) {
     val f = Format(LocalContext.current)
-    val types = listOf(EventType.FEED, EventType.DIAPER, EventType.SLEEP, EventType.PUMP, EventType.DAYLIGHT, EventType.ROUTINE, EventType.NOTE)
+    val types = listOf(EventType.FEED, EventType.DIAPER, EventType.SLEEP, EventType.MEDICINE, EventType.PUMP, EventType.DAYLIGHT, EventType.ROUTINE, EventType.NOTE)
     // One row per kind of entry. Tap: the full sheet. Slide: log at once (feed left or right,
     // diaper wet/both/dirty…), so the most common entries cost one move, not three taps.
     br.gabriel.cochilo.ui.kit.RowGroup {
@@ -231,7 +231,7 @@ internal fun QuickLog(
             SlideRow(
                 label = f.typeName(t),
                 meta = hint,
-                icon = if (t == EventType.DAYLIGHT) R.drawable.gg_ic_sun else R.drawable.gg_ic_plus,
+                icon = br.gabriel.cochilo.ui.kit.typeIcon(t),
                 options = options,
                 onTap = { onNew(t) },
                 onPick = { o -> onQuick(t, o.key.takeIf { it.isNotEmpty() }) },

@@ -6,6 +6,8 @@ import androidx.room.Database
 import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Room
+import androidx.sqlite.db.SupportSQLiteDatabase
+import androidx.room.migration.Migration
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverter
 import androidx.room.TypeConverters
@@ -53,7 +55,7 @@ interface BabyDao {
     suspend fun upsert(baby: Baby)
 }
 
-@Database(entities = [Event::class, Baby::class], version = 1, exportSchema = true)
+@Database(entities = [Event::class, Baby::class], version = 2, exportSchema = true)
 @TypeConverters(Converters::class)
 abstract class CochiloDb : RoomDatabase() {
     abstract fun events(): EventDao
@@ -61,6 +63,32 @@ abstract class CochiloDb : RoomDatabase() {
 
     companion object {
         fun create(context: Context): CochiloDb =
-            Room.databaseBuilder(context, CochiloDb::class.java, "cochilo.db").build()
+            Room.databaseBuilder(context, CochiloDb::class.java, "cochilo.db")
+                .addMigrations(MEDICINE_TYPE)
+                .build()
+
+        /**
+         * 1 → 2: medicine became its own type (MEDICINE). Notes that were medicine (the Napper import
+         * wrote "Medicine · <name>" / "Remédio · <name>") become MEDICINE entries holding just the
+         * name. The table is unchanged; only those rows move. updatedAt moves on, so a backup made
+         * after this wins over an older one on import.
+         */
+        val MEDICINE_TYPE = object : Migration(1, 2) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(MEDICINE_SQL)
+            }
+        }
+
+        /** Kept as plain SQL so a JVM test can run it against SQLite. */
+        const val MEDICINE_SQL = """
+            UPDATE events SET
+                type = 'MEDICINE',
+                note = CASE WHEN instr(note, ' · ') > 0
+                            THEN nullif(trim(substr(note, instr(note, ' · ') + 3)), '')
+                            ELSE NULL END,
+                updatedAt = CAST(strftime('%s', 'now') AS INTEGER) * 1000
+            WHERE type = 'NOTE' AND (
+                note IN ('Medicine', 'Remédio') OR note LIKE 'Medicine · %' OR note LIKE 'Remédio · %')
+        """
     }
 }

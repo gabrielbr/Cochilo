@@ -1,4 +1,4 @@
-From 49396b723d3ce6d1ac8e04067912fe295d0ea73d Mon Sep 17 00:00:00 2001
+From ff1ae669eb9c992b70acc930429da10b4a00dcb5 Mon Sep 17 00:00:00 2001
 From: Gabriel Lopes <ogabriel@gmail.com>
 Date: Mon, 2 Nov 2026 19:19:23 +0000
 Subject: [PATCH] =?UTF-8?q?Design=20system=200.5.0=20+=200.6.0:=20Cochilo?=
@@ -15,7 +15,7 @@ brands.tata-slings worn by cochilo; Libre Franklin + OFL; the Cochilo-da-Tatá m
 check_brands; audit audits/2026-11-02-v0.6.0-brands.md.
 ---
  AGENTS.md                                |  14 +-
- CHANGELOG.md                             |  40 ++++++
+ CHANGELOG.md                             |  45 +++++++
  DESIGN.md                                |   2 +-
  PRODUCT.md                               |   7 +-
  README.md                                |   8 +-
@@ -24,13 +24,23 @@ check_brands; audit audits/2026-11-02-v0.6.0-brands.md.
  assets/fonts/libre_franklin_bold.ttf     | Bin 0 -> 106528 bytes
  assets/fonts/libre_franklin_regular.ttf  | Bin 0 -> 106428 bytes
  assets/fonts/libre_franklin_semibold.ttf | Bin 0 -> 106412 bytes
+ assets/icons/android/gg_ic_bottle.xml    |   7 +
+ assets/icons/android/gg_ic_breast.xml    |   3 +
  assets/icons/android/gg_ic_chart.xml     |   6 +
+ assets/icons/android/gg_ic_day.xml       |   7 +
+ assets/icons/android/gg_ic_diaper.xml    |   5 +
+ assets/icons/android/gg_ic_info.xml      |   5 +
+ assets/icons/android/gg_ic_medicine.xml  |   4 +
  assets/icons/android/gg_ic_moon.xml      |   3 +
+ assets/icons/android/gg_ic_note.xml      |   4 +
+ assets/icons/android/gg_ic_pump.xml      |   6 +
+ assets/icons/android/gg_ic_routine.xml   |   6 +
+ assets/icons/android/gg_ic_spoon.xml     |   4 +
  assets/icons/android/gg_ic_sun.xml       |  11 ++
  assets/logos/co-mark.svg                 |   4 +
  assets/logos/cochilo-tata-mark.svg       |   7 +
  audits/2026-11-02-v0.5.0-cochilo.md      | 137 ++++++++++++++++++++
- audits/2026-11-02-v0.6.0-brands.md       |  59 +++++++++
+ audits/2026-11-02-v0.6.0-brands.md       |  61 +++++++++
  docs/brands.md                           |  73 +++++++++++
  docs/components.md                       |   5 +
  docs/consuming.md                        |   9 +-
@@ -49,13 +59,23 @@ check_brands; audit audits/2026-11-02-v0.6.0-brands.md.
  scripts/tokens_lib.py                    |  19 +++
  tests/test_scripts.py                    |  49 ++++++-
  tokens/tokens.json                       | 111 ++++++++++++++--
- 35 files changed, 1047 insertions(+), 38 deletions(-)
+ 45 files changed, 1105 insertions(+), 38 deletions(-)
  create mode 100644 assets/fonts/OFL-LibreFranklin.txt
  create mode 100644 assets/fonts/libre_franklin_bold.ttf
  create mode 100644 assets/fonts/libre_franklin_regular.ttf
  create mode 100644 assets/fonts/libre_franklin_semibold.ttf
+ create mode 100644 assets/icons/android/gg_ic_bottle.xml
+ create mode 100644 assets/icons/android/gg_ic_breast.xml
  create mode 100644 assets/icons/android/gg_ic_chart.xml
+ create mode 100644 assets/icons/android/gg_ic_day.xml
+ create mode 100644 assets/icons/android/gg_ic_diaper.xml
+ create mode 100644 assets/icons/android/gg_ic_info.xml
+ create mode 100644 assets/icons/android/gg_ic_medicine.xml
  create mode 100644 assets/icons/android/gg_ic_moon.xml
+ create mode 100644 assets/icons/android/gg_ic_note.xml
+ create mode 100644 assets/icons/android/gg_ic_pump.xml
+ create mode 100644 assets/icons/android/gg_ic_routine.xml
+ create mode 100644 assets/icons/android/gg_ic_spoon.xml
  create mode 100644 assets/icons/android/gg_ic_sun.xml
  create mode 100644 assets/logos/co-mark.svg
  create mode 100644 assets/logos/cochilo-tata-mark.svg
@@ -113,10 +133,10 @@ index 0a00c74..c997e7b 100644
    ([docs/fairy-mode.md](docs/fairy-mode.md), `variants.fairy`). It swaps brand tokens only, never
    neutrals, alerts, semantic or data colours. A new brand token (anything mint, or on mint) gets its
 diff --git a/CHANGELOG.md b/CHANGELOG.md
-index c5579a5..7849369 100644
+index c5579a5..c1c23a7 100644
 --- a/CHANGELOG.md
 +++ b/CHANGELOG.md
-@@ -3,6 +3,46 @@
+@@ -3,6 +3,51 @@
  Semantic versioning (AGENTS.md "Versioning"). Each entry says what changed for each app and what
  the app has to do.
  
@@ -138,10 +158,15 @@ index c5579a5..7849369 100644
 +  theme, family and faces named, nothing else). `check_shared_light` now runs on the Views kit only
 +  (the only consumer that looks dark values up by light value). Tests for both.
 +- Assets: Libre Franklin 400/600/700 + OFL licence; `assets/logos/cochilo-tata-mark.svg`.
++- Icons (same line set, 22dp, stroke 1.75), one per kind of Cochilo entry so entries are known at a
++  glance, always beside their name: `gg_ic_breast` (a drop), `gg_ic_bottle`, `gg_ic_spoon`,
++  `gg_ic_pump`, `gg_ic_diaper`, `gg_ic_routine` (a bath), `gg_ic_note` (a pencil),
++  `gg_ic_medicine` (a capsule); and `gg_ic_info` (the "i" beside an action) and `gg_ic_day`
++  (Cochilo's Day tab).
 +- Docs: docs/brands.md; AGENTS.md rules (one accent / one family per app, brands); README.
 +- Audit: `audits/2026-11-02-v0.6.0-brands.md`.
 +- **Cochilo:** copy `generated/cochilo/CTokens.kt`; ship Libre Franklin and switch the type family;
-+  swap the `CO_` monogram and launcher icon for the mark.
++  swap the `CO_` monogram and launcher icon for the mark; copy the new icons.
 +- **NotTheOmiAIApp, PulseLoop:** nothing to do (their generated files only change version lines).
 +
 +## 0.5.0 — 2026-11-02
@@ -3660,6 +3685,28 @@ k^AuUR)U=F$F-&34+rr|+<LMx?aJYXK4!660?E3!y0qcflng9R*
 literal 0
 HcmV?d00001
 
+diff --git a/assets/icons/android/gg_ic_bottle.xml b/assets/icons/android/gg_ic_bottle.xml
+new file mode 100644
+index 0000000..8368261
+--- /dev/null
++++ b/assets/icons/android/gg_ic_bottle.xml
+@@ -0,0 +1,7 @@
++<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="22dp" android:height="22dp" android:viewportWidth="24" android:viewportHeight="24">
++ <path android:strokeColor="#FF000000" android:strokeWidth="1.75" android:strokeLineCap="round" android:strokeLineJoin="round" android:fillColor="#00000000" android:pathData="M10.5,6.5 C10.5,4.3 11.2,3 12,3 C12.8,3 13.5,4.3 13.5,6.5"/>
++ <path android:strokeColor="#FF000000" android:strokeWidth="1.75" android:strokeLineCap="round" android:strokeLineJoin="round" android:fillColor="#00000000" android:pathData="M9.5,6.5 h5"/>
++ <path android:strokeColor="#FF000000" android:strokeWidth="1.75" android:strokeLineCap="round" android:strokeLineJoin="round" android:fillColor="#00000000" android:pathData="M10,8.5 h4 A1.5,1.5 0 0,1 15.5,10 V19.5 A1.5,1.5 0 0,1 14,21 h-4 A1.5,1.5 0 0,1 8.5,19.5 V10 A1.5,1.5 0 0,1 10,8.5 Z"/>
++ <path android:strokeColor="#FF000000" android:strokeWidth="1.75" android:strokeLineCap="round" android:strokeLineJoin="round" android:fillColor="#00000000" android:pathData="M8.5,13 h2.5"/>
++ <path android:strokeColor="#FF000000" android:strokeWidth="1.75" android:strokeLineCap="round" android:strokeLineJoin="round" android:fillColor="#00000000" android:pathData="M8.5,16 h2.5"/>
++</vector>
+diff --git a/assets/icons/android/gg_ic_breast.xml b/assets/icons/android/gg_ic_breast.xml
+new file mode 100644
+index 0000000..9e7f2ff
+--- /dev/null
++++ b/assets/icons/android/gg_ic_breast.xml
+@@ -0,0 +1,3 @@
++<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="22dp" android:height="22dp" android:viewportWidth="24" android:viewportHeight="24">
++ <path android:strokeColor="#FF000000" android:strokeWidth="1.75" android:strokeLineCap="round" android:strokeLineJoin="round" android:fillColor="#00000000" android:pathData="M12,3.5 C12,3.5 6.5,9.6 6.5,14 A5.5,5.5 0 0,0 17.5,14 C17.5,9.6 12,3.5 12,3.5 Z"/>
++</vector>
 diff --git a/assets/icons/android/gg_ic_chart.xml b/assets/icons/android/gg_ic_chart.xml
 new file mode 100644
 index 0000000..a4191a0
@@ -3672,6 +3719,51 @@ index 0000000..a4191a0
 + <path android:strokeColor="#FF000000" android:strokeWidth="1.75" android:strokeLineCap="round" android:strokeLineJoin="round" android:fillColor="#00000000" android:pathData="M13,17V5"/>
 + <path android:strokeColor="#FF000000" android:strokeWidth="1.75" android:strokeLineCap="round" android:strokeLineJoin="round" android:fillColor="#00000000" android:pathData="M8,17v-3"/>
 +</vector>
+diff --git a/assets/icons/android/gg_ic_day.xml b/assets/icons/android/gg_ic_day.xml
+new file mode 100644
+index 0000000..f5ca5d3
+--- /dev/null
++++ b/assets/icons/android/gg_ic_day.xml
+@@ -0,0 +1,7 @@
++<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="22dp" android:height="22dp" android:viewportWidth="24" android:viewportHeight="24">
++ <path android:strokeColor="#FF000000" android:strokeWidth="1.75" android:strokeLineCap="round" android:strokeLineJoin="round" android:fillColor="#00000000" android:pathData="M7,3v18"/>
++ <path android:strokeColor="#FF000000" android:strokeWidth="1.75" android:strokeLineCap="round" android:strokeLineJoin="round" android:fillColor="#00000000" android:pathData="M5.5,12a1.5,1.5 0,1 0,3 0a1.5,1.5 0,1 0,-3 0z"/>
++ <path android:strokeColor="#FF000000" android:strokeWidth="1.75" android:strokeLineCap="round" android:strokeLineJoin="round" android:fillColor="#00000000" android:pathData="M11,6h9"/>
++ <path android:strokeColor="#FF000000" android:strokeWidth="1.75" android:strokeLineCap="round" android:strokeLineJoin="round" android:fillColor="#00000000" android:pathData="M11,12h6"/>
++ <path android:strokeColor="#FF000000" android:strokeWidth="1.75" android:strokeLineCap="round" android:strokeLineJoin="round" android:fillColor="#00000000" android:pathData="M11,18h8"/>
++</vector>
+diff --git a/assets/icons/android/gg_ic_diaper.xml b/assets/icons/android/gg_ic_diaper.xml
+new file mode 100644
+index 0000000..b195a4d
+--- /dev/null
++++ b/assets/icons/android/gg_ic_diaper.xml
+@@ -0,0 +1,5 @@
++<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="22dp" android:height="22dp" android:viewportWidth="24" android:viewportHeight="24">
++ <path android:strokeColor="#FF000000" android:strokeWidth="1.75" android:strokeLineCap="round" android:strokeLineJoin="round" android:fillColor="#00000000" android:pathData="M4,7 h16 v3 C20,15 16.5,18.5 12,18.5 C7.5,18.5 4,15 4,10 Z"/>
++ <path android:strokeColor="#FF000000" android:strokeWidth="1.75" android:strokeLineCap="round" android:strokeLineJoin="round" android:fillColor="#00000000" android:pathData="M4,10.5 h3"/>
++ <path android:strokeColor="#FF000000" android:strokeWidth="1.75" android:strokeLineCap="round" android:strokeLineJoin="round" android:fillColor="#00000000" android:pathData="M17,10.5 h3"/>
++</vector>
+diff --git a/assets/icons/android/gg_ic_info.xml b/assets/icons/android/gg_ic_info.xml
+new file mode 100644
+index 0000000..9f9a539
+--- /dev/null
++++ b/assets/icons/android/gg_ic_info.xml
+@@ -0,0 +1,5 @@
++<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="22dp" android:height="22dp" android:viewportWidth="24" android:viewportHeight="24">
++ <path android:strokeColor="#FF000000" android:strokeWidth="1.75" android:strokeLineCap="round" android:strokeLineJoin="round" android:fillColor="#00000000" android:pathData="M12,3a9,9 0,1 1,0 18a9,9 0,1 1,0 -18z"/>
++ <path android:strokeColor="#FF000000" android:strokeWidth="1.75" android:strokeLineCap="round" android:strokeLineJoin="round" android:fillColor="#00000000" android:pathData="M12,11v6"/>
++ <path android:strokeColor="#FF000000" android:strokeWidth="1.75" android:strokeLineCap="round" android:strokeLineJoin="round" android:fillColor="#00000000" android:pathData="M12,7.5v0.01"/>
++</vector>
+diff --git a/assets/icons/android/gg_ic_medicine.xml b/assets/icons/android/gg_ic_medicine.xml
+new file mode 100644
+index 0000000..6fd5e3c
+--- /dev/null
++++ b/assets/icons/android/gg_ic_medicine.xml
+@@ -0,0 +1,4 @@
++<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="22dp" android:height="22dp" android:viewportWidth="24" android:viewportHeight="24">
++ <path android:strokeColor="#FF000000" android:strokeWidth="1.75" android:strokeLineCap="round" android:strokeLineJoin="round" android:fillColor="#00000000" android:pathData="M7.76,16.24 a4.5,4.5 0 0,1 0,-6.36 l5.66,-5.66 a4.5,4.5 0 0,1 6.36,6.36 l-5.66,5.66 a4.5,4.5 0 0,1 -6.36,0 Z"/>
++ <path android:strokeColor="#FF000000" android:strokeWidth="1.75" android:strokeLineCap="round" android:strokeLineJoin="round" android:fillColor="#00000000" android:pathData="M10.59,7.05 l6.36,6.36"/>
++</vector>
 diff --git a/assets/icons/android/gg_ic_moon.xml b/assets/icons/android/gg_ic_moon.xml
 new file mode 100644
 index 0000000..21f26b8
@@ -3680,6 +3772,50 @@ index 0000000..21f26b8
 @@ -0,0 +1,3 @@
 +<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="22dp" android:height="22dp" android:viewportWidth="24" android:viewportHeight="24">
 + <path android:strokeColor="#FF000000" android:strokeWidth="1.75" android:strokeLineCap="round" android:strokeLineJoin="round" android:fillColor="#00000000" android:pathData="M12,3a6,6 0,0 0,9 9a9,9 0,1 1,-9 -9z"/>
++</vector>
+diff --git a/assets/icons/android/gg_ic_note.xml b/assets/icons/android/gg_ic_note.xml
+new file mode 100644
+index 0000000..a6cfc8a
+--- /dev/null
++++ b/assets/icons/android/gg_ic_note.xml
+@@ -0,0 +1,4 @@
++<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="22dp" android:height="22dp" android:viewportWidth="24" android:viewportHeight="24">
++ <path android:strokeColor="#FF000000" android:strokeWidth="1.75" android:strokeLineCap="round" android:strokeLineJoin="round" android:fillColor="#00000000" android:pathData="M15,4.5 l4.5,4.5 L9,19.5 H4.5 V15 Z"/>
++ <path android:strokeColor="#FF000000" android:strokeWidth="1.75" android:strokeLineCap="round" android:strokeLineJoin="round" android:fillColor="#00000000" android:pathData="M12.5,7 l4.5,4.5"/>
++</vector>
+diff --git a/assets/icons/android/gg_ic_pump.xml b/assets/icons/android/gg_ic_pump.xml
+new file mode 100644
+index 0000000..416a2ae
+--- /dev/null
++++ b/assets/icons/android/gg_ic_pump.xml
+@@ -0,0 +1,6 @@
++<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="22dp" android:height="22dp" android:viewportWidth="24" android:viewportHeight="24">
++ <path android:strokeColor="#FF000000" android:strokeWidth="1.75" android:strokeLineCap="round" android:strokeLineJoin="round" android:fillColor="#00000000" android:pathData="M6.5,3.5 h11 l-3.5,5.5 h-4 Z"/>
++ <path android:strokeColor="#FF000000" android:strokeWidth="1.75" android:strokeLineCap="round" android:strokeLineJoin="round" android:fillColor="#00000000" android:pathData="M10.5,9 v2"/>
++ <path android:strokeColor="#FF000000" android:strokeWidth="1.75" android:strokeLineCap="round" android:strokeLineJoin="round" android:fillColor="#00000000" android:pathData="M13.5,9 v2"/>
++ <path android:strokeColor="#FF000000" android:strokeWidth="1.75" android:strokeLineCap="round" android:strokeLineJoin="round" android:fillColor="#00000000" android:pathData="M9,11 h6 a1,1 0 0,1 1,1 v8 a1,1 0 0,1 -1,1 h-6 a1,1 0 0,1 -1,-1 v-8 a1,1 0 0,1 1,-1 Z"/>
++</vector>
+diff --git a/assets/icons/android/gg_ic_routine.xml b/assets/icons/android/gg_ic_routine.xml
+new file mode 100644
+index 0000000..1a896b5
+--- /dev/null
++++ b/assets/icons/android/gg_ic_routine.xml
+@@ -0,0 +1,6 @@
++<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="22dp" android:height="22dp" android:viewportWidth="24" android:viewportHeight="24">
++ <path android:strokeColor="#FF000000" android:strokeWidth="1.75" android:strokeLineCap="round" android:strokeLineJoin="round" android:fillColor="#00000000" android:pathData="M3.5,12 h17 v2 a5,5 0 0,1 -5,5 h-7 a5,5 0 0,1 -5,-5 Z"/>
++ <path android:strokeColor="#FF000000" android:strokeWidth="1.75" android:strokeLineCap="round" android:strokeLineJoin="round" android:fillColor="#00000000" android:pathData="M7,19 l-1,2"/>
++ <path android:strokeColor="#FF000000" android:strokeWidth="1.75" android:strokeLineCap="round" android:strokeLineJoin="round" android:fillColor="#00000000" android:pathData="M17,19 l1,2"/>
++ <path android:strokeColor="#FF000000" android:strokeWidth="1.75" android:strokeLineCap="round" android:strokeLineJoin="round" android:fillColor="#00000000" android:pathData="M6,12 V6.5 a2,2 0 0,1 4,0"/>
++</vector>
+diff --git a/assets/icons/android/gg_ic_spoon.xml b/assets/icons/android/gg_ic_spoon.xml
+new file mode 100644
+index 0000000..aff2236
+--- /dev/null
++++ b/assets/icons/android/gg_ic_spoon.xml
+@@ -0,0 +1,4 @@
++<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="22dp" android:height="22dp" android:viewportWidth="24" android:viewportHeight="24">
++ <path android:strokeColor="#FF000000" android:strokeWidth="1.75" android:strokeLineCap="round" android:strokeLineJoin="round" android:fillColor="#00000000" android:pathData="M12,3 C9.8,3 8.5,5 8.5,7 C8.5,9 10,10.5 12,10.5 C14,10.5 15.5,9 15.5,7 C15.5,5 14.2,3 12,3 Z"/>
++ <path android:strokeColor="#FF000000" android:strokeWidth="1.75" android:strokeLineCap="round" android:strokeLineJoin="round" android:fillColor="#00000000" android:pathData="M12,10.5 V21"/>
 +</vector>
 diff --git a/assets/icons/android/gg_ic_sun.xml b/assets/icons/android/gg_ic_sun.xml
 new file mode 100644
@@ -3866,10 +4002,10 @@ index 0000000..d8bbcc6
 +decision), C-1, C-4, C-5, then C-3, C-6, C-7, C-8.
 diff --git a/audits/2026-11-02-v0.6.0-brands.md b/audits/2026-11-02-v0.6.0-brands.md
 new file mode 100644
-index 0000000..e6a7c63
+index 0000000..480533b
 --- /dev/null
 +++ b/audits/2026-11-02-v0.6.0-brands.md
-@@ -0,0 +1,59 @@
+@@ -0,0 +1,61 @@
 +# Audit: Brands, and Cochilo as Tatá Slings (0.6.0)
 +
 +Date: 2026-11-02 · PR: (Cochilo repo patch, see Cochilo `design-system/`) · Auditor: Claude, by hand
@@ -3883,7 +4019,9 @@ index 0000000..e6a7c63
 +  muted, line, mint → teal `#5DC2BB`, on-mint, coral ×3, panel ×3, snackbar ×2); type family
 +  Ubuntu Mono → Libre Franklin 400/600/700. Data colours, spacing, radii, sizes, motion and the type
 +  scale unchanged.
-+- Assets: Libre Franklin + OFL; `assets/logos/cochilo-tata-mark.svg` (moon in a sling, navy on teal).
++- Assets: Libre Franklin + OFL; `assets/logos/cochilo-tata-mark.svg` (moon in a sling, navy on teal);
++  ten line icons in the existing set (breast, bottle, spoon, pump, diaper, routine, note, medicine,
++  info, day), checked at 22 and 44 px: one stroke weight, round caps, readable at size.
 +- Evidence: `check_tokens.py` 0 errors (every contrast pair re-checked with the brand on); unit
 +  tests 16/16; Cochilo's Paparazzi screenshots (Today light/dark/pt-BR, Day, History, Patterns,
 +  Settings, sheets, quick log) re-recorded and looked at one by one; the mark rendered at 200, 96,

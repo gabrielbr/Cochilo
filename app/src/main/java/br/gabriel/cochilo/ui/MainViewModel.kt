@@ -188,7 +188,6 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         nursing = str(R.string.napper_nursing),
         breastMilk = str(R.string.napper_breast_milk),
         formula = str(R.string.napper_formula),
-        medicine = str(R.string.napper_medicine),
         sides = { left, right -> str(R.string.napper_sides, left, right) },
     )
 }

@@ -3,6 +3,19 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.5.0 — 2026-11-02
+
+**Icons for every kind of entry**, so entries are known at a glance: a drop for a breastfeed, a
+bottle, a spoon for solids, a pump, a diaper, the moon for sleep, the sun for daylight, a bath for a
+routine, a capsule for medicine, a pencil for a note. On the log rows, every entry list, the Day
+tab's hour-by-hour list (in the entry's timeline colour) and the timers' notifications. Always next
+to the name. Icons are in the design system's line set (patch in `design-system/`).
+
+**Medicine is its own entry type**, with its own log row and "i". The Napper import brings
+medicine in as Medicine; medicine already imported as notes ("Remédio · Luftal") becomes Medicine
+("Luftal") on first launch (database version 2). Backups are format version 2: older backups still
+import; a version-2 backup can't be imported into an app older than 0.5.0.
+
 ## 0.4.0 — 2026-11-02
 
 **Notifications, like Napper's.** A quiet live notification: asleep or awake, a running clock,
