@@ -3,6 +3,14 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.13.0 — 2026-11-02
+
+**Meet the baby.** A warm first run: welcome, the baby's name and birth date, then how the baby
+looks (skin tone, hair, girl / boy / rather not say), skippable. The baby appears as a little
+drawing wrapped in a Rosa Chá sling: in the first run, asleep on Today before the first sleep, and
+in Settings › Baby, where the look can change any time. Dates now always read in the app's
+language ("qui 9 jul"). Backups are version 3 (older backups still import). `docs/onboarding.md`.
+
 ## 0.12.0 — 2026-11-02
 
 **Softer, warmer, made for her** (a design review with the owner's graphic-design-fundamentals and

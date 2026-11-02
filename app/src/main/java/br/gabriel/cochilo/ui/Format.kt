@@ -18,7 +18,11 @@ class Format(
     /** The app's "now", so Today and Yesterday agree with the rest of the screen. */
     private val now: Long = System.currentTimeMillis(),
 ) {
-    private val locale: Locale get() = context.resources.configuration.locales[0]
+    /**
+     * The language the app is showing, from its own strings (locale_tag), so dates read in the same
+     * language as the words around them, whatever the system's locale says.
+     */
+    private val locale: Locale get() = Locale.forLanguageTag(context.getString(R.string.locale_tag))
     private val timeFmt: DateTimeFormatter
         get() = DateTimeFormatter.ofPattern(if (DateFormat.is24HourFormat(context)) "HH:mm" else "h:mm a", locale)
 

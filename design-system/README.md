@@ -46,6 +46,11 @@ one commit on top of the design system's `main` at 0.4.0 (self-update):
   `event-*-soft` tints; Cochilo's Screen title without the highlighter and pill buttons
   (components.md). Audit `audits/2026-11-02-v0.11.0-softer.md`.
 
+**[0007-Baby-avatar-0.12.0.patch](0007-Baby-avatar-0.12.0.patch)**, on top of 0006:
+
+- **0.12.0:** the illustration palette and the Baby avatar and Look picker components. Audit
+  `audits/2026-11-02-v0.12.0-avatar.md`.
+
 All checked on a fresh checkout of the design system's `main`: `git am` applies it,
 `check_tokens.py` reports 0 errors, the tests pass, and `drift.py --cochilo` against this repo
 reports 0 differences.

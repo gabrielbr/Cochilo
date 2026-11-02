@@ -55,7 +55,7 @@ interface BabyDao {
     suspend fun upsert(baby: Baby)
 }
 
-@Database(entities = [Event::class, Baby::class], version = 2, exportSchema = true)
+@Database(entities = [Event::class, Baby::class], version = 3, exportSchema = true)
 @TypeConverters(Converters::class)
 abstract class CochiloDb : RoomDatabase() {
     abstract fun events(): EventDao
@@ -64,7 +64,7 @@ abstract class CochiloDb : RoomDatabase() {
     companion object {
         fun create(context: Context): CochiloDb =
             Room.databaseBuilder(context, CochiloDb::class.java, "cochilo.db")
-                .addMigrations(MEDICINE_TYPE)
+                .addMigrations(MEDICINE_TYPE, BABY_LOOK)
                 .build()
 
         /**
@@ -78,6 +78,15 @@ abstract class CochiloDb : RoomDatabase() {
                 db.execSQL(MEDICINE_SQL)
             }
         }
+
+        /** 2 → 3: the baby's look for the avatar (0.13.0); existing babies get the default look. */
+        val BABY_LOOK = object : Migration(2, 3) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(LOOK_SQL)
+            }
+        }
+
+        const val LOOK_SQL = "ALTER TABLE baby ADD COLUMN look TEXT NOT NULL DEFAULT ''"
 
         /** Kept as plain SQL so a JVM test can run it against SQLite. */
         const val MEDICINE_SQL = """

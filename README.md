@@ -31,6 +31,8 @@ dressed in the Tatá Slings brand (teal, plum-grey ink, Pérola, Libre Franklin,
 - **Log button**: the main action, in the bottom-right corner on every tab. Press, drag up to a
   kind and sideways to a choice (Feed › Right breast), let go: logged. Let go on the kind for its
   sheet. A tap opens it for taps.
+- **Meet the baby**: a two-step first run, and the baby's avatar (skin tone, hair, girl / boy /
+  rather not say) in a Rosa Chá sling. [docs/onboarding.md](docs/onboarding.md).
 - **What's next**: the plan, with the owner's suggestions (celebrations, the baby's avatar),
   research-based features and UX work: [docs/roadmap.md](docs/roadmap.md).
 - **Soft and warm**: plain titles, teal only on the one action, a blush for what's picked,

@@ -72,4 +72,7 @@ data class Baby(
     val birthDate: Long,
     /** Due date, for corrected age if the baby was born early. Null = born at term. */
     val dueDate: Long? = null,
+    /** How the baby looks, for the avatar (domain.BabyLook, encoded). Empty = the default look. */
+    @androidx.room.ColumnInfo(defaultValue = "")
+    val look: String = "",
 )

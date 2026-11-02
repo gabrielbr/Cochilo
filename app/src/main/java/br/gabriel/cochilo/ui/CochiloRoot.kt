@@ -86,6 +86,7 @@ fun CochiloRoot(vm: MainViewModel) {
     var settings by rememberSaveable { mutableStateOf(false) }
     var editing by remember { mutableStateOf<Editing?>(null) }
     var editingBaby by remember { mutableStateOf(false) }
+    var editingLook by remember { mutableStateOf(false) }
     val snackbar = remember { SnackbarHostState() }
 
     val exportJson = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { it?.let(vm::exportJson) }
@@ -119,6 +120,9 @@ fun CochiloRoot(vm: MainViewModel) {
     val weeks = baby?.let { ageWeeks(it.birthDate, it.dueDate, now) } ?: 0
     val prediction = remember(log, now, weeks) { Predictor(zone).predict(log, weeks, now) }
 
+    // The baby's look, for the avatar anywhere below (docs/onboarding.md).
+    val look = remember(baby?.look) { br.gabriel.cochilo.domain.BabyLook.decode(baby?.look) }
+    androidx.compose.runtime.CompositionLocalProvider(br.gabriel.cochilo.ui.kit.LocalBabyLook provides look) {
     Frame {
         Box(Modifier.fillMaxSize().safeDrawingPadding()) {
             Column(Modifier.fillMaxSize()) {
@@ -128,6 +132,7 @@ fun CochiloRoot(vm: MainViewModel) {
                         SettingsScreen(
                             baby, theme, zone,
                             onEditBaby = { editingBaby = true },
+                            onEditLook = { editingLook = true },
                             onTheme = vm::setTheme,
                             onExportJson = { exportJson.launch("cochilo-${LocalDate.now(zone)}.json") },
                             onExportCsv = { exportCsv.launch("cochilo-${LocalDate.now(zone)}.csv") },
@@ -156,13 +161,8 @@ fun CochiloRoot(vm: MainViewModel) {
                     Box(Modifier.weight(1f)) {
                         when (babyState) {
                             BabyState.Loading -> Unit
-                            BabyState.Missing -> ScrollPage {
-                                ScreenTitle(stringResource(R.string.welcome_title), stringResource(R.string.app_name))
-                                EmptyState(
-                                    stringResource(R.string.add_baby), stringResource(R.string.welcome_line),
-                                    stringResource(R.string.add_baby),
-                                ) { editingBaby = true }
-                            }
+                            // The first run: meet the baby, then how the baby looks (docs/onboarding.md).
+                            BabyState.Missing -> br.gabriel.cochilo.ui.screens.Onboarding(zone, onDone = { vm.saveBaby(it) })
                             is BabyState.Ready -> {
                                 val reduce = CochiloTheme.reduceMotion
                                 AnimatedContent(
@@ -251,6 +251,7 @@ fun CochiloRoot(vm: MainViewModel) {
             }
         }
     }
+    }
 
     editing?.let { ed ->
         EventSheet(
@@ -260,6 +261,9 @@ fun CochiloRoot(vm: MainViewModel) {
             onDelete = { vm.delete(it); editing = null },
             onDismiss = { editing = null },
         )
+    }
+    if (editingLook && baby != null) {
+        br.gabriel.cochilo.ui.screens.LookSheet(baby, onSave = { vm.saveBaby(it); editingLook = false }, onDismiss = { editingLook = false })
     }
     if (editingBaby) {
         BabySheet(baby, zone, onSave = { vm.saveBaby(it); editingBaby = false }, onDismiss = { editingBaby = false })
