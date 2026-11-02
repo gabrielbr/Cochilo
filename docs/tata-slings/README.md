@@ -11,7 +11,7 @@ yet; each document ends with the decisions Tatá needs to make.
 | [design-system.md](design-system.md) | The Tatá Slings design system: measured from the live site (teal `#5DC2BB`, navy `#13293D`, Libre Franklin), extended with a warm fabric palette, contrast-checked, mapped onto Cochilo's components. |
 | [positioning-and-marketing.md](positioning-and-marketing.md) | Positioning ("Toda soneca conta. Até no colo."), audience, competition, launch phases, channels, content and SEO plan, targets, risks. |
 | [preview.html](preview.html) | A visual preview of the palette, controls and two Cochilo screens in the new look (open in a browser; light and dark). |
-| [../../design-system/tata-slings/tokens.json](../../design-system/tata-slings/tokens.json) | The proposed `tata` token layer, to go into the Gabriel Design System the same way the `cochilo` layer did. |
+| [../../design-system/](../../design-system/README.md) | The design-system patch that makes it real: the `brands` concept and `brands.tata-slings`, worn by the `cochilo` layer. Cochilo ships it from 0.3.0. |
 
 Sources: tataslings.com.br (home, "Tudo sobre a Tatá", "Tudo sobre o Tatá Fácil Sling", "Tudo
 sobre o Tatá Swaddle", the Fácil Sling category, a product page, the FAQ and the Nuvemshop theme

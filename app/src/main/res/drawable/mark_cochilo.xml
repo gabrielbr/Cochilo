@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  The header mark: the launcher symbol cropped to its safe zone (66 of 108), on a teal tile with the
+  system's control radius (4 of 32). Design system asset: assets/logos/cochilo-tata-mark.svg.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="32dp" android:height="32dp" android:viewportWidth="66" android:viewportHeight="66">
+    <path android:fillColor="#FF5DC2BB"
+        android:pathData="M8.25,0 H57.75 A8.25,8.25 0 0,1 66,8.25 V57.75 A8.25,8.25 0 0,1 57.75,66 H8.25 A8.25,8.25 0 0,1 0,57.75 V8.25 A8.25,8.25 0 0,1 8.25,0 Z" />
+    <group android:translateX="-21" android:translateY="-21">
+        <path android:fillColor="#FF13293D"
+            android:pathData="M51.05,32.31 A14,14 0 1,0 67.01,51.17 A12.5,12.5 0 0,1 51.05,32.31 Z" />
+        <path android:strokeColor="#FF13293D" android:strokeWidth="6" android:strokeLineCap="round"
+            android:fillColor="#00000000" android:pathData="M32,56 Q54,90 76,56" />
+    </group>
+</vector>

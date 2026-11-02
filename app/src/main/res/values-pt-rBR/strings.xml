@@ -212,4 +212,7 @@
     <string name="quick_started">Começou: %1$s</string>
     <string name="quick_logged">Registrado: %1$s</string>
     <string name="quick_switched">Trocou para %1$s</string>
+    <!-- Marca (Tatá Slings). -->
+    <string name="brand_line">Cochilo, da Tatá Slings</string>
+    <string name="brand_meta">Slings, swaddles e mais, feitos no Brasil. Abre tataslings.com.br.</string>
 </resources>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- From Gabriel Design System tokens (cochilo layer): page and panel. -->
-    <color name="page">#F2F2F2</color>
-    <color name="panel">#17161A</color>
+    <!-- Window and launcher colours, from the design system's cochilo layer in the Tatá Slings brand
+         (CTokens.Light): page and the brand accent (the mint role, Tatá teal). -->
+    <color name="page">#FBF7F2</color>
+    <color name="brand">#5DC2BB</color>
 </resources>

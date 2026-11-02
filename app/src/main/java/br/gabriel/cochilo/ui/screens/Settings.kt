@@ -98,7 +98,18 @@ fun SettingsScreen(
             Hairline()
             val version = runCatching { context.packageManager.getPackageInfo(context.packageName, 0).versionName }.getOrNull() ?: ""
             ListRow(stringResource(R.string.version), value = version)
+            Hairline()
+            // The brand's home. Opens the browser (an intent: the app itself needs no internet);
+            // the UTM tags let the shop count visits from the app (docs/tata-slings/monetization.md).
+            ListRow(stringResource(R.string.brand_line), meta = stringResource(R.string.brand_meta), trailing = chevron, onClick = {
+                runCatching {
+                    context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(TATA_SLINGS_URL)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+                }
+            })
             about()
         }
     }
 }
+
+/** tataslings.com.br, tagged so the shop's analytics can tell visits from the app. */
+const val TATA_SLINGS_URL = "https://tataslings.com.br/?utm_source=cochilo&utm_medium=app&utm_campaign=about"

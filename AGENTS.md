@@ -3,10 +3,25 @@
 Cochilo is a personal baby-sleep app for the owner's family. Read [README.md](README.md) first,
 then [docs/research.md](docs/research.md) for the science the features rest on.
 
+## Standing rules from the owner
+
+- **Document everything in this repo's docs.** Every change updates what it touches: `README.md`
+  (what the app does), `CHANGELOG.md` (every release, in plain words), the matching file in
+  `docs/` (or a new one), and this file when a rule changes. A PR that changes behaviour without
+  its docs isn't done.
+- **Always merge and release.** Once a PR's CI is green and it has no open review threads, merge it
+  (squash) and run the Release workflow with the next version and a one-line note in English and
+  Portuguese. Never leave a finished PR waiting.
+- **Never guess a repo or project.** Work in Cochilo. If a request seems to point at another repo
+  (PulseLoop, the design system…), ask before opening it.
+
 ## The design system decides how it looks
 
 The UI follows the [Gabriel Design System](https://github.com/gabrielbr/Gabriel-Deisgn-System),
-layer `cochilo`. Its AGENTS.md and DESIGN.md are the rules; the short version:
+layer `cochilo`, dressed in the **Tatá Slings brand** (`brands.tata-slings`, the design system's
+`docs/brands.md`): Cochilo is a Tatá Slings product. The brand sets the colour values (teal accent,
+navy ink, Pérola page), the one family (Libre Franklin) and the mark; every other standard is the
+system's. Its AGENTS.md and DESIGN.md are the rules; the short version:
 
 - **Tokens only.** Every colour, size, radius, duration and type role comes from
   `ui/theme/CTokens.kt` (through `CochiloTheme.colors`, `CTokens.Spacing/Radius/Size`, `Type`).
@@ -14,9 +29,12 @@ layer `cochilo`. Its AGENTS.md and DESIGN.md are the rules; the short version:
   system first, then copy the regenerated `CTokens.kt` here.
 - **Never edit `CTokens.kt` by hand.** It is `generated/cochilo/CTokens.kt` from the design system,
   copied as is; `python3 scripts/drift.py --cochilo ../Cochilo` there must report 0 differences.
-- **One mint action per screen** (Start sleep / Woke up on Today; Save in a sheet). Everything else
-  is a secondary outline, a row or a chip. Text on mint is `onMint`.
+- **One mint action per screen** (Start sleep / Woke up on Today; Save in a sheet). Under the brand
+  the `mint` role is Tatá teal; it's a fill, never text. Everything else is a secondary outline, a
+  row or a chip. Text on it is `onMint`.
 - **Event colours are data colours.** Use them only on data, always next to a word.
+- **Brand voice.** Words follow [docs/tata-slings/brand-voice.md](docs/tata-slings/brand-voice.md):
+  quiet and short in the app, warm in marketing, never a promise about how the baby will sleep.
 - **Components live in `ui/kit`.** Screens compose them; they don't draw their own buttons or rows.
 - **Copy in English and Brazilian Portuguese.** Every string in `values/strings.xml` and
   `values-pt-rBR/strings.xml`; short, plain, sentence case, verb first on buttons; no plurals that

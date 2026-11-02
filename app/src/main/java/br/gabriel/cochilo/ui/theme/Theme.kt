@@ -13,35 +13,40 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import br.gabriel.cochilo.R
 
-/** Ubuntu Mono, the system's one family: regular, bold, bold italic. */
-val UbuntuMono = FontFamily(
-    Font(R.font.ubuntu_mono, FontWeight.Normal),
-    Font(R.font.ubuntu_mono_bold, FontWeight.Bold),
-    Font(R.font.ubuntu_mono_bold_italic, FontWeight.Bold, FontStyle.Italic),
+/**
+ * The app's one family. Cochilo wears the Tatá Slings brand (CTokens.Brand, the design system's
+ * docs/brands.md), whose family is Libre Franklin, the one on tataslings.com.br: regular,
+ * semibold, bold. The faces ship in res/font under the SIL Open Font License (licenses/).
+ */
+val BrandFamily = FontFamily(
+    Font(R.font.libre_franklin_regular, FontWeight.Normal),
+    Font(R.font.libre_franklin_semibold, FontWeight.SemiBold),
+    Font(R.font.libre_franklin_bold, FontWeight.Bold),
 )
 
-private fun role(size: Int, line: Int, bold: Boolean, tracking: Float = 0f) = TextStyle(
-    fontFamily = UbuntuMono,
+private fun role(size: Int, line: Int, bold: Boolean, tracking: Float = 0f, tabular: Boolean = false) = TextStyle(
+    fontFamily = BrandFamily,
     fontSize = size.sp,
     lineHeight = line.sp,
     fontWeight = if (bold) FontWeight.Bold else FontWeight.Normal,
     letterSpacing = tracking.sp,
+    // Times and durations in tabular figures, so a running timer doesn't jitter.
+    fontFeatureSettings = if (tabular) "tnum" else null,
 )
 
 /** The layer's type roles. Screens use these, never an inline size. */
 object Type {
     val display = role(CTokens.Type.displaySize, CTokens.Type.displayLine, CTokens.Type.displayBold)
-    val timer = role(CTokens.Type.timerSize, CTokens.Type.timerLine, CTokens.Type.timerBold, CTokens.Type.timerTracking)
+    val timer = role(CTokens.Type.timerSize, CTokens.Type.timerLine, CTokens.Type.timerBold, CTokens.Type.timerTracking, tabular = true)
     val title = role(CTokens.Type.titleSize, CTokens.Type.titleLine, CTokens.Type.titleBold)
     val label = role(CTokens.Type.labelSize, CTokens.Type.labelLine, CTokens.Type.labelBold)
     val body = role(CTokens.Type.bodySize, CTokens.Type.bodyLine, CTokens.Type.bodyBold)
     val bodySmall = role(CTokens.Type.bodySmallSize, CTokens.Type.bodySmallLine, CTokens.Type.bodySmallBold)
-    val meta = role(CTokens.Type.metaSize, CTokens.Type.metaLine, CTokens.Type.metaBold)
+    val meta = role(CTokens.Type.metaSize, CTokens.Type.metaLine, CTokens.Type.metaBold, tabular = true)
     /** Upper-case the text yourself (or use [kit.Caption]); TextStyle has no text-transform. */
     val caption = role(CTokens.Type.captionSize, CTokens.Type.captionLine, CTokens.Type.captionBold, CTokens.Type.captionTracking)
 }
