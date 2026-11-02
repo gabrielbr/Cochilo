@@ -22,8 +22,10 @@ data class BackupFile(
         /**
          * 2: entries may be MEDICINE (0.5.0). Version-1 files still read: they have no MEDICINE.
          * A version-2 file in an older app is refused as "made by a newer Cochilo".
+         * 3: the baby has a look (the avatar, 0.13.0). Version-1 and -2 files still read: no look
+         * means the default one.
          */
-        const val VERSION = 2
+        const val VERSION = 3
     }
 }
 

@@ -65,36 +65,10 @@ the moment or none), unit-tested like `Predictor`. One `Celebration` component i
 Canvas, transforms from `Motion.kt`), no new animation library. Screenshot tests of the resting
 frame in light, dark and night.
 
-### 1.2 The baby's avatar: chosen at onboarding, used by the celebrations
+### 1.2 The baby's avatar: shipped in 0.13.0
 
-**The idea (owner):** in the baby's profile, when setting up, the parent picks how the baby looks,
-so the animation looks like *her* baby.
-
-**What to ask, in words a parent would use (and the brand voice):**
-- **Skin tone** ("Tom de pele"): six swatches, light to deep (the same range as emoji skin tones).
-  The app asks for how the baby *looks*, not for race or ethnicity: that is what the drawing needs,
-  it is more accurate (families are mixed), and it is kinder to ask.
-- **Hair** ("Cabelo"): none yet / a little / curly / straight / wavy, and a colour (black, brown,
-  blond, red).
-- **Boy, girl, or "rather not say"** ("Menino, menina ou prefiro não dizer"): changes small details
-  only (an optional bow or none); "rather not say" draws a neutral baby. Never changes colours to
-  pink/blue by gender; the app's palette is her fabrics.
-- A live preview of the baby while choosing; every choice one tap; all optional, with a default.
-
-**Where the avatar appears.** The celebrations; the onboarding welcome; the empty Today ("Ready
-when Bebê is"); optionally the header in place of the moon mark (a Settings choice). Never on
-data screens where it would compete with the numbers.
-
-**Style.** The brand's illustration style (`docs/tata-slings/design-system.md` §6): single-weight
-line with rounded caps, flat fills from the fabric palette, the same stroke as the icon set. Drawn
-as layered vectors (head, face, hair, body, bow) so every combination is one drawing, and the
-animation moves parts (blink, smile, arms) rather than swapping frames.
-
-**Data.** Stored with the baby (Room migration), included in the backup (bump
-`BackupFile.VERSION`, still read older files), never sent anywhere. Editable later in Settings ›
-Baby › Appearance.
-
-**Needs first:** a real onboarding (3.1) and the design-system illustration set.
+Chosen at onboarding (skin tone, hair, girl / boy / rather not say), drawn in a Rosa Chá sling.
+Now in [onboarding.md](onboarding.md). The celebrations (1.1) use it next.
 
 ---
 
@@ -118,11 +92,7 @@ Each is grounded in `docs/research.md` or the Tatá Slings plans (`docs/tata-sli
 
 ## 3. UX improvements
 
-### 3.1 Onboarding (needed for the avatar)
-Today the app asks for the baby's name and birth date in a sheet. A first-run flow of three short
-screens, each skippable: the baby (name, birth date, due date if early) → how the baby looks
-(1.2) → "Log the first sleep" with the widget offered. Remember actions applies: nothing asked
-twice. Brand voice: warm, one line per screen.
+### 3.1 Onboarding: shipped in 0.13.0 ([onboarding.md](onboarding.md))
 
 ### 3.2 Logging, faster still
 - **"Fell asleep a few minutes ago"**: long-press Start sleep (or the widget) for 5 / 10 / 15 min
@@ -148,7 +118,6 @@ twice. Brand voice: warm, one line per screen.
 
 | Item | Why |
 |---|---|
-| **Dates in the phone's language**: the Portuguese screenshots show "Thu 9 Jul" (Settings' birth date) | `Format.day` already formats in the configuration's locale, so this may be the screenshot tool's locale only; check on a Portuguese phone and fix if real |
 | **200% font scale pass** | Audit v0.9.0 P3: the Log menu's labels ellipsize at large font sizes |
 | **Tablet and foldable layout** | Android guidance: a navigation rail and two panes on wide screens |
 | **Upstream the design-system patches** | Six patches wait in `design-system/`; merging them makes the system the source of truth again |
@@ -157,11 +126,15 @@ twice. Brand voice: warm, one line per screen.
 | **On-device checks with TalkBack** | Paparazzi checks pixels, not the reading order |
 | **Predictor tests on a year of synthetic data** | Every rule tested, as the product rule asks |
 
+## Shipped from this plan
+
+- **0.13.0**: onboarding and the baby's avatar (1.2, 3.1); dates in the app's language
+  ([onboarding.md](onboarding.md)).
+
 ## 5. Priorities
 
 | When | What | Why first |
 |---|---|---|
-| **Next (0.13)** | Onboarding (3.1) with the baby's avatar (1.2); check the dates in Portuguese (4) | The owner's request; the avatar needs onboarding |
 | **Then (0.14)** | Celebrations (1.1) on the avatar | Builds on 0.13; the first "peak" moment |
 | **Soon** | Night light theme; "fell asleep a few minutes ago"; where the baby slept | Research-backed, small, and on the brand's subject |
 | **Later** | Ritual builder, T.I.C.K.S., notes from Tatá, printable report (the Cochilo+ set) | Needs Tatá's writing and the monetization plan's order of work |

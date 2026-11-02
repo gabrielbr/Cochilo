@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- O idioma destas strings: datas e horas o seguem (ui.Format). -->
+    <string name="locale_tag">pt-BR</string>
     <string name="tab_today">Hoje</string>
     <string name="tab_history">Histórico</string>
     <string name="tab_patterns">Padrões</string>
@@ -245,4 +247,29 @@
     <string name="widget_asleep">Dormindo desde %1$s</string>
     <string name="widget_awake">Acordado desde %1$s</string>
     <string name="widget_finish_side">Terminar %1$s, começou %2$s</string>
+    <!-- Primeira vez e a aparência do bebê (docs/onboarding.md, docs/onboarding.md). -->
+    <string name="onboarding_next">Próximo</string>
+    <string name="onboarding_done">Pronto</string>
+    <string name="onboarding_skip">Pular por agora</string>
+    <string name="look_title">Como %1$s é</string>
+    <string name="look_line">Para o desenho de %1$s. Dá para mudar quando quiser.</string>
+    <string name="look_skin">Tom de pele</string>
+    <string name="look_skin_n">Tom de pele %1$d de 6</string>
+    <string name="look_hair">Cabelo</string>
+    <string name="hair_none">Ainda não</string>
+    <string name="hair_little">Pouquinho</string>
+    <string name="hair_curly">Cacheado</string>
+    <string name="hair_straight">Liso</string>
+    <string name="hair_wavy">Ondulado</string>
+    <string name="look_hair_color">Cor do cabelo</string>
+    <string name="hair_black">Preto</string>
+    <string name="hair_brown">Castanho</string>
+    <string name="hair_blond">Loiro</string>
+    <string name="hair_red">Ruivo</string>
+    <string name="look_gender">Menina ou menino</string>
+    <string name="gender_girl">Menina</string>
+    <string name="gender_boy">Menino</string>
+    <string name="gender_unsaid">Prefiro não dizer</string>
+    <string name="avatar_of">Desenho de %1$s</string>
+    <string name="look_row_meta">Tom de pele, cabelo, menina ou menino</string>
 </resources>

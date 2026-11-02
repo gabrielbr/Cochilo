@@ -42,6 +42,8 @@ fun SettingsScreen(
     onFabric: (br.gabriel.cochilo.ui.kit.Fabric) -> Unit = {},
     /** Extra About rows from the build (the github build's "Check for updates"). */
     about: @Composable () -> Unit = {},
+    /** Settings › Baby › Appearance: the look picker. */
+    onEditLook: () -> Unit = {},
 ) {
     val context = LocalContext.current
     val f = Format(context, zone)
@@ -52,6 +54,15 @@ fun SettingsScreen(
         Caption(stringResource(R.string.caption_baby), top = Spacing.space1)
         RowGroup {
             ListRow(stringResource(R.string.baby_name), value = baby?.name ?: stringResource(R.string.not_set), onClick = onEditBaby, trailing = chevron)
+            if (baby != null) {
+                Hairline()
+                // The avatar: how the baby looks (the look picker in a sheet).
+                ListRow(
+                    stringResource(R.string.look_title, baby.name), meta = stringResource(R.string.look_row_meta),
+                    leading = { br.gabriel.cochilo.ui.kit.BabyAvatar(br.gabriel.cochilo.domain.BabyLook.decode(baby.look), size = br.gabriel.cochilo.ui.theme.CTokens.Size.kindBadgeLead) },
+                    onClick = onEditLook, trailing = chevron,
+                )
+            }
             Hairline()
             ListRow(stringResource(R.string.birth_date), value = baby?.let { f.day(localDate(it.birthDate, zone)) } ?: stringResource(R.string.not_set), onClick = onEditBaby, trailing = chevron)
             Hairline()

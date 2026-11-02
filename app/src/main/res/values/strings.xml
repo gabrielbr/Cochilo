@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name" translatable="false">Cochilo</string>
+    <!-- The language these strings are in: dates and times follow it (ui.Format). -->
+    <string name="locale_tag">en</string>
 
     <!-- Navigation -->
     <string name="tab_today">Today</string>
@@ -270,4 +272,29 @@
     <string name="widget_asleep">Asleep since %1$s</string>
     <string name="widget_awake">Awake since %1$s</string>
     <string name="widget_finish_side">Finish %1$s, started %2$s</string>
+    <!-- Onboarding and the baby's look (docs/onboarding.md, docs/onboarding.md). -->
+    <string name="onboarding_next">Next</string>
+    <string name="onboarding_done">Done</string>
+    <string name="onboarding_skip">Skip for now</string>
+    <string name="look_title">How %1$s looks</string>
+    <string name="look_line">For the little drawing of %1$s. You can change it any time.</string>
+    <string name="look_skin">Skin tone</string>
+    <string name="look_skin_n">Skin tone %1$d of 6</string>
+    <string name="look_hair">Hair</string>
+    <string name="hair_none">None yet</string>
+    <string name="hair_little">A little</string>
+    <string name="hair_curly">Curly</string>
+    <string name="hair_straight">Straight</string>
+    <string name="hair_wavy">Wavy</string>
+    <string name="look_hair_color">Hair colour</string>
+    <string name="hair_black">Black</string>
+    <string name="hair_brown">Brown</string>
+    <string name="hair_blond">Blond</string>
+    <string name="hair_red">Red</string>
+    <string name="look_gender">Girl or boy</string>
+    <string name="gender_girl">Girl</string>
+    <string name="gender_boy">Boy</string>
+    <string name="gender_unsaid">Rather not say</string>
+    <string name="avatar_of">Drawing of %1$s</string>
+    <string name="look_row_meta">Skin tone, hair, girl or boy</string>
 </resources>

@@ -1,0 +1,398 @@
+From 0757c42cc38d53c0e8fa9d269d96cc8071cb804b Mon Sep 17 00:00:00 2001
+From: Gabriel Lopes <ogabriel@gmail.com>
+Date: Mon, 2 Nov 2026 22:47:12 +0000
+Subject: [PATCH] Design system 0.12.0: the baby avatar
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+The cochilo illustration palette (six skin tones, hair colours, cheek,
+face line, catchlight, the Rosa Chá wrap, the Amora bow), the avatar
+size, and the Baby avatar and Look picker components. Audit v0.12.0.
+---
+ CHANGELOG.md                        | 14 ++++++++
+ DESIGN.md                           |  2 +-
+ VERSION                             |  2 +-
+ audits/2026-11-02-v0.12.0-avatar.md | 43 ++++++++++++++++++++++++
+ docs/components.md                  |  2 ++
+ generated/cochilo/CTokens.kt        | 51 ++++++++++++++++++++++++++++-
+ generated/pulseloop/GTokens.kt      |  2 +-
+ generated/uikit/UiTokens.java       |  2 +-
+ generated/web/cochilo.css           | 51 ++++++++++++++++++++++++++++-
+ generated/web/pulseloop.css         |  2 +-
+ generated/web/uikit.css             |  2 +-
+ tokens/tokens.json                  | 23 +++++++++++--
+ 12 files changed, 185 insertions(+), 11 deletions(-)
+ create mode 100644 audits/2026-11-02-v0.12.0-avatar.md
+
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+index b5f385d..67cb5ea 100644
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -3,6 +3,20 @@
+ Semantic versioning (AGENTS.md "Versioning"). Each entry says what changed for each app and what
+ the app has to do.
+ 
++## 0.12.0 — 2026-11-02
++
++The baby avatar (minor: an illustration palette, a size and two components).
++
++- `cochilo` illustration palette, the same in both themes: six skin tones `illustration-skin-1..6`
++  (`#F6D7C3` to `#5E3A26`), hair black / brown / blond / red, `illustration-cheek`,
++  `illustration-face-line` `#241A1C`, `illustration-catchlight`, the Rosa Chá `illustration-wrap`
++  and `illustration-wrap-edge`, and the Amora `illustration-bow`. Never UI state, never text.
++- Size `avatar` 112px.
++- Components **Baby avatar** and **Look picker** (components.md). The picker asks how the baby
++  looks (skin tone, hair), never race; girl / boy / rather not say changes details only.
++- Audit `audits/2026-11-02-v0.12.0-avatar.md`.
++- **Cochilo:** copy `CTokens.kt`; `BabyAvatar`, `LookPicker`, onboarding.
++
+ ## 0.11.0 — 2026-11-02
+ 
+ Cochilo softer: a review for "feminine and maternal" (minor: roles added; Cochilo values change).
+diff --git a/DESIGN.md b/DESIGN.md
+index 4f071ea..3e9c251 100644
+--- a/DESIGN.md
++++ b/DESIGN.md
+@@ -1,6 +1,6 @@
+ ---
+ name: Gabriel Design System
+-version: 0.11.0
++version: 0.12.0
+ # GENERATED from tokens/tokens.json by scripts/gen_tokens.py. Edit the tokens, not this block.
+ colors:
+   page: "#F2F2F2"
+diff --git a/VERSION b/VERSION
+index d9df1bb..ac454c6 100644
+--- a/VERSION
++++ b/VERSION
+@@ -1 +1 @@
+-0.11.0
++0.12.0
+diff --git a/audits/2026-11-02-v0.12.0-avatar.md b/audits/2026-11-02-v0.12.0-avatar.md
+new file mode 100644
+index 0000000..f517a1f
+--- /dev/null
++++ b/audits/2026-11-02-v0.12.0-avatar.md
+@@ -0,0 +1,43 @@
++# Audit: the baby avatar (0.12.0), from Cochilo 0.13.0
++
++Method: design review only (detector not applicable, native platform): impeccable critique
++(Android guidance, craft floor) and graphic-design-fundamentals §13, on `onboarding_meet_light`,
++`onboarding_look_ptBR_dark`, `avatar_matrix_light`, `empty_today_light`, `settings_light`,
++`fabric_picker_ptBR_light`.
++
++## graphic-design-fundamentals §13
++
++| # | Check | Result |
++|---|---|---|
++| 1 | Brief | The baby looks like hers; first run warm and short. ✅ |
++| 2 | Concept | The baby in a Rosa Chá sling: the brand's subject. ✅ |
++| 3 | Hierarchy | Title, avatar, one line, fields, one teal action. ✅ |
++| 4 | Contrast | Eyes on skin 6 were weak; fixed with a darker line and catchlights. ✅ after fix |
++| 5 | Alignment | One left axis on both steps; avatar centred only in the picker and the Today card, where it is the subject. ✅ |
++| 6 | Spacing | Spacing tokens only; picker groups separated by captions. ✅ |
++| 7 | Typography | Existing roles. ✅ |
++| 8 | Colour | Illustration palette apart from UI and data colours; teal only on Next/Done. ✅ |
++| 9 | Consistency | Picker uses the system's swatch ring and filter chips. ✅ |
++| 10 | Simplicity | Hair colour hidden for "none yet"; look step skippable. ✅ |
++| 11 | Real size | Avatar read at 44dp (Settings) and 112dp. ✅ |
++| 12 | Accessibility | Swatches are radio buttons with spoken names ("Skin tone 3 of 6"); avatar described ("Drawing of Dante"). ✅ |
++| 13 | Production | Vector, no assets; Room migration and backup version 3. ✅ |
++
++## impeccable critique
++
++| # | Heuristic | Score | Note |
++|---|---|---|---|
++| 1 | System status | 4 | Live preview of every choice. |
++| 2 | Real world | 4 | "How Dante looks", skin tone not race, "rather not say". |
++| 3 | Control | 4 | Skip for now; changeable in Settings. |
++| 4 | Consistency | 4 | Same picker in onboarding and Settings. |
++| 5 | Error prevention | 3 | Next disabled until a name; dates picked, never typed. |
++| 6 | Recognition | 4 | Swatches and words side by side. |
++| 7 | Efficiency | 3 | One more screen than before, skippable. |
++| 8 | Aesthetic | 4 | Soft, warm, brand-specific. |
++| 9 | Error recovery | 3 | Everything editable later. |
++| 10 | Help | 3 | One line per step explains why. |
++| | **Total** | **36/40** | |
++
++Issues found and fixed in this release: weak eyes on deep skin tones; "Appearance" used twice in
++Settings (the baby row is now "How Bebê looks"); dates in English on Portuguese screens.
+diff --git a/docs/components.md b/docs/components.md
+index 0eae3d3..f9161a6 100644
+--- a/docs/components.md
++++ b/docs/components.md
+@@ -36,6 +36,8 @@ component, the row says so.
+ | Slide row | Cochilo: a row that also slides; past the touch slop it becomes its options side by side, the one under the finger in `ink` with a haptic tick; letting go logs, back to start cancels; the last-used option says LAST; tap still opens the sheet; each option is a TalkBack action | — | Cochilo `SlideRow` | 🟡 |
+ | Kind icon | Cochilo: an entry kind's 22dp line icon in its `event-*` colour, on a `kind-badge` (36dp) round of `event-*-soft` (sleep: `kind-badge-lead`, 44dp, with its name in the label role, because sleep leads); always beside the kind's name; on a highlighted row the round is `on-fab` at 18% and the line `on-fab` | — | Cochilo `KindIcon` | 🟡 |
+ | Last mark | Cochilo: the option used last time: an `outline` (2dp) in its kind's `event-*` colour and a `space-2` dot of that colour before its name; on a lit option the dot is `on-fab`. Spoken as "last" by TalkBack, never written. Also before the "last time" line of a row or sheet | — | Cochilo `LastDot`, `SlideOption.last` | 🟡 |
++| Baby avatar | Cochilo: the parent's own baby in a Rosa Chá sling, drawn on a 100-unit grid in the brand's illustration style (single line weight, round caps, flat fills); `illustration-*` colours only, the same in both themes; moods awake / asleep / happy, blink and lift for celebrations; a catchlight in open eyes so faces read on every skin tone; described for TalkBack. Sizes `avatar` (112) and `kind-badge-lead` (44) | — | Cochilo `BabyAvatar` | 🟡 |
++| Look picker | Cochilo: a live avatar preview, then skin tone (six 48dp swatches with spoken names), hair (filter chips), hair colour (swatches, hidden for "none yet"), girl / boy / rather not say (chips). One tap each, defaults for all | — | Cochilo `LookPicker` | 🟡 |
+ | Home widget | Cochilo: a 4 × 2 home-screen widget (RemoteViews): the mark, "Asleep / Awake since 14:20" and a running clock, then one row of 48dp buttons: the one mint action (Start sleep / Woke up, wider) and the two breasts (secondary; the one used last has the Last mark; the running side lit in `event-feed-soft` with an `outline` and reads Finish). `surface` card, `radius-m`, buttons `radius-s`, `space-3` padding, `space-2` gaps. Colours copied from the tokens into resources, checked by a test | — | Cochilo `CochiloWidget` | 🟡 |
+ | Fabric frame | Cochilo: a card wrapped in a brand texture, the way a sling wraps the baby: the texture is a band (`space8` on top, `space3` elsewhere) round a card of its own colour (`radius-s` inside `radius-m`); no word ever sits on the texture. Without a texture it is the plain card | — | Cochilo `FabricFrame` | 🟡 |
+ | Fabric picker | Cochilo: the brand's textures as 48dp round swatches in one scrolling row, the name under each (meta), the next one always peeking in; one tap picks and applies; the picked one has a 2dp `ink` ring; each is a radio button for TalkBack. First choice: plain | — | Cochilo `FabricPicker` | 🟡 |
+diff --git a/generated/cochilo/CTokens.kt b/generated/cochilo/CTokens.kt
+index 3d4176d..3683fe4 100644
+--- a/generated/cochilo/CTokens.kt
++++ b/generated/cochilo/CTokens.kt
+@@ -1,4 +1,4 @@
+-// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.11.0 — do not edit.
++// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.12.0 — do not edit.
+ package br.gabriel.cochilo.ui.theme
+ 
+ import androidx.compose.ui.graphics.Color
+@@ -49,6 +49,22 @@ object CTokens {
+         val eventRoutineSoft: Color,
+         val eventMedicineSoft: Color,
+         val eventNoteSoft: Color,
++        val illustrationSkin1: Color,
++        val illustrationSkin2: Color,
++        val illustrationSkin3: Color,
++        val illustrationSkin4: Color,
++        val illustrationSkin5: Color,
++        val illustrationSkin6: Color,
++        val illustrationHairBlack: Color,
++        val illustrationHairBrown: Color,
++        val illustrationHairBlond: Color,
++        val illustrationHairRed: Color,
++        val illustrationCatchlight: Color,
++        val illustrationCheek: Color,
++        val illustrationFaceLine: Color,
++        val illustrationWrap: Color,
++        val illustrationWrapEdge: Color,
++        val illustrationBow: Color,
+     )
+ 
+     val Light = Palette(
+@@ -90,6 +106,22 @@ object CTokens {
+         eventRoutineSoft = Color(0xFFD3EFEC), // The round behind the routine icon (a soft tint of event-routine). Never text, never alone.
+         eventMedicineSoft = Color(0xFFF6D3DA), // The round behind the medicine icon (a soft tint of event-medicine). Never text, never alone.
+         eventNoteSoft = Color(0xFFEBDFD4), // The round behind the note icon (a soft tint of event-note). Never text, never alone.
++        illustrationSkin1 = Color(0xFFF6D7C3), // Illustration (the baby avatar, docs/components.md): Skin tone 1, the lightest. The same in both themes: a baby doesn't change colour at night. Never UI state, never text.
++        illustrationSkin2 = Color(0xFFEBC1A0), // Illustration (the baby avatar, docs/components.md): Skin tone 2. The same in both themes: a baby doesn't change colour at night. Never UI state, never text.
++        illustrationSkin3 = Color(0xFFD7A27E), // Illustration (the baby avatar, docs/components.md): Skin tone 3. The same in both themes: a baby doesn't change colour at night. Never UI state, never text.
++        illustrationSkin4 = Color(0xFFB97F5A), // Illustration (the baby avatar, docs/components.md): Skin tone 4. The same in both themes: a baby doesn't change colour at night. Never UI state, never text.
++        illustrationSkin5 = Color(0xFF8D5A3B), // Illustration (the baby avatar, docs/components.md): Skin tone 5. The same in both themes: a baby doesn't change colour at night. Never UI state, never text.
++        illustrationSkin6 = Color(0xFF5E3A26), // Illustration (the baby avatar, docs/components.md): Skin tone 6, the deepest. The same in both themes: a baby doesn't change colour at night. Never UI state, never text.
++        illustrationHairBlack = Color(0xFF2A2220), // Illustration (the baby avatar, docs/components.md): Hair: black. The same in both themes: a baby doesn't change colour at night. Never UI state, never text.
++        illustrationHairBrown = Color(0xFF6B4430), // Illustration (the baby avatar, docs/components.md): Hair: brown. The same in both themes: a baby doesn't change colour at night. Never UI state, never text.
++        illustrationHairBlond = Color(0xFFD9B26A), // Illustration (the baby avatar, docs/components.md): Hair: blond. The same in both themes: a baby doesn't change colour at night. Never UI state, never text.
++        illustrationHairRed = Color(0xFFB45A32), // Illustration (the baby avatar, docs/components.md): Hair: red. The same in both themes: a baby doesn't change colour at night. Never UI state, never text.
++        illustrationCatchlight = Color(0xFFFFFFFF), // Illustration (the baby avatar): the small light in an open eye, so the eyes read on every skin tone. The same in both themes.
++        illustrationCheek = Color(0xFFF2A7A0), // Illustration (the baby avatar, docs/components.md): The cheeks' blush. The same in both themes: a baby doesn't change colour at night. Never UI state, never text.
++        illustrationFaceLine = Color(0xFF241A1C), // Illustration (the baby avatar, docs/components.md): Eyes, mouth and the drawing's line, on any skin tone. The same in both themes: a baby doesn't change colour at night. Never UI state, never text.
++        illustrationWrap = Color(0xFFE8B4A8), // Illustration (the baby avatar, docs/components.md): The Rosa Chá sling the baby is wrapped in. The same in both themes: a baby doesn't change colour at night. Never UI state, never text.
++        illustrationWrapEdge = Color(0xFFC98476), // Illustration (the baby avatar, docs/components.md): The sling's folds. The same in both themes: a baby doesn't change colour at night. Never UI state, never text.
++        illustrationBow = Color(0xFF8A3566), // Illustration (the baby avatar, docs/components.md): Amora: the bow, when the parent chose “girl”. The same in both themes: a baby doesn't change colour at night. Never UI state, never text.
+     )
+ 
+     val Dark = Palette(
+@@ -131,6 +163,22 @@ object CTokens {
+         eventRoutineSoft = Color(0xFF1E4744), // The round behind the routine icon (a soft tint of event-routine). Never text, never alone.
+         eventMedicineSoft = Color(0xFF572934), // The round behind the medicine icon (a soft tint of event-medicine). Never text, never alone.
+         eventNoteSoft = Color(0xFF47392E), // The round behind the note icon (a soft tint of event-note). Never text, never alone.
++        illustrationSkin1 = Color(0xFFF6D7C3), // Illustration (the baby avatar, docs/components.md): Skin tone 1, the lightest. The same in both themes: a baby doesn't change colour at night. Never UI state, never text.
++        illustrationSkin2 = Color(0xFFEBC1A0), // Illustration (the baby avatar, docs/components.md): Skin tone 2. The same in both themes: a baby doesn't change colour at night. Never UI state, never text.
++        illustrationSkin3 = Color(0xFFD7A27E), // Illustration (the baby avatar, docs/components.md): Skin tone 3. The same in both themes: a baby doesn't change colour at night. Never UI state, never text.
++        illustrationSkin4 = Color(0xFFB97F5A), // Illustration (the baby avatar, docs/components.md): Skin tone 4. The same in both themes: a baby doesn't change colour at night. Never UI state, never text.
++        illustrationSkin5 = Color(0xFF8D5A3B), // Illustration (the baby avatar, docs/components.md): Skin tone 5. The same in both themes: a baby doesn't change colour at night. Never UI state, never text.
++        illustrationSkin6 = Color(0xFF5E3A26), // Illustration (the baby avatar, docs/components.md): Skin tone 6, the deepest. The same in both themes: a baby doesn't change colour at night. Never UI state, never text.
++        illustrationHairBlack = Color(0xFF2A2220), // Illustration (the baby avatar, docs/components.md): Hair: black. The same in both themes: a baby doesn't change colour at night. Never UI state, never text.
++        illustrationHairBrown = Color(0xFF6B4430), // Illustration (the baby avatar, docs/components.md): Hair: brown. The same in both themes: a baby doesn't change colour at night. Never UI state, never text.
++        illustrationHairBlond = Color(0xFFD9B26A), // Illustration (the baby avatar, docs/components.md): Hair: blond. The same in both themes: a baby doesn't change colour at night. Never UI state, never text.
++        illustrationHairRed = Color(0xFFB45A32), // Illustration (the baby avatar, docs/components.md): Hair: red. The same in both themes: a baby doesn't change colour at night. Never UI state, never text.
++        illustrationCatchlight = Color(0xFFFFFFFF), // Illustration (the baby avatar): the small light in an open eye, so the eyes read on every skin tone. The same in both themes.
++        illustrationCheek = Color(0xFFF2A7A0), // Illustration (the baby avatar, docs/components.md): The cheeks' blush. The same in both themes: a baby doesn't change colour at night. Never UI state, never text.
++        illustrationFaceLine = Color(0xFF241A1C), // Illustration (the baby avatar, docs/components.md): Eyes, mouth and the drawing's line, on any skin tone. The same in both themes: a baby doesn't change colour at night. Never UI state, never text.
++        illustrationWrap = Color(0xFFE8B4A8), // Illustration (the baby avatar, docs/components.md): The Rosa Chá sling the baby is wrapped in. The same in both themes: a baby doesn't change colour at night. Never UI state, never text.
++        illustrationWrapEdge = Color(0xFFC98476), // Illustration (the baby avatar, docs/components.md): The sling's folds. The same in both themes: a baby doesn't change colour at night. Never UI state, never text.
++        illustrationBow = Color(0xFF8A3566), // Illustration (the baby avatar, docs/components.md): Amora: the bow, when the parent chose “girl”. The same in both themes: a baby doesn't change colour at night. Never UI state, never text.
+     )
+ 
+     object Spacing {
+@@ -164,6 +212,7 @@ object CTokens {
+         val kindBadge = 36.dp
+         val kindBadgeLead = 44.dp
+         val outline = 2.dp
++        val avatar = 112.dp
+     }
+ 
+     /** Durations in ms. */
+diff --git a/generated/pulseloop/GTokens.kt b/generated/pulseloop/GTokens.kt
+index 0448a66..f56025e 100644
+--- a/generated/pulseloop/GTokens.kt
++++ b/generated/pulseloop/GTokens.kt
+@@ -1,4 +1,4 @@
+-// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.11.0 — do not edit.
++// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.12.0 — do not edit.
+ package com.pulseloop.ui.theme
+ 
+ import androidx.compose.ui.graphics.Color
+diff --git a/generated/uikit/UiTokens.java b/generated/uikit/UiTokens.java
+index 8d34861..a62ee32 100644
+--- a/generated/uikit/UiTokens.java
++++ b/generated/uikit/UiTokens.java
+@@ -1,4 +1,4 @@
+-// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.11.0 — do not edit.
++// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.12.0 — do not edit.
+ package br.gabriel.ui;
+ 
+ /**
+diff --git a/generated/web/cochilo.css b/generated/web/cochilo.css
+index b3ac3ff..2a5548a 100644
+--- a/generated/web/cochilo.css
++++ b/generated/web/cochilo.css
+@@ -1,4 +1,4 @@
+-/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.11.0 — do not edit. */
++/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.12.0 — do not edit. */
+ /* Layer: cochilo. Themes: light, dark. */
+ 
+ :root {
+@@ -40,6 +40,22 @@
+   --gds-event-routine-soft: #D3EFEC;
+   --gds-event-medicine-soft: #F6D3DA;
+   --gds-event-note-soft: #EBDFD4;
++  --gds-illustration-skin-1: #F6D7C3;
++  --gds-illustration-skin-2: #EBC1A0;
++  --gds-illustration-skin-3: #D7A27E;
++  --gds-illustration-skin-4: #B97F5A;
++  --gds-illustration-skin-5: #8D5A3B;
++  --gds-illustration-skin-6: #5E3A26;
++  --gds-illustration-hair-black: #2A2220;
++  --gds-illustration-hair-brown: #6B4430;
++  --gds-illustration-hair-blond: #D9B26A;
++  --gds-illustration-hair-red: #B45A32;
++  --gds-illustration-catchlight: #FFFFFF;
++  --gds-illustration-cheek: #F2A7A0;
++  --gds-illustration-face-line: #241A1C;
++  --gds-illustration-wrap: #E8B4A8;
++  --gds-illustration-wrap-edge: #C98476;
++  --gds-illustration-bow: #8A3566;
+ }
+ 
+ [data-theme="dark"] {
+@@ -81,6 +97,22 @@
+   --gds-event-routine-soft: #1E4744;
+   --gds-event-medicine-soft: #572934;
+   --gds-event-note-soft: #47392E;
++  --gds-illustration-skin-1: #F6D7C3;
++  --gds-illustration-skin-2: #EBC1A0;
++  --gds-illustration-skin-3: #D7A27E;
++  --gds-illustration-skin-4: #B97F5A;
++  --gds-illustration-skin-5: #8D5A3B;
++  --gds-illustration-skin-6: #5E3A26;
++  --gds-illustration-hair-black: #2A2220;
++  --gds-illustration-hair-brown: #6B4430;
++  --gds-illustration-hair-blond: #D9B26A;
++  --gds-illustration-hair-red: #B45A32;
++  --gds-illustration-catchlight: #FFFFFF;
++  --gds-illustration-cheek: #F2A7A0;
++  --gds-illustration-face-line: #241A1C;
++  --gds-illustration-wrap: #E8B4A8;
++  --gds-illustration-wrap-edge: #C98476;
++  --gds-illustration-bow: #8A3566;
+ }
+ @media (prefers-color-scheme: dark) {
+   :root:not([data-theme="light"]) {
+@@ -122,6 +154,22 @@
+     --gds-event-routine-soft: #1E4744;
+     --gds-event-medicine-soft: #572934;
+     --gds-event-note-soft: #47392E;
++    --gds-illustration-skin-1: #F6D7C3;
++    --gds-illustration-skin-2: #EBC1A0;
++    --gds-illustration-skin-3: #D7A27E;
++    --gds-illustration-skin-4: #B97F5A;
++    --gds-illustration-skin-5: #8D5A3B;
++    --gds-illustration-skin-6: #5E3A26;
++    --gds-illustration-hair-black: #2A2220;
++    --gds-illustration-hair-brown: #6B4430;
++    --gds-illustration-hair-blond: #D9B26A;
++    --gds-illustration-hair-red: #B45A32;
++    --gds-illustration-catchlight: #FFFFFF;
++    --gds-illustration-cheek: #F2A7A0;
++    --gds-illustration-face-line: #241A1C;
++    --gds-illustration-wrap: #E8B4A8;
++    --gds-illustration-wrap-edge: #C98476;
++    --gds-illustration-bow: #8A3566;
+   }
+ }
+ 
+@@ -153,6 +201,7 @@
+   --gds-kind-badge: 36px;
+   --gds-kind-badge-lead: 44px;
+   --gds-outline: 2px;
++  --gds-avatar: 112px;
+   --gds-motion-standard: 150ms;
+   --gds-motion-emphasised: 250ms;
+   --gds-text-display: 600 30px/36px var(--gds-font);
+diff --git a/generated/web/pulseloop.css b/generated/web/pulseloop.css
+index 5febe27..43d28d2 100644
+--- a/generated/web/pulseloop.css
++++ b/generated/web/pulseloop.css
+@@ -1,4 +1,4 @@
+-/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.11.0 — do not edit. */
++/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.12.0 — do not edit. */
+ /* Layer: pulseloop. Themes: dark. */
+ 
+ :root {
+diff --git a/generated/web/uikit.css b/generated/web/uikit.css
+index 591faa3..bfb085c 100644
+--- a/generated/web/uikit.css
++++ b/generated/web/uikit.css
+@@ -1,4 +1,4 @@
+-/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.11.0 — do not edit. */
++/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.12.0 — do not edit. */
+ /* Layer: uikit. Themes: light, dark. */
+ 
+ :root {
+diff --git a/tokens/tokens.json b/tokens/tokens.json
+index 021ac3c..d8c8caf 100644
+--- a/tokens/tokens.json
++++ b/tokens/tokens.json
+@@ -1,7 +1,7 @@
+ {
+   "$comment": "Source of truth for every app's design tokens. Edit here, run scripts/gen_tokens.py, commit tokens + generated/ + DESIGN.md together. Schema: docs/tokens.md.",
+   "name": "Gabriel Design System",
+-  "version": "0.11.0",
++  "version": "0.12.0",
+   "core": {
+     "$comment": "Shared by every app. Every layer must include every core token (scripts/check_tokens.py enforces it).",
+     "color": [
+@@ -198,7 +198,23 @@
+         {"name": "event-daylight-soft", "value": {"light": "#F5E6BC", "dark": "#4A3C17"}, "usage": "The round behind the daylight icon (a soft tint of event-daylight). Never text, never alone."},
+         {"name": "event-routine-soft", "value": {"light": "#D3EFEC", "dark": "#1E4744"}, "usage": "The round behind the routine icon (a soft tint of event-routine). Never text, never alone."},
+         {"name": "event-medicine-soft", "value": {"light": "#F6D3DA", "dark": "#572934"}, "usage": "The round behind the medicine icon (a soft tint of event-medicine). Never text, never alone."},
+-        {"name": "event-note-soft", "value": {"light": "#EBDFD4", "dark": "#47392E"}, "usage": "The round behind the note icon (a soft tint of event-note). Never text, never alone."}
++        {"name": "event-note-soft", "value": {"light": "#EBDFD4", "dark": "#47392E"}, "usage": "The round behind the note icon (a soft tint of event-note). Never text, never alone."},
++        {"name": "illustration-skin-1", "value": {"light": "#F6D7C3", "dark": "#F6D7C3"}, "usage": "Illustration (the baby avatar, docs/components.md): Skin tone 1, the lightest. The same in both themes: a baby doesn't change colour at night. Never UI state, never text."},
++        {"name": "illustration-skin-2", "value": {"light": "#EBC1A0", "dark": "#EBC1A0"}, "usage": "Illustration (the baby avatar, docs/components.md): Skin tone 2. The same in both themes: a baby doesn't change colour at night. Never UI state, never text."},
++        {"name": "illustration-skin-3", "value": {"light": "#D7A27E", "dark": "#D7A27E"}, "usage": "Illustration (the baby avatar, docs/components.md): Skin tone 3. The same in both themes: a baby doesn't change colour at night. Never UI state, never text."},
++        {"name": "illustration-skin-4", "value": {"light": "#B97F5A", "dark": "#B97F5A"}, "usage": "Illustration (the baby avatar, docs/components.md): Skin tone 4. The same in both themes: a baby doesn't change colour at night. Never UI state, never text."},
++        {"name": "illustration-skin-5", "value": {"light": "#8D5A3B", "dark": "#8D5A3B"}, "usage": "Illustration (the baby avatar, docs/components.md): Skin tone 5. The same in both themes: a baby doesn't change colour at night. Never UI state, never text."},
++        {"name": "illustration-skin-6", "value": {"light": "#5E3A26", "dark": "#5E3A26"}, "usage": "Illustration (the baby avatar, docs/components.md): Skin tone 6, the deepest. The same in both themes: a baby doesn't change colour at night. Never UI state, never text."},
++        {"name": "illustration-hair-black", "value": {"light": "#2A2220", "dark": "#2A2220"}, "usage": "Illustration (the baby avatar, docs/components.md): Hair: black. The same in both themes: a baby doesn't change colour at night. Never UI state, never text."},
++        {"name": "illustration-hair-brown", "value": {"light": "#6B4430", "dark": "#6B4430"}, "usage": "Illustration (the baby avatar, docs/components.md): Hair: brown. The same in both themes: a baby doesn't change colour at night. Never UI state, never text."},
++        {"name": "illustration-hair-blond", "value": {"light": "#D9B26A", "dark": "#D9B26A"}, "usage": "Illustration (the baby avatar, docs/components.md): Hair: blond. The same in both themes: a baby doesn't change colour at night. Never UI state, never text."},
++        {"name": "illustration-hair-red", "value": {"light": "#B45A32", "dark": "#B45A32"}, "usage": "Illustration (the baby avatar, docs/components.md): Hair: red. The same in both themes: a baby doesn't change colour at night. Never UI state, never text."},
++        {"name": "illustration-catchlight", "value": {"light": "#FFFFFF", "dark": "#FFFFFF"}, "usage": "Illustration (the baby avatar): the small light in an open eye, so the eyes read on every skin tone. The same in both themes."},
++        {"name": "illustration-cheek", "value": {"light": "#F2A7A0", "dark": "#F2A7A0"}, "usage": "Illustration (the baby avatar, docs/components.md): The cheeks' blush. The same in both themes: a baby doesn't change colour at night. Never UI state, never text."},
++        {"name": "illustration-face-line", "value": {"light": "#241A1C", "dark": "#241A1C"}, "usage": "Illustration (the baby avatar, docs/components.md): Eyes, mouth and the drawing's line, on any skin tone. The same in both themes: a baby doesn't change colour at night. Never UI state, never text."},
++        {"name": "illustration-wrap", "value": {"light": "#E8B4A8", "dark": "#E8B4A8"}, "usage": "Illustration (the baby avatar, docs/components.md): The Rosa Chá sling the baby is wrapped in. The same in both themes: a baby doesn't change colour at night. Never UI state, never text."},
++        {"name": "illustration-wrap-edge", "value": {"light": "#C98476", "dark": "#C98476"}, "usage": "Illustration (the baby avatar, docs/components.md): The sling's folds. The same in both themes: a baby doesn't change colour at night. Never UI state, never text."},
++        {"name": "illustration-bow", "value": {"light": "#8A3566", "dark": "#8A3566"}, "usage": "Illustration (the baby avatar, docs/components.md): Amora: the bow, when the parent chose “girl”. The same in both themes: a baby doesn't change colour at night. Never UI state, never text."}
+       ],
+       "type": [
+         {"name": "Display", "styles": [
+@@ -232,7 +248,8 @@
+         {"name": "timeline", "value": "24px", "usage": "Height of the 24-hour timeline bar and of one day in the actogram."},
+         {"name": "kind-badge", "value": "36px", "usage": "The round of colour behind an entry kind's icon (the icon stays 22dp inside)."},
+         {"name": "kind-badge-lead", "value": "44px", "usage": "Sleep's round, a size up from kind-badge: sleep is what Cochilo is for, so it leads every list, menu and timeline (0.9.0)."},
+-        {"name": "outline", "value": "2px", "usage": "A strong outline: the option used last time (in its kind's colour) and the picked fabric swatch."}
++        {"name": "outline", "value": "2px", "usage": "A strong outline: the option used last time (in its kind's colour) and the picked fabric swatch."},
++        {"name": "avatar", "value": "112px", "usage": "The baby avatar where it is the subject (onboarding, the look picker, the empty Today, celebrations)."}
+       ],
+       "motion": ["@motion-standard", "@motion-emphasised"]
+     }
+-- 
+2.43.0
+

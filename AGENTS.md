@@ -57,6 +57,10 @@ system's. Its AGENTS.md and DESIGN.md are the rules; the short version:
 - **Copy in English and Brazilian Portuguese.** Every string in `values/strings.xml` and
   `values-pt-rBR/strings.xml`; short, plain, sentence case, verb first on buttons; no plurals that
   break with 1 (write "Naps: 1").
+- **The baby avatar** (`ui/kit/BabyAvatar.kt`) uses only the `illustration-*` colours, the same in
+  both themes; it asks how the baby looks, never race; gender changes details only, never colour.
+- **Audit every release.** Each feature ends with an impeccable critique and the
+  graphic-design-fundamentals checklist in `docs/audits/<version>-<topic>.md`; fix what fails first.
 - **Sleep leads.** Sleep is the app's subject: wherever kinds are listed it is a size up
   (`kind-badge-lead`, label role); `EventType.leads` says which.
 - **Last mark, not a word.** What was used last is an outline and a dot in the kind's colour

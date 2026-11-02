@@ -24,6 +24,7 @@ A "tap" is a touch on a target; a "slide" is one touch that moves sideways and l
 | Medicine, same as last | 3+ taps | **1 drag** | Log button › Medicine › its name |
 | Any of the above, from any tab, without scrolling | scroll + the row | **1 drag** | The Log button (below) |
 | Undo any of the above | — | 1 tap | Undo in the snackbar that says what was logged |
+| First run: add the baby | 1 tap + name + Save | name + **Next**, then **Done** or **Skip** | Two short steps; the look step is skippable ([onboarding.md](onboarding.md)) |
 | Start sleep / Woke up from the home screen | open app + 1 tap | **1 tap** | The widget's mint button ([widget.md](widget.md)) |
 | Breastfeed a side / switch / finish, from the home screen | open app + 1 move | **1 tap** | The widget's Left / Right; the running side reads Finish |
 | Pick a fabric for the Today card | — | 2 taps | Settings (gear), then a swatch: applied at once, no Save |

@@ -13,6 +13,7 @@ import br.gabriel.cochilo.domain.overlaps
 import br.gabriel.cochilo.ui.kit.InfoButton
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -165,6 +166,12 @@ private fun SleepPanel(p: Predictor.Result, now: Long, f: Format, onStart: () ->
             InfoButton(stringResource(R.string.type_sleep), stringResource(R.string.info_sleep_panel), tint = fgMuted)
         }
         val since = sleeping?.since ?: awake?.since
+        if (since == null) {
+            // Before the first sleep: the baby, asleep in the sling, waiting with her.
+            Box(Modifier.fillMaxWidth().padding(top = Spacing.space4), contentAlignment = Alignment.Center) {
+                br.gabriel.cochilo.ui.kit.BabyAvatar(br.gabriel.cochilo.ui.kit.LocalBabyLook.current, mood = br.gabriel.cochilo.ui.kit.BabyMood.ASLEEP)
+            }
+        }
         if (since != null) {
             Text(
                 f.duration(now - since), style = Type.timer, color = fg,

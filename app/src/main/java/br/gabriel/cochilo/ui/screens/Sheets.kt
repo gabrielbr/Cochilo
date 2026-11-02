@@ -272,6 +272,8 @@ fun BabySheet(initial: Baby?, zone: ZoneId, onSave: (Baby) -> Unit, onDismiss: (
                         name = name.trim(),
                         birthDate = birth.atStartOfDay(zone).toInstant().toEpochMilli(),
                         dueDate = due?.atStartOfDay(zone)?.toInstant()?.toEpochMilli(),
+                        // The look is edited in its own sheet; keep it.
+                        look = initial?.look ?: "",
                     )
                 )
             },
