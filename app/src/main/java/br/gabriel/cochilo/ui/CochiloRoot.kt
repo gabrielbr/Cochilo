@@ -135,6 +135,8 @@ fun CochiloRoot(vm: MainViewModel) {
                             onEditLook = { editingLook = true },
                             celebrations = vm.celebrations.collectAsState().value,
                             onCelebrations = vm::setCelebrations,
+                            nightLight = vm.nightLight.collectAsState().value,
+                            onNightLight = vm::setNightLight,
                             onTheme = vm::setTheme,
                             onExportJson = { exportJson.launch("cochilo-${LocalDate.now(zone)}.json") },
                             onExportCsv = { exportCsv.launch("cochilo-${LocalDate.now(zone)}.csv") },

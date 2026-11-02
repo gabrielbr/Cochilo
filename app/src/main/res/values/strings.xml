@@ -306,4 +306,11 @@
     <string name="cheer_week">A whole week logged. The suggestions know %1$s better now.</string>
     <string name="celebrations">Little celebrations</string>
     <string name="celebrations_meta">A few warm words and the baby, when a nap goes well</string>
+    <!-- The night light, the daylight nudge and the wind-down (docs/night-light.md). -->
+    <string name="night_light">Night light</string>
+    <string name="night_light_meta">From 19:00 to 07:00: warm amber on black, no blue light</string>
+    <string name="daylight_nudge">No daylight yet</string>
+    <string name="daylight_nudge_meta">12:00–16:00 helps the body clock</string>
+    <string name="daylight_go">Go outside</string>
+    <string name="notif_wind_down">Since %1$s · bedtime %2$s · dim the lights</string>
 </resources>

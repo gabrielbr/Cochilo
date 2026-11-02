@@ -1,0 +1,524 @@
+From 105b3dd4911b417c88ec0a4e9b65527a6e2f6d48 Mon Sep 17 00:00:00 2001
+From: Gabriel Lopes <ogabriel@gmail.com>
+Date: Mon, 2 Nov 2026 23:04:45 +0000
+Subject: [PATCH] Design system 0.14.0: Cochilo's night light theme
+
+Layers may ship extra themes with a fallback (theme_fallback); cochilo
+gains night: warm amber and red on near-black, no blue, every contrast
+pair passing. Audit v0.14.0.
+---
+ CHANGELOG.md                       | 17 +++++++
+ DESIGN.md                          |  2 +-
+ VERSION                            |  2 +-
+ audits/2026-11-02-v0.14.0-night.md | 42 ++++++++++++++++
+ docs/brands.md                     |  7 +++
+ generated/cochilo/CTokens.kt       | 59 +++++++++++++++++++++-
+ generated/pulseloop/GTokens.kt     |  2 +-
+ generated/uikit/UiTokens.java      |  2 +-
+ generated/web/cochilo.css          | 61 +++++++++++++++++++++-
+ generated/web/pulseloop.css        |  2 +-
+ generated/web/uikit.css            |  2 +-
+ scripts/check_tokens.py            |  2 +-
+ scripts/gen_tokens.py              |  2 +
+ scripts/tokens_lib.py              | 15 +++++-
+ tests/test_scripts.py              |  6 ++-
+ tokens/tokens.json                 | 81 +++++++++++++++---------------
+ 16 files changed, 251 insertions(+), 53 deletions(-)
+ create mode 100644 audits/2026-11-02-v0.14.0-night.md
+
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+index 09887f7..e9cdee0 100644
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -3,6 +3,23 @@
+ Semantic versioning (AGENTS.md "Versioning"). Each entry says what changed for each app and what
+ the app has to do.
+ 
++## 0.14.0 — 2026-11-02
++
++Cochilo's night light: a third theme (minor: a theme and a fallback rule; no light or dark value
++changes).
++
++- Layers may ship more themes than light and dark, with `theme_fallback` (`{"night": "dark"}`): a
++  theme spells out only the roles it changes; `tokens_lib.colour_map` fills the rest, so the
++  generator, the checks and drift all see the full theme. CSS emits `[data-theme="night"]` with
++  no media query (only dark has a system preference).
++- `cochilo` gains **night**: warm amber and red on near-black, no blue or teal. Brand roles:
++  page `#0D0806`, surface `#170F0B`, ink `#E9A25F`, muted `#B67A47`, mint `#E0A060`, fab
++  `#B8642F`, selected `#3A2416`, frame-line `#241610`; nine warm event colours and rounds. Every
++  contrast pair passes in night too. Illustration colours fall back to dark (unchanged).
++- Tests: the night palette is complete.
++- Audit `audits/2026-11-02-v0.14.0-night.md`.
++- **Cochilo:** copy `CTokens.kt`; `CochiloTheme(dark, night)` picks `CTokens.Night` 19:00–07:00.
++
+ ## 0.13.0 — 2026-11-02
+ 
+ Celebrations (minor: a component; no token values change).
+diff --git a/DESIGN.md b/DESIGN.md
+index 041b52b..fb2a047 100644
+--- a/DESIGN.md
++++ b/DESIGN.md
+@@ -1,6 +1,6 @@
+ ---
+ name: Gabriel Design System
+-version: 0.13.0
++version: 0.14.0
+ # GENERATED from tokens/tokens.json by scripts/gen_tokens.py. Edit the tokens, not this block.
+ colors:
+   page: "#F2F2F2"
+diff --git a/VERSION b/VERSION
+index 54d1a4f..a803cc2 100644
+--- a/VERSION
++++ b/VERSION
+@@ -1 +1 @@
+-0.13.0
++0.14.0
+diff --git a/audits/2026-11-02-v0.14.0-night.md b/audits/2026-11-02-v0.14.0-night.md
+new file mode 100644
+index 0000000..755c500
+--- /dev/null
++++ b/audits/2026-11-02-v0.14.0-night.md
+@@ -0,0 +1,42 @@
++# Audit 0.15.0: night light, daylight nudge, wind-down
++
++Method: design review only (detector not applicable, native platform): impeccable (Android
++"dark theme is a first-class scheme", craft floor contrast) and graphic-design-fundamentals §13, on
++`today_night_light_sleeping`, `day_night_light_ptBR`, `today_daylight_nudge_light`.
++
++## graphic-design-fundamentals §13
++
++| # | Check | Result |
++|---|---|---|
++| 1 | Brief | Research-backed light features, Tatá's red/amber question answered. ✅ |
++| 2 | Concept | The phone becomes a warm night lamp. ✅ |
++| 3 | Hierarchy | Same structure; the amber action still leads. ✅ |
++| 4 | Contrast | Every pair passes in night (ink 9.3:1, muted 5.6:1, events ≥ 3:1 on page and on their rounds). ✅ |
++| 5 | Alignment | Unchanged. ✅ |
++| 6 | Spacing | Unchanged; the nudge is one row. ✅ |
++| 7 | Typography | Unchanged. ✅ |
++| 8 | Colour | Monochrome warm at night (60/30/10 holds: black, deep browns, amber accent); data told apart by lightness and always worded. ✅ |
++| 9 | Consistency | One theme switch; every component follows the roles. ✅ |
++| 10 | Simplicity | One setting; the nudge is one tap; the wind-down is one more phrase. ✅ |
++| 11 | Real size | Checked on phone screenshots, EN and PT. ✅ |
++| 12 | Accessibility | Contrast passes; no motion added. ✅ |
++| 13 | Production | Generated from tokens; a theme fallback so night lists only what changes. ✅ |
++
++Fixed in this release: the nudge's copy wrapped to three lines beside its button; shortened.
++Polish, kept: the header's brand mark stays teal at night (small, and the mark).
++
++## impeccable critique
++
++| # | Heuristic | Score | Note |
++|---|---|---|---|
++| 1 | System status | 4 | The theme changes with the clock, by itself. |
++| 2 | Real world | 4 | "Night light", "Go outside". |
++| 3 | Control | 4 | A switch for each. |
++| 4 | Consistency | 4 | Same layout in every theme. |
++| 5 | Error prevention | n/a | |
++| 6 | Recognition | 4 | Words beside every colour. |
++| 7 | Efficiency | 4 | Go outside starts the walk in one tap. |
++| 8 | Aesthetic | 4 | Warm, calm, cohesive. |
++| 9 | Error recovery | n/a | |
++| 10 | Help | 4 | The Settings line says the hours and why. |
++| | **Total** | **32/32** | |
+diff --git a/docs/brands.md b/docs/brands.md
+index 563d693..1d4a352 100644
+--- a/docs/brands.md
++++ b/docs/brands.md
+@@ -82,6 +82,13 @@ the timer and meta roles use tabular figures so running times don't jitter (app-
+ on teal. It is the launcher icon (adaptive, symbol inside the 66dp safe zone) and the header's
+ 32dp mark in place of the `CO_` monogram.
+ 
++## Night light (0.14.0)
++
++Cochilo has a third theme, **night**, chosen by the app (19:00–07:00), not by the system. The brand
++spells out its night values for the roles it swaps; the layer for its data colours; everything
++else falls back to dark (`theme_fallback`). Research: light at night suppresses melatonin even
++dim; red and amber disturb least (Cochilo research §2.3).
++
+ ## Softer (0.11.0)
+ 
+ A review for "feminine and maternal" (audit v0.11.0): under the brand teal is only the one
+diff --git a/generated/cochilo/CTokens.kt b/generated/cochilo/CTokens.kt
+index 7dece23..0aa5d26 100644
+--- a/generated/cochilo/CTokens.kt
++++ b/generated/cochilo/CTokens.kt
+@@ -1,4 +1,4 @@
+-// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.13.0 — do not edit.
++// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.14.0 — do not edit.
+ package br.gabriel.cochilo.ui.theme
+ 
+ import androidx.compose.ui.graphics.Color
+@@ -181,6 +181,63 @@ object CTokens {
+         illustrationBow = Color(0xFF8A3566), // Illustration (the baby avatar, docs/components.md): Amora: the bow, when the parent chose “girl”. The same in both themes: a baby doesn't change colour at night. Never UI state, never text.
+     )
+ 
++    val Night = Palette(
++        page = Color(0xFF0D0806), // Tatá Slings: Pérola with a blush of Rosa Chá; plum-black at night.
++        surface = Color(0xFF170F0B), // Tatá Slings: White cards; plum-grey in dark.
++        ink = Color(0xFFE9A25F), // Tatá Slings: A warm plum-grey (0.7.0, was navy): softer than navy, still 14:1 on page.
++        muted = Color(0xFFB67A47), // Tatá Slings: Warm grey with a little plum.
++        line = Color(0xFF2B1C14), // Tatá Slings: A rosé hairline. Never text.
++        mint = Color(0xFFE0A060), // Tatá Slings: The brand teal (logo, site buttons) in the brand-accent role: one filled action per screen, the frame, the active tab. Fill only, never text (2.1:1 on white).
++        onMint = Color(0xFF0D0806), // Tatá Slings: Plum-grey on teal.
++        coral = Color(0xFFB5432E), // Tatá Slings: Cereja, a fabric name. Stop and destructive fills; ink on it 5.1:1 (light).
++        coralText = Color(0xFFE07A5A), // Tatá Slings: Cereja as text. 5.0:1 on page, 4.6:1 on coral-soft (light).
++        coralSoft = Color(0xFF2A120C), // Tatá Slings: The tint behind coral-text chips.
++        panel = Color(0xFF120A07), // Tatá Slings: The sleep panel: a plum night (0.7.0, was navy).
++        onPanel = Color(0xFFE9A25F), // Tatá Slings: Pérola on the plum night.
++        onPanelMuted = Color(0xFFB67A47), // Tatá Slings: Secondary text on the plum night.
++        snackbar = Color(0xFFE9A25F), // Tatá Slings: Plum-grey on light, near-white on dark.
++        snackbarAction = Color(0xFF5A2A10), // Tatá Slings: Teal on the plum snackbar; deep teal on the dark theme's light one.
++        fab = Color(0xFFB8642F), // Tatá Slings: Amora, the berry fabric: the Log button. Warm and easy to find, and not the teal of the one action.
++        onFab = Color(0xFF0D0806), // Tatá Slings: On Amora.
++        selected = Color(0xFF3A2416), // Tatá Slings: A blush of Rosa Chá and Amora behind the active tab and a picked chip; the ink on it is 12:1.
++        onSelected = Color(0xFFE9A25F), // Tatá Slings: Ink on the blush.
++        frameLine = Color(0xFF241610), // Tatá Slings: A soft Rosa Chá hem round the screen; plum at night.
++        eventNight = Color(0xFFD29560), // Data: night sleep. Lavanda, one of her fabrics. On the timeline, the charts and as the line of its kind's icon. Always beside a word.
++        eventNap = Color(0xFFB8703C), // Data: naps. Imensidão blue, so a nap and a night are told apart by hue as well as by the word. On the timeline, the charts and as the line of its kind's icon. Always beside a word.
++        eventFeed = Color(0xFFE0805C), // Data: feeds (breast, bottle, solids). Rosa Chá, deepened to be seen. On the timeline, the charts and as the line of its kind's icon. Always beside a word.
++        eventPump = Color(0xFFC76B5A), // Data: pumping sessions. Amora. On the timeline, the charts and as the line of its kind's icon. Always beside a word.
++        eventDiaper = Color(0xFFA88A4E), // Data: diaper changes. Trevo. On the timeline, the charts and as the line of its kind's icon. Always beside a word.
++        eventDaylight = Color(0xFFE2B25A), // Data: time outdoors in daylight. Mel. On the timeline, the charts and as the line of its kind's icon. Always beside a word.
++        eventRoutine = Color(0xFF9E7A55), // Data: routines (bath, bedtime). Turquesa, the brand teal deepened. On the timeline, the charts and as the line of its kind's icon. Always beside a word.
++        eventMedicine = Color(0xFFD06A4E), // Data: medicine. Cereja. On the timeline, the charts and as the line of its kind's icon. Always beside a word.
++        eventNote = Color(0xFFB08A70), // Data: notes. Capuccino. On the timeline, the charts and as the line of its kind's icon. Always beside a word.
++        eventNightSoft = Color(0xFF33200F), // The round behind the night icon (a soft tint of event-night). Never text, never alone.
++        eventNapSoft = Color(0xFF2E1C10), // The round behind the nap icon (a soft tint of event-nap). Never text, never alone.
++        eventFeedSoft = Color(0xFF36190F), // The round behind the feed icon (a soft tint of event-feed). Never text, never alone.
++        eventPumpSoft = Color(0xFF331814), // The round behind the pump icon (a soft tint of event-pump). Never text, never alone.
++        eventDiaperSoft = Color(0xFF2A2312), // The round behind the diaper icon (a soft tint of event-diaper). Never text, never alone.
++        eventDaylightSoft = Color(0xFF33260E), // The round behind the daylight icon (a soft tint of event-daylight). Never text, never alone.
++        eventRoutineSoft = Color(0xFF2B2116), // The round behind the routine icon (a soft tint of event-routine). Never text, never alone.
++        eventMedicineSoft = Color(0xFF36160F), // The round behind the medicine icon (a soft tint of event-medicine). Never text, never alone.
++        eventNoteSoft = Color(0xFF2E2219), // The round behind the note icon (a soft tint of event-note). Never text, never alone.
++        illustrationSkin1 = Color(0xFFF6D7C3), // Illustration (the baby avatar, docs/components.md): Skin tone 1, the lightest. The same in both themes: a baby doesn't change colour at night. Never UI state, never text.
++        illustrationSkin2 = Color(0xFFEBC1A0), // Illustration (the baby avatar, docs/components.md): Skin tone 2. The same in both themes: a baby doesn't change colour at night. Never UI state, never text.
++        illustrationSkin3 = Color(0xFFD7A27E), // Illustration (the baby avatar, docs/components.md): Skin tone 3. The same in both themes: a baby doesn't change colour at night. Never UI state, never text.
++        illustrationSkin4 = Color(0xFFB97F5A), // Illustration (the baby avatar, docs/components.md): Skin tone 4. The same in both themes: a baby doesn't change colour at night. Never UI state, never text.
++        illustrationSkin5 = Color(0xFF8D5A3B), // Illustration (the baby avatar, docs/components.md): Skin tone 5. The same in both themes: a baby doesn't change colour at night. Never UI state, never text.
++        illustrationSkin6 = Color(0xFF5E3A26), // Illustration (the baby avatar, docs/components.md): Skin tone 6, the deepest. The same in both themes: a baby doesn't change colour at night. Never UI state, never text.
++        illustrationHairBlack = Color(0xFF2A2220), // Illustration (the baby avatar, docs/components.md): Hair: black. The same in both themes: a baby doesn't change colour at night. Never UI state, never text.
++        illustrationHairBrown = Color(0xFF6B4430), // Illustration (the baby avatar, docs/components.md): Hair: brown. The same in both themes: a baby doesn't change colour at night. Never UI state, never text.
++        illustrationHairBlond = Color(0xFFD9B26A), // Illustration (the baby avatar, docs/components.md): Hair: blond. The same in both themes: a baby doesn't change colour at night. Never UI state, never text.
++        illustrationHairRed = Color(0xFFB45A32), // Illustration (the baby avatar, docs/components.md): Hair: red. The same in both themes: a baby doesn't change colour at night. Never UI state, never text.
++        illustrationCatchlight = Color(0xFFFFFFFF), // Illustration (the baby avatar): the small light in an open eye, so the eyes read on every skin tone. The same in both themes.
++        illustrationCheek = Color(0xFFF2A7A0), // Illustration (the baby avatar, docs/components.md): The cheeks' blush. The same in both themes: a baby doesn't change colour at night. Never UI state, never text.
++        illustrationFaceLine = Color(0xFF241A1C), // Illustration (the baby avatar, docs/components.md): Eyes, mouth and the drawing's line, on any skin tone. The same in both themes: a baby doesn't change colour at night. Never UI state, never text.
++        illustrationWrap = Color(0xFFE8B4A8), // Illustration (the baby avatar, docs/components.md): The Rosa Chá sling the baby is wrapped in. The same in both themes: a baby doesn't change colour at night. Never UI state, never text.
++        illustrationWrapEdge = Color(0xFFC98476), // Illustration (the baby avatar, docs/components.md): The sling's folds. The same in both themes: a baby doesn't change colour at night. Never UI state, never text.
++        illustrationBow = Color(0xFF8A3566), // Illustration (the baby avatar, docs/components.md): Amora: the bow, when the parent chose “girl”. The same in both themes: a baby doesn't change colour at night. Never UI state, never text.
++    )
++
+     object Spacing {
+         val space1 = 4.dp
+         val space2 = 8.dp
+diff --git a/generated/pulseloop/GTokens.kt b/generated/pulseloop/GTokens.kt
+index 38f84c7..da9a920 100644
+--- a/generated/pulseloop/GTokens.kt
++++ b/generated/pulseloop/GTokens.kt
+@@ -1,4 +1,4 @@
+-// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.13.0 — do not edit.
++// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.14.0 — do not edit.
+ package com.pulseloop.ui.theme
+ 
+ import androidx.compose.ui.graphics.Color
+diff --git a/generated/uikit/UiTokens.java b/generated/uikit/UiTokens.java
+index 83e4040..4ce6a2d 100644
+--- a/generated/uikit/UiTokens.java
++++ b/generated/uikit/UiTokens.java
+@@ -1,4 +1,4 @@
+-// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.13.0 — do not edit.
++// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.14.0 — do not edit.
+ package br.gabriel.ui;
+ 
+ /**
+diff --git a/generated/web/cochilo.css b/generated/web/cochilo.css
+index dd676d9..50fcae9 100644
+--- a/generated/web/cochilo.css
++++ b/generated/web/cochilo.css
+@@ -1,5 +1,5 @@
+-/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.13.0 — do not edit. */
+-/* Layer: cochilo. Themes: light, dark. */
++/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.14.0 — do not edit. */
++/* Layer: cochilo. Themes: light, dark, night. */
+ 
+ :root {
+   --gds-page: #FBF5F1;
+@@ -173,6 +173,63 @@
+   }
+ }
+ 
++[data-theme="night"] {
++  --gds-page: #0D0806;
++  --gds-surface: #170F0B;
++  --gds-ink: #E9A25F;
++  --gds-muted: #B67A47;
++  --gds-line: #2B1C14;
++  --gds-mint: #E0A060;
++  --gds-on-mint: #0D0806;
++  --gds-coral: #B5432E;
++  --gds-coral-text: #E07A5A;
++  --gds-coral-soft: #2A120C;
++  --gds-panel: #120A07;
++  --gds-on-panel: #E9A25F;
++  --gds-on-panel-muted: #B67A47;
++  --gds-snackbar: #E9A25F;
++  --gds-snackbar-action: #5A2A10;
++  --gds-fab: #B8642F;
++  --gds-on-fab: #0D0806;
++  --gds-selected: #3A2416;
++  --gds-on-selected: #E9A25F;
++  --gds-frame-line: #241610;
++  --gds-event-night: #D29560;
++  --gds-event-nap: #B8703C;
++  --gds-event-feed: #E0805C;
++  --gds-event-pump: #C76B5A;
++  --gds-event-diaper: #A88A4E;
++  --gds-event-daylight: #E2B25A;
++  --gds-event-routine: #9E7A55;
++  --gds-event-medicine: #D06A4E;
++  --gds-event-note: #B08A70;
++  --gds-event-night-soft: #33200F;
++  --gds-event-nap-soft: #2E1C10;
++  --gds-event-feed-soft: #36190F;
++  --gds-event-pump-soft: #331814;
++  --gds-event-diaper-soft: #2A2312;
++  --gds-event-daylight-soft: #33260E;
++  --gds-event-routine-soft: #2B2116;
++  --gds-event-medicine-soft: #36160F;
++  --gds-event-note-soft: #2E2219;
++  --gds-illustration-skin-1: #F6D7C3;
++  --gds-illustration-skin-2: #EBC1A0;
++  --gds-illustration-skin-3: #D7A27E;
++  --gds-illustration-skin-4: #B97F5A;
++  --gds-illustration-skin-5: #8D5A3B;
++  --gds-illustration-skin-6: #5E3A26;
++  --gds-illustration-hair-black: #2A2220;
++  --gds-illustration-hair-brown: #6B4430;
++  --gds-illustration-hair-blond: #D9B26A;
++  --gds-illustration-hair-red: #B45A32;
++  --gds-illustration-catchlight: #FFFFFF;
++  --gds-illustration-cheek: #F2A7A0;
++  --gds-illustration-face-line: #241A1C;
++  --gds-illustration-wrap: #E8B4A8;
++  --gds-illustration-wrap-edge: #C98476;
++  --gds-illustration-bow: #8A3566;
++}
++
+ /* Brand: Tatá Slings (docs/brands.md): colours and the type family above are the brand's. */
+ 
+ :root {
+diff --git a/generated/web/pulseloop.css b/generated/web/pulseloop.css
+index c8a7871..cf6e85e 100644
+--- a/generated/web/pulseloop.css
++++ b/generated/web/pulseloop.css
+@@ -1,4 +1,4 @@
+-/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.13.0 — do not edit. */
++/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.14.0 — do not edit. */
+ /* Layer: pulseloop. Themes: dark. */
+ 
+ :root {
+diff --git a/generated/web/uikit.css b/generated/web/uikit.css
+index b1e6cf2..3e2ec57 100644
+--- a/generated/web/uikit.css
++++ b/generated/web/uikit.css
+@@ -1,4 +1,4 @@
+-/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.13.0 — do not edit. */
++/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.14.0 — do not edit. */
+ /* Layer: uikit. Themes: light, dark. */
+ 
+ :root {
+diff --git a/scripts/check_tokens.py b/scripts/check_tokens.py
+index 496eccb..861332d 100644
+--- a/scripts/check_tokens.py
++++ b/scripts/check_tokens.py
+@@ -123,7 +123,7 @@ def check_brands(t):
+             if target and target.startswith(DATA_PREFIXES):
+                 err(f"brands.{bname}: replaces {target}, a data colour; data colours stay the system's")
+             for th in layer["themes"]:
+-                if th not in tok.get("value", {}):
++                if th not in tok.get("value", {}) and th not in layer.get("theme_fallback", {}):
+                     err(f"brands.{bname}.{target}: no {th} value, and {lname} ships {th}")
+ 
+ 
+diff --git a/scripts/gen_tokens.py b/scripts/gen_tokens.py
+index 2cd0d21..e8123cc 100644
+--- a/scripts/gen_tokens.py
++++ b/scripts/gen_tokens.py
+@@ -201,6 +201,8 @@ def css(t, layer_name):
+     for th in themes[1:]:
+         o.append("")
+         block(f'[data-theme="{th}"]', th)
++        if th != "dark":
++            continue  # only dark has a system preference; other themes (night) are chosen by the app
+         o.append(f"@media (prefers-color-scheme: {th}) {{")
+         o.append(f'  :root:not([data-theme="{first}"]) {{')
+         o.extend(f"    --gds-{n}: {css_hex(v[th])};" for n, v in colours.items() if th in v)
+diff --git a/scripts/tokens_lib.py b/scripts/tokens_lib.py
+index c125103..a688f8d 100644
+--- a/scripts/tokens_lib.py
++++ b/scripts/tokens_lib.py
+@@ -68,15 +68,26 @@ def colour_map(t, layer_name):
+             return {th: v for th in layer["themes"]}
+         return v
+ 
++    # A theme a token doesn't spell out falls back to another (layer "theme_fallback", e.g.
++    # Cochilo's night light falls back to dark), so a theme only lists the roles it changes.
++    fallback = layer.get("theme_fallback", {})
++
++    def filled(v):
++        v = dict(v)
++        for th in layer["themes"]:
++            if th not in v and th in fallback and fallback[th] in v:
++                v[th] = v[fallback[th]]
++        return v
++
+     for name in raw:
+-        out[name] = value(name)
++        out[name] = filled(value(name))
+     # A brand (docs/brands.md) swaps colour roles after aliases are followed, so every reader
+     # (generator, checks, drift) sees the app as it ships.
+     b = brand(t, layer_name)
+     if b:
+         for tok in b.get("color", []):
+             if tok["replaces"] in out:
+-                out[tok["replaces"]] = {th: tok["value"][th] for th in layer["themes"]}
++                out[tok["replaces"]] = filled({th: tok["value"][th] for th in layer["themes"] if th in tok["value"]})
+     return out
+ 
+ 
+diff --git a/tests/test_scripts.py b/tests/test_scripts.py
+index bfb4f89..62a5f69 100644
+--- a/tests/test_scripts.py
++++ b/tests/test_scripts.py
+@@ -35,8 +35,12 @@ class TokensLibTest(unittest.TestCase):
+     def test_cochilo_palettes_match(self):
+         kt = gen_tokens.cochilo_kt(tl.load())
+         light = kt[kt.index("val Light"):kt.index("val Dark")]
+-        dark = kt[kt.index("val Dark"):kt.index("object Spacing")]
++        dark = kt[kt.index("val Dark"):kt.index("val Night")]
++        night = kt[kt.index("val Night"):kt.index("object Spacing")]
+         self.assertEqual(light.count("= Color("), dark.count("= Color("))
++        # 0.14.0: the night light, every role filled (spelled out or from dark), warm on near-black.
++        self.assertEqual(light.count("= Color("), night.count("= Color("))
++        self.assertIn("page = Color(0xFF0D0806)", night)
+         # 0.7.0 "Tecidos": the layer's data colours are her fabrics (Lavanda night), every kind has a soft round.
+         self.assertIn("eventNight = Color(0xFF5B4B8A)", light)
+         self.assertIn("eventNoteSoft = Color(", dark)
+diff --git a/tokens/tokens.json b/tokens/tokens.json
+index c85fa82..fdc3c3b 100644
+--- a/tokens/tokens.json
++++ b/tokens/tokens.json
+@@ -1,7 +1,7 @@
+ {
+   "$comment": "Source of truth for every app's design tokens. Edit here, run scripts/gen_tokens.py, commit tokens + generated/ + DESIGN.md together. Schema: docs/tokens.md.",
+   "name": "Gabriel Design System",
+-  "version": "0.13.0",
++  "version": "0.14.0",
+   "core": {
+     "$comment": "Shared by every app. Every layer must include every core token (scripts/check_tokens.py enforces it).",
+     "color": [
+@@ -167,7 +167,8 @@
+     "cochilo": {
+       "$comment": "Cochilo, the baby sleep tracker (gabrielbr/Cochilo), Jetpack Compose (br.gabriel.cochilo.ui.theme). Light and dark. Type roles, sizes and spacing copy uikit, so the Compose kit reads like the Views kit (the D-1 direction of travel). Fairy mode is not carried: Cochilo's profile is the baby, not the person holding the phone (D-12). Dressed as a Tatá Slings product (brands.tata-slings, docs/brands.md). From 0.7.0 its data colours are her fabrics, each kind's icon sits in a soft round of its colour, and its corners are rounder (docs/brands.md, \"Tecidos\").",
+       "consumers": ["Cochilo (Cochilo/app)"],
+-      "themes": ["light", "dark"],
++      "themes": ["light", "dark", "night"],
++      "theme_fallback": {"night": "dark"},
+       "brand": "tata-slings",
+       "color": [
+         "@page", "@surface", "@ink", "@muted", "@line", "@mint", "@on-mint", "@coral", "@coral-text", "@coral-soft",
+@@ -181,24 +182,24 @@
+         {"name": "selected", "value": "{mint}", "usage": "What is picked in a set that isn't an action: the active tab's pill, a picked filter chip. Under the brand a soft blush, so teal stays the one action (0.11.0)."},
+         {"name": "on-selected", "value": "{on-mint}", "usage": "Icon and text on selected."},
+         {"name": "frame-line", "value": "{mint}", "usage": "The frame round the screen. Under the brand a soft blush edge, like a fabric hem, not a teal rule (0.11.0)."},
+-        {"name": "event-night", "value": {"light": "#5B4B8A", "dark": "#B7A6E6"}, "usage": "Data: night sleep. Lavanda, one of her fabrics. On the timeline, the charts and as the line of its kind's icon. Always beside a word."},
+-        {"name": "event-nap", "value": {"light": "#3D6FA3", "dark": "#8FB8E8"}, "usage": "Data: naps. Imensidão blue, so a nap and a night are told apart by hue as well as by the word. On the timeline, the charts and as the line of its kind's icon. Always beside a word."},
+-        {"name": "event-feed", "value": {"light": "#B0503F", "dark": "#F0A898"}, "usage": "Data: feeds (breast, bottle, solids). Rosa Chá, deepened to be seen. On the timeline, the charts and as the line of its kind's icon. Always beside a word."},
+-        {"name": "event-pump", "value": {"light": "#8A3566", "dark": "#E59AC6"}, "usage": "Data: pumping sessions. Amora. On the timeline, the charts and as the line of its kind's icon. Always beside a word."},
+-        {"name": "event-diaper", "value": {"light": "#3E7350", "dark": "#8CCB9F"}, "usage": "Data: diaper changes. Trevo. On the timeline, the charts and as the line of its kind's icon. Always beside a word."},
+-        {"name": "event-daylight", "value": {"light": "#8C6A00", "dark": "#FFD25C"}, "usage": "Data: time outdoors in daylight. Mel. On the timeline, the charts and as the line of its kind's icon. Always beside a word."},
+-        {"name": "event-routine", "value": {"light": "#1E6E68", "dark": "#7FD6CF"}, "usage": "Data: routines (bath, bedtime). Turquesa, the brand teal deepened. On the timeline, the charts and as the line of its kind's icon. Always beside a word."},
+-        {"name": "event-medicine", "value": {"light": "#A3324A", "dark": "#FF94A8"}, "usage": "Data: medicine. Cereja. On the timeline, the charts and as the line of its kind's icon. Always beside a word."},
+-        {"name": "event-note", "value": {"light": "#7A5A44", "dark": "#D6B9A2"}, "usage": "Data: notes. Capuccino. On the timeline, the charts and as the line of its kind's icon. Always beside a word."},
+-        {"name": "event-night-soft", "value": {"light": "#E4DDF2", "dark": "#3A3158"}, "usage": "The round behind the night icon (a soft tint of event-night). Never text, never alone."},
+-        {"name": "event-nap-soft", "value": {"light": "#D9E6F3", "dark": "#273B55"}, "usage": "The round behind the nap icon (a soft tint of event-nap). Never text, never alone."},
+-        {"name": "event-feed-soft", "value": {"light": "#F6D9D1", "dark": "#563029"}, "usage": "The round behind the feed icon (a soft tint of event-feed). Never text, never alone."},
+-        {"name": "event-pump-soft", "value": {"light": "#F1D5E4", "dark": "#522A47"}, "usage": "The round behind the pump icon (a soft tint of event-pump). Never text, never alone."},
+-        {"name": "event-diaper-soft", "value": {"light": "#D6E9DB", "dark": "#284634"}, "usage": "The round behind the diaper icon (a soft tint of event-diaper). Never text, never alone."},
+-        {"name": "event-daylight-soft", "value": {"light": "#F5E6BC", "dark": "#4A3C17"}, "usage": "The round behind the daylight icon (a soft tint of event-daylight). Never text, never alone."},
+-        {"name": "event-routine-soft", "value": {"light": "#D3EFEC", "dark": "#1E4744"}, "usage": "The round behind the routine icon (a soft tint of event-routine). Never text, never alone."},
+-        {"name": "event-medicine-soft", "value": {"light": "#F6D3DA", "dark": "#572934"}, "usage": "The round behind the medicine icon (a soft tint of event-medicine). Never text, never alone."},
+-        {"name": "event-note-soft", "value": {"light": "#EBDFD4", "dark": "#47392E"}, "usage": "The round behind the note icon (a soft tint of event-note). Never text, never alone."},
++        {"name": "event-night", "value": {"light": "#5B4B8A", "dark": "#B7A6E6", "night": "#D29560"}, "usage": "Data: night sleep. Lavanda, one of her fabrics. On the timeline, the charts and as the line of its kind's icon. Always beside a word."},
++        {"name": "event-nap", "value": {"light": "#3D6FA3", "dark": "#8FB8E8", "night": "#B8703C"}, "usage": "Data: naps. Imensidão blue, so a nap and a night are told apart by hue as well as by the word. On the timeline, the charts and as the line of its kind's icon. Always beside a word."},
++        {"name": "event-feed", "value": {"light": "#B0503F", "dark": "#F0A898", "night": "#E0805C"}, "usage": "Data: feeds (breast, bottle, solids). Rosa Chá, deepened to be seen. On the timeline, the charts and as the line of its kind's icon. Always beside a word."},
++        {"name": "event-pump", "value": {"light": "#8A3566", "dark": "#E59AC6", "night": "#C76B5A"}, "usage": "Data: pumping sessions. Amora. On the timeline, the charts and as the line of its kind's icon. Always beside a word."},
++        {"name": "event-diaper", "value": {"light": "#3E7350", "dark": "#8CCB9F", "night": "#A88A4E"}, "usage": "Data: diaper changes. Trevo. On the timeline, the charts and as the line of its kind's icon. Always beside a word."},
++        {"name": "event-daylight", "value": {"light": "#8C6A00", "dark": "#FFD25C", "night": "#E2B25A"}, "usage": "Data: time outdoors in daylight. Mel. On the timeline, the charts and as the line of its kind's icon. Always beside a word."},
++        {"name": "event-routine", "value": {"light": "#1E6E68", "dark": "#7FD6CF", "night": "#9E7A55"}, "usage": "Data: routines (bath, bedtime). Turquesa, the brand teal deepened. On the timeline, the charts and as the line of its kind's icon. Always beside a word."},
++        {"name": "event-medicine", "value": {"light": "#A3324A", "dark": "#FF94A8", "night": "#D06A4E"}, "usage": "Data: medicine. Cereja. On the timeline, the charts and as the line of its kind's icon. Always beside a word."},
++        {"name": "event-note", "value": {"light": "#7A5A44", "dark": "#D6B9A2", "night": "#B08A70"}, "usage": "Data: notes. Capuccino. On the timeline, the charts and as the line of its kind's icon. Always beside a word."},
++        {"name": "event-night-soft", "value": {"light": "#E4DDF2", "dark": "#3A3158", "night": "#33200F"}, "usage": "The round behind the night icon (a soft tint of event-night). Never text, never alone."},
++        {"name": "event-nap-soft", "value": {"light": "#D9E6F3", "dark": "#273B55", "night": "#2E1C10"}, "usage": "The round behind the nap icon (a soft tint of event-nap). Never text, never alone."},
++        {"name": "event-feed-soft", "value": {"light": "#F6D9D1", "dark": "#563029", "night": "#36190F"}, "usage": "The round behind the feed icon (a soft tint of event-feed). Never text, never alone."},
++        {"name": "event-pump-soft", "value": {"light": "#F1D5E4", "dark": "#522A47", "night": "#331814"}, "usage": "The round behind the pump icon (a soft tint of event-pump). Never text, never alone."},
++        {"name": "event-diaper-soft", "value": {"light": "#D6E9DB", "dark": "#284634", "night": "#2A2312"}, "usage": "The round behind the diaper icon (a soft tint of event-diaper). Never text, never alone."},
++        {"name": "event-daylight-soft", "value": {"light": "#F5E6BC", "dark": "#4A3C17", "night": "#33260E"}, "usage": "The round behind the daylight icon (a soft tint of event-daylight). Never text, never alone."},
++        {"name": "event-routine-soft", "value": {"light": "#D3EFEC", "dark": "#1E4744", "night": "#2B2116"}, "usage": "The round behind the routine icon (a soft tint of event-routine). Never text, never alone."},
++        {"name": "event-medicine-soft", "value": {"light": "#F6D3DA", "dark": "#572934", "night": "#36160F"}, "usage": "The round behind the medicine icon (a soft tint of event-medicine). Never text, never alone."},
++        {"name": "event-note-soft", "value": {"light": "#EBDFD4", "dark": "#47392E", "night": "#2E2219"}, "usage": "The round behind the note icon (a soft tint of event-note). Never text, never alone."},
+         {"name": "illustration-skin-1", "value": {"light": "#F6D7C3", "dark": "#F6D7C3"}, "usage": "Illustration (the baby avatar, docs/components.md): Skin tone 1, the lightest. The same in both themes: a baby doesn't change colour at night. Never UI state, never text."},
+         {"name": "illustration-skin-2", "value": {"light": "#EBC1A0", "dark": "#EBC1A0"}, "usage": "Illustration (the baby avatar, docs/components.md): Skin tone 2. The same in both themes: a baby doesn't change colour at night. Never UI state, never text."},
+         {"name": "illustration-skin-3", "value": {"light": "#D7A27E", "dark": "#D7A27E"}, "usage": "Illustration (the baby avatar, docs/components.md): Skin tone 3. The same in both themes: a baby doesn't change colour at night. Never UI state, never text."},
+@@ -283,26 +284,26 @@
+       "source": "tataslings.com.br, measured 2026-11-02: teal #5DC2BB (logo, buttons), navy #13293D (accent), Libre Franklin (the whole site). Pérola and Cereja are her fabric names.",
+       "type": {"family": "\"Libre Franklin\", system-ui, sans-serif", "faces": ["libre_franklin_regular.ttf (400)", "libre_franklin_semibold.ttf (600)", "libre_franklin_bold.ttf (700)"], "licence": "SIL Open Font License 1.1"},
+       "color": [
+-        {"replaces": "page", "value": {"light": "#FBF5F1", "dark": "#141017"}, "usage": "Pérola with a blush of Rosa Chá; plum-black at night."},
+-        {"replaces": "surface", "value": {"light": "#FFFFFF", "dark": "#1D1822"}, "usage": "White cards; plum-grey in dark."},
+-        {"replaces": "ink", "value": {"light": "#2B2233", "dark": "#F3EEF2"}, "usage": "A warm plum-grey (0.7.0, was navy): softer than navy, still 14:1 on page."},
+-        {"replaces": "muted", "value": {"light": "#6E6475", "dark": "#B5AAB9"}, "usage": "Warm grey with a little plum."},
+-        {"replaces": "line", "value": {"light": "#EEDFD8", "dark": "#2E2734"}, "usage": "A rosé hairline. Never text."},
+-        {"replaces": "mint", "value": {"light": "#5DC2BB", "dark": "#5DC2BB"}, "usage": "The brand teal (logo, site buttons) in the brand-accent role: one filled action per screen, the frame, the active tab. Fill only, never text (2.1:1 on white)."},
+-        {"replaces": "on-mint", "value": {"light": "#2B2233", "dark": "#141017"}, "usage": "Plum-grey on teal."},
+-        {"replaces": "coral", "value": {"light": "#E07A6B", "dark": "#FF9C8E"}, "usage": "Cereja, a fabric name. Stop and destructive fills; ink on it 5.1:1 (light)."},
+-        {"replaces": "coral-text", "value": {"light": "#B5473A", "dark": "#FF9C8E"}, "usage": "Cereja as text. 5.0:1 on page, 4.6:1 on coral-soft (light)."},
+-        {"replaces": "coral-soft", "value": {"light": "#FBE9E5", "dark": "#3A2220"}, "usage": "The tint behind coral-text chips."},
+-        {"replaces": "panel", "value": {"light": "#2E2238", "dark": "#1A1320"}, "usage": "The sleep panel: a plum night (0.7.0, was navy)."},
+-        {"replaces": "on-panel", "value": {"light": "#FBF5F1", "dark": "#F3EEF2"}, "usage": "Pérola on the plum night."},
+-        {"replaces": "on-panel-muted", "value": {"light": "#B9AFC2", "dark": "#B5AAB9"}, "usage": "Secondary text on the plum night."},
+-        {"replaces": "snackbar", "value": {"light": "#2B2233", "dark": "#F3EEF2"}, "usage": "Plum-grey on light, near-white on dark."},
+-        {"replaces": "snackbar-action", "value": {"light": "#5DC2BB", "dark": "#1E6E68"}, "usage": "Teal on the plum snackbar; deep teal on the dark theme's light one."},
+-        {"replaces": "fab", "value": {"light": "#8A3566", "dark": "#E59AC6"}, "usage": "Amora, the berry fabric: the Log button. Warm and easy to find, and not the teal of the one action."},
+-        {"replaces": "on-fab", "value": {"light": "#FFF7FA", "dark": "#2B1022"}, "usage": "On Amora."},
+-        {"replaces": "selected", "value": {"light": "#F6DDE3", "dark": "#4A2D40"}, "usage": "A blush of Rosa Chá and Amora behind the active tab and a picked chip; the ink on it is 12:1."},
+-        {"replaces": "on-selected", "value": {"light": "#2B2233", "dark": "#F3EEF2"}, "usage": "Ink on the blush."},
+-        {"replaces": "frame-line", "value": {"light": "#F1D9D3", "dark": "#2A2030"}, "usage": "A soft Rosa Chá hem round the screen; plum at night."}
++        {"replaces": "page", "value": {"light": "#FBF5F1", "dark": "#141017", "night": "#0D0806"}, "usage": "Pérola with a blush of Rosa Chá; plum-black at night."},
++        {"replaces": "surface", "value": {"light": "#FFFFFF", "dark": "#1D1822", "night": "#170F0B"}, "usage": "White cards; plum-grey in dark."},
++        {"replaces": "ink", "value": {"light": "#2B2233", "dark": "#F3EEF2", "night": "#E9A25F"}, "usage": "A warm plum-grey (0.7.0, was navy): softer than navy, still 14:1 on page."},
++        {"replaces": "muted", "value": {"light": "#6E6475", "dark": "#B5AAB9", "night": "#B67A47"}, "usage": "Warm grey with a little plum."},
++        {"replaces": "line", "value": {"light": "#EEDFD8", "dark": "#2E2734", "night": "#2B1C14"}, "usage": "A rosé hairline. Never text."},
++        {"replaces": "mint", "value": {"light": "#5DC2BB", "dark": "#5DC2BB", "night": "#E0A060"}, "usage": "The brand teal (logo, site buttons) in the brand-accent role: one filled action per screen, the frame, the active tab. Fill only, never text (2.1:1 on white)."},
++        {"replaces": "on-mint", "value": {"light": "#2B2233", "dark": "#141017", "night": "#0D0806"}, "usage": "Plum-grey on teal."},
++        {"replaces": "coral", "value": {"light": "#E07A6B", "dark": "#FF9C8E", "night": "#B5432E"}, "usage": "Cereja, a fabric name. Stop and destructive fills; ink on it 5.1:1 (light)."},
++        {"replaces": "coral-text", "value": {"light": "#B5473A", "dark": "#FF9C8E", "night": "#E07A5A"}, "usage": "Cereja as text. 5.0:1 on page, 4.6:1 on coral-soft (light)."},
++        {"replaces": "coral-soft", "value": {"light": "#FBE9E5", "dark": "#3A2220", "night": "#2A120C"}, "usage": "The tint behind coral-text chips."},
++        {"replaces": "panel", "value": {"light": "#2E2238", "dark": "#1A1320", "night": "#120A07"}, "usage": "The sleep panel: a plum night (0.7.0, was navy)."},
++        {"replaces": "on-panel", "value": {"light": "#FBF5F1", "dark": "#F3EEF2", "night": "#E9A25F"}, "usage": "Pérola on the plum night."},
++        {"replaces": "on-panel-muted", "value": {"light": "#B9AFC2", "dark": "#B5AAB9", "night": "#B67A47"}, "usage": "Secondary text on the plum night."},
++        {"replaces": "snackbar", "value": {"light": "#2B2233", "dark": "#F3EEF2", "night": "#E9A25F"}, "usage": "Plum-grey on light, near-white on dark."},
++        {"replaces": "snackbar-action", "value": {"light": "#5DC2BB", "dark": "#1E6E68", "night": "#5A2A10"}, "usage": "Teal on the plum snackbar; deep teal on the dark theme's light one."},
++        {"replaces": "fab", "value": {"light": "#8A3566", "dark": "#E59AC6", "night": "#B8642F"}, "usage": "Amora, the berry fabric: the Log button. Warm and easy to find, and not the teal of the one action."},
++        {"replaces": "on-fab", "value": {"light": "#FFF7FA", "dark": "#2B1022", "night": "#0D0806"}, "usage": "On Amora."},
++        {"replaces": "selected", "value": {"light": "#F6DDE3", "dark": "#4A2D40", "night": "#3A2416"}, "usage": "A blush of Rosa Chá and Amora behind the active tab and a picked chip; the ink on it is 12:1."},
++        {"replaces": "on-selected", "value": {"light": "#2B2233", "dark": "#F3EEF2", "night": "#E9A25F"}, "usage": "Ink on the blush."},
++        {"replaces": "frame-line", "value": {"light": "#F1D9D3", "dark": "#2A2030", "night": "#241610"}, "usage": "A soft Rosa Chá hem round the screen; plum at night."}
+       ]
+     }
+   },
+-- 
+2.43.0
+

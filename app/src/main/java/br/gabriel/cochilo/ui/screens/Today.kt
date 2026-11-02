@@ -88,6 +88,17 @@ fun TodayScreen(
             Text(stringResource(R.string.prediction_need_data), style = Type.bodySmall, color = CochiloTheme.colors.muted)
         }
 
+        // The daylight nudge: 14:00–16:00 with no daylight yet (research §2.3), one tap to start a walk.
+        if (prediction !is Predictor.Result.Sleeping && br.gabriel.cochilo.domain.Daylight.nudge(log, zone, now)) {
+            Spacer(Modifier.height(Spacing.space4))
+            br.gabriel.cochilo.ui.kit.RowGroup {
+                br.gabriel.cochilo.ui.kit.ListRow(
+                    stringResource(R.string.daylight_nudge), meta = stringResource(R.string.daylight_nudge_meta),
+                    leading = { br.gabriel.cochilo.ui.kit.KindIcon(EventType.DAYLIGHT) },
+                ) { Button(stringResource(R.string.daylight_go), { onQuick(EventType.DAYLIGHT, br.gabriel.cochilo.data.Kinds.OUTDOORS) }) }
+            }
+        }
+
         val running = log.filter { it.running && it.type != EventType.SLEEP }
         if (running.isNotEmpty()) {
             Caption(stringResource(R.string.caption_running))

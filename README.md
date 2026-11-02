@@ -31,6 +31,8 @@ dressed in the Tatá Slings brand (teal, plum-grey ink, Pérola, Libre Franklin,
 - **Log button**: the main action, in the bottom-right corner on every tab. Press, drag up to a
   kind and sideways to a choice (Feed › Right breast), let go: logged. Let go on the kind for its
   sheet. A tap opens it for taps.
+- **Night light**: warm amber on black from 19:00 to 07:00; a daylight nudge in the afternoon;
+  "dim the lights" before bedtime. [docs/night-light.md](docs/night-light.md).
 - **Little celebrations**: a few warm words and the baby lifting its arms when a nap goes well.
   [docs/celebrations.md](docs/celebrations.md).
 - **Meet the baby**: a two-step first run, and the baby's avatar (skin tone, hair, girl / boy /

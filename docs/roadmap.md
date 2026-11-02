@@ -29,9 +29,6 @@ Each is grounded in `docs/research.md` or the Tatá Slings plans (`docs/tata-sli
 | Feature | Why (source) | What it is |
 |---|---|---|
 | **Where the baby slept** (crib, arms, sling, pram, car) | Contact naps are normal early on; the brand is babywearing (monetization §6.1) | A kind on Sleep; Patterns shows "Naps in the sling: 3 this week", guilt-free; the `eventCarry` teal data colour is reserved for it |
-| **Night light theme** | Evening and night light suppress melatonin even when dim; red/amber is least disruptive (research §2.3) | An automatic theme from bedtime to morning: very dim, warm amber/red on near-black, no teal glow; one tap to leave. Turns Tatá's "yellow or red light?" question into a feature |
-| **Wind-down reminder** | Same (§2.3, §7.3) | ~60 min before the predicted bedtime: "Dim the lights; warm light only." Off by default; never a promise |
-| **Daylight nudge** | Daylight 12:00–16:00 linked to better nights at 6–12 weeks (§2.3) | If no daylight is logged by 14:00, a quiet line on Today (not a notification) |
 | **Change detection instead of "regressions"** | Don't hard-code regressions; detect real change (§2.5) | "Night wakings: more this week than the two before (3 vs 1.5)", neutral, with its numbers, like the prediction card |
 | **Day milk / night milk** | Chrononutrition (§2.4) | Pumped milk tagged by the time it was pumped; bottles say which milk |
 | **Ritual builder** | Preventive parent education has the strongest evidence (§4); what consultations sell (monetization §6.4) | The parent writes the steps once (feed, play, nappy, room ready, song) and ticks them off; logged as the routine |
@@ -78,6 +75,7 @@ Each is grounded in `docs/research.md` or the Tatá Slings plans (`docs/tata-sli
 
 ## Shipped from this plan
 
+- **0.15.0**: night light, daylight nudge, wind-down in the notification ([night-light.md](night-light.md)).
 - **0.14.0**: little celebrations (1.1) ([celebrations.md](celebrations.md)).
 - **0.13.0**: onboarding and the baby's avatar (1.2, 3.1); dates in the app's language
   ([onboarding.md](onboarding.md)).
@@ -86,7 +84,7 @@ Each is grounded in `docs/research.md` or the Tatá Slings plans (`docs/tata-sli
 
 | When | What | Why first |
 |---|---|---|
-| **Soon** | Night light theme; "fell asleep a few minutes ago"; where the baby slept | Research-backed, small, and on the brand's subject |
+| **Soon** | "Fell asleep a few minutes ago"; where the baby slept | Research-backed, small, and on the brand's subject |
 | **Later** | Ritual builder, T.I.C.K.S., notes from Tatá, printable report (the Cochilo+ set) | Needs Tatá's writing and the monetization plan's order of work |
 | **Exploring** | Wi-Fi sync between two phones; Wear OS; smarter prediction | Bigger builds; worth a design spike first |
 

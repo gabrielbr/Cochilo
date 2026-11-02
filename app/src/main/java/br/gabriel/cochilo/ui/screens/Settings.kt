@@ -46,6 +46,8 @@ fun SettingsScreen(
     onEditLook: () -> Unit = {},
     celebrations: Boolean = true,
     onCelebrations: (Boolean) -> Unit = {},
+    nightLight: Boolean = true,
+    onNightLight: (Boolean) -> Unit = {},
 ) {
     val context = LocalContext.current
     val f = Format(context, zone)
@@ -86,6 +88,8 @@ fun SettingsScreen(
                 )
                 FilterChips(ThemeMode.entries, theme, { labels.getValue(it) }, onTheme)
             }
+            Hairline()
+            br.gabriel.cochilo.ui.kit.SwitchRow(stringResource(R.string.night_light), stringResource(R.string.night_light_meta), nightLight, onNightLight)
             Hairline()
             Column(Modifier.padding(horizontal = Spacing.space4, vertical = Spacing.space3)) {
                 androidx.compose.material3.Text(stringResource(R.string.fabric), style = br.gabriel.cochilo.ui.theme.Type.body, color = CochiloTheme.colors.ink)

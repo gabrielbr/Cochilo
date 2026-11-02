@@ -27,6 +27,7 @@ A "tap" is a touch on a target; a "slide" is one touch that moves sideways and l
 | First run: add the baby | 1 tap + name + Save | name + **Next**, then **Done** or **Skip** | Two short steps; the look step is skippable ([onboarding.md](onboarding.md)) |
 | Start sleep / Woke up from the home screen | open app + 1 tap | **1 tap** | The widget's mint button ([widget.md](widget.md)) |
 | Breastfeed a side / switch / finish, from the home screen | open app + 1 move | **1 tap** | The widget's Left / Right; the running side reads Finish |
+| Start a daylight walk when nudged | open the Daylight row | **1 tap** | "Go outside" on the nudge row ([night-light.md](night-light.md)) |
 | Pick a fabric for the Today card | — | 2 taps | Settings (gear), then a swatch: applied at once, no Save |
 
 ## Remember actions (project rule)

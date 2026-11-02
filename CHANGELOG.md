@@ -3,6 +3,14 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.15.0 — 2026-11-02
+
+**A night light.** From 19:00 to 07:00 the app turns warm amber on black, with no blue light (light
+at night is what the research says to keep dim; red and amber disturb least). Settings ›
+Appearance › Night light turns it off. **Daylight:** from 14:00, if there's been no daylight
+between 12:00 and 16:00, Today offers "Go outside" to start a walk in one tap. **Wind-down:** the
+notification says "dim the lights" in the hour before bedtime. `docs/night-light.md`.
+
 ## 0.14.0 — 2026-11-02
 
 **Little celebrations.** When what you were trying for happens (a full nap, a sleep right on time,
