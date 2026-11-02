@@ -1,4 +1,4 @@
-From ff1ae669eb9c992b70acc930429da10b4a00dcb5 Mon Sep 17 00:00:00 2001
+From bc840b4959c793f96021cff1b8d9fc9a5bba360c Mon Sep 17 00:00:00 2001
 From: Gabriel Lopes <ogabriel@gmail.com>
 Date: Mon, 2 Nov 2026 19:19:23 +0000
 Subject: [PATCH] =?UTF-8?q?Design=20system=200.5.0=20+=200.6.0:=20Cochilo?=
@@ -42,7 +42,7 @@ check_brands; audit audits/2026-11-02-v0.6.0-brands.md.
  audits/2026-11-02-v0.5.0-cochilo.md      | 137 ++++++++++++++++++++
  audits/2026-11-02-v0.6.0-brands.md       |  61 +++++++++
  docs/brands.md                           |  73 +++++++++++
- docs/components.md                       |   5 +
+ docs/components.md                       |   7 +
  docs/consuming.md                        |   9 +-
  docs/divergences.md                      |   1 +
  docs/foundations.md                      |   6 +-
@@ -59,7 +59,7 @@ check_brands; audit audits/2026-11-02-v0.6.0-brands.md.
  scripts/tokens_lib.py                    |  19 +++
  tests/test_scripts.py                    |  49 ++++++-
  tokens/tokens.json                       | 111 ++++++++++++++--
- 45 files changed, 1105 insertions(+), 38 deletions(-)
+ 45 files changed, 1107 insertions(+), 38 deletions(-)
  create mode 100644 assets/fonts/OFL-LibreFranklin.txt
  create mode 100644 assets/fonts/libre_franklin_bold.ttf
  create mode 100644 assets/fonts/libre_franklin_regular.ttf
@@ -4147,7 +4147,7 @@ index 0000000..b2665f7
 +4. Point the layer at it, regenerate, run `check_tokens.py` and the tests, audit, bump minor.
 +5. In the app: copy the generated file, ship the faces, switch the family, swap the mark.
 diff --git a/docs/components.md b/docs/components.md
-index 3c6a33f..c1ef5ad 100644
+index 3c6a33f..41b8347 100644
 --- a/docs/components.md
 +++ b/docs/components.md
 @@ -3,6 +3,9 @@
@@ -4160,12 +4160,14 @@ index 3c6a33f..c1ef5ad 100644
  | Component | Spec | uikit | Compose | Status |
  |---|---|---|---|---|
  | Frame | 4dp mint border; loading line (uikit) | `FrameDrawable`, `FrameSweep`, `Motion.loading` | `AppChrome` frame | ✅ |
-@@ -28,6 +31,8 @@ PulseLoop's `ui/components`. Status: ✅ both, 🟡 one app, ⬜ to build.
+@@ -28,6 +31,10 @@ PulseLoop's `ui/components`. Status: ✅ both, 🟡 one app, ⬜ to build.
  | Charts | one message per chart, zone colours, spoken summary | — | `Charts`, `ZoneLineChart` | 🟡 |
  | Update sheet | "Update available · {version}", release notes, Update · {size} (primary) / Later; "Downloading… n%" with the frame's line, Later becomes Cancel — [self-update.md](self-update.md) | `Ui.updateSheet` | `UpdateDialog` | 🟡 |
  | Check for updates | About row: version, a secondary button, one result line; release builds only — [self-update.md](self-update.md) | `Ui.checkForUpdates` | `CheckForUpdatesButton` | 🟡 |
 +| Sleep panel | Cochilo: `panel` block, state word over the `timer` role, one PRIMARY (Start sleep / Woke up) | — | Cochilo `SleepPanel` | 🟡 |
 +| Timeline / actogram | Cochilo: 24h bar, `timeline` 24dp high, `event-*` blocks on `line`, hour labels muted, spoken summary | — | Cochilo `Timeline`, `Actogram` | 🟡 |
++| Slide row | Cochilo: a row that also slides; past the touch slop it becomes its options side by side, the one under the finger in `ink` with a haptic tick; letting go logs, back to start cancels; the last-used option says LAST; tap still opens the sheet; each option is a TalkBack action | — | Cochilo `SlideRow` | 🟡 |
++| Log button | Cochilo: the main action in the thumb's corner (bottom-end, `space4` in, `button` size, `ink` circle, plus that turns to a cross). Press: the entry kinds rise above it, most frequent nearest; drag up to a kind, sideways onto a choice; let go logs (choice) or opens the sheet (kind); elsewhere cancels. A tap opens it for taps and TalkBack. Scrim `page` at 94%. Never mint: the screen's one mint action stays | — | Cochilo `LogButton` | 🟡 |
  | Fairy transformation | once, over everything; glow, wand, sparkles, "Tatá, te amo!"; 4.2s (1.4s reduced) — [fairy-mode.md](fairy-mode.md) | ⬜ | `FairyTransformOverlay` | 🟡 |
  
  Rules for every component: built from tokens only; 48dp targets; TalkBack reads label + value +

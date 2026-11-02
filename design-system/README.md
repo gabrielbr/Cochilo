@@ -13,6 +13,8 @@ one commit on top of the design system's `main` at 0.4.0 (self-update):
   type family, nothing else. `brands.tata-slings` is worn by `cochilo`: teal accent, navy ink,
   Pérola page, Libre Franklin. `check_brands` enforces the limits. Also Libre Franklin + OFL and
   `assets/logos/cochilo-tata-mark.svg`. Audit `audits/2026-11-02-v0.6.0-brands.md`.
+- **Components:** `docs/components.md` lists Cochilo's Slide row and Log button (the main action in
+  the thumb's corner, press and drag to log).
 
 Checked on a fresh checkout of the design system's `main`: `git am` applies it,
 `check_tokens.py` reports 0 errors, the tests pass, and `drift.py --cochilo` against this repo

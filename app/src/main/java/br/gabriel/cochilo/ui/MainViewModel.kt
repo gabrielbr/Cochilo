@@ -100,12 +100,14 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
      * The slide shortcut: logs [type] with [kind] now, with no sheet. A timer type starts running.
      * The snackbar says what was logged and offers Undo, so a slip costs one tap to take back.
      */
-    fun quickLog(type: EventType, kind: String?) = viewModelScope.launch {
+    fun quickLog(type: EventType, kind: String?, amountMl: Int? = null, note: String? = null) = viewModelScope.launch {
         val now = System.currentTimeMillis()
-        val e = br.gabriel.cochilo.ui.screens.newEvent(type, now).copy(kind = kind, updatedAt = now)
+        val e = br.gabriel.cochilo.ui.screens.newEvent(type, now).copy(kind = kind, amountMl = amountMl, note = note, updatedAt = now)
         events.upsert(e)
         refreshNow()
-        val name = Format(ctx, zone).let { f -> listOfNotNull(f.typeName(type), f.kindName(kind)).joinToString(" · ") }
+        val name = Format(ctx, zone).let { f ->
+            listOfNotNull(f.typeName(type), f.kindName(kind), amountMl?.let { str(R.string.ml, it) }, note).joinToString(" · ")
+        }
         _messages.send(UiMessage(str(if (type.hasDuration) R.string.quick_started else R.string.quick_logged, name), str(R.string.undo)) {
             viewModelScope.launch { events.delete(e); refreshNow() }
         })

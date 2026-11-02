@@ -41,6 +41,9 @@ import br.gabriel.cochilo.data.EventType
 import br.gabriel.cochilo.domain.Predictor
 import br.gabriel.cochilo.domain.ageWeeks
 import br.gabriel.cochilo.ui.kit.BackHeader
+import br.gabriel.cochilo.ui.screens.LogKeys
+import br.gabriel.cochilo.ui.screens.logMenuItems
+import br.gabriel.cochilo.ui.kit.LogButton
 import br.gabriel.cochilo.update.AboutUpdates
 import br.gabriel.cochilo.update.UpdatePrompt
 import br.gabriel.cochilo.ui.kit.EmptyState
@@ -178,7 +181,7 @@ fun CochiloRoot(vm: MainViewModel) {
                                                 // breast, diaper kind, bottle amount, medicine), so a repeat is one tap + Save.
                                                 editing = Editing(newEvent(type, System.currentTimeMillis()).rememberedFrom(log), true)
                                             },
-                                            onQuick = vm::quickLog,
+                                            onQuick = { type, kind -> vm.quickLog(type, kind) },
                                             onSwitch = vm::switchSide,
                                             onOpen = { editing = Editing(it, false) },
                                         )
@@ -187,6 +190,31 @@ fun CochiloRoot(vm: MainViewModel) {
                                         else -> PatternsScreen(log, now, zone, weeks)
                                     }
                                 }
+                                // The Log button: the main action, under the right thumb, on every tab
+                                // (docs/flows.md). Press, drag to a kind, slide to a choice, let go.
+                                val newOf = { type: EventType -> editing = Editing(newEvent(type, System.currentTimeMillis()).rememberedFrom(log), true) }
+                                LogButton(
+                                    items = logMenuItems(context, f, log, prediction is Predictor.Result.Sleeping),
+                                    label = stringResource(R.string.log_button),
+                                    closeLabel = stringResource(R.string.log_close),
+                                    lastTag = stringResource(R.string.slide_last_tag),
+                                    onItem = { item -> newOf(EventType.valueOf(item.key)) },
+                                    onOption = { item, o ->
+                                        val type = EventType.valueOf(item.key)
+                                        when (o.key) {
+                                            LogKeys.START_SLEEP -> vm.startSleep()
+                                            LogKeys.WOKE_UP -> vm.wakeUp()
+                                            LogKeys.START -> vm.quickLog(type, null)
+                                            LogKeys.REPEAT_MEDICINE -> vm.quickLog(type, null, note = o.label)
+                                            br.gabriel.cochilo.data.Kinds.BOTTLE -> vm.quickLog(
+                                                type, o.key,
+                                                amountMl = log.filter { it.type == EventType.FEED && it.kind == o.key && it.amountMl != null }
+                                                    .maxByOrNull { it.start }?.amountMl,
+                                            )
+                                            else -> vm.quickLog(type, o.key)
+                                        }
+                                    },
+                                )
                             }
                         }
                     }

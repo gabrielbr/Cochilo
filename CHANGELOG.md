@@ -3,6 +3,17 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.7.0 — 2026-11-02
+
+**The Log button.** Logging no longer sits below the fold: a navy button in the bottom-right
+corner, where a right thumb rests, on every tab. Press and hold: the kinds of entry rise above it,
+the commonest nearest the thumb. Without lifting, drag up to Feed and its choices appear beside it
+(Left · Right, the last breast marked LAST, and the last bottle's amount); slide onto one and let
+go: logged, with Undo. Let go on a kind to open its sheet; anywhere else, nothing happens. Diaper
+(Wet · Both · Dirty), Sleep (start or wake up), Medicine (the last one again), Pump, Daylight,
+Routine and Note are there too. A tap opens the same menu to use with taps (and TalkBack). After
+Wunderlist's thumb-corner add button and marking menus. `docs/flows.md`.
+
 ## 0.6.0 — 2026-11-02
 
 **Remember actions** (now a project rule, with "fewest taps"). What was done last is shown and

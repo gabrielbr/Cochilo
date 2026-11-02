@@ -244,4 +244,8 @@
     <string name="slide_last_tag">LAST</string>
     <string name="row_last">Last: %1$s</string>
     <string name="sheet_last">Last time: %1$s · %2$s</string>
+    <!-- The Log button (docs/flows.md). -->
+    <string name="log_button">Log an entry: hold and drag to a kind, then to a choice</string>
+    <string name="log_close">Close</string>
+    <string name="diaper_both_short">Both</string>
 </resources>

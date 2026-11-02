@@ -20,6 +20,9 @@ A "tap" is a touch on a target; a "slide" is one touch that moves sideways and l
 | Routine | 2–3 taps | **1 slide** | Nap routine · Bedtime routine |
 | Pumping | 2 taps | **1 slide** | Slide either way: the timer starts |
 | Bottle with ml, note, past entry | 4+ taps | same | Tap the row: the sheet, where typing belongs |
+| Bottle, same amount as last | 4+ taps | **1 drag** | Log button › Feed › the bottle chip ("120 ml") |
+| Medicine, same as last | 3+ taps | **1 drag** | Log button › Medicine › its name |
+| Any of the above, from any tab, without scrolling | scroll + the row | **1 drag** | The Log button (below) |
 | Undo any of the above | — | 1 tap | Undo in the snackbar that says what was logged |
 
 ## Remember actions (project rule)
@@ -41,6 +44,54 @@ costs the fewest taps. Audit of every entry type (2026-11-02):
 Code: `lastOf`, `lastKind`, `lastKindAmong`, `Event.rememberedFrom` in `domain/QuickLog.kt`
 (tested in `QuickLogTest`); the rows in `Today.kt` (`QuickLog`); the sheet's line in `Sheets.kt`.
 This replaced the earlier "next: other breast" suggestion: the app shows what happened, she decides.
+
+## The Log button (0.7.0)
+
+The log rows sat below the first fold of Today: reaching them meant scrolling first, and they
+weren't on the other tabs at all. Wunderlist's lesson was to put the main action where the thumb
+already is: its big add button sat in the bottom corner, in reach without moving the grip. Most
+people hold a phone one-handed with the thumb doing the work, and the bottom of the screen,
+towards the thumb's side, is the easy zone (Hoober). So the **Log button** (`ui/kit/LogButton.kt`,
+items in `ui/screens/LogMenu.kt`) is a navy circle in the bottom-right corner of every tab.
+
+**One move, with a cadence:**
+
+1. **Press** the button: the kinds of entry rise in a column above it. The commonest is nearest the
+   thumb: Feed, Diaper, Sleep, Medicine, Pump, Daylight, Routine, Note.
+2. **Without lifting, drag up**: the kind under the finger lights, with a tick. On a kind with
+   choices, they appear beside it, to the left where the thumb can reach: Feed shows
+   Left · Right (the last breast says LAST) and the last bottle ("120 ml"); Diaper shows
+   Wet · Both · Dirty (the last one says LAST); Sleep shows Start sleep or Woke up; Medicine shows
+   the last medicine's name; Pump shows Start.
+3. **Slide sideways onto a choice and let go**: logged at once, with Undo in the snackbar.
+   **Let go on the kind** itself: its sheet, opened on the last choice. **Let go anywhere else**:
+   nothing happens.
+
+A **tap** opens the same menu to use with taps: tap a kind to show its choices, tap it again for
+the sheet, tap a choice to log. TalkBack reads the button ("Log an entry: hold and drag…") and
+every kind and choice as a button. The scrim closes it; the button turns into a cross.
+
+The design rules it keeps:
+
+- **The same move each time.** The order never changes, so after a few days the thumb knows that
+  Feed › Right is "up a little, then left". This is a marking menu's promise: novices look at the
+  menu, experts flick without looking.
+- **Remember actions.** The last breast and the last diaper kind say LAST; the bottle chip carries
+  the last amount; Medicine repeats the last name.
+- **Navy, not teal.** The screen's one mint action (Start sleep / Woke up) stays the only teal fill.
+  The Log button is the brand's ink, like the snackbar.
+- **The old rows stay.** Today's slide rows still work for whoever has scrolled there; the button
+  is the shortcut, not a replacement.
+
+| Entry from the Log button | Moves |
+|---|---|
+| Breastfeed, either side | 1 drag (press, up to Feed, onto Left or Right, let go) |
+| Bottle, same amount | 1 drag |
+| Diaper, any kind | 1 drag |
+| Start sleep / Woke up | 1 drag (or the panel's one tap) |
+| Same medicine again | 1 drag |
+| Start pumping | 1 drag |
+| Any entry's sheet | 1 drag, letting go on the kind (or tap, tap) |
 
 ## The gesture
 
@@ -86,5 +137,10 @@ The rules it follows, from what the research says goes wrong with gestures:
   [nngroup.com/articles/contextual-swipe](https://www.nngroup.com/articles/contextual-swipe/)
 - Hoober, S. *The thumb zone* (Smashing Magazine, 2016):
   [smashingmagazine.com](https://www.smashingmagazine.com/2016/09/the-thumb-zone-designing-for-mobile-users)
+- Wunderlist's design (the big add button in the thumb's corner, the main action always in
+  reach): [6wunderkinder on Medium](https://medium.com/@6wunderkinder) and
+  [Material Design, floating action button](https://m3.material.io/components/floating-action-button/overview)
+- Material Design, *FAB menu* (speed dial: the main button opens related actions above it):
+  [m3.material.io](https://m3.material.io/components/fab-menu/overview)
 - Android gesture patterns (long press is for selection, not menus):
   [stuff.mit.edu mirror of the Android design docs](https://stuff.mit.edu/afs/sipb/project/android/docs/design/patterns/gestures.html)

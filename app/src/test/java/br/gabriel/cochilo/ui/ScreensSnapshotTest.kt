@@ -32,6 +32,8 @@ import br.gabriel.cochilo.data.ThemeMode
 import br.gabriel.cochilo.domain.Predictor
 import br.gabriel.cochilo.domain.ageWeeks
 import br.gabriel.cochilo.ui.kit.BackHeader
+import br.gabriel.cochilo.ui.kit.LogButton
+import br.gabriel.cochilo.ui.screens.logMenuItems
 import br.gabriel.cochilo.ui.kit.Frame
 import br.gabriel.cochilo.ui.kit.Header
 import br.gabriel.cochilo.ui.kit.IconButton
@@ -93,6 +95,7 @@ class ScreensSnapshotTest {
     @Composable
     private fun Chrome(
         dark: Boolean, tab: Int, log: List<Event> = this.log, settings: Boolean = false,
+        logHover: br.gabriel.cochilo.ui.kit.LogHover? = null,
     ) {
         CochiloTheme(dark) {
             val weeks = ageWeeks(baby.birthDate, null, now)
@@ -118,6 +121,11 @@ class ScreensSnapshotTest {
                             2 -> HistoryScreen(log, now, zone) {}
                             else -> PatternsScreen(log, now, zone, weeks)
                         }
+                        LogButton(
+                            logMenuItems(androidx.compose.ui.platform.LocalContext.current, f, log, p is Predictor.Result.Sleeping),
+                            stringResource(R.string.log_button), stringResource(R.string.log_close), stringResource(R.string.slide_last_tag),
+                            {}, { _, _ -> }, preview = logHover,
+                        )
                     }
                     TabBar(
                         listOf(
@@ -222,6 +230,9 @@ class ScreensSnapshotTest {
             }
         }
     }
+    /** The Log button mid-drag: on Feed, slid onto Right (the menu rises from the bottom-right). */
+    @Test fun log_button_feed_right_light() { light(); paparazzi.snapshot { Chrome(false, 0, logHover = br.gabriel.cochilo.ui.kit.LogHover(0, 1)) } }
+    @Test fun log_button_open_ptBR_dark() { pt(true); paparazzi.snapshot { Chrome(true, 0, logHover = br.gabriel.cochilo.ui.kit.LogHover(1)) } }
     @Test fun day_ptBR_dark() { pt(true); paparazzi.snapshot { Chrome(true, 1) } }
     @Test fun settings_light() { light(); paparazzi.snapshot { Chrome(false, 0, settings = true) } }
     /** Settings › About in the github build, after a manual check. */
