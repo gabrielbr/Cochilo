@@ -480,3 +480,49 @@ fun TabBar(tabs: List<Tab>, selected: Int, onSelect: (Int) -> Unit) {
 fun Swatch(color: Color) {
     Box(Modifier.size(Spacing.space3).clip(RoundedCornerShape(Radius.radiusS)).background(color))
 }
+
+/**
+ * Earlier chips (design system, components.md): under the sleep panel's one action, a short
+ * sentence, "Fell asleep [5] [10] [15] min ago", each chip logging the same action that long ago in
+ * one tap. Outline
+ * pills, 32dp inside 48dp targets; [onDark] on the night panel. Each is a button TalkBack reads in
+ * full ("Fell asleep 10 minutes ago").
+ */
+@Composable
+fun EarlierChips(
+    label: String,
+    minutes: List<Int>,
+    chipLabel: @Composable (Int) -> String,
+    spoken: @Composable (Int) -> String,
+    /** What follows the chips, so the row reads as a sentence ("Fell asleep 5 10 15 min ago"). */
+    after: String = "",
+    onDark: Boolean = false,
+    onPick: (Int) -> Unit,
+) {
+    val c = CochiloTheme.colors
+    val fg = if (onDark) c.onPanel else c.ink
+    val muted = if (onDark) c.onPanelMuted else c.muted
+    val edge = if (onDark) c.onPanelMuted else c.line
+    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.space2)) {
+        Text(label, style = Type.meta, color = muted, maxLines = 1)
+        minutes.forEach { m ->
+            val src = remember { MutableInteractionSource() }
+            val words = spoken(m)
+            Box(
+                Modifier.heightIn(min = Spacing.space12)
+                    .clickable(src, indication = null, role = Role.Button, onClickLabel = words) { onPick(m) }
+                    .semantics { contentDescription = words },
+                contentAlignment = Alignment.Center,
+            ) {
+                Box(
+                    Modifier.pressScale(src).heightIn(min = Spacing.space8)
+                        .clip(RoundedCornerShape(Radius.radiusRound))
+                        .border(Size.hairline, edge, RoundedCornerShape(Radius.radiusRound))
+                        .padding(horizontal = Spacing.space3),
+                    contentAlignment = Alignment.Center,
+                ) { Text(chipLabel(m), style = Type.bodySmall, color = fg) }
+            }
+        }
+        if (after.isNotEmpty()) Text(after, style = Type.meta, color = muted, maxLines = 1)
+    }
+}

@@ -3,6 +3,13 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.16.0 — 2026-11-02
+
+**"Fell asleep a few minutes ago."** Under Start sleep / Woke up: "Fell asleep 5 · 10 · 15 min ago",
+one tap, for when the baby fell asleep in your arms (or woke) before you could reach the phone.
+**A quick-settings tile**: add "Cochilo sleep" to the phone's quick settings for Start sleep /
+Woke up from the notification shade, lit while the baby sleeps. `docs/flows.md`.
+
 ## 0.15.0 — 2026-11-02
 
 **A night light.** From 19:00 to 07:00 the app turns warm amber on black, with no blue light (light

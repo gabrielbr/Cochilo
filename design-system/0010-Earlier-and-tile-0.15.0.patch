@@ -1,0 +1,199 @@
+From 276eb8523acbbc64329f93c4975f2486cc87b4b5 Mon Sep 17 00:00:00 2001
+From: Gabriel Lopes <ogabriel@gmail.com>
+Date: Mon, 2 Nov 2026 23:12:38 +0000
+Subject: [PATCH] Design system 0.15.0: Earlier chips and the quick-settings
+ tile
+
+Two Cochilo components: the Earlier chips sentence under the sleep
+action, and the Start sleep / Woke up quick-settings tile. Audit v0.15.0.
+---
+ CHANGELOG.md                              |  8 +++++
+ DESIGN.md                                 |  2 +-
+ VERSION                                   |  2 +-
+ audits/2026-11-02-v0.15.0-earlier-tile.md | 42 +++++++++++++++++++++++
+ docs/components.md                        |  2 ++
+ generated/cochilo/CTokens.kt              |  2 +-
+ generated/pulseloop/GTokens.kt            |  2 +-
+ generated/uikit/UiTokens.java             |  2 +-
+ generated/web/cochilo.css                 |  2 +-
+ generated/web/pulseloop.css               |  2 +-
+ generated/web/uikit.css                   |  2 +-
+ tokens/tokens.json                        |  2 +-
+ 12 files changed, 61 insertions(+), 9 deletions(-)
+ create mode 100644 audits/2026-11-02-v0.15.0-earlier-tile.md
+
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+index e9cdee0..350db14 100644
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -3,6 +3,14 @@
+ Semantic versioning (AGENTS.md "Versioning"). Each entry says what changed for each app and what
+ the app has to do.
+ 
++## 0.15.0 — 2026-11-02
++
++Earlier chips and the quick-settings tile (minor: two components; no token values change).
++
++- **Earlier chips**: a sentence of hairline pills under the sleep panel's action.
++- **Quick-settings tile**: Start sleep / Woke up in the shade, with the system's tile states.
++- Audit `audits/2026-11-02-v0.15.0-earlier-tile.md`.
++
+ ## 0.14.0 — 2026-11-02
+ 
+ Cochilo's night light: a third theme (minor: a theme and a fallback rule; no light or dark value
+diff --git a/DESIGN.md b/DESIGN.md
+index fb2a047..66e32c4 100644
+--- a/DESIGN.md
++++ b/DESIGN.md
+@@ -1,6 +1,6 @@
+ ---
+ name: Gabriel Design System
+-version: 0.14.0
++version: 0.15.0
+ # GENERATED from tokens/tokens.json by scripts/gen_tokens.py. Edit the tokens, not this block.
+ colors:
+   page: "#F2F2F2"
+diff --git a/VERSION b/VERSION
+index a803cc2..a551051 100644
+--- a/VERSION
++++ b/VERSION
+@@ -1 +1 @@
+-0.14.0
++0.15.0
+diff --git a/audits/2026-11-02-v0.15.0-earlier-tile.md b/audits/2026-11-02-v0.15.0-earlier-tile.md
+new file mode 100644
+index 0000000..62deb45
+--- /dev/null
++++ b/audits/2026-11-02-v0.15.0-earlier-tile.md
+@@ -0,0 +1,42 @@
++# Audit 0.16.0: Earlier chips and the quick-settings tile
++
++Method: design review only (detector not applicable, native platform): impeccable critique
++(Android guidance: system surfaces, 48dp targets) and graphic-design-fundamentals §13, on
++`today_light`, `today_sleeping_dark`, `today_ptBR_light`.
++
++## graphic-design-fundamentals §13
++
++| # | Check | Result |
++|---|---|---|
++| 1 | Brief | Log a sleep that began before you reached the phone, in one tap; Start sleep from anywhere. ✅ |
++| 2 | Concept | The row reads as a sentence: "Fell asleep 5 10 15 min ago". ✅ |
++| 3 | Hierarchy | Under the one action, muted, small: secondary by design. ✅ |
++| 4 | Contrast | Meta text and hairline chips pass on surface and on the night panel. ✅ |
++| 5 | Alignment | The sentence starts on the card's left axis. ✅ |
++| 6 | Spacing | Tokens; 48dp targets around 32dp pills. ✅ |
++| 7 | Typography | Meta and body-small, one line. ✅ |
++| 8 | Colour | Outline only; teal stays the action. ✅ |
++| 9 | Consistency | Same pill as the chips elsewhere. ✅ |
++| 10 | Simplicity | Only valid chips appear; none when nothing makes sense. ✅ |
++| 11 | Real size | EN, PT, light, dark checked at phone width. ✅ |
++| 12 | Accessibility | Each chip spoken in full; the tile uses the system's states. ✅ |
++| 13 | Production | No new permission (the tile's service is guarded by the system's bind permission). ✅ |
++
++Fixed in this release: "Already asleep?" wrapped to two lines beside three chips; the row became
++one sentence ("Fell asleep … min ago" / "Dormiu há … min").
++
++## impeccable critique
++
++| # | Heuristic | Score | Note |
++|---|---|---|---|
++| 1 | System status | 4 | The tile is lit while asleep and says since when. |
++| 2 | Real world | 4 | The way a parent says it. |
++| 3 | Control | 4 | Undo-free but editable; times clamp to what is possible. |
++| 4 | Consistency | 4 | Tile and chips go through Entries like every button. |
++| 5 | Error prevention | 4 | Impossible times are never offered. |
++| 6 | Recognition | 4 | Visible, not a hidden long-press. |
++| 7 | Efficiency | 4 | One tap each. |
++| 8 | Aesthetic | 4 | Quiet under the action. |
++| 9 | Error recovery | 3 | Fix a wrong time in the sheet. |
++| 10 | Help | 3 | The tile's label and the sentence explain themselves. |
++| | **Total** | **38/40** | |
+diff --git a/docs/components.md b/docs/components.md
+index d59a494..2a44204 100644
+--- a/docs/components.md
++++ b/docs/components.md
+@@ -39,6 +39,8 @@ component, the row says so.
+ | Baby avatar | Cochilo: the parent's own baby in a Rosa Chá sling, drawn on a 100-unit grid in the brand's illustration style (single line weight, round caps, flat fills); `illustration-*` colours only, the same in both themes; moods awake / asleep / happy, blink and lift for celebrations; a catchlight in open eyes so faces read on every skin tone; described for TalkBack. Sizes `avatar` (112) and `kind-badge-lead` (44) | — | Cochilo `BabyAvatar` | 🟡 |
+ | Look picker | Cochilo: a live avatar preview, then skin tone (six 48dp swatches with spoken names), hair (filter chips), hair colour (swatches, hidden for "none yet"), girl / boy / rather not say (chips). One tap each, defaults for all | — | Cochilo `LookPicker` | 🟡 |
+ | Celebration | Cochilo: one small moment when an intent is met: a `selected` blush card with a hairline under the header; the Baby avatar (happy) lifts its arms (`motion-emphasised`) beside one line (label role); gone by itself or at a tap, never blocks; at night words only, muted, no motion; polite live region. Celebrate, never scold | — | Cochilo `CelebrationCard` | 🟡 |
++| Earlier chips | Cochilo: under the sleep panel's one action, one sentence "Fell asleep [5] [10] [15] min ago": hairline pills (32dp in 48dp targets), meta text either side; only valid choices shown; on the night panel in `on-panel` colours; each spoken in full | — | Cochilo `EarlierChips` | 🟡 |
++| Quick-settings tile | Cochilo: "Cochilo sleep", the moon icon; inactive while awake (label Start sleep), active while asleep (label Woke up, subtitle "Asleep since 14:50"); unavailable before a baby is added | — | Cochilo `SleepTile` | 🟡 |
+ | Home widget | Cochilo: a 4 × 2 home-screen widget (RemoteViews): the mark, "Asleep / Awake since 14:20" and a running clock, then one row of 48dp buttons: the one mint action (Start sleep / Woke up, wider) and the two breasts (secondary; the one used last has the Last mark; the running side lit in `event-feed-soft` with an `outline` and reads Finish). `surface` card, `radius-m`, buttons `radius-s`, `space-3` padding, `space-2` gaps. Colours copied from the tokens into resources, checked by a test | — | Cochilo `CochiloWidget` | 🟡 |
+ | Fabric frame | Cochilo: a card wrapped in a brand texture, the way a sling wraps the baby: the texture is a band (`space8` on top, `space3` elsewhere) round a card of its own colour (`radius-s` inside `radius-m`); no word ever sits on the texture. Without a texture it is the plain card | — | Cochilo `FabricFrame` | 🟡 |
+ | Fabric picker | Cochilo: the brand's textures as 48dp round swatches in one scrolling row, the name under each (meta), the next one always peeking in; one tap picks and applies; the picked one has a 2dp `ink` ring; each is a radio button for TalkBack. First choice: plain | — | Cochilo `FabricPicker` | 🟡 |
+diff --git a/generated/cochilo/CTokens.kt b/generated/cochilo/CTokens.kt
+index 0aa5d26..c06b573 100644
+--- a/generated/cochilo/CTokens.kt
++++ b/generated/cochilo/CTokens.kt
+@@ -1,4 +1,4 @@
+-// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.14.0 — do not edit.
++// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.15.0 — do not edit.
+ package br.gabriel.cochilo.ui.theme
+ 
+ import androidx.compose.ui.graphics.Color
+diff --git a/generated/pulseloop/GTokens.kt b/generated/pulseloop/GTokens.kt
+index da9a920..9daad9e 100644
+--- a/generated/pulseloop/GTokens.kt
++++ b/generated/pulseloop/GTokens.kt
+@@ -1,4 +1,4 @@
+-// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.14.0 — do not edit.
++// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.15.0 — do not edit.
+ package com.pulseloop.ui.theme
+ 
+ import androidx.compose.ui.graphics.Color
+diff --git a/generated/uikit/UiTokens.java b/generated/uikit/UiTokens.java
+index 4ce6a2d..78bb734 100644
+--- a/generated/uikit/UiTokens.java
++++ b/generated/uikit/UiTokens.java
+@@ -1,4 +1,4 @@
+-// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.14.0 — do not edit.
++// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.15.0 — do not edit.
+ package br.gabriel.ui;
+ 
+ /**
+diff --git a/generated/web/cochilo.css b/generated/web/cochilo.css
+index 50fcae9..176a3b9 100644
+--- a/generated/web/cochilo.css
++++ b/generated/web/cochilo.css
+@@ -1,4 +1,4 @@
+-/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.14.0 — do not edit. */
++/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.15.0 — do not edit. */
+ /* Layer: cochilo. Themes: light, dark, night. */
+ 
+ :root {
+diff --git a/generated/web/pulseloop.css b/generated/web/pulseloop.css
+index cf6e85e..0cf2a80 100644
+--- a/generated/web/pulseloop.css
++++ b/generated/web/pulseloop.css
+@@ -1,4 +1,4 @@
+-/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.14.0 — do not edit. */
++/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.15.0 — do not edit. */
+ /* Layer: pulseloop. Themes: dark. */
+ 
+ :root {
+diff --git a/generated/web/uikit.css b/generated/web/uikit.css
+index 3e2ec57..e53d2fd 100644
+--- a/generated/web/uikit.css
++++ b/generated/web/uikit.css
+@@ -1,4 +1,4 @@
+-/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.14.0 — do not edit. */
++/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.15.0 — do not edit. */
+ /* Layer: uikit. Themes: light, dark. */
+ 
+ :root {
+diff --git a/tokens/tokens.json b/tokens/tokens.json
+index fdc3c3b..d745856 100644
+--- a/tokens/tokens.json
++++ b/tokens/tokens.json
+@@ -1,7 +1,7 @@
+ {
+   "$comment": "Source of truth for every app's design tokens. Edit here, run scripts/gen_tokens.py, commit tokens + generated/ + DESIGN.md together. Schema: docs/tokens.md.",
+   "name": "Gabriel Design System",
+-  "version": "0.14.0",
++  "version": "0.15.0",
+   "core": {
+     "$comment": "Shared by every app. Every layer must include every core token (scripts/check_tokens.py enforces it).",
+     "color": [
+-- 
+2.43.0
+
