@@ -66,4 +66,5 @@ The debug build installs as `br.gabriel.cochilo.debug`, beside a release build.
 | `app/src/test` | Predictor, stats and backup tests; Paparazzi screenshots of every screen |
 | `design-system/` | The design-system change that adds this app's layer, waiting to be merged there |
 
-Rules for working here: [AGENTS.md](AGENTS.md).
+Rules for working here: [AGENTS.md](AGENTS.md). Plans for Cochilo as a Tatá Slings product
+(monetization, voice, design system, marketing): [docs/tata-slings](docs/tata-slings/README.md).
