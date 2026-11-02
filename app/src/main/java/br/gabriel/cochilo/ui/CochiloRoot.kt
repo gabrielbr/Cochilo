@@ -33,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import br.gabriel.cochilo.domain.suggestedBreast
 import br.gabriel.cochilo.R
 import br.gabriel.cochilo.data.Event
 import br.gabriel.cochilo.data.EventType
@@ -153,7 +154,13 @@ fun CochiloRoot(vm: MainViewModel) {
                                             onStartSleep = { vm.startSleep() },
                                             onWokeUp = { vm.wakeUp() },
                                             onFinish = { vm.finish(it) },
-                                            onNew = { type -> editing = Editing(newEvent(type, System.currentTimeMillis()), true) },
+                                            onNew = { type ->
+                                                // The sheet opens on the breast to offer next, so the usual feed is one tap + Save.
+                                                val e = newEvent(type, System.currentTimeMillis())
+                                                editing = Editing(if (type == EventType.FEED) e.copy(kind = suggestedBreast(log) ?: e.kind) else e, true)
+                                            },
+                                            onQuick = vm::quickLog,
+                                            onSwitch = vm::switchSide,
                                             onOpen = { editing = Editing(it, false) },
                                         )
                                         1 -> DayScreen(log, now, zone, onOpen = { editing = Editing(it, false) })

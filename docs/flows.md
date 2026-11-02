@@ -1,0 +1,72 @@
+# Logging flows: how many taps each entry costs
+
+Audited 2026-11-02. The rule: the entries a tired parent logs many times a day must cost one move.
+Details (amounts, notes, past times) stay one tap away in the sheet, never in the way.
+
+## Before and after
+
+A "tap" is a touch on a target; a "slide" is one touch that moves sideways and lets go.
+
+| Entry | Before | Now | How |
+|---|---|---|---|
+| Start / end a sleep | 1 tap / 1 tap | same | Start sleep / Woke up on Today (already one action) |
+| Breastfeed, suggested side | 2 taps (Feed, Save) | **1 slide**, or 2 taps | Slide Feed toward the side; the sheet also opens on the side to offer next |
+| Breastfeed, other side | 3 taps (Feed, side, Save) | **1 slide** | Slide left = left breast, right = right breast |
+| Switch side mid-feed | 4 taps (Finish, Feed, side, Save) | **1 slide** | Slide the running feed: this side ends, the other starts |
+| End a feed / walk / pump | 1 tap | same | Finish on the running row |
+| Diaper, wet | 2 taps (Diaper, Save) | **1 slide** | Diaper row: Wet · Both · Dirty, left to right |
+| Diaper, dirty or both | 3 taps | **1 slide** | as above |
+| Daylight walk | 2–3 taps | **1 slide** | Outdoors · By a window |
+| Routine | 2–3 taps | **1 slide** | Nap routine · Bedtime routine |
+| Pumping | 2 taps | **1 slide** | Slide either way: the timer starts |
+| Bottle with ml, note, past entry | 4+ taps | same | Tap the row: the sheet, where typing belongs |
+| Undo any of the above | — | 1 tap | Undo in the snackbar that says what was logged |
+
+## The gesture
+
+**Slide to log** (`ui/kit/Slide.kt`, `SlideRow`) comes from *marking menus* (Kurtenbach and Buxton):
+the same movement works whether you look or not. When your finger starts sliding, the row turns
+into its options side by side, and the one under the finger lights up with a haptic tick. That's
+the menu, which teaches beginners. Experienced hands flick without looking; in Kurtenbach and
+Buxton's study a mark was about 3.5× faster than choosing from the menu. Letting go logs at once.
+Sliding back to where you started cancels.
+
+The rules it follows, from what the research says goes wrong with gestures:
+
+- **Never hidden.** Each row says it can slide ("Slide: Left · Right; next: right"), and tapping
+  still opens the full sheet. Swipe gestures without a visible cue mostly go undiscovered (NN/g).
+- **Undo, not "Are you sure?".** A slip is taken back from the snackbar in one tap; nothing asks
+  first.
+- **Accessible.** TalkBack lists each option as an action on the row ("Log Feed · Right breast").
+- **One direction, one meaning.** Left is always the left option, right always the right one.
+  Swipe is not used for delete anywhere, so it never surprises.
+- **Thumb-friendly.** Rows are full width, so the thumb slides along the bottom half of the screen
+  where it already rests.
+
+## Smart defaults
+
+- The breast to offer next is the other side from the last breastfeed (`suggestedBreast`). The Feed
+  row says so, and tapping Feed opens the sheet on that side.
+
+## Next candidates (not built yet)
+
+- Remember the last bottle amount as the sheet's default.
+- A home-screen widget or quick-settings tile for Start sleep / Woke up and the two breasts, so
+  the commonest entries don't even need the app open.
+- Long-press on Start sleep to log a sleep that began a few minutes ago (5 / 10 / 15 min), for when
+  the baby fell asleep in your arms before you could reach the phone.
+
+## Sources
+
+- Kurtenbach, G. and Buxton, W. *User learning and performance with marking menus*, CHI 1994:
+  [billbuxton.com/MMUserLearn.html](https://billbuxton.com/MMUserLearn.html)
+- Kurtenbach and Buxton, *The limits of expert performance using hierarchic marking menus*:
+  [research.autodesk.com](https://research.autodesk.com/app/uploads/2023/03/the-limits-of-expert.pdf_recyw5wL6ekPqcE4Q.pdf)
+- Li et al., *M3 Gesture Menu* (recall-based gesture use after short practice):
+  [research.google.com](https://research.google.com/pubs/archive/46567.pdf)
+- Nielsen Norman Group, *Contextual swipe*:
+  [nngroup.com/articles/contextual-swipe](https://www.nngroup.com/articles/contextual-swipe/)
+- Hoober, S. *The thumb zone* (Smashing Magazine, 2016):
+  [smashingmagazine.com](https://www.smashingmagazine.com/2016/09/the-thumb-zone-designing-for-mobile-users)
+- Android gesture patterns (long press is for selection, not menus):
+  [stuff.mit.edu mirror of the Android design docs](https://stuff.mit.edu/afs/sipb/project/android/docs/design/patterns/gestures.html)

@@ -198,7 +198,20 @@ class ScreensSnapshotTest {
         pt(false)
         paparazzi.snapshot {
             CochiloTheme(false) {
-                Frame { Column(Modifier.fillMaxSize().padding(CTokens.Spacing.space4)) { QuickLog {} } }
+                Frame { Column(Modifier.fillMaxSize().padding(CTokens.Spacing.space4)) { QuickLog({}, nextBreast = br.gabriel.cochilo.data.Kinds.BREAST_RIGHT) } }
+            }
+        }
+    }
+    /** Mid-slide on Feed: the row has become Left | Right, with Right under the finger. */
+    @Test fun quick_log_sliding_light() {
+        light()
+        paparazzi.snapshot {
+            CochiloTheme(false) {
+                Frame {
+                    Column(Modifier.fillMaxSize().padding(CTokens.Spacing.space4)) {
+                        QuickLog({}, nextBreast = br.gabriel.cochilo.data.Kinds.BREAST_RIGHT, previewActive = EventType.FEED to 1)
+                    }
+                }
             }
         }
     }
