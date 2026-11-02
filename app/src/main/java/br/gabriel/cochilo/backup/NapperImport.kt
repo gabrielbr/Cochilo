@@ -15,8 +15,8 @@ data class NapperLabels(
     val breastMilk: String,
     val formula: String,
     val medicine: String,
-    /** "Left %1$d min, right %2$d min". */
-    val sides: String,
+    /** "Left 5 min, right 9 min", from minutes on each breast. */
+    val sides: (left: Int, right: Int) -> String,
 )
 
 data class NapperResult(val events: List<Event>, val skipped: Int)
@@ -137,7 +137,7 @@ object NapperImport {
             left >= right -> Kinds.BREAST_LEFT
             else -> Kinds.BREAST_RIGHT
         }
-        val sides = if (left > 0 && right > 0) labels.sides.format(minutes(left), minutes(right)) else null
+        val sides = if (left > 0 && right > 0) labels.sides(minutes(left), minutes(right)) else null
         return event(row, EventType.FEED, row.start, row.end, kind, note = noteOf(sides, m["comment"]))
     }
 

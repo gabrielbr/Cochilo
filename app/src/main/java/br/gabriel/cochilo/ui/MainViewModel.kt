@@ -64,7 +64,9 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     fun refreshNow() { _now.value = System.currentTimeMillis() }
 
-    private fun str(id: Int, vararg args: Any) = ctx.getString(id, *args)
+    // With no arguments, read the text as it is: Context.getString(id, *emptyArray()) still
+    // formats, and throws on a template like "Left %1${'$'}d min" that is filled in later.
+    private fun str(id: Int, vararg args: Any) = if (args.isEmpty()) ctx.getString(id) else ctx.getString(id, *args)
 
     fun setTheme(mode: ThemeMode) = ctx.prefs.setTheme(mode)
 
@@ -162,7 +164,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         breastMilk = str(R.string.napper_breast_milk),
         formula = str(R.string.napper_formula),
         medicine = str(R.string.napper_medicine),
-        sides = str(R.string.napper_sides),
+        sides = { left, right -> str(R.string.napper_sides, left, right) },
     )
 }
 
