@@ -364,4 +364,11 @@
         <item>Quarto escuro e quieto</item>
         <item>Uma música no colo</item>
     </string-array>
+    <!-- O relatório para imprimir (docs/report.md). -->
+    <string name="export_report">Relatório para o médico (PDF)</string>
+    <string name="export_report_meta">Uma página: a semana, o que mudou, duas semanas de sono</string>
+    <string name="report_title">%1$s · relatório de sono</string>
+    <string name="report_period">%1$s a %2$s</string>
+    <string name="report_rhythm">Sono, últimos %1$d dias</string>
+    <string name="report_footer">Do registro da própria família no Cochilo, feito %1$s. Não é um prontuário médico.</string>
 </resources>

@@ -1,0 +1,195 @@
+From c7e62d8086fcedaee0f07e0df99ee4744257c015 Mon Sep 17 00:00:00 2001
+From: Gabriel Lopes <ogabriel@gmail.com>
+Date: Mon, 2 Nov 2026 23:45:49 +0000
+Subject: [PATCH] Design system 0.18.0: the Printable report
+
+Cochilo's one-page PDF for the paediatrician, specified as a component.
+Audit v0.18.0.
+---
+ CHANGELOG.md                        |  7 +++++
+ DESIGN.md                           |  2 +-
+ VERSION                             |  2 +-
+ audits/2026-11-02-v0.18.0-report.md | 41 +++++++++++++++++++++++++++++
+ docs/components.md                  |  1 +
+ generated/cochilo/CTokens.kt        |  2 +-
+ generated/pulseloop/GTokens.kt      |  2 +-
+ generated/uikit/UiTokens.java       |  2 +-
+ generated/web/cochilo.css           |  2 +-
+ generated/web/pulseloop.css         |  2 +-
+ generated/web/uikit.css             |  2 +-
+ tokens/tokens.json                  |  2 +-
+ 12 files changed, 58 insertions(+), 9 deletions(-)
+ create mode 100644 audits/2026-11-02-v0.18.0-report.md
+
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+index b683acc..53e4fc8 100644
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -3,6 +3,13 @@
+ Semantic versioning (AGENTS.md "Versioning"). Each entry says what changed for each app and what
+ the app has to do.
+ 
++## 0.18.0 — 2026-11-02
++
++The Printable report (minor: a component; no token values change).
++
++- **Printable report** (components.md): Cochilo's one-page PDF for the paediatrician.
++- Audit `audits/2026-11-02-v0.18.0-report.md`.
++
+ ## 0.17.0 — 2026-11-02
+ 
+ The Checklist component (minor: a component; no token values change).
+diff --git a/DESIGN.md b/DESIGN.md
+index 3c4ce48..48b2795 100644
+--- a/DESIGN.md
++++ b/DESIGN.md
+@@ -1,6 +1,6 @@
+ ---
+ name: Gabriel Design System
+-version: 0.17.0
++version: 0.18.0
+ # GENERATED from tokens/tokens.json by scripts/gen_tokens.py. Edit the tokens, not this block.
+ colors:
+   page: "#F2F2F2"
+diff --git a/VERSION b/VERSION
+index c5523bd..6633391 100644
+--- a/VERSION
++++ b/VERSION
+@@ -1 +1 @@
+-0.17.0
++0.18.0
+diff --git a/audits/2026-11-02-v0.18.0-report.md b/audits/2026-11-02-v0.18.0-report.md
+new file mode 100644
+index 0000000..7e43144
+--- /dev/null
++++ b/audits/2026-11-02-v0.18.0-report.md
+@@ -0,0 +1,41 @@
++# Audit 0.20.0: the printable report
++
++Method: graphic-design-fundamentals §13 (editorial / print sections: one page, hierarchy, real
++size) and impeccable (persuade-free, read mode), on `report_page_light`.
++
++## graphic-design-fundamentals §13
++
++| # | Check | Result |
++|---|---|---|
++| 1 | Brief | One page a paediatrician can read in a minute. ✅ |
++| 2 | Concept | The summary first, the two weeks below. ✅ |
++| 3 | Hierarchy | Title 22, captions 11 semibold muted, rows 11, bars. ✅ |
++| 4 | Contrast | Light theme ink on white; muted ≥ 4.5:1. ✅ |
++| 5 | Alignment | One left margin (48pt); values right-aligned to the same edge. ✅ |
++| 6 | Spacing | Even rows with hairlines; sections separated by space. ✅ |
++| 7 | Typography | Libre Franklin regular / semibold / bold; tabular-looking numbers on the right edge. ✅ |
++| 8 | Colour | Data colours only on the bars and legend, each beside a word. ✅ |
++| 9 | Consistency | Same words and numbers as Patterns. ✅ |
++| 10 | Simplicity | One page; nothing decorative. ✅ |
++| 11 | Real size | A4 at 595 × 842 pt; text ≥ 8pt. ✅ |
++| 12 | Accessibility | Legend words beside every colour; colour never alone. ✅ |
++| 13 | Production | Vector text and shapes in a real PDF; no raster. ✅ |
++
++Fixed in this release: the first page said "Today" and "Yesterday", which is wrong on paper read
++later; every date is absolute now (`Format.dayAbsolute`).
++
++## impeccable critique (read mode)
++
++| # | Heuristic | Score | Note |
++|---|---|---|---|
++| 1 | System status | 4 | "Exported" after saving. |
++| 2 | Real world | 4 | "Report for the doctor". |
++| 3 | Control | 4 | The parent chooses where it goes. |
++| 4 | Consistency | 4 | Same figures as Patterns. |
++| 5 | Error prevention | 3 | Empty sections are left out. |
++| 6 | Recognition | 4 | Legend and labels on the page. |
++| 7 | Efficiency | 4 | Two taps from Settings. |
++| 8 | Aesthetic | 4 | Quiet, typographic. |
++| 9 | Error recovery | 3 | A failure says so. |
++| 10 | Help | 4 | The footer says what it is and is not. |
++| | **Total** | **38/40** | |
+diff --git a/docs/components.md b/docs/components.md
+index cffe9ed..8007f30 100644
+--- a/docs/components.md
++++ b/docs/components.md
+@@ -42,6 +42,7 @@ component, the row says so.
+ | Earlier chips | Cochilo: under the sleep panel's one action, one sentence "Fell asleep [5] [10] [15] min ago": hairline pills (32dp in 48dp targets), meta text either side; only valid choices shown; on the night panel in `on-panel` colours; each spoken in full | — | Cochilo `EarlierChips` | 🟡 |
+ | Quick-settings tile | Cochilo: "Cochilo sleep", the moon icon; inactive while awake (label Start sleep), active while asleep (label Woke up, subtitle "Asleep since 14:50"); unavailable before a baby is added | — | Cochilo `SleepTile` | 🟡 |
+ | Checklist | Cochilo: steps ticked one by one in a row group; a ticked step has `gg_ic_check` in a `selected` blush round (`kind-badge`), the words unchanged (no strike); each row a checkbox | — | Cochilo `Checklist` | 🟡 |
++| Printable report | Cochilo: one A4 page (595 × 842 pt), 48pt margin, light theme: title (22 bold), subtitle with absolute dates, sections (11 semibold muted captions, 11pt rows with values on the right edge, hairlines), 14 day bars in data colours with a legend, footer "not a medical record" | — | Cochilo `Report` | 🟡 |
+ | Home widget | Cochilo: a 4 × 2 home-screen widget (RemoteViews): the mark, "Asleep / Awake since 14:20" and a running clock, then one row of 48dp buttons: the one mint action (Start sleep / Woke up, wider) and the two breasts (secondary; the one used last has the Last mark; the running side lit in `event-feed-soft` with an `outline` and reads Finish). `surface` card, `radius-m`, buttons `radius-s`, `space-3` padding, `space-2` gaps. Colours copied from the tokens into resources, checked by a test | — | Cochilo `CochiloWidget` | 🟡 |
+ | Fabric frame | Cochilo: a card wrapped in a brand texture, the way a sling wraps the baby: the texture is a band (`space8` on top, `space3` elsewhere) round a card of its own colour (`radius-s` inside `radius-m`); no word ever sits on the texture. Without a texture it is the plain card | — | Cochilo `FabricFrame` | 🟡 |
+ | Fabric picker | Cochilo: the brand's textures as 48dp round swatches in one scrolling row, the name under each (meta), the next one always peeking in; one tap picks and applies; the picked one has a 2dp `ink` ring; each is a radio button for TalkBack. First choice: plain | — | Cochilo `FabricPicker` | 🟡 |
+diff --git a/generated/cochilo/CTokens.kt b/generated/cochilo/CTokens.kt
+index 7f32978..a0c60e7 100644
+--- a/generated/cochilo/CTokens.kt
++++ b/generated/cochilo/CTokens.kt
+@@ -1,4 +1,4 @@
+-// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.17.0 — do not edit.
++// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.18.0 — do not edit.
+ package br.gabriel.cochilo.ui.theme
+ 
+ import androidx.compose.ui.graphics.Color
+diff --git a/generated/pulseloop/GTokens.kt b/generated/pulseloop/GTokens.kt
+index 42e74e7..dce73c1 100644
+--- a/generated/pulseloop/GTokens.kt
++++ b/generated/pulseloop/GTokens.kt
+@@ -1,4 +1,4 @@
+-// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.17.0 — do not edit.
++// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.18.0 — do not edit.
+ package com.pulseloop.ui.theme
+ 
+ import androidx.compose.ui.graphics.Color
+diff --git a/generated/uikit/UiTokens.java b/generated/uikit/UiTokens.java
+index 53b252d..cca8ffd 100644
+--- a/generated/uikit/UiTokens.java
++++ b/generated/uikit/UiTokens.java
+@@ -1,4 +1,4 @@
+-// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.17.0 — do not edit.
++// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.18.0 — do not edit.
+ package br.gabriel.ui;
+ 
+ /**
+diff --git a/generated/web/cochilo.css b/generated/web/cochilo.css
+index b4c18eb..1167e25 100644
+--- a/generated/web/cochilo.css
++++ b/generated/web/cochilo.css
+@@ -1,4 +1,4 @@
+-/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.17.0 — do not edit. */
++/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.18.0 — do not edit. */
+ /* Layer: cochilo. Themes: light, dark, night. */
+ 
+ :root {
+diff --git a/generated/web/pulseloop.css b/generated/web/pulseloop.css
+index f4d2f35..90c4a70 100644
+--- a/generated/web/pulseloop.css
++++ b/generated/web/pulseloop.css
+@@ -1,4 +1,4 @@
+-/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.17.0 — do not edit. */
++/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.18.0 — do not edit. */
+ /* Layer: pulseloop. Themes: dark. */
+ 
+ :root {
+diff --git a/generated/web/uikit.css b/generated/web/uikit.css
+index b0c14f8..e73b191 100644
+--- a/generated/web/uikit.css
++++ b/generated/web/uikit.css
+@@ -1,4 +1,4 @@
+-/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.17.0 — do not edit. */
++/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.18.0 — do not edit. */
+ /* Layer: uikit. Themes: light, dark. */
+ 
+ :root {
+diff --git a/tokens/tokens.json b/tokens/tokens.json
+index 3a7a75f..49129be 100644
+--- a/tokens/tokens.json
++++ b/tokens/tokens.json
+@@ -1,7 +1,7 @@
+ {
+   "$comment": "Source of truth for every app's design tokens. Edit here, run scripts/gen_tokens.py, commit tokens + generated/ + DESIGN.md together. Schema: docs/tokens.md.",
+   "name": "Gabriel Design System",
+-  "version": "0.17.0",
++  "version": "0.18.0",
+   "core": {
+     "$comment": "Shared by every app. Every layer must include every core token (scripts/check_tokens.py enforces it).",
+     "color": [
+-- 
+2.43.0
+

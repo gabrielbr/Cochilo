@@ -3,6 +3,13 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.20.0 — 2026-11-02
+
+**A report for the doctor.** Settings › Data › Report for the doctor (PDF): one page with the
+week's averages, what changed, where naps happened and two weeks of sleep as bars, made on the
+phone and saved where you choose. "From the parent's own log. Not a medical record."
+`docs/report.md`.
+
 ## 0.19.0 — 2026-11-02
 
 **Routine steps.** Write the bedtime and nap steps once (Settings › Baby › Routine steps; there are

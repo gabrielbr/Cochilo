@@ -53,6 +53,13 @@ class Format(
         }
     }
 
+    /** "Mon 2 Nov" (with the year if it isn't this one), never "Today": for things read later, like the report. */
+    fun dayAbsolute(date: LocalDate): String {
+        val thisYear = Instant.ofEpochMilli(now).atZone(zone).year
+        val pattern = if (date.year == thisYear) "EEE d MMM" else "EEE d MMM yyyy"
+        return DateTimeFormatter.ofPattern(pattern, locale).format(date).replace(".", "")
+    }
+
     /** "Yesterday 15:32" under a week, then "Fri 9 Oct 15:32". */
     fun dayTime(ms: Long): String {
         val d = Instant.ofEpochMilli(ms).atZone(zone).toLocalDate()

@@ -204,6 +204,17 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         _messages.send(UiMessage(str(if (ok) R.string.exported else R.string.file_failed)))
     }
 
+    /** The one-page PDF for the paediatrician (docs/report.md), written where the parent chose. */
+    fun exportReport(uri: Uri) = viewModelScope.launch {
+        val ok = withContext(Dispatchers.IO) {
+            runCatching {
+                val m = br.gabriel.cochilo.report.Report.build(ctx, babies.get(), events.all(), System.currentTimeMillis(), zone)
+                ctx.contentResolver.openOutputStream(uri, "wt")!!.use { br.gabriel.cochilo.report.Report.write(ctx, m, it) }
+            }.isSuccess
+        }
+        _messages.send(UiMessage(str(if (ok) R.string.exported else R.string.file_failed)))
+    }
+
     fun exportCsv(uri: Uri) = viewModelScope.launch {
         val ok = withContext(Dispatchers.IO) {
             runCatching {
