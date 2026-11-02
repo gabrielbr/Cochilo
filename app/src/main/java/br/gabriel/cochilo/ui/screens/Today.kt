@@ -161,7 +161,7 @@ private fun SleepPanel(p: Predictor.Result, now: Long, f: Format, onStart: () ->
             else -> stringResource(R.string.panel_ready)
         }
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(label.uppercase(), style = Type.caption, color = fgMuted, modifier = Modifier.weight(1f))
+            Text(label, style = Type.caption, color = fgMuted, modifier = Modifier.weight(1f))
             InfoButton(stringResource(R.string.type_sleep), stringResource(R.string.info_sleep_panel), tint = fgMuted)
         }
         val since = sleeping?.since ?: awake?.since
@@ -189,7 +189,7 @@ private fun PredictionCard(p: Predictor.Result.Awake, now: Long, f: Format) {
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
-                stringResource(if (p.next == Predictor.Next.NAP) R.string.next_nap else R.string.next_bedtime).uppercase(),
+                stringResource(if (p.next == Predictor.Next.NAP) R.string.next_nap else R.string.next_bedtime),
                 style = Type.caption, color = c.muted, modifier = Modifier.weight(1f),
             )
             when {

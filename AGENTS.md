@@ -21,6 +21,8 @@ then [docs/research.md](docs/research.md) for the science the features rest on.
   kind, daylight, routine), the last bottle and pump amounts and the last medicine are filled in, and
   the sheet says "Last time: … · 14:20". New entry types and kinds follow it, and the audit in
   docs/flows.md lists what each type remembers.
+- **Keep the plan.** Ideas, the owner's suggestions and research-backed features go into
+  [docs/roadmap.md](docs/roadmap.md); when one ships, move it out of the plan and into the docs.
 - **Never guess a repo or project.** Work in Cochilo. If a request seems to point at another repo
   (PulseLoop, the design system…), ask before opening it.
 
@@ -38,6 +40,9 @@ system's. Its AGENTS.md and DESIGN.md are the rules; the short version:
   system first, then copy the regenerated `CTokens.kt` here.
 - **Never edit `CTokens.kt` by hand.** It is `generated/cochilo/CTokens.kt` from the design system,
   copied as is; `python3 scripts/drift.py --cochilo ../Cochilo` there must report 0 differences.
+- **Teal is the one action, nothing else.** No highlighter behind titles; the active tab and a
+  picked chip use `selected` (a blush), the screen's edge uses `frame-line` (a soft hem). Captions
+  are sentence case; buttons are pills. Why: [docs/design-review.md](docs/design-review.md).
 - **One mint action per screen** (Start sleep / Woke up on Today; Save in a sheet). Under the brand
   the `mint` role is Tatá teal; it's a fill, never text. Everything else is a secondary outline, a
   row or a chip. Text on it is `onMint`.

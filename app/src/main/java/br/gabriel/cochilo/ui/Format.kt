@@ -29,7 +29,12 @@ class Format(
         val total = (ms / 60_000).coerceAtLeast(0)
         val h = total / 60
         val m = total % 60
-        return if (h > 0) context.getString(R.string.duration_hm, h, m) else context.getString(R.string.duration_m, m)
+        // Under a minute reads "<1m", never "0m": a feed that just began isn't nothing.
+        return when {
+            h > 0 -> context.getString(R.string.duration_hm, h, m)
+            m == 0L -> context.getString(R.string.duration_under_m)
+            else -> context.getString(R.string.duration_m, m)
+        }
     }
 
     fun durationMin(min: Int): String = duration(min * 60_000L)

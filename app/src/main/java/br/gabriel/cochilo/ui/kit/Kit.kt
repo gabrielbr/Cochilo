@@ -88,7 +88,8 @@ fun Frame(content: @Composable () -> Unit) {
         Modifier
             .fillMaxSize()
             .background(c.page)
-            .border(Size.frame, c.mint)
+            // A soft hem round the screen (frame-line: Rosa Chá under the brand), not a teal rule.
+            .border(Size.frame, c.frameLine)
             .padding(Size.frame)
     ) { content() }
 }
@@ -161,26 +162,22 @@ fun BackHeader(title: String, backLabel: String, onBack: () -> Unit) {
     }
 }
 
-/** Screen title: display role, one word on the mint highlighter. */
+/**
+ * Screen title: the display role in ink, plain. Cochilo dropped the system's mint highlighter
+ * (0.11.0, docs/design-review.md): a teal block behind the word read loud and technical; the
+ * title now speaks by size and weight alone. [highlight] is kept for callers and ignored.
+ */
 @Composable
-fun ScreenTitle(text: String, highlight: String) {
-    val c = CochiloTheme.colors
-    val i = text.indexOf(highlight)
-    val s: AnnotatedString = buildAnnotatedString {
-        if (i < 0) append(text) else {
-            append(text.substring(0, i))
-            withStyle(SpanStyle(background = c.mint, color = c.onMint)) { append(highlight) }
-            append(text.substring(i + highlight.length))
-        }
-    }
-    Text(s, style = Type.display, color = c.ink, modifier = Modifier.semantics { heading() })
+@Suppress("UNUSED_PARAMETER")
+fun ScreenTitle(text: String, highlight: String = text) {
+    Text(text, style = Type.display, color = CochiloTheme.colors.ink, modifier = Modifier.semantics { heading() })
 }
 
-/** Section caption: 12/16 bold caps muted, 40 above, 12 below, no divider. */
+/** Section caption: 13/18 semibold, sentence case, muted; 40 above, 12 below, no divider (0.11.0: no caps). */
 @Composable
 fun Caption(text: String, top: Dp = Spacing.space10) {
     Text(
-        text.uppercase(), style = Type.caption, color = CochiloTheme.colors.muted,
+        text, style = Type.caption, color = CochiloTheme.colors.muted,
         modifier = Modifier.padding(top = top, bottom = Spacing.space3).semantics { heading() },
     )
 }
@@ -307,7 +304,8 @@ fun Button(
         ButtonKind.SECONDARY -> Triple(Color.Transparent, c.ink, BorderStroke(Size.hairline, c.ink))
         ButtonKind.DANGER -> Triple(Color.Transparent, c.coralText, BorderStroke(Size.hairline, c.coralText))
     }
-    val shape = RoundedCornerShape(Radius.radiusS)
+    // Pills: a soft, round shape for every button (0.11.0), like the Log menu.
+    val shape = RoundedCornerShape(Radius.radiusRound)
     var m = modifier
         .defaultMinSize(minHeight = Size.button)
         .pressScale(src)
@@ -341,7 +339,7 @@ fun Chip(text: String, kind: ChipKind) {
         ChipKind.MUTED -> c.line to c.ink
     }
     Text(
-        text.uppercase(), style = Type.caption, color = fg,
+        text, style = Type.caption, color = fg,
         modifier = Modifier.clip(RoundedCornerShape(Radius.radiusS)).background(bg)
             .padding(horizontal = Spacing.space2, vertical = Spacing.space1),
     )
@@ -361,17 +359,18 @@ fun <T> FilterChips(options: List<T>, selected: T?, label: (T) -> String, onSele
                 contentAlignment = Alignment.Center,
             ) {
                 // The pick cross-fades to mint; the chip dips under the finger.
-                val bg = animatedColor(if (on) c.mint else c.surface)
+                // The pick is a blush (selected), so teal stays the screen's one action.
+                val bg = animatedColor(if (on) c.selected else c.surface)
                 Box(
                     Modifier
                         .pressScale(src)
                         .heightIn(min = Spacing.space8)
                         .clip(RoundedCornerShape(Radius.radiusL))
                         .background(bg)
-                        .border(Size.hairline, animatedColor(if (on) c.mint else c.line), RoundedCornerShape(Radius.radiusL))
+                        .border(Size.hairline, animatedColor(if (on) c.selected else c.line), RoundedCornerShape(Radius.radiusL))
                         .padding(horizontal = Spacing.space3),
                     contentAlignment = Alignment.Center,
-                ) { Text(label(o), style = Type.bodySmall, color = animatedColor(if (on) c.onMint else c.ink)) }
+                ) { Text(label(o), style = Type.bodySmall, color = animatedColor(if (on) c.onSelected else c.ink)) }
             }
         }
     }
@@ -467,9 +466,9 @@ fun TabBar(tabs: List<Tab>, selected: Int, onSelect: (Int) -> Unit) {
                 // The pill cross-fades from tab to tab.
                 Box(
                     Modifier.pressScale(src).widthIn(min = Spacing.space12 + Spacing.space2).height(Spacing.space8)
-                        .clip(RoundedCornerShape(Radius.radiusL)).background(animatedColor(if (on) c.mint else c.surface)),
+                        .clip(RoundedCornerShape(Radius.radiusL)).background(animatedColor(if (on) c.selected else c.surface)),
                     contentAlignment = Alignment.Center,
-                ) { GIcon(t.icon, null, animatedColor(if (on) c.onMint else c.muted)) }
+                ) { GIcon(t.icon, null, animatedColor(if (on) c.onSelected else c.muted)) }
                 Text(t.label, style = Type.caption, color = animatedColor(if (on) c.ink else c.muted))
             }
         }

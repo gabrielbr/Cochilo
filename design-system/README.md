@@ -39,6 +39,13 @@ one commit on top of the design system's `main` at 0.4.0 (self-update):
 
 - **0.10.0:** the Home widget component (components.md). No token values change.
 
+**[0006-Cochilo-softer-0.11.0.patch](0006-Cochilo-softer-0.11.0.patch)**, on top of 0005:
+
+- **0.11.0:** `selected` / `on-selected` and `frame-line` roles (blush and Rosa Chá hem under the
+  brand), Cochilo's caption role in sentence case (13/18, 600), display 600, lighter dark
+  `event-*-soft` tints; Cochilo's Screen title without the highlighter and pill buttons
+  (components.md). Audit `audits/2026-11-02-v0.11.0-softer.md`.
+
 All checked on a fresh checkout of the design system's `main`: `git am` applies it,
 `check_tokens.py` reports 0 errors, the tests pass, and `drift.py --cochilo` against this repo
 reports 0 differences.

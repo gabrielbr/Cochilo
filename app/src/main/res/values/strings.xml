@@ -169,6 +169,7 @@
     <!-- Units and dates -->
     <string name="duration_hm">%1$dh %2$02dm</string>
     <string name="duration_m">%1$dm</string>
+    <string name="duration_under_m">&lt;1m</string>
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
     <string name="ml">%1$d ml</string>

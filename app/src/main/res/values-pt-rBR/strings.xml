@@ -155,6 +155,7 @@
 
     <string name="duration_hm">%1$dh %2$02dm</string>
     <string name="duration_m">%1$dmin</string>
+    <string name="duration_under_m">&lt;1min</string>
     <string name="today">Hoje</string>
     <string name="yesterday">Ontem</string>
     <string name="ml">%1$d ml</string>
