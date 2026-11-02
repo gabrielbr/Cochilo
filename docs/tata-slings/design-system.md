@@ -55,6 +55,13 @@ keeps the teal (recognition), adds the warm side from the fabrics, and fixes con
 
 ## 3. Colour
 
+### 3b. Softer (Cochilo 0.12.0)
+
+A design review for "feminine and maternal" ([../design-review.md](../design-review.md)) removed
+the title highlighter, kept teal for the one action only (new roles `selected`, a blush for the
+active tab and picked chips, and `frame-line`, a Rosa Chá hem round the screen), set captions in
+sentence case, made every button a pill and lightened the dark icon rounds.
+
 ### 3a. "Tecidos" (Cochilo 0.8.0): warmer, made for her
 
 The first build read cold and masculine (navy lines on cream), and the people who log a baby's day

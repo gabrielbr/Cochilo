@@ -3,6 +3,18 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.12.0 — 2026-11-02
+
+**Softer, warmer, made for her** (a design review with the owner's graphic-design-fundamentals and
+impeccable skills, `docs/design-review.md`).
+- No colour behind the screen titles: they stand on their own, plain and a touch lighter.
+- Teal is only for the one main button. The active tab and a picked chip are a soft blush; the
+  edge round the screen is a soft Rosa Chá hem instead of a teal line.
+- Captions in quiet sentence case ("Awake for", "Running") instead of spaced capitals.
+- Every button is a soft pill, like the Log menu and the widget.
+- Icon rounds in dark are a little lighter, no longer muddy.
+- A feed under a minute reads "<1min", not "0min".
+
 ## 0.11.0 — 2026-11-02
 
 **A home-screen widget: Sleep and feed.** Start sleep / Woke up and the two breasts, one tap each

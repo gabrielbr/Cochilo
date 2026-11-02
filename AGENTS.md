@@ -38,6 +38,9 @@ system's. Its AGENTS.md and DESIGN.md are the rules; the short version:
   system first, then copy the regenerated `CTokens.kt` here.
 - **Never edit `CTokens.kt` by hand.** It is `generated/cochilo/CTokens.kt` from the design system,
   copied as is; `python3 scripts/drift.py --cochilo ../Cochilo` there must report 0 differences.
+- **Teal is the one action, nothing else.** No highlighter behind titles; the active tab and a
+  picked chip use `selected` (a blush), the screen's edge uses `frame-line` (a soft hem). Captions
+  are sentence case; buttons are pills. Why: [docs/design-review.md](docs/design-review.md).
 - **One mint action per screen** (Start sleep / Woke up on Today; Save in a sheet). Under the brand
   the `mint` role is Tatá teal; it's a fill, never text. Everything else is a secondary outline, a
   row or a chip. Text on it is `onMint`.
