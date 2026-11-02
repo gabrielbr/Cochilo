@@ -33,12 +33,19 @@ object Kinds {
     // DAYLIGHT
     const val OUTDOORS = "OUTDOORS"
     const val WINDOW = "WINDOW"
+    // SLEEP: where the baby slept (docs/places.md)
+    const val CRIB = "CRIB"
+    const val ARMS = "ARMS"
+    const val SLING = "SLING"
+    const val PRAM = "PRAM"
+    const val CAR = "CAR"
 
     fun forType(type: EventType): List<String> = when (type) {
         EventType.FEED -> listOf(BREAST_LEFT, BREAST_RIGHT, BOTTLE, SOLIDS)
         EventType.DIAPER -> listOf(WET, DIRTY, BOTH)
         EventType.ROUTINE -> listOf(NAP_ROUTINE, BEDTIME_ROUTINE)
         EventType.DAYLIGHT -> listOf(OUTDOORS, WINDOW)
+        EventType.SLEEP -> listOf(CRIB, ARMS, SLING, PRAM, CAR)
         else -> emptyList()
     }
 }

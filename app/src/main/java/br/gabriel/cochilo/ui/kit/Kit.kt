@@ -347,7 +347,7 @@ fun Chip(text: String, kind: ChipKind) {
 
 /** Filter chips: 32dp pills inside 48dp targets, single selection. */
 @Composable
-fun <T> FilterChips(options: List<T>, selected: T?, label: (T) -> String, onSelect: (T) -> Unit) {
+fun <T> FilterChips(options: List<T>, selected: T?, label: (T) -> String, onDark: Boolean = false, onSelect: (T) -> Unit) {
     val c = CochiloTheme.colors
     androidx.compose.foundation.layout.FlowRow(horizontalArrangement = Arrangement.spacedBy(Spacing.space2)) {
         options.forEach { o ->
@@ -360,17 +360,18 @@ fun <T> FilterChips(options: List<T>, selected: T?, label: (T) -> String, onSele
             ) {
                 // The pick cross-fades to mint; the chip dips under the finger.
                 // The pick is a blush (selected), so teal stays the screen's one action.
-                val bg = animatedColor(if (on) c.selected else c.surface)
+                // On the night panel ([onDark]) the unpicked chips are outlines in the panel's colours.
+                val bg = animatedColor(if (on) c.selected else if (onDark) c.panel else c.surface)
                 Box(
                     Modifier
                         .pressScale(src)
                         .heightIn(min = Spacing.space8)
                         .clip(RoundedCornerShape(Radius.radiusL))
                         .background(bg)
-                        .border(Size.hairline, animatedColor(if (on) c.selected else c.line), RoundedCornerShape(Radius.radiusL))
+                        .border(Size.hairline, animatedColor(if (on) c.selected else if (onDark) c.onPanelMuted else c.line), RoundedCornerShape(Radius.radiusL))
                         .padding(horizontal = Spacing.space3),
                     contentAlignment = Alignment.Center,
-                ) { Text(label(o), style = Type.bodySmall, color = animatedColor(if (on) c.onSelected else c.ink)) }
+                ) { Text(label(o), style = Type.bodySmall, color = animatedColor(if (on) c.onSelected else if (onDark) c.onPanel else c.ink)) }
             }
         }
     }

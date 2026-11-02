@@ -179,7 +179,7 @@ fun EventSheet(
 
         val kinds = Kinds.forType(t)
         if (kinds.isNotEmpty()) {
-            Text(stringResource(R.string.field_kind), style = Type.meta, color = CochiloTheme.colors.muted)
+            Text(stringResource(if (t == EventType.SLEEP) R.string.field_place else R.string.field_kind), style = Type.meta, color = CochiloTheme.colors.muted)
             FilterChips(kinds, kind, { f.kindName(it) ?: it }) { kind = it }
             Spacer(Modifier.height(Spacing.space4))
         }
@@ -287,3 +287,45 @@ fun BabySheet(initial: Baby?, zone: ZoneId, onSave: (Baby) -> Unit, onDismiss: (
         "due" -> DatePickerSheet(due ?: birth, ok, cancel, { due = it }, { picking = null })
     }
 }
+
+/**
+ * Safe babywearing (docs/places.md): T.I.C.K.S., the UK Sling Consortium's five checks, shown once,
+ * the first time "sling" is picked. Plain words; never "the app checks your baby": the parent does.
+ */
+@Composable
+fun TicksSheet(onDismiss: () -> Unit) {
+    Sheet(onDismiss) { TicksBody(onDismiss) }
+}
+
+/** The sheet's content (also drawn alone by the screenshot test). */
+@Composable
+fun TicksBody(onDismiss: () -> Unit = {}) {
+    val context = LocalContext.current
+    androidx.compose.foundation.layout.Column {
+        SheetTitle(stringResource(R.string.ticks_title))
+        Text(stringResource(R.string.ticks_line), style = Type.body, color = CochiloTheme.colors.muted)
+        Spacer(Modifier.height(Spacing.space4))
+        br.gabriel.cochilo.ui.kit.RowGroup {
+            listOf(
+                R.string.ticks_t to R.string.ticks_t_meta, R.string.ticks_i to R.string.ticks_i_meta,
+                R.string.ticks_c to R.string.ticks_c_meta, R.string.ticks_k to R.string.ticks_k_meta,
+                R.string.ticks_s to R.string.ticks_s_meta,
+            ).forEachIndexed { i, (label, meta) ->
+                if (i > 0) br.gabriel.cochilo.ui.kit.Hairline()
+                br.gabriel.cochilo.ui.kit.ListRow(stringResource(label), meta = stringResource(meta))
+            }
+        }
+        Spacer(Modifier.height(Spacing.space2))
+        Text(stringResource(R.string.ticks_source), style = Type.meta, color = CochiloTheme.colors.muted)
+        Spacer(Modifier.height(Spacing.space6))
+        Button(stringResource(R.string.ticks_ok), onDismiss, ButtonKind.PRIMARY, Modifier.fillMaxWidth())
+        Spacer(Modifier.height(Spacing.space2))
+        Button(stringResource(R.string.ticks_guide), {
+            runCatching {
+                context.startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse(TATA_SLINGS_URL))
+                    .addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK))
+            }
+        }, ButtonKind.SECONDARY, Modifier.fillMaxWidth())
+    }
+}
+

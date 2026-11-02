@@ -69,6 +69,8 @@ fun TodayScreen(
     onOpen: (Event) -> Unit,
     onQuick: (EventType, String?) -> Unit = { _, _ -> },
     onSwitch: (Event) -> Unit = {},
+    /** Where the running sleep is (crib, arms, sling…). */
+    onPlace: (Event, String) -> Unit = { _, _ -> },
 ) {
     val f = Format(LocalContext.current, zone, now)
     val today = localDate(now, zone)
@@ -79,7 +81,7 @@ fun TodayScreen(
     ScrollPage {
         ScreenTitle(stringResource(R.string.tab_today), stringResource(R.string.tab_today))
         Spacer(Modifier.height(Spacing.space6))
-        SleepPanel(prediction, now, f, log, onStartSleep, onWokeUp)
+        SleepPanel(prediction, now, f, log, onStartSleep, onWokeUp, onPlace)
 
         if (prediction is Predictor.Result.Awake) {
             Spacer(Modifier.height(Spacing.space4))
@@ -157,7 +159,7 @@ fun TodayScreen(
 
 /** The sleep panel: dark while the baby sleeps, a surface card while awake. One primary action. */
 @Composable
-private fun SleepPanel(p: Predictor.Result, now: Long, f: Format, log: List<Event>, onStart: (Int) -> Unit, onWoke: (Int) -> Unit) {
+private fun SleepPanel(p: Predictor.Result, now: Long, f: Format, log: List<Event>, onStart: (Int) -> Unit, onWoke: (Int) -> Unit, onPlace: (Event, String) -> Unit) {
     val c = CochiloTheme.colors
     val sleeping = p as? Predictor.Result.Sleeping
     val awake = p as? Predictor.Result.Awake
@@ -190,6 +192,13 @@ private fun SleepPanel(p: Predictor.Result, now: Long, f: Format, log: List<Even
                 modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite },
             )
             Text(stringResource(R.string.panel_since, f.time(since)), style = Type.meta, color = fgMuted)
+        }
+        // Where the baby is sleeping: one tap to change (remembered for the next sleep).
+        val running = if (sleeping != null) log.filter { it.type == EventType.SLEEP && it.end == null }.maxByOrNull { it.start } else null
+        if (running != null) {
+            Spacer(Modifier.height(Spacing.space4))
+            Text(stringResource(R.string.field_place), style = Type.meta, color = fgMuted)
+            br.gabriel.cochilo.ui.kit.FilterChips(br.gabriel.cochilo.domain.Places.ALL, running.kind, { f.kindName(it) ?: it }, onDark = true) { onPlace(running, it) }
         }
         Spacer(Modifier.height(Spacing.space6))
         if (sleeping != null) {

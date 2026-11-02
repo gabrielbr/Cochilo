@@ -182,6 +182,7 @@ fun CochiloRoot(vm: MainViewModel) {
                                             log, prediction, now, zone,
                                             onStartSleep = { vm.startSleep(it) },
                                             onWokeUp = { vm.wakeUp(it) },
+                                            onPlace = { e, k -> vm.setPlace(e, k) },
                                             onFinish = { vm.finish(it) },
                                             onNew = { type ->
                                                 // Remember actions: the sheet opens on what was done last (the same
@@ -282,6 +283,9 @@ fun CochiloRoot(vm: MainViewModel) {
             onDelete = { vm.delete(it); editing = null },
             onDismiss = { editing = null },
         )
+    }
+    if (vm.ticks.collectAsState().value) {
+        br.gabriel.cochilo.ui.screens.TicksSheet(onDismiss = vm::ticksSeen)
     }
     if (editingLook && baby != null) {
         br.gabriel.cochilo.ui.screens.LookSheet(baby, onSave = { vm.saveBaby(it); editingLook = false }, onDismiss = { editingLook = false })

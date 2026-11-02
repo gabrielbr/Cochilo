@@ -114,5 +114,19 @@ fun PatternsScreen(log: List<Event>, now: Long, zone: ZoneId, ageWeeks: Int) {
             Hairline()
             ListRow(stringResource(R.string.daylight), meta = stringResource(R.string.daylight_meta), value = f.durationMin(avg.daylightMin))
         }
+
+        // Where naps happened (docs/places.md): side by side, never judged; contact naps are normal.
+        val places = br.gabriel.cochilo.domain.Places.napsByPlace(log, zone, now)
+        if (places.isNotEmpty()) {
+            Caption(stringResource(R.string.caption_places))
+            RowGroup {
+                places.forEachIndexed { i, (kind, n) ->
+                    if (i > 0) Hairline()
+                    ListRow(f.kindName(kind) ?: kind, value = stringResource(R.string.naps_count, n))
+                }
+            }
+            Spacer(Modifier.height(Spacing.space2))
+            Text(stringResource(R.string.places_meta), style = Type.meta, color = CochiloTheme.colors.muted)
+        }
     }
 }

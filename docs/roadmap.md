@@ -28,11 +28,9 @@ Each is grounded in `docs/research.md` or the Tatá Slings plans (`docs/tata-sli
 
 | Feature | Why (source) | What it is |
 |---|---|---|
-| **Where the baby slept** (crib, arms, sling, pram, car) | Contact naps are normal early on; the brand is babywearing (monetization §6.1) | A kind on Sleep; Patterns shows "Naps in the sling: 3 this week", guilt-free; the `eventCarry` teal data colour is reserved for it |
 | **Change detection instead of "regressions"** | Don't hard-code regressions; detect real change (§2.5) | "Night wakings: more this week than the two before (3 vs 1.5)", neutral, with its numbers, like the prediction card |
 | **Day milk / night milk** | Chrononutrition (§2.4) | Pumped milk tagged by the time it was pumped; bottles say which milk |
 | **Ritual builder** | Preventive parent education has the strongest evidence (§4); what consultations sell (monetization §6.4) | The parent writes the steps once (feed, play, nappy, room ready, song) and ticks them off; logged as the routine |
-| **Safe babywearing check (T.I.C.K.S.)** | AAP 2022; the brand's expertise (monetization §6.3) | Shown once, the first time "sling" is logged, by Tatá, with her video link. Never "the app checks your baby" |
 | **Notes from Tatá by age** | The brand voice; trust (monetization §6.5) | One short note per age band, signed, reviewed against AAP 2022 |
 | **Printable report** | Paediatrician visits (monetization §3) | A PDF made on the phone (sleep per day, feeds, the actogram), shared by the parent |
 | **Smarter prediction (phase 2)** | Two-process model (§2.1, §7.2) | Weight recent days more, separate first nap / later naps / bedtime, still showing its numbers |
@@ -72,6 +70,7 @@ Each is grounded in `docs/research.md` or the Tatá Slings plans (`docs/tata-sli
 
 ## Shipped from this plan
 
+- **0.17.0**: where the baby slept, naps by place in Patterns, the T.I.C.K.S. check ([places.md](places.md)).
 - **0.16.0**: "Fell asleep a few minutes ago" (Earlier chips) and the quick-settings tile ([flows.md](flows.md)).
 - **0.15.0**: night light, daylight nudge, wind-down in the notification ([night-light.md](night-light.md)).
 - **0.14.0**: little celebrations (1.1) ([celebrations.md](celebrations.md)).
@@ -82,8 +81,8 @@ Each is grounded in `docs/research.md` or the Tatá Slings plans (`docs/tata-sli
 
 | When | What | Why first |
 |---|---|---|
-| **Soon** | Where the baby slept | Research-backed, small, and on the brand's subject |
-| **Later** | Ritual builder, T.I.C.K.S., notes from Tatá, printable report (the Cochilo+ set) | Needs Tatá's writing and the monetization plan's order of work |
+| **Soon** | Change detection; day / night milk | Research-backed, small, and on the brand's subject |
+| **Later** | Ritual builder, notes from Tatá, printable report (the Cochilo+ set) | Needs Tatá's writing and the monetization plan's order of work |
 | **Exploring** | Wi-Fi sync between two phones; Wear OS; smarter prediction | Bigger builds; worth a design spike first |
 
 Each of these lands like the rest: design system first, docs with the change, screenshots looked

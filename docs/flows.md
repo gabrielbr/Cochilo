@@ -53,6 +53,7 @@ costs the fewest taps. Audit of every entry type (2026-11-02):
 | Medicine | last medicine and when ("Luftal · Today 14:20") | (no slide) | the last medicine's name | ✅ |
 | Sleep | (the Sleep panel shows awake/asleep since) | (no slide) | the last half hour, as before | ✅ |
 | Note | nothing: notes are one-offs | (no slide) | empty | ✅ |
+| Sleep place | the panel shows "Where" while asleep | — | the last place (crib, arms, sling…) | ✅ |
 | Widget | the breast used last has the Last mark | — | — | — |
 | Fabric (a setting) | the Today card wears it | — | the picker opens with it ringed | — |
 

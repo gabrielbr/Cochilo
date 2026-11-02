@@ -8,10 +8,15 @@ import br.gabriel.cochilo.domain.otherBreast
  */
 class Entries(private val events: EventDao) {
 
-    /** Starts a sleep now, unless one is already running (only one sleep runs at a time). */
+    /**
+     * Starts a sleep now, unless one is already running (only one sleep runs at a time), in the
+     * place used last (remember actions: crib, arms, sling…), so every button remembers it.
+     */
     suspend fun startSleep(now: Long = System.currentTimeMillis()): Event? {
-        if (events.all().any { it.type == EventType.SLEEP && it.end == null }) return null
-        return Event(type = EventType.SLEEP, start = now, updatedAt = now).also { events.upsert(it) }
+        val all = events.all()
+        if (all.any { it.type == EventType.SLEEP && it.end == null }) return null
+        return Event(type = EventType.SLEEP, start = now, kind = br.gabriel.cochilo.domain.Places.last(all), updatedAt = now)
+            .also { events.upsert(it) }
     }
 
     /** Ends every running sleep now. */

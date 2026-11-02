@@ -31,6 +31,8 @@ dressed in the Tatá Slings brand (teal, plum-grey ink, Pérola, Libre Franklin,
 - **Log button**: the main action, in the bottom-right corner on every tab. Press, drag up to a
   kind and sideways to a choice (Feed › Right breast), let go: logged. Let go on the kind for its
   sheet. A tap opens it for taps.
+- **Where the baby slept**: crib, arms, sling, pram, car, remembered; naps by place in Patterns;
+  T.I.C.K.S. the first time the sling is picked. [docs/places.md](docs/places.md).
 - **Earlier and the tile**: "Fell asleep 5 · 10 · 15 min ago" in one tap; Start sleep / Woke up from
   the quick-settings tile. [docs/flows.md](docs/flows.md).
 - **Night light**: warm amber on black from 19:00 to 07:00; a daylight nudge in the afternoon;
