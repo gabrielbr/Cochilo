@@ -156,6 +156,9 @@ bars and the ring already give sleep the full height.
 
 ## Next candidates (not built yet)
 
+The full plan is [roadmap.md](roadmap.md).
+
+
 - A quick-settings tile for Start sleep / Woke up (the home-screen widget shipped in 0.11.0).
 - Long-press on Start sleep to log a sleep that began a few minutes ago (5 / 10 / 15 min), for when
   the baby fell asleep in your arms before you could reach the phone.
