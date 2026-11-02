@@ -113,14 +113,17 @@ fun IconButton(@DrawableRes id: Int, contentDescription: String, onClick: () -> 
     ) { GIcon(id, contentDescription, tint) }
 }
 
-/** The CO_ mark: a panel square, Ubuntu Mono bold, light letters. */
+/**
+ * The app's mark in the header: Cochilo, da Tatá Slings, a crescent moon resting in a sling's curve
+ * on a teal tile (the design system's assets/logos/cochilo-tata-mark.svg). Decorative: the app's
+ * name sits beside it.
+ */
 @Composable
 fun Monogram() {
-    val c = CochiloTheme.colors
-    Box(
-        Modifier.size(Size.monogram).clip(RoundedCornerShape(Radius.radiusS)).background(c.panel),
-        contentAlignment = Alignment.Center,
-    ) { Text("CO_", style = Type.caption, color = c.onPanel) }
+    androidx.compose.foundation.Image(
+        painterResource(br.gabriel.cochilo.R.drawable.mark_cochilo), contentDescription = null,
+        modifier = Modifier.size(Size.monogram),
+    )
 }
 
 /** Header: monogram, app name over one status line, one trailing icon. */

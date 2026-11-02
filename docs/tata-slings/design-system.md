@@ -1,15 +1,27 @@
 # Tatá Slings design system (for Cochilo and beyond)
 
-> Draft 0.1, 2026-11-02. Built from what tataslings.com.br ships today (its Nuvemshop theme CSS and
-> logo), Tatá's product language and the [voice guide](brand-voice.md). It's a proposal for Tatá to
-> approve. The token values live in
-> [`design-system/tata-slings/tokens.json`](../../design-system/tata-slings/tokens.json); a visual
-> preview is in [`preview.html`](preview.html).
->
-> **How it reaches the code.** AGENTS.md says Cochilo takes every value from `CTokens.kt`, generated
-> by the Gabriel Design System, and that nobody edits it by hand. So this becomes a **`tata` layer**
-> in the design system (same route as `design-system/0001-…patch`), which generates a Tatá-themed
-> `CTokens.kt`. Nothing in `app/` changes until that layer is merged there.
+> Started as a proposal (2026-11-02), built from what tataslings.com.br ships (its Nuvemshop theme
+> CSS and logo), Tatá's product language and the [voice guide](brand-voice.md). A visual preview
+> is in [`preview.html`](preview.html).
+
+## Status: what the app ships (Cochilo 0.3.0)
+
+Cochilo wears this brand through the Gabriel Design System's **brands** concept (design system
+0.6.0, `docs/brands.md` there; the change waits as a patch in
+[`design-system/`](../../design-system/README.md)). A brand swaps colour roles, the type family and
+the mark, and nothing else, so the app follows every Gabriel standard and looks like Tatá's.
+
+| Part of this proposal | In the app? |
+|---|---|
+| §3 brand palette (teal accent, navy ink, Pérola page, Cereja alerts, navy night panel), both themes | ✅ `brands.tata-slings` → `CTokens.kt` |
+| §4 Libre Franklin as the one family | ✅ `res/font/libre_franklin_*.ttf`, `Theme.kt`; tabular figures for times |
+| §7 the mark: crescent moon in a sling, navy on teal | ✅ launcher icon and header mark (`mark_cochilo.xml`) |
+| §7 "Cochilo, da Tatá Slings" endorsement | ✅ Settings › About row, opens tataslings.com.br (UTM-tagged) |
+| §5 softer radii (8/12/20) | ✗ The system's radii stay (4/8/16): radii are a Gabriel standard a brand doesn't change |
+| §3 fabric palette (Mel, Trevo, Imensidão…) | ⬜ Marketing and future Cochilo+ themes only |
+| §3 `eventCarry`, a data colour for sling naps | ⬜ Waits for the "where the baby slept" log (data colours are the system's) |
+| §6 the woven texture ("trama") | ⬜ Not built |
+| §8 tip card on `tealSoft` | ⬜ The "i" tooltips use the system's panel colours |
 
 ## 1. What the brand looks like today (measured)
 

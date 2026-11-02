@@ -226,4 +226,7 @@
     <string name="quick_started">Started: %1$s</string>
     <string name="quick_logged">Logged: %1$s</string>
     <string name="quick_switched">Switched to %1$s</string>
+    <!-- Brand (Tatá Slings). -->
+    <string name="brand_line">Cochilo, da Tatá Slings</string>
+    <string name="brand_meta">Slings, swaddles and more, made in Brazil. Opens tataslings.com.br.</string>
 </resources>

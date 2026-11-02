@@ -5,8 +5,11 @@ feeds, pumping, diapers, daylight, routines and notes, and a prediction of the n
 learned from the baby's own history. Everything stays on the phone; backups are files you export
 and import yourself.
 
-Built on the [Gabriel Design System](https://github.com/gabrielbr/Gabriel-Deisgn-System) (`cochilo`
-layer). The research behind it is in [docs/research.md](docs/research.md).
+**Cochilo, da Tatá Slings**: a [Tatá Slings](https://tataslings.com.br) product. Built on the
+[Gabriel Design System](https://github.com/gabrielbr/Gabriel-Deisgn-System) (`cochilo` layer),
+dressed in the Tatá Slings brand (teal, navy, Pérola, Libre Franklin, the moon-in-a-sling mark;
+[docs/tata-slings/](docs/tata-slings/README.md)). The research behind it is in
+[docs/research.md](docs/research.md). What changed in each release: [CHANGELOG.md](CHANGELOG.md).
 
 | Today | Asleep (dark) | Patterns | Hoje (pt-BR) |
 |---|---|---|---|
@@ -81,7 +84,7 @@ The debug build installs as `br.gabriel.cochilo.debug`, beside a release build.
 | `.../ui/kit` | The design system's components in Compose: frame, header, tab bar, rows, buttons, chips, fields, timeline, actogram, pickers |
 | `.../ui/screens` | Today, History, Patterns, Settings, sheets |
 | `app/src/test` | Predictor, stats and backup tests; Paparazzi screenshots of every screen |
-| `design-system/` | The design-system change that adds this app's layer, waiting to be merged there |
+| `design-system/` | The design-system change (the `cochilo` layer and the Tatá Slings brand), waiting to be merged there |
 
 Rules for working here: [AGENTS.md](AGENTS.md). Plans for Cochilo as a Tatá Slings product
 (monetization, voice, design system, marketing): [docs/tata-slings](docs/tata-slings/README.md).
