@@ -348,4 +348,25 @@
     <string name="ticks_source">The UK Sling Consortium\'s T.I.C.K.S. rule. Cochilo doesn\'t watch the baby: you do.</string>
     <string name="ticks_ok">Got it</string>
     <string name="ticks_guide">Tatá\'s guides</string>
+    <!-- What changed, and day / night milk (docs/changes.md). Neutral words, both numbers, never a promise. -->
+    <string name="caption_changes">What changed</string>
+    <string name="changes_meta">The last 7 days against the 14 before, per day. Changes, not problems.</string>
+    <string name="change_night_up">Night sleep is longer</string>
+    <string name="change_night_down">Night sleep is shorter</string>
+    <string name="change_naptime_up">More nap sleep</string>
+    <string name="change_naptime_down">Less nap sleep</string>
+    <string name="change_stretch_up">The longest stretch is longer</string>
+    <string name="change_stretch_down">The longest stretch is shorter</string>
+    <string name="change_wakings_up">More night wakings</string>
+    <string name="change_wakings_down">Fewer night wakings</string>
+    <string name="change_naps_up">More naps</string>
+    <string name="change_naps_down">Fewer naps</string>
+    <string name="change_values">%1$s · %2$s before</string>
+    <string name="change_values_day">%1$s a day · %2$s before</string>
+    <string name="change_values_night">%1$s a night · %2$s before</string>
+    <string name="milk_day">Day milk</string>
+    <string name="milk_night">Night milk</string>
+    <string name="pumped_week">Pumped, last 7 days</string>
+    <string name="pumped_week_meta">Night milk (19:00–07:00) for night bottles</string>
+    <string name="pumped_split">Day %1$d ml · night %2$d ml</string>
 </resources>

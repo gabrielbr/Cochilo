@@ -65,7 +65,9 @@ fun eventLabel(e: Event, f: Format, zone: ZoneId): String {
     val base = if (e.type == EventType.SLEEP) {
         stringResource(if (e.isNightSleep(zone)) R.string.sleep_night else R.string.sleep_nap)
     } else f.typeName(e.type)
-    val parts = listOfNotNull(base, f.kindName(e.kind), e.amountMl?.let { stringResource(R.string.ml, it) })
+    // Pumped milk says when it was expressed: day milk or night milk (research §2.4).
+    val milk = if (e.type == EventType.PUMP) stringResource(if (br.gabriel.cochilo.domain.Milk.isNight(e, zone)) R.string.milk_night else R.string.milk_day) else null
+    val parts = listOfNotNull(base, f.kindName(e.kind), e.amountMl?.let { stringResource(R.string.ml, it) }, milk)
     return parts.joinToString(" · ")
 }
 

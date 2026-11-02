@@ -323,4 +323,25 @@
     <string name="ticks_source">A regra T.I.C.K.S. do UK Sling Consortium. O Cochilo não vigia o bebê: você sim.</string>
     <string name="ticks_ok">Entendi</string>
     <string name="ticks_guide">Os guias da Tatá</string>
+    <!-- O que mudou, e leite do dia / da noite (docs/changes.md). Palavras neutras, os dois números, nunca uma promessa. -->
+    <string name="caption_changes">O que mudou</string>
+    <string name="changes_meta">Os últimos 7 dias contra os 14 anteriores, por dia. Mudanças, não problemas.</string>
+    <string name="change_night_up">O sono da noite está mais longo</string>
+    <string name="change_night_down">O sono da noite está mais curto</string>
+    <string name="change_naptime_up">Mais sono nas sonecas</string>
+    <string name="change_naptime_down">Menos sono nas sonecas</string>
+    <string name="change_stretch_up">O maior trecho está mais longo</string>
+    <string name="change_stretch_down">O maior trecho está mais curto</string>
+    <string name="change_wakings_up">Mais despertares à noite</string>
+    <string name="change_wakings_down">Menos despertares à noite</string>
+    <string name="change_naps_up">Mais sonecas</string>
+    <string name="change_naps_down">Menos sonecas</string>
+    <string name="change_values">%1$s · antes %2$s</string>
+    <string name="change_values_day">%1$s por dia · antes %2$s</string>
+    <string name="change_values_night">%1$s por noite · antes %2$s</string>
+    <string name="milk_day">Leite do dia</string>
+    <string name="milk_night">Leite da noite</string>
+    <string name="pumped_week">Ordenhado, últimos 7 dias</string>
+    <string name="pumped_week_meta">Leite da noite (19:00–07:00) para as mamadeiras da noite</string>
+    <string name="pumped_split">Dia %1$d ml · noite %2$d ml</string>
 </resources>
