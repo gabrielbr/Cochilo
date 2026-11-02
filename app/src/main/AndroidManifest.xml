@@ -30,5 +30,18 @@
         <receiver
             android:name=".notify.NotificationActions"
             android:exported="false" />
+        <!-- The home-screen widget (docs/widget.md). Exported only for the launcher's update
+             broadcast; its buttons go to NotificationActions, which is not exported. -->
+        <receiver
+            android:name=".widget.CochiloWidget"
+            android:exported="true"
+            android:label="@string/widget_name">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info" />
+        </receiver>
     </application>
 </manifest>

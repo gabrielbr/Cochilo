@@ -47,7 +47,7 @@ br.gabriel.cochilo.ui_NotificationSnapshotTest_notification_light.png` and `…_
 | Building, posting, clearing; the 5-minute tick (inexact alarm, no special permission) | `notify/LiveNotifications.kt` |
 | The bar, drawn as a bitmap in the app's timeline colours | `notify/TimelineBar.kt` |
 | Title, line and bar layout (Android adds header and buttons: `DecoratedCustomViewStyle`) | `res/layout/notif_live.xml` |
-| The buttons and the tick (receiver, not exported) | `notify/NotificationActions.kt` |
+| The buttons and the tick (receiver, not exported; the home-screen widget's buttons use it too, [widget.md](widget.md)) | `notify/NotificationActions.kt` |
 | Shared actions (app and notification) | `data/Entries.kt` |
 | Refresh on every change to the log, the baby or the setting | `CochiloApp.onCreate` |
 

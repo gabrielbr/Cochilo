@@ -4,4 +4,19 @@
          (dots overhang a track half that), Spacing.space2 above and below. -->
     <dimen name="notif_bar_height">16dp</dimen>
     <dimen name="notif_bar_gap">8dp</dimen>
+
+    <!-- The home-screen widget (docs/widget.md), the design system's values: radius-m (16) for the
+         widget, radius-s (8) for its buttons, space-3 (12) padding, space-2 (8) gaps, 48dp targets
+         (space-12), the outline (2) of the Last mark, hairline (1), the mark at 24 (space-6). -->
+    <dimen name="widget_radius">16dp</dimen>
+    <dimen name="widget_button_radius">8dp</dimen>
+    <dimen name="widget_padding">12dp</dimen>
+    <dimen name="widget_gap">8dp</dimen>
+    <dimen name="widget_target">48dp</dimen>
+    <dimen name="widget_outline">2dp</dimen>
+    <dimen name="widget_hairline">1dp</dimen>
+    <dimen name="widget_mark">24dp</dimen>
+    <dimen name="widget_icon">20dp</dimen>
+    <dimen name="widget_text">14sp</dimen>
+    <dimen name="widget_meta">12sp</dimen>
 </resources>

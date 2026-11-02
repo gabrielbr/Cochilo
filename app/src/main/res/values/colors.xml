@@ -4,4 +4,15 @@
          (CTokens.Light): page and the brand accent (the mint role, Tatá teal). -->
     <color name="page">#FBF5F1</color>
     <color name="brand">#5DC2BB</color>
+
+    <!-- The home-screen widget (docs/widget.md): a RemoteViews layout can't read CTokens, so its
+         colours are CTokens.Light copied here; WidgetColorsTest fails if they drift. -->
+    <color name="widget_surface">#FFFFFF</color>
+    <color name="widget_ink">#2B2233</color>
+    <color name="widget_muted">#6E6475</color>
+    <color name="widget_line">#EEDFD8</color>
+    <color name="widget_mint">#5DC2BB</color>
+    <color name="widget_on_mint">#2B2233</color>
+    <color name="widget_feed">#B0503F</color>
+    <color name="widget_feed_soft">#F6D9D1</color>
 </resources>

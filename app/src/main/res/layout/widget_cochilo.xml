@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  The home-screen widget (docs/widget.md): the baby's state and a running clock, Start sleep /
+  Woke up (the one mint action), and the two breasts. One tap each, no app opened. Sizes and
+  colours are the design system's (dimens.xml, colors.xml); the family is the brand's.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/widget_bg"
+    android:orientation="vertical"
+    android:padding="@dimen/widget_padding">
+
+    <LinearLayout
+        android:id="@+id/status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="@dimen/widget_mark"
+            android:layout_height="@dimen/widget_mark"
+            android:importantForAccessibility="no"
+            android:src="@drawable/mark_cochilo" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/widget_gap"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:fontFamily="@font/libre_franklin_semibold"
+            android:maxLines="1"
+            android:textColor="@color/widget_ink"
+            android:textSize="@dimen/widget_text" />
+
+        <Chronometer
+            android:id="@+id/clock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/widget_gap"
+            android:fontFamily="@font/libre_franklin_bold"
+            android:textColor="@color/widget_ink"
+            android:textSize="@dimen/widget_text" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/empty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/widget_gap"
+        android:fontFamily="@font/libre_franklin_regular"
+        android:text="@string/widget_no_baby"
+        android:textColor="@color/widget_muted"
+        android:textSize="@dimen/widget_meta"
+        android:visibility="gone" />
+
+    <!-- One row: the mint action (wider), then the two breasts. While a breastfeed runs, its side
+         is lit and reads Finish; the other side switches to it. -->
+    <LinearLayout
+        android:id="@+id/buttons"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/widget_target"
+        android:layout_marginTop="@dimen/widget_gap"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/sleep"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:background="@drawable/widget_btn_primary"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="@dimen/widget_icon"
+                android:layout_height="@dimen/widget_icon"
+                android:importantForAccessibility="no"
+                android:src="@drawable/gg_ic_moon"
+                android:tint="@color/widget_on_mint" />
+
+            <TextView
+                android:id="@+id/sleep_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/widget_gap"
+                android:fontFamily="@font/libre_franklin_bold"
+                android:textColor="@color/widget_on_mint"
+                android:textSize="@dimen/widget_text" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/left"
+            android:layout_width="0dp"
+            android:layout_marginStart="@dimen/widget_gap"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:background="@drawable/widget_btn"
+            android:ellipsize="end"
+            android:fontFamily="@font/libre_franklin_bold"
+            android:gravity="center"
+            android:maxLines="1"
+            android:textColor="@color/widget_ink"
+            android:textSize="@dimen/widget_text" />
+
+        <TextView
+            android:id="@+id/right"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/widget_gap"
+            android:layout_weight="3"
+            android:background="@drawable/widget_btn"
+            android:ellipsize="end"
+            android:fontFamily="@font/libre_franklin_bold"
+            android:gravity="center"
+            android:maxLines="1"
+            android:textColor="@color/widget_ink"
+            android:textSize="@dimen/widget_text" />
+    </LinearLayout>
+</LinearLayout>

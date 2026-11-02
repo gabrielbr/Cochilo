@@ -31,6 +31,8 @@ dressed in the Tatá Slings brand (teal, plum-grey ink, Pérola, Libre Franklin,
 - **Log button**: the main action, in the bottom-right corner on every tab. Press, drag up to a
   kind and sideways to a choice (Feed › Right breast), let go: logged. Let go on the kind for its
   sheet. A tap opens it for taps.
+- **Home-screen widget**: Start sleep / Woke up and Left / Right, one tap each, with a running
+  clock. [docs/widget.md](docs/widget.md).
 - **Sleep first, and motion**: sleep is a size up in every list; every action answers with a small
   movement (off with Remove animations); what was used last has a coloured outline and dot.
   [docs/flows.md](docs/flows.md).
