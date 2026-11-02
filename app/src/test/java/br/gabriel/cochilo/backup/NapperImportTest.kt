@@ -12,7 +12,7 @@ import java.io.File
 import java.time.OffsetDateTime
 
 class NapperImportTest {
-    private val labels = NapperLabels("Held or worn", "Swing", "In bed", "While nursing", "Breast milk", "Formula", "Medicine") { l, r -> "Left $l min, right $r min" }
+    private val labels = NapperLabels("Held or worn", "Swing", "In bed", "While nursing", "Breast milk", "Formula") { l, r -> "Left $l min, right $r min" }
     private val header = "start,end,category,overallHappiness,babyMoodOnWakeUp,babyMoodOnSleep,diaperWeight,diaperContent,breastLeftSeconds,breastRightSeconds,amountPumpedLeft,amountPumpedRight,feedingAmount,temperature,bottleFeedingType,comment,numberOfPauses,pausedMinutes,units,howBabySlept,howBabyWoke,timeToFallAsleep,createdAt,updatedAt"
 
     /** One Napper row; only the columns a test cares about. */
@@ -107,8 +107,8 @@ class NapperImportTest {
         assertEquals(Kinds.WET, wet.kind)
         assertNull(plain.kind)
         assertNull(plain.end)
-        assertEquals(EventType.NOTE, med.type)
-        assertEquals("Medicine · Kolikdoron", med.note)
+        assertEquals(EventType.MEDICINE, med.type)
+        assertEquals("Kolikdoron", med.note)
     }
 
     @Test fun importing_twice_adds_nothing() {

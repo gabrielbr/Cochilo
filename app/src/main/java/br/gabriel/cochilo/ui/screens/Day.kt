@@ -133,6 +133,7 @@ internal fun VerticalTimeline(events: List<Event>, now: Long, f: Format, zone: Z
                 label = eventLabel(e, f, zone),
                 meta = eventMeta(e, now, f),
                 onClick = { onOpen(e) },
+                icon = br.gabriel.cochilo.ui.kit.entryIcon(e),
             )
         }
     }

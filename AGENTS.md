@@ -35,6 +35,8 @@ system's. Its AGENTS.md and DESIGN.md are the rules; the short version:
 - **Event colours are data colours.** Use them only on data, always next to a word.
 - **Brand voice.** Words follow [docs/tata-slings/brand-voice.md](docs/tata-slings/brand-voice.md):
   quiet and short in the app, warm in marketing, never a promise about how the baby will sleep.
+- **Every kind of entry has an icon** (`ui/kit/Icons.kt`, the design system's line set), shown
+  beside its name, never instead of it. A new entry type gets its icon in the design system first.
 - **Components live in `ui/kit`.** Screens compose them; they don't draw their own buttons or rows.
 - **Copy in English and Brazilian Portuguese.** Every string in `values/strings.xml` and
   `values-pt-rBR/strings.xml`; short, plain, sentence case, verb first on buttons; no plurals that

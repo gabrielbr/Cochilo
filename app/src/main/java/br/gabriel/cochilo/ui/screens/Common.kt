@@ -24,7 +24,6 @@ import br.gabriel.cochilo.ui.kit.Legend
 import br.gabriel.cochilo.ui.kit.LegendItem
 import br.gabriel.cochilo.ui.kit.ListRow
 import br.gabriel.cochilo.ui.kit.RowGroup
-import br.gabriel.cochilo.ui.kit.Swatch
 import br.gabriel.cochilo.ui.kit.eventColor
 import br.gabriel.cochilo.ui.theme.CTokens
 import br.gabriel.cochilo.ui.theme.CTokens.Spacing
@@ -55,6 +54,7 @@ fun infoText(t: EventType): Int = when (t) {
     EventType.DAYLIGHT -> R.string.info_daylight
     EventType.ROUTINE -> R.string.info_routine
     EventType.NOTE -> R.string.info_note
+    EventType.MEDICINE -> R.string.info_medicine
 }
 
 fun CTokens.Palette.eventColorOf(e: Event, zone: ZoneId): Color = eventColor(e, zone)
@@ -88,7 +88,7 @@ fun EventList(events: List<Event>, now: Long, f: Format, zone: ZoneId, onOpen: (
             ListRow(
                 label = eventLabel(e, f, zone),
                 meta = eventMeta(e, now, f),
-                leading = { Swatch(CochiloTheme.colors.eventColorOf(e, zone)) },
+                leading = { br.gabriel.cochilo.ui.kit.GIcon(br.gabriel.cochilo.ui.kit.entryIcon(e), null, CochiloTheme.colors.eventColorOf(e, zone)) },
                 onClick = { onOpen(e) },
             )
         }

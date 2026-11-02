@@ -59,6 +59,7 @@ class Format(
             EventType.DAYLIGHT -> R.string.type_daylight
             EventType.ROUTINE -> R.string.type_routine
             EventType.NOTE -> R.string.type_note
+            EventType.MEDICINE -> R.string.type_medicine
         }
     )
 

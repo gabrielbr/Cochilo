@@ -14,7 +14,6 @@ data class NapperLabels(
     val nursing: String,
     val breastMilk: String,
     val formula: String,
-    val medicine: String,
     /** "Left 5 min, right 9 min", from minutes on each breast. */
     val sides: (left: Int, right: Int) -> String,
 )
@@ -62,7 +61,7 @@ object NapperImport {
                     out += event(row, EventType.PUMP, row.start, row.end, null, amount = ml.takeIf { it > 0 }, note = m["comment"], expressed = row.start)
                 }
                 "CHANGED_DIAPER" -> out += event(row, EventType.DIAPER, row.start, null, diaper(m["diaperContent"]), note = m["comment"])
-                "MEDICINE" -> out += event(row, EventType.NOTE, row.start, null, null, note = noteOf(labels.medicine, m["comment"]))
+                "MEDICINE" -> out += event(row, EventType.MEDICINE, row.start, null, null, note = m["comment"])
                 else -> {
                     // Solids, temperature, growth…: Cochilo has no place for them; keep any words.
                     val c = m["comment"]

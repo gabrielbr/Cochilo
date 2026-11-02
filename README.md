@@ -25,6 +25,9 @@ dressed in the Tatá Slings brand (teal, navy, Pérola, Libre Franklin, the moon
   entry hour by hour on a vertical rail: sleeps as bars as long as they lasted, and the awake time
   between them. Arrows move between days; tap an entry to edit it.
 - **History**: every day with its summary, timeline and entries.
+- **Icons**: every kind of entry has its line icon (a drop, a bottle, a spoon, a pump, a diaper,
+  the moon, the sun, a bath, a capsule, a pencil), always beside its name (`ui/kit/Icons.kt`).
+- **Medicine**: its own entry type and log row; the name and dose go in the note.
 - **Slide to log**: on Today's log rows, slide instead of tapping. Feed: left = left breast, right =
   right breast. Diaper: Wet · Both · Dirty. Slide a running breastfeed to switch side. Tap still
   opens the full sheet. How many taps each entry costs, and why: [docs/flows.md](docs/flows.md).

@@ -43,6 +43,7 @@
     <string name="type_diaper">Fralda</string>
     <string name="type_daylight">Luz do dia</string>
     <string name="type_routine">Rotina</string>
+    <string name="type_medicine">Remédio</string>
     <string name="type_note">Nota</string>
     <string name="sleep_nap">Soneca</string>
     <string name="sleep_night">Sono da noite</string>
@@ -145,7 +146,6 @@
     <string name="napper_nursing">Mamando</string>
     <string name="napper_breast_milk">Leite materno</string>
     <string name="napper_formula">Fórmula</string>
-    <string name="napper_medicine">Remédio</string>
     <string name="napper_sides">Esquerdo %1$d min, direito %2$d min</string>
     <string name="imported">Importado. Novos: %1$d. Atualizados: %2$d.</string>
     <string name="import_failed">Esse arquivo não é um backup do Cochilo</string>
@@ -225,4 +225,5 @@
     <string name="live_notification">Notificação ao vivo</string>
     <string name="live_notification_meta">Dormindo ou acordado, o tempo, o que vem a seguir e Acordou ou Começar sono, sem abrir o app.</string>
     <string name="caption_notifications">Notificações</string>
+    <string name="info_medicine">Remédio: o que foi dado e quando, com o nome e a dose na nota. Ajuda a saber se a última dose foi há tempo suficiente. Siga as orientações do pediatra.</string>
 </resources>

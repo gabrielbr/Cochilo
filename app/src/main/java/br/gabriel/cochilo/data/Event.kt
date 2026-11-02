@@ -8,7 +8,9 @@ import java.util.UUID
 
 /** Everything we log is one row: a sleep, a feed, a diaper, a walk in the sun… */
 @Serializable
-enum class EventType { SLEEP, FEED, PUMP, DIAPER, DAYLIGHT, ROUTINE, NOTE;
+enum class EventType { SLEEP, FEED, PUMP, DIAPER, DAYLIGHT, ROUTINE, NOTE,
+    /** A dose: the note holds what was given (since 0.5.0; older backups carry these as NOTE). */
+    MEDICINE;
 
     /** Types that last a while and can run as a timer (end = null while running). */
     val hasDuration: Boolean get() = this == SLEEP || this == FEED || this == PUMP || this == DAYLIGHT
