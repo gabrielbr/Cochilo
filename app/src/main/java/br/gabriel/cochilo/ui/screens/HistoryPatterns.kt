@@ -1,5 +1,9 @@
 package br.gabriel.cochilo.ui.screens
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import br.gabriel.cochilo.data.EventType
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Text
@@ -35,12 +39,25 @@ import java.util.Locale
 fun HistoryScreen(log: List<Event>, now: Long, zone: ZoneId, onOpen: (Event) -> Unit) {
     val f = Format(LocalContext.current, zone, now)
     val stats = Stats(zone)
-    val days = log.map { localDate(it.start, zone) }.distinct().sortedDescending().take(60)
+    // One tap to show one kind of entry (docs/flows.md); the day's timeline stays whole for context.
+    var filter by androidx.compose.runtime.saveable.rememberSaveable { androidx.compose.runtime.mutableStateOf<String?>(null) }
+    val kinds = EventType.entries.filter { t -> log.any { it.type == t } }
+    val shown = filter?.let { EventType.valueOf(it) }
+    val days = log.filter { shown == null || it.type == shown }.map { localDate(it.start, zone) }.distinct().sortedDescending().take(60)
     ScrollPage {
         ScreenTitle(stringResource(R.string.title_history), stringResource(R.string.title_history))
-        if (days.isEmpty()) {
+        if (log.isEmpty()) {
             EmptyState(stringResource(R.string.empty_history_title), stringResource(R.string.empty_history_line))
             return@ScrollPage
+        }
+        if (kinds.size > 1) {
+            Spacer(Modifier.height(Spacing.space4))
+            val all = stringResource(R.string.filter_all)
+            androidx.compose.foundation.layout.Box(Modifier.horizontalScroll(androidx.compose.foundation.rememberScrollState())) {
+                androidx.compose.foundation.layout.Row(horizontalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(Spacing.space2)) {
+                    br.gabriel.cochilo.ui.kit.FilterChips(listOf<String?>(null) + kinds.map { it.name }, filter, { k -> k?.let { f.typeName(EventType.valueOf(it)) } ?: all }) { filter = it }
+                }
+            }
         }
         days.forEachIndexed { i, d ->
             val from = startOfDay(d, zone)
@@ -57,7 +74,7 @@ fun HistoryScreen(log: List<Event>, now: Long, zone: ZoneId, onOpen: (Event) -> 
             Spacer(Modifier.height(Spacing.space1))
             HourLabels()
             Spacer(Modifier.height(Spacing.space3))
-            EventList(log.filter { it.start in from until to }.sortedByDescending { it.start }, now, f, zone, onOpen)
+            EventList(log.filter { it.start in from until to && (shown == null || it.type == shown) }.sortedByDescending { it.start }, now, f, zone, onOpen)
         }
     }
 }

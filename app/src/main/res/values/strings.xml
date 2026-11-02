@@ -396,4 +396,8 @@
     <string name="report_period">%1$s to %2$s</string>
     <string name="report_rhythm">Sleep, last %1$d days</string>
     <string name="report_footer">From the parent\'s own log in Cochilo, made %1$s. Not a medical record.</string>
+    <!-- History filters and the ring's expected window (docs/flows.md). -->
+    <string name="filter_all">All</string>
+    <string name="ring_expected">Expected next sleep</string>
+    <string name="ring_expected_spoken">Next sleep expected between %1$s and %2$s.</string>
 </resources>

@@ -1,0 +1,196 @@
+From 4ea5cf2bf63ff0dc2269068205a4a167a427896f Mon Sep 17 00:00:00 2001
+From: Gabriel Lopes <ogabriel@gmail.com>
+Date: Mon, 2 Nov 2026 23:52:14 +0000
+Subject: [PATCH] Design system 0.19.0: the expected window on Cochilo's day
+ ring
+
+The ring draws today's expected next-sleep window faint, under the data,
+named and spoken. Audit v0.19.0.
+---
+ CHANGELOG.md                         |  8 ++++++
+ DESIGN.md                            |  2 +-
+ VERSION                              |  2 +-
+ audits/2026-11-02-v0.19.0-reading.md | 39 ++++++++++++++++++++++++++++
+ docs/components.md                   |  2 +-
+ generated/cochilo/CTokens.kt         |  2 +-
+ generated/pulseloop/GTokens.kt       |  2 +-
+ generated/uikit/UiTokens.java        |  2 +-
+ generated/web/cochilo.css            |  2 +-
+ generated/web/pulseloop.css          |  2 +-
+ generated/web/uikit.css              |  2 +-
+ tokens/tokens.json                   |  2 +-
+ 12 files changed, 57 insertions(+), 10 deletions(-)
+ create mode 100644 audits/2026-11-02-v0.19.0-reading.md
+
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+index 53e4fc8..292294d 100644
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -3,6 +3,14 @@
+ Semantic versioning (AGENTS.md "Versioning"). Each entry says what changed for each app and what
+ the app has to do.
+ 
++## 0.19.0 — 2026-11-02
++
++Cochilo's day ring shows the expected window (patch: a component note; no token values change).
++
++- Ring: an expected window as the nap colour at 35%, under the data, named in the legend and
++  spoken. History filter chips reuse Filter chips.
++- Audit `audits/2026-11-02-v0.19.0-reading.md`.
++
+ ## 0.18.0 — 2026-11-02
+ 
+ The Printable report (minor: a component; no token values change).
+diff --git a/DESIGN.md b/DESIGN.md
+index 48b2795..7dc70aa 100644
+--- a/DESIGN.md
++++ b/DESIGN.md
+@@ -1,6 +1,6 @@
+ ---
+ name: Gabriel Design System
+-version: 0.18.0
++version: 0.19.0
+ # GENERATED from tokens/tokens.json by scripts/gen_tokens.py. Edit the tokens, not this block.
+ colors:
+   page: "#F2F2F2"
+diff --git a/VERSION b/VERSION
+index 6633391..1cf0537 100644
+--- a/VERSION
++++ b/VERSION
+@@ -1 +1 @@
+-0.18.0
++0.19.0
+diff --git a/audits/2026-11-02-v0.19.0-reading.md b/audits/2026-11-02-v0.19.0-reading.md
+new file mode 100644
+index 0000000..2e5d70b
+--- /dev/null
++++ b/audits/2026-11-02-v0.19.0-reading.md
+@@ -0,0 +1,39 @@
++# Audit 0.21.0: History filters and the expected window
++
++Method: design review only (detector not applicable, native platform): impeccable critique and
++graphic-design-fundamentals §13 (information design: one message per chart), on
++`day_today_expected_light`, `history_light`.
++
++## graphic-design-fundamentals §13
++
++| # | Check | Result |
++|---|---|---|
++| 1 | Brief | Find one kind fast; see "on time" at a glance. ✅ |
++| 2 | Concept | Filter the list, never the picture; the expected window is a hint, not data. ✅ |
++| 3 | Hierarchy | Real sleeps over the faint window. ✅ |
++| 4 | Contrast | The band is deliberately faint (35%) and always named in the legend; it carries no meaning alone. ✅ |
++| 5 | Alignment | Chips on the page gutter. ✅ |
++| 6 | Spacing | Tokens. ✅ |
++| 7 | Typography | Existing roles. ✅ |
++| 8 | Colour | The nap colour, faint, beside its word. ✅ |
++| 9 | Consistency | The same filter chips (blush when picked). ✅ |
++| 10 | Simplicity | One row of chips; the band only today, only while awake. ✅ |
++| 11 | Real size | Phone width. ✅ |
++| 12 | Accessibility | The window is spoken with its times; chips are radio buttons. ✅ |
++| 13 | Production | No new tokens (a documented alpha on an existing data colour). ✅ |
++
++## impeccable critique
++
++| # | Heuristic | Score | Note |
++|---|---|---|---|
++| 1 | System status | 4 | The window is where the parent looks. |
++| 2 | Real world | 4 | "Expected next sleep". |
++| 3 | Control | 4 | All is one tap away. |
++| 4 | Consistency | 4 | Same chips everywhere. |
++| 5 | Error prevention | n/a | |
++| 6 | Recognition | 4 | Kinds with entries only. |
++| 7 | Efficiency | 4 | One tap to filter. |
++| 8 | Aesthetic | 4 | Quiet band. |
++| 9 | Error recovery | n/a | |
++| 10 | Help | 3 | Legend explains the band. |
++| | **Total** | **31/32** | |
+diff --git a/docs/components.md b/docs/components.md
+index 8007f30..2edeb79 100644
+--- a/docs/components.md
++++ b/docs/components.md
+@@ -27,7 +27,7 @@ component, the row says so.
+ | Recorder panel / player | panel colours, timer 56/64, −15 s, scrubber | `Ui.recorderPanel`, `Ui.player` | — | 🟡 |
+ | Empty state | title 22/28, one line, ≤ 1 primary | `Ui.emptyState` | — | 🟡 |
+ | Skeleton | grey bars instead of "Loading…" text | `Ui.skeletonRow` | — | 🟡 |
+-| Ring / gauge | swept fill 900ms, dithered track, spoken summary | — | `VitalRingGauge`, `ActivityRings` | 🟡 |
++| Ring / gauge | swept fill 900ms, dithered track, spoken summary. Cochilo day ring: today's expected next-sleep window as the nap colour at 35% under the real sleeps, named in the legend and spoken | — | `VitalRingGauge`, `ActivityRings` | 🟡 |
+ | Charts | one message per chart, zone colours, spoken summary | — | `Charts`, `ZoneLineChart` | 🟡 |
+ | Update sheet | "Update available · {version}", release notes, Update · {size} (primary) / Later; "Downloading… n%" with the frame's line, Later becomes Cancel — [self-update.md](self-update.md) | `Ui.updateSheet` | `UpdateDialog` | 🟡 |
+ | Check for updates | About row: version, a secondary button, one result line; release builds only — [self-update.md](self-update.md) | `Ui.checkForUpdates` | `CheckForUpdatesButton` | 🟡 |
+diff --git a/generated/cochilo/CTokens.kt b/generated/cochilo/CTokens.kt
+index a0c60e7..7e9c300 100644
+--- a/generated/cochilo/CTokens.kt
++++ b/generated/cochilo/CTokens.kt
+@@ -1,4 +1,4 @@
+-// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.18.0 — do not edit.
++// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.19.0 — do not edit.
+ package br.gabriel.cochilo.ui.theme
+ 
+ import androidx.compose.ui.graphics.Color
+diff --git a/generated/pulseloop/GTokens.kt b/generated/pulseloop/GTokens.kt
+index dce73c1..bd9ef3e 100644
+--- a/generated/pulseloop/GTokens.kt
++++ b/generated/pulseloop/GTokens.kt
+@@ -1,4 +1,4 @@
+-// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.18.0 — do not edit.
++// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.19.0 — do not edit.
+ package com.pulseloop.ui.theme
+ 
+ import androidx.compose.ui.graphics.Color
+diff --git a/generated/uikit/UiTokens.java b/generated/uikit/UiTokens.java
+index cca8ffd..0b4a070 100644
+--- a/generated/uikit/UiTokens.java
++++ b/generated/uikit/UiTokens.java
+@@ -1,4 +1,4 @@
+-// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.18.0 — do not edit.
++// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.19.0 — do not edit.
+ package br.gabriel.ui;
+ 
+ /**
+diff --git a/generated/web/cochilo.css b/generated/web/cochilo.css
+index 1167e25..1f54579 100644
+--- a/generated/web/cochilo.css
++++ b/generated/web/cochilo.css
+@@ -1,4 +1,4 @@
+-/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.18.0 — do not edit. */
++/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.19.0 — do not edit. */
+ /* Layer: cochilo. Themes: light, dark, night. */
+ 
+ :root {
+diff --git a/generated/web/pulseloop.css b/generated/web/pulseloop.css
+index 90c4a70..b313663 100644
+--- a/generated/web/pulseloop.css
++++ b/generated/web/pulseloop.css
+@@ -1,4 +1,4 @@
+-/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.18.0 — do not edit. */
++/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.19.0 — do not edit. */
+ /* Layer: pulseloop. Themes: dark. */
+ 
+ :root {
+diff --git a/generated/web/uikit.css b/generated/web/uikit.css
+index e73b191..d280188 100644
+--- a/generated/web/uikit.css
++++ b/generated/web/uikit.css
+@@ -1,4 +1,4 @@
+-/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.18.0 — do not edit. */
++/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.19.0 — do not edit. */
+ /* Layer: uikit. Themes: light, dark. */
+ 
+ :root {
+diff --git a/tokens/tokens.json b/tokens/tokens.json
+index 49129be..d283e95 100644
+--- a/tokens/tokens.json
++++ b/tokens/tokens.json
+@@ -1,7 +1,7 @@
+ {
+   "$comment": "Source of truth for every app's design tokens. Edit here, run scripts/gen_tokens.py, commit tokens + generated/ + DESIGN.md together. Schema: docs/tokens.md.",
+   "name": "Gabriel Design System",
+-  "version": "0.18.0",
++  "version": "0.19.0",
+   "core": {
+     "$comment": "Shared by every app. Every layer must include every core token (scripts/check_tokens.py enforces it).",
+     "color": [
+-- 
+2.43.0
+

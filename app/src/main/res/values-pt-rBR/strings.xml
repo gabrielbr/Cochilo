@@ -371,4 +371,8 @@
     <string name="report_period">%1$s a %2$s</string>
     <string name="report_rhythm">Sono, últimos %1$d dias</string>
     <string name="report_footer">Do registro da própria família no Cochilo, feito %1$s. Não é um prontuário médico.</string>
+    <!-- Filtros do histórico e a janela prevista no anel (docs/flows.md). -->
+    <string name="filter_all">Tudo</string>
+    <string name="ring_expected">Próximo sono previsto</string>
+    <string name="ring_expected_spoken">Próximo sono previsto entre %1$s e %2$s.</string>
 </resources>

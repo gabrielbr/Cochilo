@@ -144,6 +144,16 @@ settings, then Start sleep / Woke up is one tap from the notification shade on a
 while the baby sleeps, with "Asleep since 14:50" underneath (Android 10+). It updates whenever the
 log changes and goes through `Entries`, like every other button.
 
+## Reading the data (0.21.0)
+
+- **History filters:** one row of chips under the title, "All" then each kind that has entries
+  (Sleep, Feed, Pump, Diaper…). One tap shows only that kind's entries; the day's timeline stays
+  whole, so the context is never lost. Days without that kind are left out.
+- **The expected window on the ring:** on today's Day ring, while the baby is awake, the predicted
+  window for the next sleep is a faint band of the nap colour, under the real sleeps, with
+  "Expected next sleep" in the legend and in what TalkBack reads ("Next sleep expected between
+  15:51 and 16:11").
+
 ## Motion (0.10.0)
 
 Every action answers with a small movement, so the hand knows it worked without looking twice
