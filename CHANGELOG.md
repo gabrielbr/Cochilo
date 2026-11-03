@@ -3,6 +3,12 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.21.0 — 2026-11-02
+
+**Reading the data.** History has one-tap filters by kind (Sleep, Feed, Diaper…), and today's
+Day ring shows the expected window for the next sleep as a faint band, so "on time" can be seen at
+a glance. `docs/flows.md`.
+
 ## 0.20.0 — 2026-11-02
 
 **A report for the doctor.** Settings › Data › Report for the doctor (PDF): one page with the

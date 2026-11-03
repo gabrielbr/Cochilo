@@ -54,7 +54,11 @@ import java.time.ZoneId
  * vertical rail, sleeps as bars as long as they lasted and the awake time between them.
  */
 @Composable
-fun DayScreen(log: List<Event>, now: Long, zone: ZoneId, onOpen: (Event) -> Unit, initialDay: LocalDate? = null) {
+fun DayScreen(
+    log: List<Event>, now: Long, zone: ZoneId, onOpen: (Event) -> Unit, initialDay: LocalDate? = null,
+    /** The next sleep's expected window (from the prediction), shown on today's ring. */
+    expected: Pair<Long, Long>? = null,
+) {
     val f = Format(LocalContext.current, zone, now)
     val today = localDate(now, zone)
     var epochDay by rememberSaveable { mutableLongStateOf((initialDay ?: today).toEpochDay()) }
@@ -87,7 +91,10 @@ fun DayScreen(log: List<Event>, now: Long, zone: ZoneId, onOpen: (Event) -> Unit
                 .padding(vertical = Spacing.space4),
             contentAlignment = Alignment.Center,
         ) {
-            DayRing(events, from, to, dayNow, zone, daySummary(f, day, events, from, to, now, zone)) {
+            val window = expected?.takeIf { day == today }
+            val spoken = daySummary(f, day, events, from, to, now, zone) +
+                (window?.let { " " + stringResource(R.string.ring_expected_spoken, f.time(it.first), f.time(it.second)) } ?: "")
+            DayRing(events, from, to, dayNow, zone, spoken, expected = window) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(f.duration(sleepMs), style = Type.title, color = CochiloTheme.colors.ink)
                     Text(stringResource(R.string.ring_sleep), style = Type.meta, color = CochiloTheme.colors.muted)
@@ -100,7 +107,7 @@ fun DayScreen(log: List<Event>, now: Long, zone: ZoneId, onOpen: (Event) -> Unit
         Spacer(Modifier.height(Spacing.space3))
         Text(stringResource(R.string.ring_counts, naps, feeds, diapers), style = Type.bodySmall, color = CochiloTheme.colors.ink)
         Spacer(Modifier.height(Spacing.space3))
-        EventLegend()
+        EventLegend(expected = expected != null && day == today)
 
         Caption(stringResource(R.string.caption_vertical))
         if (events.isEmpty()) {

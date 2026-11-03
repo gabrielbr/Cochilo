@@ -88,7 +88,12 @@ fun InfoButton(topic: String, text: String, tint: Color = CochiloTheme.colors.mu
  * [middle] sits in the middle; [summary] is what TalkBack reads instead of the picture.
  */
 @Composable
-fun DayRing(events: List<Event>, from: Long, to: Long, now: Long?, zone: ZoneId, summary: String, middle: @Composable () -> Unit) {
+fun DayRing(
+    events: List<Event>, from: Long, to: Long, now: Long?, zone: ZoneId, summary: String,
+    /** Today's expected next-sleep window, drawn faint on the sleep ring (docs/flows.md). */
+    expected: Pair<Long, Long>? = null,
+    middle: @Composable () -> Unit,
+) {
     val c = CochiloTheme.colors
     val density = LocalDensity.current
     val outerW = with(density) { Spacing.space4.toPx() }
@@ -111,6 +116,8 @@ fun DayRing(events: List<Event>, from: Long, to: Long, now: Long?, zone: ZoneId,
             }
             drawCircle(c.line, rOuter, style = Stroke(outerW))
             drawCircle(c.line, rInner, style = Stroke(innerW))
+            // Where the next sleep is expected: a faint band of the nap colour, under the real sleeps.
+            if (expected != null) arc(c.eventNap.copy(alpha = EXPECTED_ALPHA), expected.first, expected.second, rOuter, outerW)
             for (e in events) {
                 if (!e.type.hasDuration) continue
                 val end = e.end ?: now ?: continue
@@ -198,3 +205,6 @@ fun TimelineGap(text: String) {
         Text(text, style = Type.meta, color = c.muted, modifier = Modifier.padding(start = Spacing.space2, top = Spacing.space1, bottom = Spacing.space3))
     }
 }
+
+/** How strongly the expected window shows on the ring: a hint, never data. */
+private const val EXPECTED_ALPHA = 0.35f

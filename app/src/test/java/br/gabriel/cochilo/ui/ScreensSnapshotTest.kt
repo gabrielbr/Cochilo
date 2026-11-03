@@ -271,6 +271,17 @@ class ScreensSnapshotTest {
         }
         paparazzi.snapshot { Chrome(false, 3, synthetic) }
     }
+    @Test fun day_today_expected_light() {
+        light()
+        paparazzi.snapshot {
+            CochiloTheme(false) {
+                br.gabriel.cochilo.ui.kit.Frame {
+                    val p = Predictor(zone).predict(log, ageWeeks(baby.birthDate, null, now), now) as Predictor.Result.Awake
+                    DayScreen(log, now, zone, onOpen = {}, expected = p.windowStart to p.windowEnd)
+                }
+            }
+        }
+    }
     @Test fun settings_light() { light(); paparazzi.snapshot { Chrome(false, 0, settings = true) } }
     @Test fun today_fabric_balao_light() { light(); paparazzi.snapshot { Fabric(br.gabriel.cochilo.ui.kit.Fabric.BALAO) { Chrome(false, 0) } } }
     @Test fun today_sleeping_fabric_tropical_dark() { dark(); paparazzi.snapshot { Fabric(br.gabriel.cochilo.ui.kit.Fabric.TROPICAL) { Chrome(true, 0, sleepingLog) } } }

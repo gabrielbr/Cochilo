@@ -46,9 +46,6 @@ Each is grounded in `docs/research.md` or the Tatá Slings plans (`docs/tata-sli
 - **Who logged it**: an optional initial on entries when two phones sync.
 
 ### 3.4 Reading the data
-- **Search and filter** History by kind.
-- **The Day tab's ring** with the sleep windows the prediction expected, faint, so a parent sees
-  "on time" at a glance.
 
 ## 4. Betterments (quality)
 
@@ -64,6 +61,7 @@ Each is grounded in `docs/research.md` or the Tatá Slings plans (`docs/tata-sli
 
 ## Shipped from this plan
 
+- **0.21.0**: History filters by kind; the expected window on today's ring ([flows.md](flows.md)).
 - **0.20.0**: the report for the doctor (PDF) ([report.md](report.md)).
 - **0.19.0**: the ritual builder ([rituals.md](rituals.md)).
 - **0.18.0**: what changed (change detection, the week's plain sentences first) and day / night milk ([changes.md](changes.md)).
@@ -78,7 +76,7 @@ Each is grounded in `docs/research.md` or the Tatá Slings plans (`docs/tata-sli
 
 | When | What | Why first |
 |---|---|---|
-| **Soon** | Search History; the Day ring with expected windows | Research-backed, small, and on the brand's subject |
+| **Soon** | Quality pass: font scale, seamless fabric tiles, encrypted backup, prediction tests | Research-backed, small, and on the brand's subject |
 | **Later** | Notes from Tatá (waiting for her writing) | Needs Tatá's writing and the monetization plan's order of work |
 | **Exploring** | Wi-Fi sync between two phones; Wear OS; smarter prediction | Bigger builds; worth a design spike first |
 

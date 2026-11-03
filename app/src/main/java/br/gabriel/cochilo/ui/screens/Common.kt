@@ -100,16 +100,17 @@ fun EventList(events: List<Event>, now: Long, f: Format, zone: ZoneId, onOpen: (
 }
 
 @Composable
-fun EventLegend() {
+fun EventLegend(expected: Boolean = false) {
     val c = CochiloTheme.colors
     Legend(
-        listOf(
+        listOfNotNull(
             LegendItem(stringResource(R.string.sleep_night), c.eventNight),
             LegendItem(stringResource(R.string.sleep_nap), c.eventNap),
             LegendItem(stringResource(R.string.type_feed), c.eventFeed),
             LegendItem(stringResource(R.string.type_pump), c.eventPump),
             LegendItem(stringResource(R.string.type_diaper), c.eventDiaper),
             LegendItem(stringResource(R.string.type_daylight), c.eventDaylight),
+            if (expected) LegendItem(stringResource(R.string.ring_expected), c.eventNap.copy(alpha = 0.35f)) else null,
         )
     )
 }
