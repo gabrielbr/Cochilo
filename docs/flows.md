@@ -63,6 +63,12 @@ Code: `lastOf`, `lastKind`, `lastKindAmong`, `Event.rememberedFrom` in `domain/Q
 (tested in `QuickLogTest`); the Log menu in `LogMenu.kt` (Today's rows until 0.39.0); the sheet's line in `Sheets.kt`.
 This replaced the earlier "next: other breast" suggestion: the app shows what happened, she decides.
 
+## Share to Cochilo (0.41.0)
+
+From Napper (or any app), Export or Share, then pick **Cochilo** in Android's share sheet: the file
+is imported at once and the usual message says what was added. Two taps in the other app, none in
+Cochilo; before, it was six steps through Settings. Details: [backup.md](backup.md).
+
 ## History on Today, and Ask's chats (0.40.0)
 
 The owner: "move everything from the History page to the recent items on the home page. We don't

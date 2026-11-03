@@ -70,6 +70,7 @@ other moments and the age notes need Tatá's sign-off.
 
 ## Shipped from this plan
 
+- **0.41.0**: Share to Cochilo: Napper's export (or a backup) from any app's share sheet imports at once ([backup.md](backup.md)).
 - **0.40.1**: the design in three layers in `design/` (core vendored, Tatá brand, Cochilo layer); the design system stays generic ([design/README.md](../design/README.md)).
 - **0.40.0**: History moves to the end of Today (three tabs); Ask keeps chats, one per topic ([flows.md](flows.md), [assistant.md](assistant.md)).
 - **0.39.0**: Today without the log rows; the Log button does it all (the owner's ask; [flows.md](flows.md)).

@@ -282,23 +282,35 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
             val text = runCatching {
                 ctx.contentResolver.openInputStream(uri)!!.use { it.readBytes().decodeToString() }
             }.getOrElse { return@withContext str(R.string.file_failed) }
-            if (br.gabriel.cochilo.backup.Sealed.isSealed(text)) {
-                // Try the passphrase this phone keeps; otherwise ask for it (UnlockSheet).
-                val saved = ctx.prefs.backupPassphrase.value
-                val opened = saved?.let { p -> runCatching { br.gabriel.cochilo.backup.Sealed.open(text, p) }.getOrNull() }
-                    ?: run { _sealed.value = SealedImport(text, wrong = false); return@withContext null }
-                return@withContext importBackup(opened)
-            }
-            if (NapperImport.looksLikeNapper(text)) {
-                val parsed = runCatching { NapperImport.parse(text, napperLabels()) }
-                    .getOrElse { return@withContext str(R.string.import_napper_failed) }
-                val result = mergeIn(parsed.events)
-                return@withContext str(R.string.imported_napper, result.added, result.updated)
-            }
-            importBackup(text)
+            importContent(text)
         } ?: return@launch
         refreshNow()
         _messages.send(UiMessage(msg))
+    }
+
+    /** Text shared to Cochilo (0.41.0): a Napper CSV or a backup pasted as text, imported like a file. */
+    fun importText(text: String) = viewModelScope.launch {
+        val msg = withContext(Dispatchers.IO) { importContent(text) } ?: return@launch
+        refreshNow()
+        _messages.send(UiMessage(msg))
+    }
+
+    /** What any import reads: a locked backup, a Napper CSV or a Cochilo backup. Null when it waits for a passphrase. */
+    private suspend fun importContent(text: String): String? {
+        if (br.gabriel.cochilo.backup.Sealed.isSealed(text)) {
+            // Try the passphrase this phone keeps; otherwise ask for it (UnlockSheet).
+            val saved = ctx.prefs.backupPassphrase.value
+            val opened = saved?.let { p -> runCatching { br.gabriel.cochilo.backup.Sealed.open(text, p) }.getOrNull() }
+                ?: run { _sealed.value = SealedImport(text, wrong = false); return null }
+            return importBackup(opened)
+        }
+        if (NapperImport.looksLikeNapper(text)) {
+            val parsed = runCatching { NapperImport.parse(text, napperLabels()) }
+                .getOrElse { return str(R.string.import_napper_failed) }
+            val result = mergeIn(parsed.events)
+            return str(R.string.imported_napper, result.added, result.updated)
+        }
+        return importBackup(text)
     }
 
     private suspend fun importBackup(text: String): String {
