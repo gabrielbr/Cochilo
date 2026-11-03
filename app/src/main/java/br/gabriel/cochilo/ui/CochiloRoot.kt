@@ -96,6 +96,8 @@ fun CochiloRoot(vm: MainViewModel) {
     var showingChats by rememberSaveable { mutableStateOf(false) }
     var deletedChat by androidx.compose.runtime.remember { mutableStateOf<br.gabriel.cochilo.data.Chat?>(null) }
     fun newChat() { chatId = java.util.UUID.randomUUID().toString(); showingChats = false }
+    // Today's glimpse opens a new chat already on its question (0.45.0).
+    var askTopic by rememberSaveable { mutableStateOf<br.gabriel.cochilo.domain.assistant.Assistant.Topic?>(null) }
     var showingModel by remember { mutableStateOf(false) }
     val pickModel = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { it?.let(vm::importModel) }
     val snackbar = remember { SnackbarHostState() }
@@ -185,8 +187,18 @@ fun CochiloRoot(vm: MainViewModel) {
                         // A fresh screen for each chat: its own questions, saved as they come.
                         androidx.compose.runtime.key(chatId) {
                             val id = chatId
+                            val opening = askTopic?.takeIf { current == null }?.let { t ->
+                                listOf(br.gabriel.cochilo.ui.screens.AskExchange(
+                                    context.getString(br.gabriel.cochilo.ui.screens.questionRes(t)),
+                                    br.gabriel.cochilo.domain.assistant.Assistant.Reply.About(t),
+                                    parts = br.gabriel.cochilo.ui.screens.answer(context, t, facts, f),
+                                ))
+                            }
+                            if (opening != null) androidx.compose.runtime.LaunchedEffect(id) {
+                                vm.saveChat(id, opening.mapNotNull { it.toItem() }); askTopic = null
+                            }
                             br.gabriel.cochilo.ui.screens.AskScreen(
-                                facts, f, initial = current?.items?.map { it.toExchange() } ?: emptyList(),
+                                facts, f, initial = opening ?: current?.items?.map { it.toExchange() } ?: emptyList(),
                                 generate = if (ready && !paused) vm::generate else null,
                                 onResumeModel = if (ready && paused) vm::resumeModel else null,
                                 onGetModel = if (canGet) ({ showingModel = true }) else null,
@@ -281,6 +293,12 @@ fun CochiloRoot(vm: MainViewModel) {
                                             onPlace = { e, k -> vm.setPlace(e, k) },
                                             onUpForDay = { vm.upForDay(it) },
                                             onSetNight = { e, n -> vm.setNight(e, n) },
+                                            glimpse = run {
+                                                val facts = remember(log, now, weeks) { br.gabriel.cochilo.domain.assistant.Assistant.facts(log, weeks, now, zone, prediction) }
+                                                br.gabriel.cochilo.ui.screens.glimpseTopic(facts, br.gabriel.cochilo.domain.localDate(now, zone).toEpochDay())?.let { t ->
+                                                    { br.gabriel.cochilo.ui.screens.AskGlimpse(t, facts, f) { newChat(); askTopic = it; asking = true } }
+                                                }
+                                            },
                                             onFinish = { vm.finish(it) },
                                             onNew = { type ->
                                                 // Remember actions: the sheet opens on what was done last (the same

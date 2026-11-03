@@ -55,8 +55,8 @@ the fabric line, shipped in 0.31.0; step 4's first moment, naps in arms, live in
 Today, at night, or on safety screens. The other moments need Tatá's sign-off.
 
 ### 3.3b Less is more, next ([skill](../.claude/skills/less-is-more/SKILL.md))
-- **One legend per screen**: Today's Day by day and the Day tab each carry the full colour legend;
-  try it folded behind the first chart, or only the kinds that day has.
+- **One legend per screen**: the Day tab and Patterns each carry the full colour legend; try only
+  the kinds that day has. (Today's Day by day, the third, went in 0.45.0.)
 - **Settings' second lines**: most rows explain themselves; keep a meta line only where a row is
   misread (Due date).
 - **The notification at night**: try the title and the two buttons only, no body line.
@@ -76,6 +76,7 @@ Today, at night, or on safety screens. The other moments need Tatá's sign-off.
 
 ## Shipped from this plan
 
+- **0.45.0**: Today without Day by day; the kind filter on the Day tab; the Ask Cochilo glimpse; a wider fabric band ([flows.md](flows.md)).
 - **0.44.0**: From Tatá, a tab of its own, with all twelve age notes ([in-app-marketing.md](tata-slings/in-app-marketing.md) §13).
 - **0.43.0**: less is more: Today, Day and Patterns decluttered, the night first in Patterns ([flows.md](flows.md)).
 - **0.42.0**: the night as one thing: nap or night per sleep, night wakings, up for the day ([nights.md](nights.md)).

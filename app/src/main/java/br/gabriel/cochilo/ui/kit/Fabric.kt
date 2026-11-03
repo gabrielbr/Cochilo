@@ -100,12 +100,13 @@ private fun FabricFrameNow(inner: Color, padding: Dp, fabric: Fabric, content: @
     val modifier = Modifier
     val texture = fabric.texture
     if (texture == null) {
-        Column(modifier.fillMaxWidth().clip(RoundedCornerShape(Radius.radiusM)).background(inner).padding(padding)) { content() }
+        Column(modifier.fillMaxWidth().clip(RoundedCornerShape(Radius.radiusM)).background(inner).padding(horizontal = padding, vertical = Spacing.space8)) { content() }
         return
     }
+    // A wider band since 0.45.0 (the owner): more of her fabric shows, like a sling's fold on top.
     Box(modifier.fillMaxWidth().clip(RoundedCornerShape(Radius.radiusM)).background(fabricBrush(texture))
-        .padding(start = Spacing.space3, end = Spacing.space3, bottom = Spacing.space3, top = Spacing.space8)) {
-        Column(Modifier.fillMaxWidth().clip(RoundedCornerShape(Radius.radiusS)).background(inner).padding(padding)) { content() }
+        .padding(start = Spacing.space4, end = Spacing.space4, bottom = Spacing.space4, top = Spacing.space16)) {
+        Column(Modifier.fillMaxWidth().clip(RoundedCornerShape(Radius.radiusS)).background(inner).padding(horizontal = padding, vertical = Spacing.space8)) { content() }
     }
 }
 

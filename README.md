@@ -19,9 +19,11 @@ and import yourself.
 
 - **Today**: awake/asleep timer with one action (Start sleep / Woke up), the next nap or bedtime
   with its window and the reason for it, running timers (a feed, a walk outside), quick log
-  buttons (since 0.39.0 the Log button in the corner, not a list of rows), then **day by day**
-  (since 0.40.0, what the History tab was): filters by kind, and each day, today first, with its
-  summary, timeline and entries grouped asleep and awake. Tap any entry to edit or delete it.
+  buttons (since 0.39.0 the Log button in the corner, not a list of rows), and at the end **Ask
+  Cochilo** (since 0.45.0): the one question that stands out in her log, with her numbers and
+  what to try, one tap to the full answer. The card is wrapped in her fabric, with a wider band
+  since 0.45.0. Past days are on the Day tab (its arrows), with the kind filter. Tap any entry to
+  edit or delete it.
 - **Nights** (since 0.42.0): each sleep is a nap or the night. Start sleep guesses which, and
   one tap changes it. Waking at night shows "Awake in the night" with **Back to sleep** and **Up
   for the day**, so a night with wakings is one night: bedtime, wakings and the morning are counted

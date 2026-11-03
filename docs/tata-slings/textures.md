@@ -25,8 +25,8 @@ fabric.
 
 ## Where a fabric shows, and why there
 
-Only as the band of the **Fabric frame** round the Today card (`space8` on top, like the fold of
-the sling, `space3` on the sides) and as the picker's swatches. No word is ever drawn on a fabric.
+Only as the band of the **Fabric frame** round the Today card (`space16` on top since 0.45.0, like the fold of
+the sling, `space4` on the sides) and as the picker's swatches. No word is ever drawn on a fabric.
 
 Measured first, and rejected: the fabric washed behind the whole page. For 12–13sp muted text to
 keep 4.5:1 over the darkest part of each photo, the page colour had to cover 84–96% of it in

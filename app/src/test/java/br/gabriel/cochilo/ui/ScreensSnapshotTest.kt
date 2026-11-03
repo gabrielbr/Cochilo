@@ -43,7 +43,6 @@ import br.gabriel.cochilo.ui.kit.Tab
 import br.gabriel.cochilo.ui.kit.TabBar
 import br.gabriel.cochilo.ui.screens.DayScreen
 import br.gabriel.cochilo.ui.screens.VerticalTimeline
-import br.gabriel.cochilo.ui.screens.HistoryDays
 import br.gabriel.cochilo.ui.screens.PatternsScreen
 import br.gabriel.cochilo.ui.screens.SettingsScreen
 import br.gabriel.cochilo.ui.screens.TodayScreen
@@ -100,6 +99,7 @@ class ScreensSnapshotTest {
         dark: Boolean, tab: Int, log: List<Event> = this.log, settings: Boolean = false,
         logHover: br.gabriel.cochilo.ui.kit.LogHover? = null,
         night: Boolean = false,
+        dayFilter: EventType? = null,
     ) {
         CochiloTheme(dark, night) {
             val weeks = ageWeeks(baby.birthDate, null, now)
@@ -128,8 +128,13 @@ class ScreensSnapshotTest {
                 }) { width ->
                     val screen: @Composable (Int) -> Unit = { t ->
                         when (t) {
-                            0 -> TodayScreen(log, p, now, zone, {}, {}, {}, {}, {})
-                            1 -> DayScreen(log, now, zone, onOpen = {}, initialDay = LocalDateTime.of(2026, 10, 30, 12, 0).toLocalDate())
+                            0 -> {
+                                val facts = br.gabriel.cochilo.domain.assistant.Assistant.facts(log, weeks, now, zone, p)
+                                TodayScreen(log, p, now, zone, {}, {}, {}, {}, {}, glimpse = br.gabriel.cochilo.ui.screens.glimpseTopic(facts, br.gabriel.cochilo.domain.localDate(now, zone).toEpochDay())?.let { t ->
+                                    { br.gabriel.cochilo.ui.screens.AskGlimpse(t, facts, f) {} }
+                                })
+                            }
+                            1 -> DayScreen(log, now, zone, onOpen = {}, initialDay = LocalDateTime.of(2026, 10, 30, 12, 0).toLocalDate(), initialFilter = dayFilter)
                             2 -> PatternsScreen(log, now, zone, weeks)
                             else -> br.gabriel.cochilo.ui.screens.TataScreen(
                                 baby.name, weeks, { if (it == br.gabriel.cochilo.domain.AgeNotes.Band.M1_2) "tata_facil_sling" else null },
@@ -191,7 +196,6 @@ class ScreensSnapshotTest {
     @Test fun today_font200_light() { big(); paparazzi.snapshot { Chrome(false, 0) } }
     @Test fun today_sleeping_font200_light() { big(); paparazzi.snapshot { Chrome(false, 0, sleepingLog) } }
     @Test fun log_button_open_font200_light() { big(); paparazzi.snapshot { Chrome(false, 0, logHover = br.gabriel.cochilo.ui.kit.LogHover(1)) } }
-    @Test fun history_font200_light() { big(); paparazzi.snapshot { DaysShot(false) } }
     @Test fun patterns_font200_light() { big(); paparazzi.snapshot { Chrome(false, 2) } }
     @Test fun day_font200_light() { big(); paparazzi.snapshot { Chrome(false, 1) } }
     @Test fun settings_font200_light() { big(); paparazzi.snapshot { Chrome(false, 0, settings = true) } }
@@ -225,7 +229,6 @@ class ScreensSnapshotTest {
     @Test fun today_tablet_light() { paparazzi.unsafeUpdateConfig(tabletPortrait); paparazzi.snapshot { Chrome(false, 0) } }
     @Test fun patterns_tablet_light() { paparazzi.unsafeUpdateConfig(tabletPortrait); paparazzi.snapshot { Chrome(false, 2) } }
     @Test fun today_foldable_light() { paparazzi.unsafeUpdateConfig(foldOpen); paparazzi.snapshot { Chrome(false, 0) } }
-    @Test fun history_foldable_dark() { paparazzi.unsafeUpdateConfig(foldOpen.copy(nightMode = NightMode.NIGHT)); paparazzi.snapshot { DaysShot(true) } }
     @Test fun settings_foldable_light() { paparazzi.unsafeUpdateConfig(foldOpen); paparazzi.snapshot { Chrome(false, 0, settings = true) } }
 
     /** A night waking (docs/nights.md, 0.42.0): the night's sleep ended 40 min ago; back to sleep or up for the day. */
@@ -239,16 +242,16 @@ class ScreensSnapshotTest {
     @Test fun today_dark() { dark(); paparazzi.snapshot { Chrome(true, 0) } }
     @Test fun today_sleeping_dark() { dark(); paparazzi.snapshot { Chrome(true, 0, sleepingLog) } }
     @Test fun today_ptBR_light() { pt(false); paparazzi.snapshot { Chrome(false, 0) } }
-    /** Today's day-by-day part (0.40.0: History moved here), with its filters. */
-    @Test fun history_light() { light(); paparazzi.snapshot { DaysShot(false) } }
-
-    @Composable
-    private fun DaysShot(dark: Boolean) {
-        CochiloTheme(dark) { br.gabriel.cochilo.ui.kit.Frame { br.gabriel.cochilo.ui.screens.ScrollPage {
-            br.gabriel.cochilo.ui.kit.Caption(stringResource(R.string.caption_days))
-            HistoryDays(log, now, zone, {}, top = CTokens.Spacing.space2)
-        } } }
+    /** The whole of Today on a tall screen (0.45.0): no Day by day; the Ask Cochilo glimpse at the end. */
+    private fun tall(night: Boolean = false) = paparazzi.unsafeUpdateConfig(DeviceConfig.PIXEL_5.copy(screenHeight = 4400, nightMode = if (night) NightMode.NIGHT else NightMode.NOTNIGHT))
+    @Test fun today_full_light() { tall(); paparazzi.snapshot { Chrome(false, 0) } }
+    @Test fun today_full_fabric_dark() {
+        tall(true)
+        paparazzi.snapshot { androidx.compose.runtime.CompositionLocalProvider(br.gabriel.cochilo.ui.kit.LocalFabric provides br.gabriel.cochilo.ui.kit.Fabric.BALAO) { Chrome(true, 0) } }
     }
+    /** The Day tab's kind filter (0.45.0, moved from Today), on Feeds. */
+    @Test fun day_filter_feed_light() { tall(); paparazzi.snapshot { Chrome(false, 1, dayFilter = EventType.FEED) } }
+    @Test fun day_filter_all_light() { tall(); paparazzi.snapshot { Chrome(false, 1) } }
     @Test fun patterns_light() { light(); paparazzi.snapshot { Chrome(false, 2) } }
     @Test fun patterns_dark() { dark(); paparazzi.snapshot { Chrome(true, 2) } }
     @Test fun patterns_ptBR_dark() { pt(true); paparazzi.snapshot { Chrome(true, 2) } }

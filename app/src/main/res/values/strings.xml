@@ -63,7 +63,6 @@
     <string name="action_finish">Finish</string>
     <string name="empty_today_title">Nothing logged today</string>
     <string name="empty_today_line">Start a sleep, or tap + to log a feed or a diaper when it happens.</string>
-    <string name="caption_days">Day by day</string>
 
     <string name="type_sleep">Sleep</string>
     <string name="type_feed">Feed</string>
@@ -448,6 +447,10 @@
     <string name="details_skip">Not now</string>
     <string name="last_used">used last time</string>
     <!-- Ask Cochilo (docs/assistant.md): reviewed answers. Describe, suggest gently, never judge, never diagnose. -->
+    <string name="glimpse_caption">Ask Cochilo</string>
+    <string name="glimpse_line">From your log, on this phone.</string>
+    <string name="glimpse_open">Read the answer</string>
+    <string name="glimpse_spoken">%1$s Read Ask Cochilo\'s answer, from your log, on this phone.</string>
     <string name="ask_title">Ask Cochilo</string>
     <string name="ask_line">Answers from your log and from sleep research, made on this phone. Not medical advice.</string>
     <string name="ask_field">Ask about naps, nights, routines…</string>
