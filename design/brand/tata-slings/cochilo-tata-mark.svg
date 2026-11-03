@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="108" height="108" viewBox="0 0 108 108" role="img" aria-label="Cochilo, da Tatá Slings: a crescent moon resting in a sling">
+  <rect width="108" height="108" fill="#5DC2BB"/>
+  <!-- the crescent moon, resting -->
+  <path fill="#13293D" d="M51.05,32.31 A14,14 0 1,0 67.01,51.17 A12.5,12.5 0 0,1 51.05,32.31 Z"/>
+  <!-- the sling's curve, holding it -->
+  <path fill="none" stroke="#13293D" stroke-width="6" stroke-linecap="round" d="M32,56 Q54,90 76,56"/>
+</svg>

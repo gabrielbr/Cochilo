@@ -1,3 +1,8 @@
+> **Superseded (Cochilo 0.40.1).** Cochilo's design now lives in [`../design/`](../design/README.md),
+> in three layers: the core (vendored), the Tatá Slings brand and the Cochilo layer. These patches
+> are kept only as the source for the one upstream PR described in
+> [`../design/UPSTREAM.md`](../design/UPSTREAM.md). Don't add patches here any more.
+
 # Design-system change for Cochilo
 
 The design system's rules say an app's values are decided there first. This folder holds that

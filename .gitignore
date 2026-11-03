@@ -159,3 +159,4 @@ captures/
 
 # Ask Cochilo model files (docs/assistant.md): never committed
 assistant_model/src/main/assets/*.task
+__pycache__/

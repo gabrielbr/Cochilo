@@ -3,6 +3,17 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.40.1 — 2026-11-03
+
+**No change you can see.** Behind the scenes, Cochilo's look now lives in this repo in three
+layers:
+- the Gabriel Design System's core, kept at a fixed version;
+- the Tatá Slings brand;
+- Cochilo's own pieces.
+
+The design system stays the owner's generic boilerplate. Every value in the app is exactly the
+same. `design/README.md`.
+
 ## 0.40.0 — 2026-11-03
 
 **History is on Today, and Ask keeps chats.** The History tab is gone. Today now ends with Day by

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   Cochilo, da Tatá Slings: a crescent moon resting in a sling's curve, navy on the brand teal
-  (background). Design system asset: assets/logos/cochilo-tata-mark.svg (docs/brands.md).
+  (background). Brand asset: design/brand/tata-slings/cochilo-tata-mark.svg.
 -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp" android:height="108dp" android:viewportWidth="108" android:viewportHeight="108">
