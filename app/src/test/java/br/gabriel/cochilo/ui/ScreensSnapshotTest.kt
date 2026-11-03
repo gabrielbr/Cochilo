@@ -393,6 +393,19 @@ class ScreensSnapshotTest {
             br.gabriel.cochilo.ui.screens.TataSuggestion(s, "https://tataslings.com.br/", onDismiss = {})
         } } }
     }
+    /** Tatá's note by age, as it would read once she approves it: content only, and one with the sling. */
+    @Test fun age_note_3_4_months_light() {
+        light()
+        paparazzi.snapshot { CochiloTheme(false) { br.gabriel.cochilo.ui.kit.Frame { Column(Modifier.padding(CTokens.Spacing.space6)) {
+            br.gabriel.cochilo.ui.screens.TataAgeNote(br.gabriel.cochilo.domain.AgeNotes.Band.M3_4, null, null, onClose = {})
+        } } } }
+    }
+    @Test fun age_note_1_2_months_ptBR_dark() {
+        pt(true)
+        paparazzi.snapshot { CochiloTheme(true) { br.gabriel.cochilo.ui.kit.Frame { Column(Modifier.padding(CTokens.Spacing.space6)) {
+            br.gabriel.cochilo.ui.screens.TataAgeNote(br.gabriel.cochilo.domain.AgeNotes.Band.M1_2, "tata_facil_sling", "https://tataslings.com.br/", onClose = {})
+        } } } }
+    }
     @Test fun tata_note_arms_naps_light() {
         light(); paparazzi.snapshot { TataNoteShot(false, br.gabriel.cochilo.domain.Suggestions.Suggestion(br.gabriel.cochilo.domain.Suggestions.Moment.ARMS_NAPS, "tata_facil_sling", 6)) }
     }

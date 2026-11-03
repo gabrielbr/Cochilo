@@ -241,11 +241,18 @@ fun CochiloRoot(vm: MainViewModel) {
                                             // A note from Tatá when one is due (in-app-marketing.md): rules in Suggestions.
                                             vm.suggestionTick.collectAsState().value
                                             vm.tataSuggestions.collectAsState().value
-                                            val due = vm.suggestion(log, weeks, now, prediction is Predictor.Result.Sleeping)
+                                            val sleeping = prediction is Predictor.Result.Sleeping
+                                            // One Tatá card at most: her note for the baby's age first (content), else a suggestion.
+                                            val band = vm.ageNote(weeks, now, sleeping)
+                                            val due = if (band == null) vm.suggestion(log, weeks, now, sleeping) else null
                                             if (due != null) androidx.compose.runtime.LaunchedEffect(due.moment) { vm.suggestionShown(due.moment) }
                                             PatternsScreen(
                                                 log, now, zone, weeks, onAsk = { asking = true },
-                                                tataNote = due?.let { s -> { br.gabriel.cochilo.ui.screens.TataSuggestion(s, vm.catalog.url(s.moment), onDismiss = { vm.dismissSuggestion(s.moment) }) } },
+                                                tataNote = when {
+                                                    band != null -> { { br.gabriel.cochilo.ui.screens.TataAgeNote(band, vm.catalog.noteProduct(band), vm.catalog.noteUrl(band), onClose = { vm.closeAgeNote(band) }) } }
+                                                    due != null -> { { br.gabriel.cochilo.ui.screens.TataSuggestion(due, vm.catalog.url(due.moment), onDismiss = { vm.dismissSuggestion(due.moment) }) } }
+                                                    else -> null
+                                                },
                                             )
                                         }
                                     }

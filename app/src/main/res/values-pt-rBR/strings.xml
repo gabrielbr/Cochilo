@@ -551,4 +551,18 @@
     <string name="reminder_bed_title">Janela de dormir em %1$d min</string>
     <string name="reminder_text">Prevista por volta de %1$s–%2$s. Um bom momento para começar a rotina.</string>
     <string name="reminder_start_routine">Começar a rotina</string>
+    <!-- Notes from Tatá by age (in-app-marketing.md §3.1). DRAFTS for Tatá to rewrite or approve; none shows until approved in the catalog. -->
+    <string name="age_note_close">Entendi</string>
+    <string name="age_note_m0_1">De 0 a 1 mês · Recém-nascidos dormem em pedacinhos, de dia e de noite. Mamar muitas vezes faz parte. Descanse quando puder.</string>
+    <string name="age_note_m1_2">De 1 a 2 meses · Sonecas curtas e no colo são comuns agora; o ritmo do dia ainda está se formando. Se o colo cansa os braços, o sling deixa as mãos livres.</string>
+    <string name="age_note_m2_3">De 2 a 3 meses · Luz do dia à tarde e uma noite calma, com pouca luz, ajudam o relógio do corpo que está se formando.</string>
+    <string name="age_note_m3_4">De 3 a 4 meses · O sono está mudando de estrutura, e algumas noites podem ter mais despertares por um tempo. É desenvolvimento, no ritmo do bebê. Quando o bebê começar a tentar rolar, é hora de parar de enrolar no swaddle.</string>
+    <string name="age_note_m4_6">De 4 a 6 meses · As janelas acordado crescem, e muitos bebês ficam com três ou quatro sonecas. Uma rotina curta, sempre igual, ajuda todos a saber o que vem.</string>
+    <string name="age_note_m6_8">De 6 a 8 meses · Brincar e explorar ocupam mais do tempo acordado. Rolar e sentar são conquistas novas, e treinar faz parte do dia.</string>
+    <string name="age_note_m8_10">De 8 a 10 meses · Muitos bebês passam para duas sonecas por volta de agora. Dias com uma janela acordado mais longa são normais enquanto a mudança se assenta.</string>
+    <string name="age_note_m10_12">De 10 a 12 meses · Ficar de pé e os novos sons podem agitar a noite por alguns dias. Uma rotina conhecida é um lugar firme para voltar.</string>
+    <string name="age_note_m12_15">De 12 a 15 meses · O sono total costuma ficar entre 11 e 14 horas por dia, com as sonecas. Cada criança encontra o seu lugar nessa faixa.</string>
+    <string name="age_note_m15_18">De 15 a 18 meses · Muitas crianças passam para uma soneca, muitas vezes depois do almoço. A mudança pode levar algumas semanas de vai e vem.</string>
+    <string name="age_note_m18_21">De 18 a 21 meses · Chega a vontade de escolher. Duas pequenas escolhas na hora de dormir (qual pijama, qual livro) deixam a rotina tranquila.</string>
+    <string name="age_note_m21_24">De 21 a 24 meses · Uma soneca e um horário regular de dormir são comuns agora. Luz do dia, movimento e uma noite calma ainda ajudam a noite.</string>
 </resources>

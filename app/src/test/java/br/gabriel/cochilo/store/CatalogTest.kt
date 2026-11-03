@@ -22,6 +22,14 @@ class CatalogTest {
         assertEquals(emptySet<Moment>(), catalog.approved)
     }
 
+    @Test fun every_age_band_has_a_note_entry_none_approved_most_without_a_product() {
+        for (b in br.gabriel.cochilo.domain.AgeNotes.Band.entries) assertTrue("$b", catalog.notes.any { it.band == b.name })
+        assertEquals(emptySet<br.gabriel.cochilo.domain.AgeNotes.Band>(), catalog.approvedNotes)
+        assertEquals(1, catalog.notes.count { it.product != null })
+        assertEquals("https://tataslings.com.br/tata-facil-sling/?utm_source=cochilo&utm_medium=app&utm_campaign=note_m1_2", catalog.noteUrl(br.gabriel.cochilo.domain.AgeNotes.Band.M1_2))
+        assertEquals(null, catalog.noteUrl(br.gabriel.cochilo.domain.AgeNotes.Band.M3_4))
+    }
+
     @Test fun approval_is_read_per_moment() {
         val c = Catalog.parse("""{"version":1,"moments":[{"moment":"SIX_MONTHS","product":"tata_to","path":"/x/","approved":true},{"moment":"GONE","product":"p","path":"y/","approved":true}]}""")
         assertEquals(setOf(Moment.SIX_MONTHS), c.approved)

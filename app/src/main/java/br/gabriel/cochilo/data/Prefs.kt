@@ -109,6 +109,11 @@ class Prefs(context: Context) {
     val firstSeen: Long
         get() = sp.getLong("first_seen", 0L).takeIf { it > 0 } ?: System.currentTimeMillis().also { now -> sp.edit { putLong("first_seen", now) } }
 
+    /** Age notes the parent closed ("Got it"), by band. */
+    var ageNotesClosed: Set<String>
+        get() = sp.getStringSet("age_notes_closed", emptySet())!!.toSet()
+        set(v) = sp.edit { putStringSet("age_notes_closed", v) }
+
     /** Moments dismissed for good. */
     var suggestionsDismissed: Set<String>
         get() = sp.getStringSet("suggestions_dismissed", emptySet())!!.toSet()

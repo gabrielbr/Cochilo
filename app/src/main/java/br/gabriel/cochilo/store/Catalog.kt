@@ -10,9 +10,25 @@ import kotlinx.serialization.json.Json
  * inside each release; the app never fetches it.
  */
 @Serializable
-data class Catalog(val version: Int, val moments: List<Entry>) {
+data class Catalog(val version: Int, val moments: List<Entry>, val notes: List<Note> = emptyList()) {
     @Serializable
     data class Entry(val moment: String, val product: String, val path: String, val approved: Boolean)
+
+    /** A note by age (§3.1): most have no product; a few link to one. */
+    @Serializable
+    data class Note(val band: String, val approved: Boolean, val product: String? = null, val path: String? = null)
+
+    private fun note(b: br.gabriel.cochilo.domain.AgeNotes.Band) = notes.firstOrNull { it.band == b.name }
+
+    /** The age notes Tatá wrote or approved. */
+    val approvedNotes: Set<br.gabriel.cochilo.domain.AgeNotes.Band>
+        get() = br.gabriel.cochilo.domain.AgeNotes.Band.entries.filter { note(it)?.approved == true }.toSet()
+
+    fun noteProduct(b: br.gabriel.cochilo.domain.AgeNotes.Band): String? = note(b)?.product
+
+    /** The shop link a note ends with, if any, tagged `note_<band>`. */
+    fun noteUrl(b: br.gabriel.cochilo.domain.AgeNotes.Band): String? =
+        note(b)?.path?.let { Store.page(it, "note_${b.name.lowercase()}") }
 
     private fun entry(m: Moment) = moments.firstOrNull { it.moment == m.name }
 

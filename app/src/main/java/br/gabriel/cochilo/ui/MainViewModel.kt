@@ -330,6 +330,19 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         )
     }
 
+    /** Tatá's note for the baby's age (§3.1), or null. Content first: it takes the slot before a suggestion. */
+    fun ageNote(ageWeeks: Int, now: Long, sleeping: Boolean): br.gabriel.cochilo.domain.AgeNotes.Band? {
+        val known = br.gabriel.cochilo.domain.AgeNotes.Band.entries.associateBy { it.name }
+        return br.gabriel.cochilo.domain.AgeNotes.pick(
+            ageWeeks, now, zone, sleeping, catalog.approvedNotes, ctx.prefs.ageNotesClosed.mapNotNull { known[it] }.toSet(),
+        )
+    }
+
+    fun closeAgeNote(b: br.gabriel.cochilo.domain.AgeNotes.Band) {
+        ctx.prefs.ageNotesClosed = ctx.prefs.ageNotesClosed + b.name
+        _suggestionTick.value++
+    }
+
     fun suggestionShown(m: br.gabriel.cochilo.domain.Suggestions.Moment) {
         if (m.name in ctx.prefs.suggestionsShown) return
         ctx.prefs.suggestionsShown = ctx.prefs.suggestionsShown + (m.name to System.currentTimeMillis())
