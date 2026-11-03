@@ -441,6 +441,8 @@
     <string name="ask_not_sure">I can help with naps and how long they last, nights, bedtime, wake windows, daylight, routines and contact naps, using your log. Try one of the questions below.</string>
     <string name="ask_unchecked">The on-device AI wrote an answer I couldn\'t check against your log, so here is what I know instead.</string>
     <string name="ask_model_getting">The on-device AI is still downloading. Ask again once it\'s ready, and it can answer from your log.</string>
+    <string name="ask_model_paused">The on-device AI stopped the app last time, so it\'s paused. Answers come from the list for now.</string>
+    <string name="ask_model_resume">Try the on-device AI again</string>
     <string name="ask_open">Ask Cochilo</string>
     <string name="ask_insight_sleep">Sleep: %1$s a day on average (usual for this age %2$s–%3$s h).</string>
     <string name="ask_insight_naps">Naps: %1$s a day, %2$s at the median.</string>

@@ -18,6 +18,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
@@ -365,19 +366,42 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     fun downloadModel() = modelSource.download()
     fun modelOnMobileData() = modelSource.useMobileData()
     fun importModel(uri: Uri) = viewModelScope.launch { modelSource.import(uri) }
-    fun removeModel() {
-        model?.close(); model = null; modelFile = null
+    fun removeModel() = viewModelScope.launch {
+        // Never close the engine while it's writing an answer.
+        modelLock.withLock { model?.close(); model = null; modelFile = null }
         modelSource.remove()
     }
 
-    /** The model's answer to a grounded [prompt], or null when there's no model or it failed. */
-    suspend fun generate(prompt: String): String? = withContext(Dispatchers.Default) {
+    /**
+     * The model took the app down last time (0.39.1): a native crash can't be caught, so the flag
+     * set before writing is still on at the next start. The model is paused until she tries again.
+     */
+    private val _modelPaused = MutableStateFlow(ctx.prefs.modelWasRunning)
+    val modelPaused: StateFlow<Boolean> = _modelPaused
+    fun resumeModel() { ctx.prefs.setModelRunning(false); _modelPaused.value = false }
+
+    /** The model's answer to a grounded question, trimmed to fit its window, or null when there's no model or it failed. */
+    suspend fun generate(ask: br.gabriel.cochilo.ui.screens.ModelAsk): br.gabriel.cochilo.ui.screens.ModelAnswer? = modelLock.withLock { generateLocked(ask) }
+
+    /** One answer at a time: the engine isn't safe to run twice at once. */
+    private val modelLock = kotlinx.coroutines.sync.Mutex()
+
+    private suspend fun generateLocked(ask: br.gabriel.cochilo.ui.screens.ModelAsk): br.gabriel.cochilo.ui.screens.ModelAnswer? = withContext(Dispatchers.Default) {
+        if (_modelPaused.value) return@withContext null
         val ready = modelState.value as? br.gabriel.cochilo.ai.ModelState.Ready ?: return@withContext null
-        runCatching {
-            val m = model?.takeIf { modelFile == ready.file }
-                ?: br.gabriel.cochilo.ai.MediaPipeModel(ctx, ready.file).also { model?.close(); model = it; modelFile = ready.file }
-            m.generate(prompt)
-        }.getOrNull()
+        ctx.prefs.setModelRunning(true)
+        try {
+            runCatching {
+                val m = model?.takeIf { modelFile == ready.file }
+                    ?: br.gabriel.cochilo.ai.MediaPipeModel(ctx, ready.file).also { model?.close(); model = it; modelFile = ready.file }
+                val budget = br.gabriel.cochilo.ai.MediaPipeModel.MAX_TOKENS - br.gabriel.cochilo.ai.MediaPipeModel.REPLY_TOKENS
+                val prompt = br.gabriel.cochilo.domain.assistant.Grounding.fit(ask.question, ask.facts, ask.passages, ask.portuguese) { m.tokens(it) <= budget }
+                    ?: return@runCatching null
+                br.gabriel.cochilo.ui.screens.ModelAnswer(prompt, m.generate(prompt))
+            }.getOrNull()
+        } finally {
+            ctx.prefs.setModelRunning(false)
+        }
     }
 
     override fun onCleared() {

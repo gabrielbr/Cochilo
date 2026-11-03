@@ -155,8 +155,10 @@ fun CochiloRoot(vm: MainViewModel) {
                         val digest = remember(log, now, weeks, facts, pt) {
                             br.gabriel.cochilo.domain.assistant.Digest.lines(log, baby?.name, weeks, now, zone, facts, pt)
                         }
+                        val paused = vm.modelPaused.collectAsState().value
                         br.gabriel.cochilo.ui.screens.AskScreen(
-                            facts, f, generate = if (ready) vm::generate else null,
+                            facts, f, generate = if (ready && !paused) vm::generate else null,
+                            onResumeModel = if (ready && paused) vm::resumeModel else null,
                             onGetModel = if (canGet) ({ showingModel = true }) else null,
                             digest = digest,
                             modelGetting = model is br.gabriel.cochilo.ai.ModelState.Getting,

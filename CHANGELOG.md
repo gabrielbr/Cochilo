@@ -3,6 +3,13 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.39.1 — 2026-11-03
+
+**Asking questions no longer closes the app.** With the on-device AI on, a question could make the
+app quit: since 0.38.0 the AI was given more of the log than it can read at once. Now what it's
+given always fits, it answers one question at a time, and if it ever stops the app again it pauses
+itself (with "Try the on-device AI again") instead of crashing every time. `docs/assistant.md`.
+
 ## 0.39.0 — 2026-11-03
 
 **Today is simpler.** The list of log rows is gone from Today: the Log button (the round + in the
