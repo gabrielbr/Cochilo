@@ -428,6 +428,21 @@ class ScreensSnapshotTest {
     @Test fun settings_light() { light(); paparazzi.snapshot { Chrome(false, 0, settings = true) } }
     @Test fun today_fabric_balao_light() { light(); paparazzi.snapshot { Fabric(br.gabriel.cochilo.ui.kit.Fabric.BALAO) { Chrome(false, 0) } } }
     @Test fun today_sleeping_fabric_tropical_dark() { dark(); paparazzi.snapshot { Fabric(br.gabriel.cochilo.ui.kit.Fabric.TROPICAL) { Chrome(true, 0, sleepingLog) } } }
+    /** The fabric group with Rosa Chá picked: the quiet line to the shop under the swatches (in-app-marketing.md §3.3). */
+    @Test fun fabric_shop_line_ptBR_light() {
+        pt(false)
+        paparazzi.snapshot {
+            CochiloTheme(false) { br.gabriel.cochilo.ui.kit.Frame { Column(Modifier.padding(CTokens.Spacing.space6)) {
+                br.gabriel.cochilo.ui.kit.RowGroup { Column(Modifier.padding(horizontal = CTokens.Spacing.space4, vertical = CTokens.Spacing.space3)) {
+                    br.gabriel.cochilo.ui.kit.FabricPicker(br.gabriel.cochilo.ui.kit.Fabric.ROSA_CHA) {}
+                    br.gabriel.cochilo.ui.kit.QuietLink(
+                        stringResource(R.string.fabric_in_shop_line), stringResource(R.string.fabric_in_shop_action),
+                        stringResource(R.string.fabric_in_shop_spoken, "Rosa Chá"), onClick = {},
+                    )
+                } }
+            } } }
+        }
+    }
     @Test fun fabric_picker_ptBR_light() { pt(false); paparazzi.snapshot { Fabric(br.gabriel.cochilo.ui.kit.Fabric.ROSA_CHA) { Chrome(false, 0, settings = true) } } }
 
     /** The fabric she picked, as MainActivity provides it. */

@@ -518,4 +518,7 @@
     <string name="model_failed_other">Não deu certo. Tente de novo.</string>
     <string name="ask_thinking">Pensando, neste celular…</string>
     <string name="ask_generated_label">Escrito neste celular por um pequeno modelo de IA, a partir dos seus registros. Pode errar.</string>
+    <string name="fabric_in_shop_line">Este tecido existe em sling.</string>
+    <string name="fabric_in_shop_action">Ver na loja</string>
+    <string name="fabric_in_shop_spoken">Ver o sling %1$s na loja da Tatá Slings. Abre o navegador.</string>
 </resources>

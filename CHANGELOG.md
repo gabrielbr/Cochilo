@@ -3,6 +3,14 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.31.0 — 2026-11-03
+
+**Your fabric, in the shop.** In Settings › Appearance › Fabric, the fabric you picked now has one
+quiet line under it: "This fabric comes as a sling. See it in the shop", opening Tatá Slings in the
+browser. Nowhere else, and nothing about it is recorded in the app. The safety check's "Tatá's
+guides" now opens her guide to using the sling (positions, safety, videos) instead of the shop.
+`docs/tata-slings/in-app-marketing.md`.
+
 ## 0.30.0 — 2026-11-03
 
 **On-device AI for Ask Cochilo (optional).** Settings › Ask Cochilo › On-device AI: get a small AI

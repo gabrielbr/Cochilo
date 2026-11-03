@@ -50,7 +50,7 @@ Each is grounded in `docs/research.md` or the Tatá Slings plans (`docs/tata-sli
 ### 3.2c Tatá Slings inside the app
 
 The non-intrusive plan in [tata-slings/in-app-marketing.md](tata-slings/in-app-marketing.md):
-Settings › Loja Tatá Slings, the fabric picker line, notes by age and log moments in Patterns,
+notes by age and log moments in Patterns (step 1, the fabric line, shipped in 0.31.0),
 never on Today, at night, or on safety screens. Needs Tatá's catalog, notes and sign-off.
 
 ### 3.3 Two parents
@@ -69,6 +69,7 @@ never on Today, at night, or on safety screens. Needs Tatá's catalog, notes and
 
 ## Shipped from this plan
 
+- **0.31.0**: Tatá marketing step 1: the fabric's shop line; the safety sheet links to her guide ([in-app-marketing.md](tata-slings/in-app-marketing.md)).
 - **0.30.0**: Ask Cochilo, phase 2: the optional on-device model ([assistant.md](assistant.md)).
 - **0.29.0**: Ask Cochilo, phase 1: a local assistant from the log and reviewed answers ([assistant.md](assistant.md)).
 - **0.28.0**: details after the main action; Day's timeline newest first ([flows.md](flows.md)).

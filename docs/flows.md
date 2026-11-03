@@ -155,6 +155,11 @@ log changes and goes through `Entries`, like every other button.
   "Expected next sleep" in the legend and in what TalkBack reads ("Next sleep expected between
   15:51 and 16:11").
 
+## The fabric's shop line (0.31.0)
+
+No logging flow changes. From Settings, the picked fabric's sling in the shop is one tap ("See it
+in the shop ›"). It isn't on Today, the Log button, any sheet or the night.
+
 ## On-device AI (0.30.0)
 
 | Flow | Taps |
