@@ -195,6 +195,28 @@ class ScreensSnapshotTest {
     @Test fun day_font200_light() { big(); paparazzi.snapshot { Chrome(false, 1) } }
     @Test fun settings_font200_light() { big(); paparazzi.snapshot { Chrome(false, 0, settings = true) } }
 
+    /** Naps that vary, and windows that follow them (phase 2): today's last nap was short. */
+    private val shortNapLog: List<Event> = buildList {
+        val naps = listOf(40, 100, 70, 50, 90, 60, 110, 45)
+        var k = 0
+        for (d in 17..30) {
+            var t = at(d, 6, 30)
+            repeat(4) {
+                val nap = naps[k % naps.size]
+                val prev = if (it == 0) 70 else naps[(k - 1 + naps.size) % naps.size]
+                val start = t + (90 + (prev - 70) / 2) * 60_000L
+                add(Event(type = EventType.SLEEP, start = start, end = start + nap * 60_000L))
+                t = start + nap * 60_000L
+                k++
+            }
+            add(Event(type = EventType.SLEEP, start = at(d, 19, 45), end = at(d + 1, 6, 30)))
+        }
+        add(Event(type = EventType.SLEEP, start = at(31, 8, 0), end = at(31, 9, 10)))
+        add(Event(type = EventType.SLEEP, start = at(31, 10, 40), end = at(31, 11, 50)))
+        add(Event(type = EventType.SLEEP, start = at(31, 14, 0), end = at(31, 14, 35)))
+    }
+    @Test fun today_after_a_short_nap_light() { light(); paparazzi.snapshot { Chrome(false, 0, shortNapLog) } }
+
     @Test fun today_light() { light(); paparazzi.snapshot { Chrome(false, 0) } }
     @Test fun today_dark() { dark(); paparazzi.snapshot { Chrome(true, 0) } }
     @Test fun today_sleeping_dark() { dark(); paparazzi.snapshot { Chrome(true, 0, sleepingLog) } }

@@ -32,6 +32,8 @@
     <string name="prediction_window">Between %1$s and %2$s</string>
     <string name="prediction_why_personal">Window %1$s: recent median %2$s (windows logged: %3$d), blended with %4$s for this age.</string>
     <string name="prediction_why_prior">Window %1$s, the usual for this age. It learns from your log within about a week.</string>
+    <string name="prediction_nap_shorter">Last nap %1$s, shorter than the usual %2$s, so %3$s sooner.</string>
+    <string name="prediction_nap_longer">Last nap %1$s, longer than the usual %2$s, so %3$s later.</string>
     <string name="prediction_need_data">Predictions start once the first sleep is logged.</string>
     <string name="chip_due">Due</string>
     <string name="chip_past">Past window</string>

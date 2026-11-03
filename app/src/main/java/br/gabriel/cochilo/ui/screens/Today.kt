@@ -247,6 +247,14 @@ private fun PredictionCard(p: Predictor.Result.Awake, now: Long, f: Format) {
             f.durationMin(p.wakeMinutes), f.durationMin(p.personalMinutes), p.samples, f.durationMin(p.priorMinutes),
         ) else stringResource(R.string.prediction_why_prior, f.durationMin(p.wakeMinutes))
         Text(why, style = Type.meta, color = c.muted)
+        // Phase 2 says what the last nap did, with its numbers (predictions explain themselves).
+        p.napEffect?.let { e ->
+            val words = stringResource(
+                if (e.shiftMinutes < 0) R.string.prediction_nap_shorter else R.string.prediction_nap_longer,
+                f.durationMin(e.lastNapMinutes), f.durationMin(e.usualNapMinutes), f.durationMin(kotlin.math.abs(e.shiftMinutes)),
+            )
+            Text(words, style = Type.meta, color = c.muted, modifier = Modifier.padding(top = Spacing.space1))
+        }
         if (p.next == Predictor.Next.BEDTIME && p.at - now <= 60 * MINUTE) {
             Spacer(Modifier.height(Spacing.space2))
             Text(stringResource(R.string.wind_down), style = Type.meta, color = c.ink)

@@ -82,7 +82,11 @@ the morning wake, second, … and the one before bed) it takes the recency-weigh
 baby's own windows over the last 14 days and blends it with an age-based prior,
 `(n·personal + 5·prior) / (n + 5)`. The prior fades after about a week of logging. Bedtime is the
 weighted median of recent bedtimes; when the next nap would land within 45 minutes of it, the app
-shows bedtime instead. The card always says which numbers it used. Code:
+shows bedtime instead. Since 0.24.0 the last nap counts too (the two-process model's sleep
+pressure): after a short nap the next sleep comes sooner, after a long one later, by as much as this
+baby's own log shows, and the card says so ("Last nap 35m, shorter than the usual 1h 18m, so 18m
+sooner"). The card always says which numbers it used. Tested on a synthetic year
+([docs/prediction.md](docs/prediction.md)). Code:
 [`domain/Predictor.kt`](app/src/main/java/br/gabriel/cochilo/domain/Predictor.kt).
 
 ### Your data

@@ -26,6 +26,8 @@
     <string name="prediction_window">Entre %1$s e %2$s</string>
     <string name="prediction_why_personal">Janela de %1$s: mediana recente de %2$s (janelas registradas: %3$d), combinada com %4$s para esta idade.</string>
     <string name="prediction_why_prior">Janela de %1$s, o usual para esta idade. Aprende com seus registros em cerca de uma semana.</string>
+    <string name="prediction_nap_shorter">Última soneca de %1$s, mais curta que o usual (%2$s), então %3$s antes.</string>
+    <string name="prediction_nap_longer">Última soneca de %1$s, mais longa que o usual (%2$s), então %3$s depois.</string>
     <string name="prediction_need_data">As previsões começam depois do primeiro sono registrado.</string>
     <string name="chip_due">Na hora</string>
     <string name="chip_past">Passou da janela</string>
