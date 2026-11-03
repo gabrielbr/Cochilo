@@ -3,6 +3,14 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.32.0 — 2026-11-03
+
+**Ready for notes from Tatá (all off for now).** The groundwork for Tatá's suggestions: rare,
+signed notes in Patterns that start from what you logged and point to one product in her shop.
+They follow strict rules (never at night, never while the baby sleeps, never in the first week,
+at most one a week, "Don't show again" means never) and **none is switched on until Tatá approves
+it**, so nothing changes on your screen yet. `docs/tata-slings/in-app-marketing.md`.
+
 ## 0.31.0 — 2026-11-03
 
 **Your fabric, in the shop.** In Settings › Appearance › Fabric, the fabric you picked now has one

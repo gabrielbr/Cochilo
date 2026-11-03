@@ -138,7 +138,7 @@ Measured in the store, never in the app: Nuvemshop orders with `utm_source=cochi
 | Step | What | Needs |
 |---|---|---|
 | 1 | Settings › Loja Tatá Slings and the fabric picker line (§3.3, §3.4) | **Shipped in 0.31.0** (§9) |
-| 2 | "Tatá note" component in the design system; `Suggestions.kt` with tests | — |
+| 2 | "Tatá note" component in the design system; `Suggestions.kt` with tests | **Shipped in 0.32.0**, every moment off until Tatá approves it (§10) |
 | 3 | Notes by age (§3.1) | Tatá's writing (the scarce resource) |
 | 4 | Log moments (§3.2), one at a time, each with its UTM campaign | Tatá's sign-off per moment |
 | 5 | Review at 3 months by the numbers in §6 | Store reports |
@@ -163,6 +163,47 @@ Measured in the store, never in the app: Nuvemshop orders with `utm_source=cochi
   `ticks_guide`. All links live in `store/Store.kt` (tested in `StoreTest`) and open the browser
   through an intent: no permission, nothing recorded in the app.
 
+## 10. Step 2, as shipped (0.32.0)
+
+The machinery, with nothing switched on: **no note appears in the app until Tatá approves a
+moment.**
+
+- **The rules** (`domain/Suggestions.kt`, `SuggestionsTest`): every ground rule in §2 is a test.
+  Off when the switch is off, while the baby sleeps, between 19:00 and 07:00, and in the first 7
+  days of use. A note keeps its place for a week from when it first shows, then retires for good.
+  At most one new note a week, even after "Don't show again". A dismissed moment never comes back.
+  Two notes in a row never point to the same product. The note starts with what the parent logged.
+- **The moments built** (from §3.2, priority order):
+
+  | Moment | Rule | Product (shop page) |
+  |---|---|---|
+  | `ARMS_NAPS` | under 13 weeks, 5+ naps in arms in the last 7 days | Tatá Fácil Sling (`/tata-facil-sling/`) |
+  | `ROUTINE_STEADY` | 5+ bedtime routines in the last 7 days | Tatá Naninha (`/acessorios/tata-naninha/`) |
+  | `LITTLE_DAYLIGHT` | daylight under 20 min a day over 5+ logged days | Tatá Fácil Sling |
+  | `SIX_MONTHS` | 26–30 weeks | TatáT.O. toys (`/acessorios/tata-to-brinquedos-…/`) |
+
+  Left out: **the swaddle** (it needs "startle wake-ups", which the app doesn't log, and
+  swaddling is close to safety advice) and **the carrier for a bigger baby** (the shop sells no
+  structured carrier or ring sling today). Both wait for Tatá.
+- **No promises in the copy.** §3.2's six-month line ("ajuda a dormir melhor à noite") promised
+  better sleep, which the brand voice never does. The drafts say what's true instead ("brincar e
+  explorar ocupam mais do tempo acordado").
+- **The catalog** (`assets/tata/catalog.json`, `store/Catalog.kt`, `CatalogTest`): each moment's
+  product, its shop page (checked 2026-11-03, all 200), and `approved: false`. The links carry the
+  campaign `suggestion_<moment>`.
+- **The card** is a **Tatá note** (design system 0.25.0): her words, her byline ("Tatá, terapeuta
+  ocupacional e mãe do Francisco e do Dante"), one Quiet link "Na loja da Tatá Slings. Ver o sling ›",
+  and "Não mostrar mais". It shows in Patterns, under the week's data, and nowhere else.
+- **The switch** "Sugestões da Tatá" (Settings › Notifications, on by default with the line
+  "Às vezes, uma dica da Tatá com um produto da loja. Desligue quando quiser.") stays hidden
+  while no moment is approved.
+- **On the phone only:** when the app was first opened, what was shown and what was dismissed
+  (`Prefs`, not in backups). Nothing is sent.
+
+**How Tatá turns a moment on:** she reads its words (the `tata_note_*` strings in English and
+Portuguese) and, if she's happy, the moment's `approved` becomes `true` in the catalog, in a
+reviewed change that also updates `CatalogTest`. It ships with the next release.
+
 ## 8. Open questions for Tatá
 
 1. Which products and URLs belong in the first catalog, and their age ranges?
@@ -172,3 +213,5 @@ Measured in the store, never in the app: Nuvemshop orders with `utm_source=cochi
 5. Should the "Sugestões da Tatá" switch start on or off? (Recommendation: on, with the line
    "Às vezes, uma dica da Tatá com um produto da loja. Desligue quando quiser.")
 6. Folhagem is now "Malha NATURA" in the shop: should the app's fabric be renamed Natura?
+7. Are the four draft notes (§10) in her voice? Which may be switched on?
+8. Should the app suggest a swaddle (it would need a "startle" log), or a carrier for a bigger baby (not in the shop today)?

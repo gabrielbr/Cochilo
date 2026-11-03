@@ -68,6 +68,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     val zone: ZoneId get() = ZoneId.systemDefault()
 
     init {
+        ctx.prefs.firstSeen // starts the first-week clock for Tatá's suggestions
         // Details after: something ended from the widget, the notification or the tile? Ask now.
         viewModelScope.launch {
             br.gabriel.cochilo.domain.Details.pending(events.all(), System.currentTimeMillis(), ctx.prefs.detailsAsked.toSet())
@@ -298,6 +299,40 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         val result = mergeIn(file.events)
         if (babies.get() == null && file.baby != null) babies.upsert(file.baby)
         return str(R.string.imported, result.added, result.updated)
+    }
+
+    // Tatá's suggestions (docs/tata-slings/in-app-marketing.md): the catalog ships in the app.
+    val catalog: br.gabriel.cochilo.store.Catalog = runCatching {
+        br.gabriel.cochilo.store.Catalog.parse(ctx.assets.open("tata/catalog.json").bufferedReader().use { it.readText() })
+    }.getOrDefault(br.gabriel.cochilo.store.Catalog.EMPTY)
+    val tataSuggestions: StateFlow<Boolean> = ctx.prefs.tataSuggestions
+    fun setTataSuggestions(on: Boolean) = ctx.prefs.setTataSuggestions(on)
+    private val _suggestionTick = MutableStateFlow(0)
+    /** Bumps when a note is shown or dismissed, so the screen asks again. */
+    val suggestionTick: StateFlow<Int> = _suggestionTick
+
+    /** The note due now, by the rules (Suggestions.pick), or null. */
+    fun suggestion(log: List<Event>, ageWeeks: Int, now: Long, sleeping: Boolean): br.gabriel.cochilo.domain.Suggestions.Suggestion? {
+        val known = br.gabriel.cochilo.domain.Suggestions.Moment.entries.associateBy { it.name }
+        return br.gabriel.cochilo.domain.Suggestions.pick(
+            br.gabriel.cochilo.domain.Suggestions.Input(
+                log, ageWeeks, now, zone, sleeping, ctx.prefs.firstSeen, tataSuggestions.value,
+                catalog.approved, catalog.productOf,
+                ctx.prefs.suggestionsDismissed.mapNotNull { known[it] }.toSet(),
+                ctx.prefs.suggestionsShown.mapNotNull { (k, v) -> known[k]?.let { it to v } }.toMap(),
+            ),
+        )
+    }
+
+    fun suggestionShown(m: br.gabriel.cochilo.domain.Suggestions.Moment) {
+        if (m.name in ctx.prefs.suggestionsShown) return
+        ctx.prefs.suggestionsShown = ctx.prefs.suggestionsShown + (m.name to System.currentTimeMillis())
+        _suggestionTick.value++
+    }
+
+    fun dismissSuggestion(m: br.gabriel.cochilo.domain.Suggestions.Moment) {
+        ctx.prefs.suggestionsDismissed = ctx.prefs.suggestionsDismissed + m.name
+        _suggestionTick.value++
     }
 
     // Ask Cochilo, phase 2 (docs/assistant.md): the optional on-device model.

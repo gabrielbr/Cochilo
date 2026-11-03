@@ -95,6 +95,33 @@ class Prefs(context: Context) {
         get() = (sp.getString("details_asked", null) ?: "").split(',').filter { it.isNotEmpty() }
         set(v) = sp.edit { putString("details_asked", v.takeLast(50).joinToString(",")) }
 
+    // Tatá's suggestions (docs/tata-slings/in-app-marketing.md): kept on this phone, not in backups.
+    private val _suggestions = MutableStateFlow(sp.getBoolean("tata_suggestions", true))
+    /** The one switch for all of Tatá's suggestions (Settings, once any moment is approved). */
+    val tataSuggestions: StateFlow<Boolean> = _suggestions
+
+    fun setTataSuggestions(on: Boolean) {
+        sp.edit { putBoolean("tata_suggestions", on) }
+        _suggestions.value = on
+    }
+
+    /** When the app was first opened; no suggestion in the first week. */
+    val firstSeen: Long
+        get() = sp.getLong("first_seen", 0L).takeIf { it > 0 } ?: System.currentTimeMillis().also { now -> sp.edit { putLong("first_seen", now) } }
+
+    /** Moments dismissed for good. */
+    var suggestionsDismissed: Set<String>
+        get() = sp.getStringSet("suggestions_dismissed", emptySet())!!.toSet()
+        set(v) = sp.edit { putStringSet("suggestions_dismissed", v) }
+
+    /** When each moment first showed ("MOMENT=epochMillis;…"). */
+    var suggestionsShown: Map<String, Long>
+        get() = (sp.getString("suggestions_shown", null) ?: "").split(';').mapNotNull { part ->
+            val (k, v) = part.split('=').takeIf { it.size == 2 } ?: return@mapNotNull null
+            v.toLongOrNull()?.let { k to it }
+        }.toMap()
+        set(v) = sp.edit { putString("suggestions_shown", v.entries.joinToString(";") { "${it.key}=${it.value}" }) }
+
     /** Whether the safe-babywearing check (T.I.C.K.S.) has been shown once. */
     var ticksShown: Boolean
         get() = sp.getBoolean("ticks_shown", false)

@@ -155,6 +155,11 @@ log changes and goes through `Entries`, like every other button.
   "Expected next sleep" in the legend and in what TalkBack reads ("Next sleep expected between
   15:51 and 16:11").
 
+## Tatá's notes (0.32.0)
+
+No flow changes: a note (when Tatá approves one) sits at the end of Patterns, never on Today or
+the Log button. Its link is one tap; "Don't show again" is one tap and final.
+
 ## The fabric's shop line (0.31.0)
 
 No logging flow changes. From Settings, the picked fabric's sling in the shop is one tap ("See it

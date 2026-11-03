@@ -534,6 +534,39 @@ fun QuietLink(line: String, action: String, spoken: String, onClick: () -> Unit,
     }
 }
 
+/**
+ * Tatá note (design system, components.md): a short note from Tatá, signed, in a plain card under
+ * a screen's data. Her words first ([text], which starts with what the parent logged), her byline,
+ * then at most one Quiet link and "Don't show again" as a quiet text button. Never teal, never a
+ * texture behind the words, never on Today, a sheet or at night (the caller's rules decide).
+ */
+@Composable
+fun TataNote(
+    text: String, byline: String,
+    linkLine: String?, linkAction: String?, linkSpoken: String?, onLink: (() -> Unit)?,
+    dismiss: String, onDismiss: () -> Unit,
+) {
+    val c = CochiloTheme.colors
+    Column(
+        Modifier.fillMaxWidth().clip(RoundedCornerShape(Radius.radiusM)).background(c.surface)
+            .border(Size.hairline, c.line, RoundedCornerShape(Radius.radiusM))
+            .padding(start = Spacing.space4, end = Spacing.space4, top = Spacing.space4),
+    ) {
+        Text(text, style = Type.body, color = c.ink)
+        Spacer(Modifier.height(Spacing.space2))
+        Text(byline, style = Type.meta, color = c.muted)
+        if (linkLine != null && linkAction != null && onLink != null) {
+            Spacer(Modifier.height(Spacing.space2))
+            QuietLink(linkLine, linkAction, linkSpoken ?: linkAction, onLink)
+        }
+        val src = remember { MutableInteractionSource() }
+        Box(
+            Modifier.heightIn(min = Spacing.space12).clickable(src, indication = null, role = Role.Button, onClick = onDismiss).pressScale(src),
+            contentAlignment = Alignment.CenterStart,
+        ) { Text(dismiss, style = Type.meta, color = c.muted) }
+    }
+}
+
 /** A coloured square that sits next to a word on a legend (never colour alone). */
 @Composable
 fun Swatch(color: Color) {

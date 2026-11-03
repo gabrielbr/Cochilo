@@ -546,4 +546,22 @@
     <string name="fabric_in_shop_line">This fabric comes as a sling.</string>
     <string name="fabric_in_shop_action">See it in the shop</string>
     <string name="fabric_in_shop_spoken">See the %1$s sling in the Tatá Slings shop. Opens the browser.</string>
+    <!-- Tatá's suggestions (docs/tata-slings/in-app-marketing.md). Drafts for Tatá to review; none shows until she approves a moment. -->
+    <string name="tata_suggestions">Tatá\'s suggestions</string>
+    <string name="tata_suggestions_meta">Now and then, a tip from Tatá with a product from her shop. Turn it off any time.</string>
+    <string name="tata_byline">Tatá, occupational therapist and mother of Francisco and Dante</string>
+    <string name="tata_dont_show">Don\'t show again</string>
+    <string name="tata_link_line">At the Tatá Slings shop.</string>
+    <string name="tata_link_sling">See the sling</string>
+    <string name="tata_link_sling_spoken">See the Tatá Fácil Sling in the Tatá Slings shop. Opens the browser.</string>
+    <string name="tata_link_naninha">See the Naninha</string>
+    <string name="tata_link_naninha_spoken">See the Tatá Naninha in the Tatá Slings shop. Opens the browser.</string>
+    <string name="tata_link_to">See the TatáT.O. toys</string>
+    <string name="tata_link_to_spoken">See the TatáT.O. toys in the Tatá Slings shop. Opens the browser.</string>
+    <string name="tata_link_shop">See the shop</string>
+    <string name="tata_link_shop_spoken">See the Tatá Slings shop. Opens the browser.</string>
+    <string name="tata_note_arms_naps">Naps in arms this week: %1$d. Contact naps are normal at this age. A sling keeps your hands free while the baby sleeps close.</string>
+    <string name="tata_note_routine">Bedtime routines this week: %1$d. When the routine is steady, a Naninha can become one of its steps.</string>
+    <string name="tata_note_daylight">Little daylight this week. A walk outside between 12:00 and 16:00 counts, in the sling or the pram.</string>
+    <string name="tata_note_six_months">Around 6 months, play and exploring fill more of the awake time. The TatáT.O. toys were made by an occupational therapist for this age.</string>
 </resources>
