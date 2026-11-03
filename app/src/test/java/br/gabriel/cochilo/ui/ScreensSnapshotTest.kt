@@ -265,6 +265,18 @@ class ScreensSnapshotTest {
         light()
         paparazzi.snapshot { CochiloTheme(false) { br.gabriel.cochilo.ui.kit.Frame { androidx.compose.foundation.layout.Column(Modifier.padding(br.gabriel.cochilo.ui.theme.CTokens.Spacing.space6)) { TicksBody() } } } }
     }
+    @Test fun passphrase_sheet_light() {
+        light()
+        paparazzi.snapshot { CochiloTheme(false) { br.gabriel.cochilo.ui.kit.Frame { androidx.compose.foundation.layout.Column(Modifier.padding(br.gabriel.cochilo.ui.theme.CTokens.Spacing.space6)) {
+            br.gabriel.cochilo.ui.screens.PassphraseBody("lua cheia", {}, {})
+        } } } }
+    }
+    @Test fun unlock_sheet_wrong_ptBR_dark() {
+        pt(true)
+        paparazzi.snapshot { CochiloTheme(true) { br.gabriel.cochilo.ui.kit.Frame { androidx.compose.foundation.layout.Column(Modifier.padding(br.gabriel.cochilo.ui.theme.CTokens.Spacing.space6)) {
+            br.gabriel.cochilo.ui.screens.UnlockBody(wrong = true, onOpen = {}, onCancel = {}, initial = "lua nova")
+        } } } }
+    }
     @Test fun patterns_changes_light() {
         light()
         // 21 whole days: nights of 9h, then the last week 10h30 with fewer wakings: "What changed" appears.

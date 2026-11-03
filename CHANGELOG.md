@@ -3,6 +3,13 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.23.0 — 2026-11-03
+
+**Locked backups.** Settings › Data › Protect backups: set a passphrase, and every backup you
+export is locked with it (AES-256-GCM). Import asks for the passphrase only when this phone doesn't
+already have it, and says so plainly when it doesn't match. Exporting is still one tap. Lose the
+passphrase and nobody can open those files, so write it down. `docs/backup.md`.
+
 ## 0.22.0 — 2026-11-03
 
 **Large text.** At the phone's largest font size every screen still shows every word: the header's

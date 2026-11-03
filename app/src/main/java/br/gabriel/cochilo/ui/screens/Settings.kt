@@ -52,6 +52,9 @@ fun SettingsScreen(
     onEditRitual: () -> Unit = {},
     /** Settings › Data › Report (docs/report.md). */
     onExportReport: () -> Unit = {},
+    /** Settings › Data › Protect backups (docs/backup.md). */
+    passphraseSet: Boolean = false,
+    onPassphrase: () -> Unit = {},
 ) {
     val context = LocalContext.current
     val f = Format(context, zone)
@@ -132,6 +135,12 @@ fun SettingsScreen(
             ListRow(stringResource(R.string.export_csv), meta = stringResource(R.string.export_csv_meta), onClick = onExportCsv, trailing = chevron)
             Hairline()
             ListRow(stringResource(R.string.export_report), meta = stringResource(R.string.export_report_meta), onClick = onExportReport, trailing = chevron)
+            Hairline()
+            ListRow(
+                stringResource(R.string.passphrase_row),
+                meta = stringResource(if (passphraseSet) R.string.passphrase_row_on else R.string.passphrase_row_off),
+                onClick = onPassphrase, trailing = chevron,
+            )
             Hairline()
             ListRow(stringResource(R.string.import_json), meta = stringResource(R.string.import_json_meta), onClick = onImport, trailing = chevron)
             Hairline()

@@ -375,4 +375,18 @@
     <string name="filter_all">Tudo</string>
     <string name="ring_expected">Próximo sono previsto</string>
     <string name="ring_expected_spoken">Próximo sono previsto entre %1$s e %2$s.</string>
+    <string name="passphrase_row">Proteger backups</string>
+    <string name="passphrase_row_off">Desligado: quem tiver o arquivo pode ler</string>
+    <string name="passphrase_row_on">Ligado: backups só abrem com a senha</string>
+    <string name="passphrase_title">Proteger backups</string>
+    <string name="passphrase_line">Com uma senha, todo backup exportado fica trancado. Para importar, neste celular ou em outro, digite a mesma senha.</string>
+    <string name="passphrase_field">Senha</string>
+    <string name="passphrase_meta">Pelo menos 4 caracteres. Anote: se ela se perder, ninguém consegue abrir esses backups.</string>
+    <string name="passphrase_remove">Remover senha</string>
+    <string name="passphrase_saved">Os backups serão trancados</string>
+    <string name="passphrase_removed">Os backups não serão trancados</string>
+    <string name="unlock_title">Este backup está trancado</string>
+    <string name="unlock_line">Digite a senha com que ele foi exportado.</string>
+    <string name="unlock_wrong">Essa senha não abre. Tente de novo.</string>
+    <string name="unlock_open">Abrir e importar</string>
 </resources>
