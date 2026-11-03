@@ -45,8 +45,8 @@ dressed in the Tatá Slings brand (teal, plum-grey ink, Pérola, Libre Franklin,
 - **Ask Cochilo** (Patterns › Questions about sleep): questions answered from the baby's own log
   and the app's research, on the phone, in English and Portuguese; health, medicines and the
   mother's wellbeing go to a person. Not medical advice. Optional since 0.30.0: a small AI model on
-  the phone (downloaded by the Play Store, or a file the family imports) for questions beyond the
-  list, grounded in the log and checked before it's shown. [docs/assistant.md](docs/assistant.md).
+  the phone for questions beyond the list, downloaded in one tap when you want it (by the Play
+  Store, or since 0.37.0 by the family build itself, on Wi-Fi, in the background), grounded in the log and checked before it's shown. [docs/assistant.md](docs/assistant.md).
 - **Details after**: start a sleep (or a feed, pumping, daylight) in one tap; where she slept, which
   side or how much is asked once it ends, with the last answer marked. [docs/flows.md](docs/flows.md).
 - **Where the baby slept**: crib, arms, sling, pram, car, asked on waking; naps by place in Patterns;

@@ -146,8 +146,14 @@ fun CochiloRoot(vm: MainViewModel) {
                         header = { BackHeader(stringResource(R.string.ask_title), stringResource(R.string.back)) { asking = false } },
                     ) {
                         val facts = remember(log, now, weeks) { br.gabriel.cochilo.domain.assistant.Assistant.facts(log, weeks, now, zone, prediction) }
-                        val ready = vm.modelState.collectAsState().value is br.gabriel.cochilo.ai.ModelState.Ready
-                        br.gabriel.cochilo.ui.screens.AskScreen(facts, f, generate = if (ready) vm::generate else null)
+                        val model = vm.modelState.collectAsState().value
+                        val ready = model is br.gabriel.cochilo.ai.ModelState.Ready
+                        // When the list can't answer and the model isn't here yet: one tap to get it (0.37.0).
+                        val canGet = model is br.gabriel.cochilo.ai.ModelState.Absent || model is br.gabriel.cochilo.ai.ModelState.Failed
+                        br.gabriel.cochilo.ui.screens.AskScreen(
+                            facts, f, generate = if (ready) vm::generate else null,
+                            onGetModel = if (canGet) ({ showingModel = true }) else null,
+                        )
                     }
                 } else if (settings) {
                     br.gabriel.cochilo.ui.kit.AppShell(
@@ -367,6 +373,7 @@ fun CochiloRoot(vm: MainViewModel) {
             onImport = { pickModel.launch(arrayOf("application/octet-stream", "application/zip", "*/*")) },
             onRemove = vm::removeModel,
             onDismiss = { showingModel = false },
+            onMobileData = vm::modelOnMobileData,
         )
     }
     if (editingPassphrase) {

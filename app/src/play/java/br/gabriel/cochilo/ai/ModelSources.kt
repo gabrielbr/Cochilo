@@ -30,7 +30,10 @@ private class PlayAssetSource(context: Context) : ModelSource {
         if (s.name() != PACK) return@AssetPackStateUpdateListener
         _state.value = when (s.status()) {
             AssetPackStatus.PENDING, AssetPackStatus.DOWNLOADING, AssetPackStatus.TRANSFERRING, AssetPackStatus.WAITING_FOR_WIFI ->
-                ModelState.Getting(if (s.totalBytesToDownload() > 0) s.bytesDownloaded().toFloat() / s.totalBytesToDownload() else null)
+                ModelState.Getting(
+                    if (s.totalBytesToDownload() > 0) s.bytesDownloaded().toFloat() / s.totalBytesToDownload() else null,
+                    waitingForWifi = s.status() == AssetPackStatus.WAITING_FOR_WIFI,
+                )
             AssetPackStatus.COMPLETED -> located() ?: ModelState.Unavailable
             AssetPackStatus.FAILED -> ModelState.Failed(ModelState.Reason.DOWNLOAD)
             AssetPackStatus.CANCELED, AssetPackStatus.NOT_INSTALLED -> ModelState.Absent

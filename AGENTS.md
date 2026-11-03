@@ -79,7 +79,8 @@ system's. Its AGENTS.md and DESIGN.md are the rules; the short version:
   only through Export/Import. Two builds ([docs/distribution.md](docs/distribution.md)): **play** has
   no INTERNET permission at all (since 0.30.0 it may run Play Asset Delivery's extraction for Ask
   Cochilo's model, whose permissions are listed in docs/distribution.md); **github** (the family
-  build) has INTERNET only for the design system's self-update. Both may post notifications (`POST_NOTIFICATIONS`, the live notification,
+  build) has INTERNET only for the design system's self-update and, since 0.37.0, the one-tap
+  download of Ask Cochilo's model from this repository's releases (no data in either request). Both may post notifications (`POST_NOTIFICATIONS`, the live notification,
   [docs/notifications.md](docs/notifications.md)). `check<Variant>Permissions` fails the build if
   either list grows.
 - **Import never deletes** and keeps the newest edit of an entry (`Backup.merge`). Changing the

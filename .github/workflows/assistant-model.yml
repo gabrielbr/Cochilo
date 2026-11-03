@@ -1,0 +1,47 @@
+name: Publish assistant model
+# Puts Ask Cochilo's on-device model on a pre-release of this repository (docs/assistant.md), once,
+# so the family build can download it with one tap and the Release workflow can fill the Play
+# asset pack without Hugging Face. A pre-release, so the family build's self-update (which reads
+# only the latest full release) never offers it as an update.
+#
+# Needs the HF_TOKEN secret: a Hugging Face read token from an account that accepted the Gemma
+# terms on https://huggingface.co/litert-community/Gemma3-1B-IT. Gemma is redistributed under the
+# Gemma Terms of Use, which ship beside it as GEMMA-NOTICE.txt.
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+env:
+  TAG: assistant-model-v1
+  FILE: gemma3-1b-it-int4.task
+  SOURCE: https://huggingface.co/litert-community/Gemma3-1B-IT/resolve/main/gemma3-1b-it-int4.task
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download from Hugging Face
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          if [ -z "$HF_TOKEN" ]; then echo "::error::Set the HF_TOKEN secret (a read token from an account that accepted the Gemma terms)."; exit 1; fi
+          curl -fL --retry 3 -H "Authorization: Bearer $HF_TOKEN" -o "$FILE" "$SOURCE"
+          head -c 2 "$FILE" | grep -q PK || { echo "::error::Not a .task file"; exit 1; }
+          sha256sum "$FILE" > "$FILE.sha256"
+          cat "$FILE.sha256"; ls -la "$FILE"
+          cat > GEMMA-NOTICE.txt <<'NOTICE'
+          Gemma is provided under and subject to the Gemma Terms of Use found at ai.google.dev/gemma/terms.
+          Use of Gemma is subject to the Gemma Prohibited Use Policy at ai.google.dev/gemma/prohibited_use_policy.
+          Model: litert-community/Gemma3-1B-IT, gemma3-1b-it-int4.task, unmodified.
+          NOTICE
+      - name: Publish the pre-release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" "$FILE" "$FILE.sha256" GEMMA-NOTICE.txt --clobber
+          else
+            gh release create "$TAG" "$FILE" "$FILE.sha256" GEMMA-NOTICE.txt --prerelease \
+              --title "Ask Cochilo model (Gemma 3 1B)" \
+              --notes "The on-device model the family build downloads for Ask Cochilo. Not an app release. Gemma is provided under and subject to the Gemma Terms of Use (ai.google.dev/gemma/terms)."
+          fi

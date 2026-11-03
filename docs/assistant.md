@@ -79,10 +79,11 @@ git and never inside the APK.
 
 | | **play** | **github** (family) |
 |---|---|---|
-| How the model arrives | An on-demand **Play asset pack** (`:assistant_model`): the Play Store downloads it; the app only asks for it | The parent **chooses the file** (Settings › Ask Cochilo › On-device AI › Choose the model file); it's copied into the app's own storage, with progress |
-| Where it comes from | The Release workflow puts it in the pack when the `ASSISTANT_MODEL_URL` secret is set (and `HF_TOKEN` if the host needs one); without it the pack ships empty and the app says "Not in this build" | Downloaded once by the parent from Google's model page (Hugging Face `litert-community`, Gemma 3 1B IT, the int4 `.task`; accepting Gemma's terms there), then chosen in the app |
-| Checks | The pack's file must exist | Must be a `.task` (a zip: starts with "PK"), at least 50 MB, and fit in free space (`ai/ModelFile.kt`, tested) |
-| Remove | Remove the model (the pack is removed) | Remove the model (the file is deleted) |
+| How the model arrives | An on-demand **Play asset pack** (`:assistant_model`): the Play Store downloads it; the app only asks for it | Since 0.37.0 the **app downloads it** with one tap (Settings › On-device AI › Download, or from Ask under a reply it couldn't give), through Android's download manager: Wi-Fi only unless she taps "Download now on mobile data", in the background, with the system's progress notification, resuming after a dropped connection. "Choose a file instead" still copies a file already on the phone |
+| Where it comes from | The Release workflow takes it from the `assistant-model-v1` pre-release (checked against its `.sha256`), or from the `ASSISTANT_MODEL_URL` secret; without either the pack ships empty and the app says "Not in this build" | This repository's `assistant-model-v1` **pre-release** (`gemma3-1b-it-int4.task` and its `.sha256`), put there once by the **Publish assistant model** workflow from Hugging Face (`litert-community/Gemma3-1B-IT`, which is gated: the workflow needs an `HF_TOKEN` from an account that accepted Gemma's terms). A pre-release, so self-update never offers it. Until it's published, Download says "The model isn't ready to download yet" |
+| Checks | The pack's file must exist | A download must be a `.task` (a zip: starts with "PK"), at least 50 MB, and match the published SHA-256 (`ai/ModelDownload.kt`, `ModelDownloadTest`); a chosen file must be a `.task` of at least 50 MB that fits in free space (`ai/ModelFile.kt`) |
+| Remove | Remove the model (the pack is removed) | Remove the model, or Stop the download (the file is deleted) |
+| Licence | Gemma Terms of Use, named in the sheet | The same; `GEMMA-NOTICE.txt` sits beside the file on the pre-release |
 
 **What the model may answer:** only questions the library doesn't know ("not sure"). Health,
 medicine and the mother still get the fixed replies, and the model never sees them. The 13 topics
@@ -104,7 +105,9 @@ keep their reviewed answers.
 Delivery's foreground extraction service (`FOREGROUND_SERVICE`, `FOREGROUND_SERVICE_DATA_SYNC`)
 and WorkManager's `WAKE_LOCK`, `RECEIVE_BOOT_COMPLETED` and `ACCESS_NETWORK_STATE` (read-only:
 whether a network is up). **Still no `INTERNET`**: the Play Store downloads the pack, and the app
-can't reach the network. The github build gains nothing.
+can't reach the network. The github build gains nothing: its download (0.37.0) uses the `INTERNET`
+it already had and the system's download manager, and the request carries only the app's name
+and version.
 
 **Size:** the runtime's native libraries add about 46 MB to the family APK (ARM 64- and 32-bit;
 x86 left out). Play splits by ABI, so a Play install adds about half that.
@@ -124,9 +127,12 @@ iOS runtime runs the same model files for phase 2.
 - `domain/assistant/Grounding.kt`: the model's prompt and the reply check.
 - `ai/LocalModel.kt` (the runtime), `ai/ModelState.kt` (states and the `ModelSource` interface),
   `ai/ModelFile.kt` (file checks and copy); `src/play/.../ai/ModelSources.kt` (Play asset pack) and
-  `src/github/.../ai/ModelSources.kt` (file import); `ui/screens/ModelSheet.kt`.
+  `src/github/.../ai/ModelSources.kt` (the download, and file import); `ai/ModelDownload.kt` (where
+  from, and the checksum); `ui/screens/ModelSheet.kt`; `.github/workflows/assistant-model.yml`
+  (publishes the model once).
 - `assistant_model/` (the asset pack module); the Release workflow's "Assistant model" step.
 - Tests: `AssistantTest` (safety, both languages, word-boundary matching, facts, suggestions,
-  never-judge), `GroundingTest`, `ModelFileTest`. Screenshots: `ask_light`, `ask_care_ptBR_dark`,
+  never-judge), `GroundingTest`, `ModelFileTest`, `ModelDownloadTest`. Screenshots: `ask_light`, `ask_care_ptBR_dark`,
   `ask_not_sure_light`, `ask_generated_light`, `model_sheet_play_light`,
-  `model_sheet_import_copying_light`, `model_sheet_ready_ptBR_dark`.
+  `model_sheet_app_download_light`, `model_sheet_app_downloading_light`,
+  `model_sheet_waiting_wifi_ptBR_light`, `model_sheet_ready_ptBR_dark`.

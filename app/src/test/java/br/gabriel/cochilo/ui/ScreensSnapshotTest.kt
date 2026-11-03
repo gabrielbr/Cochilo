@@ -335,7 +335,7 @@ class ScreensSnapshotTest {
     }
     /** Ask Cochilo: this week's numbers, a question answered from the log, and a health question sent to a person. */
     @Composable
-    private fun AskShot(dark: Boolean, questions: List<String>) {
+    private fun AskShot(dark: Boolean, questions: List<String>, getModel: Boolean = false) {
         CochiloTheme(dark) {
             val weeks = ageWeeks(baby.birthDate, null, now)
             val p = Predictor(zone).predict(log, weeks, now)
@@ -345,7 +345,7 @@ class ScreensSnapshotTest {
                 Column(Modifier.fillMaxSize()) {
                     BackHeader(stringResource(R.string.ask_title), stringResource(R.string.back)) {}
                     Box(Modifier.weight(1f)) {
-                        br.gabriel.cochilo.ui.screens.AskScreen(facts, f, questions.map { br.gabriel.cochilo.ui.screens.AskExchange(it, br.gabriel.cochilo.domain.assistant.Assistant.ask(it, facts)) })
+                        br.gabriel.cochilo.ui.screens.AskScreen(facts, f, questions.map { br.gabriel.cochilo.ui.screens.AskExchange(it, br.gabriel.cochilo.domain.assistant.Assistant.ask(it, facts)) }, onGetModel = if (getModel) ({}) else null)
                     }
                 }
             }
@@ -353,7 +353,7 @@ class ScreensSnapshotTest {
     }
     @Test fun ask_light() { light(); paparazzi.snapshot { AskShot(false, listOf("Why are the naps so short?")) } }
     @Test fun ask_care_ptBR_dark() { pt(true); paparazzi.snapshot { AskShot(true, listOf("Ela está com febre, o que faço?")) } }
-    @Test fun ask_not_sure_light() { light(); paparazzi.snapshot { AskShot(false, listOf("What colour is the sky?")) } }
+    @Test fun ask_not_sure_light() { light(); paparazzi.snapshot { AskShot(false, listOf("What colour is the sky?"), getModel = true) } }
 
     /** On-device AI (docs/assistant.md): the sheet in its states, and an answer from the model. */
     @Composable
@@ -363,7 +363,9 @@ class ScreensSnapshotTest {
         } } }
     }
     @Test fun model_sheet_play_light() { light(); paparazzi.snapshot { ModelShot(false, br.gabriel.cochilo.ai.ModelState.Absent, br.gabriel.cochilo.ai.ModelSource.Kind.PLAY_DOWNLOAD) } }
-    @Test fun model_sheet_import_copying_light() { light(); paparazzi.snapshot { ModelShot(false, br.gabriel.cochilo.ai.ModelState.Getting(0.42f), br.gabriel.cochilo.ai.ModelSource.Kind.FILE_IMPORT) } }
+    @Test fun model_sheet_app_downloading_light() { light(); paparazzi.snapshot { ModelShot(false, br.gabriel.cochilo.ai.ModelState.Getting(0.42f), br.gabriel.cochilo.ai.ModelSource.Kind.APP_DOWNLOAD) } }
+    @Test fun model_sheet_app_download_light() { light(); paparazzi.snapshot { ModelShot(false, br.gabriel.cochilo.ai.ModelState.Absent, br.gabriel.cochilo.ai.ModelSource.Kind.APP_DOWNLOAD) } }
+    @Test fun model_sheet_waiting_wifi_ptBR_light() { pt(false); paparazzi.snapshot { ModelShot(false, br.gabriel.cochilo.ai.ModelState.Getting(0.12f, waitingForWifi = true), br.gabriel.cochilo.ai.ModelSource.Kind.APP_DOWNLOAD) } }
     @Test fun model_sheet_ready_ptBR_dark() { pt(true); paparazzi.snapshot { ModelShot(true, br.gabriel.cochilo.ai.ModelState.Ready(java.io.File("model.task"), 555L * 1024 * 1024), br.gabriel.cochilo.ai.ModelSource.Kind.PLAY_DOWNLOAD) } }
     @Test fun ask_generated_light() {
         light()

@@ -32,18 +32,27 @@ jobs:
           echo "NAME=$NAME" >> "$GITHUB_ENV"
           echo "TAG=v$NAME" >> "$GITHUB_ENV"
           echo "CODE=${{ github.run_number }}" >> "$GITHUB_ENV"
-      # Ask Cochilo's on-device model for the Play bundle's asset pack (docs/assistant.md). Only when
-      # the ASSISTANT_MODEL_URL secret is set (a Gemma .task the owner may redistribute, e.g. a
-      # Hugging Face file URL, with HF_TOKEN if it needs one); without it the pack ships without the
-      # model and the play build says so. Never committed to git.
+      # Ask Cochilo's on-device model for the Play bundle's asset pack (docs/assistant.md): the copy
+      # the "Publish assistant model" workflow put on this repository's assistant-model-v1
+      # pre-release, checked against its .sha256; or ASSISTANT_MODEL_URL (with HF_TOKEN) if set.
+      # When neither is there, the pack ships without the model and the play build says so. Never
+      # committed to git.
       - name: Assistant model (optional)
         env:
           MODEL_URL: ${{ secrets.ASSISTANT_MODEL_URL }}
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
         run: |
-          if [ -z "$MODEL_URL" ]; then echo "No ASSISTANT_MODEL_URL: the Play pack ships without the model."; exit 0; fi
-          AUTH=(); if [ -n "$HF_TOKEN" ]; then AUTH=(-H "Authorization: Bearer $HF_TOKEN"); fi
-          curl -fL --retry 3 "${AUTH[@]}" -o assistant_model/src/main/assets/model.task "$MODEL_URL"
+          OUT=assistant_model/src/main/assets/model.task
+          if gh release download assistant-model-v1 -p "gemma3-1b-it-int4.task*" -D model_dl 2>/dev/null; then
+            (cd model_dl && sha256sum -c gemma3-1b-it-int4.task.sha256) && mv model_dl/gemma3-1b-it-int4.task "$OUT"
+          elif [ -n "$MODEL_URL" ]; then
+            AUTH=(); if [ -n "$HF_TOKEN" ]; then AUTH=(-H "Authorization: Bearer $HF_TOKEN"); fi
+            curl -fL --retry 3 "${AUTH[@]}" -o "$OUT" "$MODEL_URL"
+          else
+            echo "No published model and no ASSISTANT_MODEL_URL: the Play pack ships without the model."
+          fi
           ls -la assistant_model/src/main/assets/
       # Two builds (docs/distribution.md): github, the family APK that updates itself from these
       # releases, and play, the bundle for Google Play with no INTERNET permission.
