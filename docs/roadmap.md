@@ -54,6 +54,13 @@ notes by age and log moments in Patterns (step 1, the fabric line, shipped in 0.
 first moment, naps in arms, live in 0.36.0), never on Today, at night, or on safety screens. The
 other moments and the age notes need Tatá's sign-off.
 
+### 3.3b Less is more, next ([skill](../.claude/skills/less-is-more/SKILL.md))
+- **One legend per screen**: Today's Day by day and the Day tab each carry the full colour legend;
+  try it folded behind the first chart, or only the kinds that day has.
+- **Settings' second lines**: most rows explain themselves; keep a meta line only where a row is
+  misread (Due date).
+- **The notification at night**: try the title and the two buttons only, no body line.
+
 ### 3.3 Two parents
 - **Second phone**: today through export/import. Next: a local Wi-Fi sync between the two phones
   (no server, no account; the data still never leaves the home).
@@ -69,6 +76,7 @@ other moments and the age notes need Tatá's sign-off.
 
 ## Shipped from this plan
 
+- **0.43.0**: less is more: Today, Day and Patterns decluttered, the night first in Patterns ([flows.md](flows.md)).
 - **0.42.0**: the night as one thing: nap or night per sleep, night wakings, up for the day ([nights.md](nights.md)).
 - **0.41.1**: the design system released 0.28.0 with the generic parts of Cochilo's patches; Cochilo re-synced to it and deleted the patches ([design/core/CORE.md](../design/core/CORE.md)).
 - **0.41.0**: Share to Cochilo: Napper's export (or a backup) from any app's share sheet imports at once ([backup.md](backup.md)).

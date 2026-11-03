@@ -258,7 +258,7 @@ fun CochiloRoot(vm: MainViewModel) {
                     br.gabriel.cochilo.ui.kit.AppShell(
                         tabs, tab, { tab = it }, showTabs = babyState is BabyState.Ready,
                         header = {
-                            Header(headerName, status) {
+                            Header(headerName, if (tab == 0) "" else status) {
                                 // Ask Cochilo from every tab, one tap (0.38.0): it used to be a row deep in Patterns.
                                 if (babyState is BabyState.Ready) IconButton(R.drawable.gg_ic_chat, stringResource(R.string.ask_open), { newChat(); asking = true })
                                 IconButton(R.drawable.gg_ic_gear, stringResource(R.string.settings), { settings = true })
@@ -294,6 +294,7 @@ fun CochiloRoot(vm: MainViewModel) {
                                             log, now, zone, onOpen = { editing = Editing(it, false) },
                                             expected = (prediction as? Predictor.Result.Awake)?.let { it.windowStart to it.windowEnd },
                                             onAdjust = vm::adjustEnd,
+                                            showAdjustHint = !vm.adjustHintSeen.collectAsState().value,
                                         )
                                         else -> {
                                             // A note from Tatá when one is due (in-app-marketing.md): rules in Suggestions.
@@ -305,7 +306,7 @@ fun CochiloRoot(vm: MainViewModel) {
                                             val due = if (band == null) vm.suggestion(log, weeks, now, sleeping) else null
                                             if (due != null) androidx.compose.runtime.LaunchedEffect(due.moment) { vm.suggestionShown(due.moment) }
                                             PatternsScreen(
-                                                log, now, zone, weeks, onAsk = { newChat(); asking = true },
+                                                log, now, zone, weeks,
                                                 tataNote = when {
                                                     band != null -> { { br.gabriel.cochilo.ui.screens.TataAgeNote(band, vm.catalog.noteProduct(band), vm.catalog.noteUrl(band), onClose = { vm.closeAgeNote(band) }) } }
                                                     due != null -> { { br.gabriel.cochilo.ui.screens.TataSuggestion(due, vm.catalog.url(due.moment), onDismiss = { vm.dismissSuggestion(due.moment) }) } }

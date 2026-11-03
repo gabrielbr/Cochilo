@@ -21,6 +21,10 @@ then [docs/research.md](docs/research.md) for the science the features rest on.
   kind, daylight, routine), the last bottle and pump amounts and the last medicine are filled in, and
   the sheet says "Last time: … · 14:20". New entry types and kinds follow it, and the audit in
   docs/flows.md lists what each type remembers.
+- **Less is more.** Every new or changed screen, flow, notification or widget goes through
+  [`.claude/skills/less-is-more/SKILL.md`](.claude/skills/less-is-more/SKILL.md): each element
+  must help what she does next, or it moves one tap away, gets grouped, or goes. The audit lists
+  what was cut. Cutting never adds a tap to a common entry.
 - **Keep the plan.** Ideas, the owner's suggestions and research-backed features go into
   [docs/roadmap.md](docs/roadmap.md); when one ships, move it out of the plan and into the docs.
 - **Never guess a repo or project.** Work in Cochilo. If a request seems to point at another repo
@@ -101,8 +105,8 @@ the rules; the short version:
   changing the lock means bumping that one.
 - **Not a medical or safety device.** Never imply the app monitors the baby; safe-sleep text
   follows AAP 2022.
-- **Predictions explain themselves.** The card shows the numbers it used. Keep `Predictor` pure
-  Kotlin with unit tests for every rule.
+- **Predictions explain themselves.** The card's "How it's guessed" (one tap, since 0.43.0) shows
+  the numbers it used. Keep `Predictor` pure Kotlin with unit tests for every rule.
 
 ## Before you push
 

@@ -36,6 +36,8 @@
     <string name="next_nap">Next nap</string>
     <string name="next_bedtime">Bedtime</string>
     <string name="prediction_window">Between %1$s and %2$s</string>
+    <string name="prediction_why_show">How it\'s guessed</string>
+    <string name="prediction_why_hide">Hide how it\'s guessed</string>
     <string name="prediction_why_personal">Window %1$s: recent median %2$s (windows logged: %3$d), blended with %4$s for this age.</string>
     <string name="prediction_why_prior">Window %1$s, the usual for this age. It learns from your log within about a week.</string>
     <string name="prediction_nap_shorter">Last nap %1$s, shorter than the usual %2$s, so %3$s sooner.</string>
@@ -116,7 +118,7 @@
     <string name="title_patterns">Patterns</string>
     <string name="caption_rhythm">Rhythm, last 14 days</string>
     <string name="caption_week">Daily average, last 7 days</string>
-    <string name="rhythm_meta">Each line is a day, midnight to midnight. Night sleep should gather on the left and right as the body clock forms.</string>
+    <string name="rhythm_meta">Each line is a day. Night sleep gathers at the edges as the body clock forms.</string>
     <string name="total_sleep">Total sleep</string>
     <string name="typical_range">Typical for this age: %1$s–%2$s h (%3$s)</string>
     <string name="night_sleep">Night sleep</string>
@@ -128,6 +130,9 @@
     <string name="diapers">Diapers</string>
     <string name="daylight">Daylight</string>
     <string name="daylight_meta">Light between 12:00 and 16:00 is linked to better night sleep.</string>
+    <string name="bedtime_usual">Usual bedtime</string>
+    <string name="feeds_diapers">Feeds · diapers</string>
+    <string name="feeds_diapers_value">%1$.1f · %2$.1f a day</string>
     <string name="per_day">%1$.1f a day</string>
     <string name="empty_patterns_title">Patterns need a few days</string>
     <string name="empty_patterns_line">Log sleep for two or three days and they appear here.</string>
@@ -436,8 +441,6 @@
     <!-- Ask Cochilo (docs/assistant.md): reviewed answers. Describe, suggest gently, never judge, never diagnose. -->
     <string name="ask_title">Ask Cochilo</string>
     <string name="ask_line">Answers from your log and from sleep research, made on this phone. Not medical advice.</string>
-    <string name="ask_entry">Questions about sleep</string>
-    <string name="ask_entry_meta">Answered from your log, on this phone</string>
     <string name="ask_field">Ask about naps, nights, routines…</string>
     <string name="ask_send">Ask</string>
     <string name="ask_suggested">You could ask</string>

@@ -62,6 +62,8 @@ fun DayScreen(
     onAdjust: (Event, Long) -> Unit = { _, _ -> },
     /** For screenshots: one sleep shown mid-drag (its index among the day's sleeps, steps). */
     previewDrag: Pair<Int, Int>? = null,
+    /** The drag hint shows until the first drag (0.43.0). */
+    showAdjustHint: Boolean = true,
 ) {
     val f = Format(LocalContext.current, zone, now)
     val today = localDate(now, zone)
@@ -85,7 +87,8 @@ fun DayScreen(
             else Spacer(Modifier.size(Spacing.space12))
         }
 
-        Caption(stringResource(R.string.caption_ring), top = Spacing.space6)
+        // No caption over the ring (0.43.0): the ring says what it is; its "i" explains it.
+        Spacer(Modifier.height(Spacing.space6))
         val sleepMs = events.filter { it.type == EventType.SLEEP }.sumOf { (minOf(it.end ?: now, to) - maxOf(it.start, from)).coerceAtLeast(0) }
         val naps = events.count { it.type == EventType.SLEEP && !it.isNightSleep(zone) && it.start >= from }
         val feeds = events.count { it.type == EventType.FEED && it.start >= from }
@@ -118,7 +121,7 @@ fun DayScreen(
             EmptyState(stringResource(R.string.empty_day_title), stringResource(R.string.empty_day_line))
             return@ScrollPage
         }
-        Text(stringResource(R.string.adjust_hint), style = Type.meta, color = CochiloTheme.colors.muted, modifier = Modifier.padding(bottom = Spacing.space2))
+        if (showAdjustHint) Text(stringResource(R.string.adjust_hint), style = Type.meta, color = CochiloTheme.colors.muted, modifier = Modifier.padding(bottom = Spacing.space2))
         VerticalTimeline(events, now, f, zone, onOpen, onAdjust = { e, end -> onAdjust(e, end) }, allSleeps = log, previewDrag = previewDrag)
     }
 }

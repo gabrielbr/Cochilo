@@ -30,6 +30,8 @@
     <string name="next_nap">Próxima soneca</string>
     <string name="next_bedtime">Hora de dormir</string>
     <string name="prediction_window">Entre %1$s e %2$s</string>
+    <string name="prediction_why_show">Como é calculado</string>
+    <string name="prediction_why_hide">Esconder o cálculo</string>
     <string name="prediction_why_personal">Janela de %1$s: mediana recente de %2$s (janelas registradas: %3$d), combinada com %4$s para esta idade.</string>
     <string name="prediction_why_prior">Janela de %1$s, o usual para esta idade. Aprende com seus registros em cerca de uma semana.</string>
     <string name="prediction_nap_shorter">Última soneca de %1$s, mais curta que o usual (%2$s), então %3$s antes.</string>
@@ -105,7 +107,7 @@
     <string name="title_patterns">Padrões</string>
     <string name="caption_rhythm">Ritmo, últimos 14 dias</string>
     <string name="caption_week">Média por dia, últimos 7 dias</string>
-    <string name="rhythm_meta">Cada linha é um dia, da meia-noite à meia-noite. O sono da noite se junta nas pontas conforme o relógio biológico se forma.</string>
+    <string name="rhythm_meta">Cada linha é um dia. O sono da noite se junta nas pontas conforme o relógio biológico se forma.</string>
     <string name="total_sleep">Sono total</string>
     <string name="typical_range">Típico para a idade: %1$s–%2$s h (%3$s)</string>
     <string name="night_sleep">Sono da noite</string>
@@ -117,6 +119,9 @@
     <string name="diapers">Fraldas</string>
     <string name="daylight">Luz do dia</string>
     <string name="daylight_meta">Luz entre 12:00 e 16:00 está ligada a um sono melhor à noite.</string>
+    <string name="bedtime_usual">Hora de dormir de costume</string>
+    <string name="feeds_diapers">Mamadas · fraldas</string>
+    <string name="feeds_diapers_value">%1$.1f · %2$.1f por dia</string>
     <string name="per_day">%1$.1f por dia</string>
     <string name="empty_patterns_title">Os padrões precisam de alguns dias</string>
     <string name="empty_patterns_line">Registre o sono por dois ou três dias e eles aparecem aqui.</string>
@@ -411,8 +416,6 @@
     <!-- Pergunte ao Cochilo (docs/assistant.md): respostas revisadas. Descrever, sugerir com calma, nunca julgar, nunca diagnosticar. -->
     <string name="ask_title">Pergunte ao Cochilo</string>
     <string name="ask_line">Respostas a partir dos seus registros e de pesquisas sobre sono, feitas neste celular. Não é orientação médica.</string>
-    <string name="ask_entry">Perguntas sobre o sono</string>
-    <string name="ask_entry_meta">Respondidas com seus registros, neste celular</string>
     <string name="ask_field">Pergunte sobre sonecas, noites, rotina…</string>
     <string name="ask_send">Perguntar</string>
     <string name="ask_suggested">Você pode perguntar</string>

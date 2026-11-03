@@ -63,6 +63,26 @@ Code: `lastOf`, `lastKind`, `lastKindAmong`, `Event.rememberedFrom` in `domain/Q
 (tested in `QuickLogTest`); the Log menu in `LogMenu.kt` (Today's rows until 0.39.0); the sheet's line in `Sheets.kt`.
 This replaced the earlier "next: other breast" suggestion: the app shows what happened, she decides.
 
+## Less is more (0.43.0)
+
+The owner: "reduce clutter and less valuable information and actions." Every element went
+through the five questions in [`.claude/skills/less-is-more/SKILL.md`](../.claude/skills/less-is-more/SKILL.md);
+the full list is in [audits/0.43.0-less-is-more.md](audits/0.43.0-less-is-more.md).
+
+| What | Before | Now | Taps |
+|---|---|---|---|
+| "Today" title | Always | Gone (the tab and header name it) | 0 |
+| Header status on Today | "Awake · 40m" | Hidden on Today (the card says it); shown on Day and Patterns | 0 |
+| Sleep card "i" | Always | Gone | 0 |
+| How the next nap is guessed | Always open (two meta lines) | "How it's guessed" | +1 to read, 0 to act |
+| Day ring caption | Always | Gone | 0 |
+| "Hold a sleep and drag" hint | Always | Until the first drag | 0 |
+| Daylight nudge in a night waking | Could show | Never | 0 |
+| Patterns › Questions about sleep | A row | Gone (the header's chat icon) | 1 (unchanged) |
+| Patterns week rows | Total first, 8 rows | Night first, bedtime added, feeds + diapers one row | 0 |
+
+No common entry costs more.
+
 ## The night as one thing (0.42.0)
 
 [nights.md](nights.md). Start sleep stays one tap: Cochilo guesses nap or night.
