@@ -33,7 +33,7 @@ object ModelDownload {
 
     /** What's wrong with a finished download, or null when it's the model we published. */
     fun verify(file: File, expectedSha: String): ModelState.Reason? {
-        val head = file.inputStream().use { s -> ByteArray(2).also { s.read(it) } }
+        val head = file.inputStream().use { s -> ByteArray(16).also { s.read(it) } }
         ModelFile.check(head, file.length())?.let { return it }
         return if (sha256(file) == expectedSha) null else ModelState.Reason.CHECK
     }

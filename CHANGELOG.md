@@ -3,6 +3,13 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.37.1 — 2026-11-03
+
+**The on-device AI accepts Google's current model file.** The check on the model file expected
+the older zip format, so it would have turned down the Gemma file Google publishes today, both
+when downloading and when choosing a file. It now only rules out the wrong kind of file (like a
+web page), and a download is still checked against its published checksum.
+
 ## 0.37.0 — 2026-11-03
 
 **The on-device AI downloads itself.** When you want Ask Cochilo to answer questions beyond its

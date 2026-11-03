@@ -13,7 +13,10 @@ class ModelFileTest {
 
     @Test fun only_a_task_file_of_a_real_size_is_taken() {
         assertNull(ModelFile.check(zip, 600L * 1024 * 1024))
+        // Google's current Gemma .task isn't a zip: a binary header is fine.
+        assertNull(ModelFile.check(byteArrayOf(0x1C, 0x00, 0x00, 0x00, 'T'.code.toByte()), 600L * 1024 * 1024))
         assertEquals(ModelState.Reason.NOT_A_MODEL, ModelFile.check("{}".toByteArray(), 600L * 1024 * 1024))
+        assertEquals(ModelState.Reason.NOT_A_MODEL, ModelFile.check("  <!DOCTYPE html>".toByteArray(), 600L * 1024 * 1024))
         assertEquals(ModelState.Reason.TOO_SMALL, ModelFile.check(zip, 1024))
         assertFalse(ModelFile.looksLikeTask(ByteArray(0)))
     }
