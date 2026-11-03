@@ -58,6 +58,9 @@ fun SettingsScreen(
     /** Settings › Ask Cochilo › On-device AI (docs/assistant.md); null hides the row. */
     modelStatus: String? = null,
     onModel: () -> Unit = {},
+    /** The one switch for Tatá's suggestions; null hides it (no moment approved yet). */
+    tataSuggestions: Boolean? = null,
+    onTataSuggestions: (Boolean) -> Unit = {},
 ) {
     val context = LocalContext.current
     val f = Format(context, zone)
@@ -139,6 +142,13 @@ fun SettingsScreen(
                 stringResource(R.string.celebrations), stringResource(R.string.celebrations_meta),
                 celebrations, onCelebrations,
             )
+            if (tataSuggestions != null) {
+                Hairline()
+                br.gabriel.cochilo.ui.kit.SwitchRow(
+                    stringResource(R.string.tata_suggestions), stringResource(R.string.tata_suggestions_meta),
+                    tataSuggestions, onTataSuggestions,
+                )
+            }
         }
 
         if (modelStatus != null) {

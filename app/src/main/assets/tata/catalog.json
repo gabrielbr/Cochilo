@@ -1,0 +1,10 @@
+{
+  "comment": "Tatá's suggestions (docs/tata-slings/in-app-marketing.md). Shipped inside the app: no remote config. A moment shows only when approved is true, set after Tatá signs it off. Paths are the shop's own category pages, checked 2026-11-03.",
+  "version": 1,
+  "moments": [
+    { "moment": "ARMS_NAPS", "product": "tata_facil_sling", "path": "tata-facil-sling/", "approved": false },
+    { "moment": "ROUTINE_STEADY", "product": "tata_naninha", "path": "acessorios/tata-naninha/", "approved": false },
+    { "moment": "LITTLE_DAYLIGHT", "product": "tata_facil_sling", "path": "tata-facil-sling/", "approved": false },
+    { "moment": "SIX_MONTHS", "product": "tata_to", "path": "acessorios/tata-to-brinquedos-exploracao-conexao-olhar-terapia-ocupacional/", "approved": false }
+  ]
+}

@@ -521,4 +521,22 @@
     <string name="fabric_in_shop_line">Este tecido existe em sling.</string>
     <string name="fabric_in_shop_action">Ver na loja</string>
     <string name="fabric_in_shop_spoken">Ver o sling %1$s na loja da Tatá Slings. Abre o navegador.</string>
+    <!-- Sugestões da Tatá (docs/tata-slings/in-app-marketing.md). Rascunhos para a Tatá revisar; nada aparece até ela aprovar um momento. -->
+    <string name="tata_suggestions">Sugestões da Tatá</string>
+    <string name="tata_suggestions_meta">Às vezes, uma dica da Tatá com um produto da loja. Desligue quando quiser.</string>
+    <string name="tata_byline">Tatá, terapeuta ocupacional e mãe do Francisco e do Dante</string>
+    <string name="tata_dont_show">Não mostrar mais</string>
+    <string name="tata_link_line">Na loja da Tatá Slings.</string>
+    <string name="tata_link_sling">Ver o sling</string>
+    <string name="tata_link_sling_spoken">Ver o Tatá Fácil Sling na loja da Tatá Slings. Abre o navegador.</string>
+    <string name="tata_link_naninha">Ver a Naninha</string>
+    <string name="tata_link_naninha_spoken">Ver a Tatá Naninha na loja da Tatá Slings. Abre o navegador.</string>
+    <string name="tata_link_to">Ver os brinquedos TatáT.O.</string>
+    <string name="tata_link_to_spoken">Ver os brinquedos TatáT.O. na loja da Tatá Slings. Abre o navegador.</string>
+    <string name="tata_link_shop">Ver a loja</string>
+    <string name="tata_link_shop_spoken">Ver a loja da Tatá Slings. Abre o navegador.</string>
+    <string name="tata_note_arms_naps">Sonecas no colo nesta semana: %1$d. Soneca no colo é normal nessa idade. O sling deixa as mãos livres enquanto o bebê dorme pertinho.</string>
+    <string name="tata_note_routine">Rotinas de dormir nesta semana: %1$d. Com a rotina firme, a Naninha pode virar um dos passos.</string>
+    <string name="tata_note_daylight">Pouca luz do dia nesta semana. Um passeio entre 12h e 16h conta, de sling ou de carrinho.</string>
+    <string name="tata_note_six_months">Por volta dos 6 meses, brincar e explorar ocupam mais do tempo acordado. Os brinquedos TatáT.O. foram feitos por uma terapeuta ocupacional para essa fase.</string>
 </resources>

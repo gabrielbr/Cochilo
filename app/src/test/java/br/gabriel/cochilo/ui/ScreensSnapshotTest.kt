@@ -386,6 +386,20 @@ class ScreensSnapshotTest {
         }
     }
 
+    /** Tatá's suggestion as it would read once she approves the moment (none is approved yet). */
+    @Composable
+    private fun TataNoteShot(dark: Boolean, s: br.gabriel.cochilo.domain.Suggestions.Suggestion) {
+        CochiloTheme(dark) { br.gabriel.cochilo.ui.kit.Frame { Column(Modifier.padding(CTokens.Spacing.space6)) {
+            br.gabriel.cochilo.ui.screens.TataSuggestion(s, "https://tataslings.com.br/", onDismiss = {})
+        } } }
+    }
+    @Test fun tata_note_arms_naps_light() {
+        light(); paparazzi.snapshot { TataNoteShot(false, br.gabriel.cochilo.domain.Suggestions.Suggestion(br.gabriel.cochilo.domain.Suggestions.Moment.ARMS_NAPS, "tata_facil_sling", 6)) }
+    }
+    @Test fun tata_note_routine_ptBR_dark() {
+        pt(true); paparazzi.snapshot { TataNoteShot(true, br.gabriel.cochilo.domain.Suggestions.Suggestion(br.gabriel.cochilo.domain.Suggestions.Moment.ROUTINE_STEADY, "tata_naninha", 5)) }
+    }
+
     @Test fun passphrase_sheet_light() {
         light()
         paparazzi.snapshot { CochiloTheme(false) { br.gabriel.cochilo.ui.kit.Frame { androidx.compose.foundation.layout.Column(Modifier.padding(br.gabriel.cochilo.ui.theme.CTokens.Spacing.space6)) {

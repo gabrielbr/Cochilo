@@ -163,6 +163,8 @@ fun CochiloRoot(vm: MainViewModel) {
                             passphraseSet = vm.backupPassphrase.collectAsState().value != null,
                             modelStatus = br.gabriel.cochilo.ui.screens.modelStatus(vm.modelState.collectAsState().value),
                             onModel = { vm.refreshModel(); showingModel = true },
+                            tataSuggestions = if (vm.catalog.approved.isEmpty()) null else vm.tataSuggestions.collectAsState().value,
+                            onTataSuggestions = vm::setTataSuggestions,
                             onPassphrase = { editingPassphrase = true },
                             celebrations = vm.celebrations.collectAsState().value,
                             onCelebrations = vm::setCelebrations,
@@ -228,7 +230,17 @@ fun CochiloRoot(vm: MainViewModel) {
                                             onAdjust = vm::adjustEnd,
                                         )
                                         2 -> HistoryScreen(log, now, zone) { editing = Editing(it, false) }
-                                        else -> PatternsScreen(log, now, zone, weeks, onAsk = { asking = true })
+                                        else -> {
+                                            // A note from Tatá when one is due (in-app-marketing.md): rules in Suggestions.
+                                            vm.suggestionTick.collectAsState().value
+                                            vm.tataSuggestions.collectAsState().value
+                                            val due = vm.suggestion(log, weeks, now, prediction is Predictor.Result.Sleeping)
+                                            if (due != null) androidx.compose.runtime.LaunchedEffect(due.moment) { vm.suggestionShown(due.moment) }
+                                            PatternsScreen(
+                                                log, now, zone, weeks, onAsk = { asking = true },
+                                                tataNote = due?.let { s -> { br.gabriel.cochilo.ui.screens.TataSuggestion(s, vm.catalog.url(s.moment), onDismiss = { vm.dismissSuggestion(s.moment) }) } },
+                                            )
+                                        }
                                     }
                                 }
                                 val animated: @Composable (Int) -> Unit = { target ->

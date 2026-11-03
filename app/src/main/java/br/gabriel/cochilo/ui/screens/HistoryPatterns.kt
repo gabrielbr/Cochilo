@@ -81,7 +81,11 @@ fun HistoryScreen(log: List<Event>, now: Long, zone: ZoneId, onOpen: (Event) -> 
 
 /** Rhythm (14-day actogram) and the 7-day averages against the reference ranges. */
 @Composable
-fun PatternsScreen(log: List<Event>, now: Long, zone: ZoneId, ageWeeks: Int, onAsk: () -> Unit = {}) {
+fun PatternsScreen(
+    log: List<Event>, now: Long, zone: ZoneId, ageWeeks: Int, onAsk: () -> Unit = {},
+    /** A note from Tatá, under the week's data, when one is due (in-app-marketing.md §3.2). */
+    tataNote: (@Composable () -> Unit)? = null,
+) {
     val f = Format(LocalContext.current, zone, now)
     val stats = Stats(zone)
     val today = localDate(now, zone)
@@ -174,6 +178,10 @@ fun PatternsScreen(log: List<Event>, now: Long, zone: ZoneId, ageWeeks: Int, onA
             }
             Spacer(Modifier.height(Spacing.space2))
             Text(stringResource(R.string.places_meta), style = Type.meta, color = CochiloTheme.colors.muted)
+        }
+        if (tataNote != null) {
+            Spacer(Modifier.height(Spacing.space10))
+            tataNote()
         }
     }
 }

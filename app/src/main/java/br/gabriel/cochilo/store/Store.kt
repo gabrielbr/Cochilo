@@ -21,6 +21,9 @@ object Store {
      */
     val slingGuide: String = "${HOME}tudo-sobre-o-tata-facil-sling/?$SOURCE&utm_campaign=ticks_guide"
 
+    /** A page of the shop at [path] (relative, e.g. "tata-facil-sling/"), tagged with [campaign]. */
+    fun page(path: String, campaign: String): String = "$HOME${path.trimStart('/')}?$SOURCE&utm_campaign=$campaign"
+
     /**
      * The sling in the fabric [fabricName] (her product name, e.g. "Rosa Chá"), as the shop's own
      * search for "sling <name>", so a renamed or restocked product is still found; campaign
