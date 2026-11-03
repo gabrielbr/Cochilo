@@ -88,6 +88,7 @@ fun CochiloRoot(vm: MainViewModel) {
     var editingBaby by remember { mutableStateOf(false) }
     var editingLook by remember { mutableStateOf(false) }
     var editingRitual by remember { mutableStateOf(false) }
+    var editingPassphrase by remember { mutableStateOf(false) }
     val snackbar = remember { SnackbarHostState() }
 
     val exportJson = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { it?.let(vm::exportJson) }
@@ -137,6 +138,8 @@ fun CochiloRoot(vm: MainViewModel) {
                             onEditLook = { editingLook = true },
                             onEditRitual = { editingRitual = true },
                             onExportReport = { exportReport.launch("cochilo-report-${LocalDate.now(zone)}.pdf") },
+                            passphraseSet = vm.backupPassphrase.collectAsState().value != null,
+                            onPassphrase = { editingPassphrase = true },
                             celebrations = vm.celebrations.collectAsState().value,
                             onCelebrations = vm::setCelebrations,
                             nightLight = vm.nightLight.collectAsState().value,
@@ -294,6 +297,12 @@ fun CochiloRoot(vm: MainViewModel) {
     }
     if (vm.ticks.collectAsState().value) {
         br.gabriel.cochilo.ui.screens.TicksSheet(onDismiss = vm::ticksSeen)
+    }
+    if (editingPassphrase) {
+        br.gabriel.cochilo.ui.screens.PassphraseSheet(vm.backupPassphrase.collectAsState().value, onSave = vm::setBackupPassphrase, onDismiss = { editingPassphrase = false })
+    }
+    vm.sealedImport.collectAsState().value?.let { pending ->
+        br.gabriel.cochilo.ui.screens.UnlockSheet(pending.wrong, onOpen = vm::openSealed, onDismiss = vm::cancelSealed)
     }
     if (editingRitual) {
         br.gabriel.cochilo.ui.screens.RitualSheet(vm.rituals.collectAsState().value, onSave = vm::setRitual, onDismiss = { editingRitual = false })

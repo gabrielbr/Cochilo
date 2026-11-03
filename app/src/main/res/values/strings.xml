@@ -400,4 +400,18 @@
     <string name="filter_all">All</string>
     <string name="ring_expected">Expected next sleep</string>
     <string name="ring_expected_spoken">Next sleep expected between %1$s and %2$s.</string>
+    <string name="passphrase_row">Protect backups</string>
+    <string name="passphrase_row_off">Off: anyone with the file can read it</string>
+    <string name="passphrase_row_on">On: backups open only with the passphrase</string>
+    <string name="passphrase_title">Protect backups</string>
+    <string name="passphrase_line">With a passphrase, every backup you export is locked. To import it, on this phone or another, type the same passphrase.</string>
+    <string name="passphrase_field">Passphrase</string>
+    <string name="passphrase_meta">At least 4 characters. Write it down: if it\'s lost, nobody can open those backups.</string>
+    <string name="passphrase_remove">Remove passphrase</string>
+    <string name="passphrase_saved">Backups will be locked</string>
+    <string name="passphrase_removed">Backups will not be locked</string>
+    <string name="unlock_title">This backup is locked</string>
+    <string name="unlock_line">Type the passphrase it was exported with.</string>
+    <string name="unlock_wrong">That passphrase doesn\'t open it. Try again.</string>
+    <string name="unlock_open">Open and import</string>
 </resources>

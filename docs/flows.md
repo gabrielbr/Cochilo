@@ -154,6 +154,18 @@ log changes and goes through `Entries`, like every other button.
   "Expected next sleep" in the legend and in what TalkBack reads ("Next sleep expected between
   15:51 and 16:11").
 
+## Locked backups (0.23.0)
+
+| Flow | Taps | Remembers |
+|---|---|---|
+| Export a backup | 1 (Export backup) + the system's save | the passphrase, so a locked export costs the same as a plain one |
+| Import a locked backup on the same phone | 1 + the system's picker | the passphrase opens it with no question |
+| Import it on another phone | 1 + picker + type the passphrase + Open and import | nothing (by design: the passphrase is the key) |
+| Set or change the passphrase | Protect backups, type, Save | the current passphrase is filled in |
+
+A wrong passphrase keeps the sheet open with "That passphrase doesn't open it. Try again." and the
+words still typed, so fixing a typo costs one tap.
+
 ## Large text (0.22.0)
 
 No tap counts change. At 200% font size every one-move entry keeps its cost: the Log button's

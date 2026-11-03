@@ -94,6 +94,9 @@ shows bedtime instead. The card always says which numbers it used. Code:
 - **Export backup** writes everything (baby + every entry) as JSON. **Import backup** merges a
   file: new entries are added, an entry you edited more recently replaces the older copy, and
   nothing is ever deleted, so importing the same file twice changes nothing.
+- **Protect backups** (Settings › Data) sets a passphrase: every backup is then locked
+  (AES-256-GCM) and opens only with it, on this phone or another. The spreadsheet and the report
+  stay plain. [docs/backup.md](docs/backup.md).
 - **Export spreadsheet** writes a CSV for Sheets or Excel (export only).
 - **Import from Napper** reads Napper's logs export (the `…-logs-….csv` file): naps, nights (each
   bedtime to the next wake-up, split around night wakings), feeds, bottles, diapers and medicine

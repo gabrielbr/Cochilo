@@ -82,7 +82,9 @@ system's. Its AGENTS.md and DESIGN.md are the rules; the short version:
   [docs/notifications.md](docs/notifications.md)). `check<Variant>Permissions` fails the build if
   either list grows.
 - **Import never deletes** and keeps the newest edit of an entry (`Backup.merge`). Changing the
-  backup format means bumping `BackupFile.VERSION` and still reading older files.
+  backup format means bumping `BackupFile.VERSION` and still reading older files. A locked backup
+  (`SealedFile`, [docs/backup.md](docs/backup.md)) wraps the same file and has its own `VERSION`;
+  changing the lock means bumping that one.
 - **Not a medical or safety device.** Never imply the app monitors the baby; safe-sleep text
   follows AAP 2022.
 - **Predictions explain themselves.** The card shows the numbers it used. Keep `Predictor` pure

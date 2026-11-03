@@ -77,6 +77,19 @@ class Prefs(context: Context) {
         _rituals.value = _rituals.value + (kind to text)
     }
 
+    private val _passphrase = MutableStateFlow(sp.getString("backup_passphrase", null))
+    /**
+     * The backup passphrase (docs/backup.md), or null: exports are then plain JSON. Kept in the
+     * app's private storage, which never leaves the phone (allowBackup is off); only the exported
+     * file is sealed with it.
+     */
+    val backupPassphrase: StateFlow<String?> = _passphrase
+
+    fun setBackupPassphrase(p: String?) {
+        sp.edit { if (p == null) remove("backup_passphrase") else putString("backup_passphrase", p) }
+        _passphrase.value = p
+    }
+
     /** Whether the safe-babywearing check (T.I.C.K.S.) has been shown once. */
     var ticksShown: Boolean
         get() = sp.getBoolean("ticks_shown", false)

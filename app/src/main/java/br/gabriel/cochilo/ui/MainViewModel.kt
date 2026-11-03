@@ -197,7 +197,9 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     fun exportJson(uri: Uri) = viewModelScope.launch {
         val ok = withContext(Dispatchers.IO) {
             runCatching {
-                val text = Backup.toJson(babies.get(), events.all(), System.currentTimeMillis())
+                val plain = Backup.toJson(babies.get(), events.all(), System.currentTimeMillis())
+                // With a passphrase set, the file is sealed (docs/backup.md); otherwise plain JSON.
+                val text = ctx.prefs.backupPassphrase.value?.let { br.gabriel.cochilo.backup.Sealed.seal(plain, it) } ?: plain
                 ctx.contentResolver.openOutputStream(uri, "wt")!!.use { it.write(text.toByteArray()) }
             }.isSuccess
         }
@@ -231,19 +233,60 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
             val text = runCatching {
                 ctx.contentResolver.openInputStream(uri)!!.use { it.readBytes().decodeToString() }
             }.getOrElse { return@withContext str(R.string.file_failed) }
+            if (br.gabriel.cochilo.backup.Sealed.isSealed(text)) {
+                // Try the passphrase this phone keeps; otherwise ask for it (UnlockSheet).
+                val saved = ctx.prefs.backupPassphrase.value
+                val opened = saved?.let { p -> runCatching { br.gabriel.cochilo.backup.Sealed.open(text, p) }.getOrNull() }
+                    ?: run { _sealed.value = SealedImport(text, wrong = false); return@withContext null }
+                return@withContext importBackup(opened)
+            }
             if (NapperImport.looksLikeNapper(text)) {
                 val parsed = runCatching { NapperImport.parse(text, napperLabels()) }
                     .getOrElse { return@withContext str(R.string.import_napper_failed) }
                 val result = mergeIn(parsed.events)
                 return@withContext str(R.string.imported_napper, result.added, result.updated)
             }
-            val file = runCatching { Backup.fromJson(text) }.getOrElse { return@withContext str(R.string.import_failed) }
-            val result = mergeIn(file.events)
-            if (babies.get() == null && file.baby != null) babies.upsert(file.baby)
-            str(R.string.imported, result.added, result.updated)
-        }
+            importBackup(text)
+        } ?: return@launch
         refreshNow()
         _messages.send(UiMessage(msg))
+    }
+
+    private suspend fun importBackup(text: String): String {
+        val file = runCatching { Backup.fromJson(text) }.getOrElse { return str(R.string.import_failed) }
+        val result = mergeIn(file.events)
+        if (babies.get() == null && file.baby != null) babies.upsert(file.baby)
+        return str(R.string.imported, result.added, result.updated)
+    }
+
+    /** A sealed backup waiting for its passphrase; [wrong] after a passphrase that didn't open it. */
+    data class SealedImport(val text: String, val wrong: Boolean)
+
+    private val _sealed = MutableStateFlow<SealedImport?>(null)
+    val sealedImport: StateFlow<SealedImport?> = _sealed
+
+    /** Opens the waiting sealed backup with [passphrase] and imports it; a wrong one asks again. */
+    fun openSealed(passphrase: String) = viewModelScope.launch {
+        val pending = _sealed.value ?: return@launch
+        val msg = withContext(Dispatchers.IO) {
+            val opened = runCatching { br.gabriel.cochilo.backup.Sealed.open(pending.text, passphrase) }.getOrElse { e ->
+                if (e is br.gabriel.cochilo.backup.WrongPassphrase) { _sealed.value = pending.copy(wrong = true); return@withContext null }
+                _sealed.value = null
+                return@withContext str(R.string.import_failed)
+            }
+            _sealed.value = null
+            importBackup(opened)
+        } ?: return@launch
+        refreshNow()
+        _messages.send(UiMessage(msg))
+    }
+
+    fun cancelSealed() { _sealed.value = null }
+
+    val backupPassphrase: StateFlow<String?> = ctx.prefs.backupPassphrase
+    fun setBackupPassphrase(p: String?) {
+        ctx.prefs.setBackupPassphrase(p)
+        viewModelScope.launch { _messages.send(UiMessage(str(if (p == null) R.string.passphrase_removed else R.string.passphrase_saved))) }
     }
 
     /** Import never deletes: only the added and newer entries are written. */
