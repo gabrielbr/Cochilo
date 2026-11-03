@@ -372,6 +372,18 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         modelSource.remove()
     }
 
+    // Ask's chats (0.40.0): saved on the phone, one per topic.
+    val chats: StateFlow<List<br.gabriel.cochilo.data.Chat>> = ctx.chats.chats
+
+    fun saveChat(id: String, items: List<br.gabriel.cochilo.data.ChatItem>) {
+        val old = ctx.chats.chats.value.firstOrNull { it.id == id }
+        val now = System.currentTimeMillis()
+        ctx.chats.save(br.gabriel.cochilo.data.Chat(id, old?.created ?: now, now, br.gabriel.cochilo.data.ChatStore.title(items.firstOrNull()?.question ?: ""), items))
+    }
+
+    fun deleteChat(id: String) = ctx.chats.delete(id)
+    fun restoreChat(chat: br.gabriel.cochilo.data.Chat) = ctx.chats.restore(chat)
+
     /**
      * The model took the app down last time (0.39.1): a native crash can't be caught, so the flag
      * set before writing is still on at the next start. The model is paused until she tries again.

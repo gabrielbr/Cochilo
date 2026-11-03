@@ -3,6 +3,14 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.40.0 — 2026-11-03
+
+**History is on Today, and Ask keeps chats.** The History tab is gone. Today now ends with Day by
+day: the same filters, then every day, today first, with its summary, timeline and entries. Three
+tabs are left: Today, Day and Patterns. In Ask you can now have several chats, one per topic.
+Each new visit starts a fresh one, Chats lists the saved ones to go back to, and a chat is deleted
+with Undo. Chats stay on this phone and aren't in backups. `docs/flows.md`, `docs/assistant.md`.
+
 ## 0.39.1 — 2026-11-03
 
 **Asking questions no longer closes the app.** With the on-device AI on, a question could make the

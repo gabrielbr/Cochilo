@@ -15,6 +15,8 @@ import kotlinx.coroutines.launch
 class CochiloApp : Application() {
     val db: CochiloDb by lazy { CochiloDb.create(this) }
     val prefs: Prefs by lazy { Prefs(this) }
+    /** Ask Cochilo's saved chats (0.40.0): on the phone only, not in backups. */
+    val chats: br.gabriel.cochilo.data.ChatStore by lazy { br.gabriel.cochilo.data.ChatStore(java.io.File(filesDir, "chats.json")) }
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     @OptIn(FlowPreview::class)

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -34,50 +35,53 @@ import br.gabriel.cochilo.ui.theme.Type
 import java.time.ZoneId
 import java.util.Locale
 
-/** Day by day, newest first: a summary line, the day's timeline, then its entries. */
+/**
+ * Day by day, newest first, today at the top: a summary line, the day's timeline, then its entries,
+ * grouped asleep and awake (0.35.0). Since 0.40.0 this is the end of Today, not a tab of its own:
+ * the owner found Today's "today's entries" and the History tab to be the same list twice. The
+ * filters stay: one tap shows one kind of entry, and the day's timeline stays whole for context.
+ */
 @Composable
-fun HistoryScreen(log: List<Event>, now: Long, zone: ZoneId, onOpen: (Event) -> Unit) {
+fun ColumnScope.HistoryDays(log: List<Event>, now: Long, zone: ZoneId, onOpen: (Event) -> Unit, top: androidx.compose.ui.unit.Dp = Spacing.space8) {
     val f = Format(LocalContext.current, zone, now)
     val stats = Stats(zone)
-    // One tap to show one kind of entry (docs/flows.md); the day's timeline stays whole for context.
     var filter by androidx.compose.runtime.saveable.rememberSaveable { androidx.compose.runtime.mutableStateOf<String?>(null) }
     val kinds = EventType.entries.filter { t -> log.any { it.type == t } }
     val shown = filter?.let { EventType.valueOf(it) }
     val days = log.filter { shown == null || it.type == shown }.map { localDate(it.start, zone) }.distinct().sortedDescending().take(60)
-    ScrollPage {
-        ScreenTitle(stringResource(R.string.title_history), stringResource(R.string.title_history))
-        if (log.isEmpty()) {
-            EmptyState(stringResource(R.string.empty_history_title), stringResource(R.string.empty_history_line))
-            return@ScrollPage
-        }
-        if (kinds.size > 1) {
-            Spacer(Modifier.height(Spacing.space4))
-            val all = stringResource(R.string.filter_all)
-            androidx.compose.foundation.layout.Box(Modifier.horizontalScroll(androidx.compose.foundation.rememberScrollState())) {
-                androidx.compose.foundation.layout.Row(horizontalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(Spacing.space2)) {
-                    br.gabriel.cochilo.ui.kit.FilterChips(listOf<String?>(null) + kinds.map { it.name }, filter, { k -> k?.let { f.typeName(EventType.valueOf(it)) } ?: all }) { filter = it }
-                }
+    if (log.isEmpty()) {
+        EmptyState(stringResource(R.string.empty_today_title), stringResource(R.string.empty_today_line))
+        return
+    }
+    if (kinds.size > 1) {
+        Spacer(Modifier.height(top))
+        val all = stringResource(R.string.filter_all)
+        androidx.compose.foundation.layout.Box(Modifier.horizontalScroll(androidx.compose.foundation.rememberScrollState())) {
+            androidx.compose.foundation.layout.Row(horizontalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(Spacing.space2)) {
+                br.gabriel.cochilo.ui.kit.FilterChips(listOf<String?>(null) + kinds.map { it.name }, filter, { k -> k?.let { f.typeName(EventType.valueOf(it)) } ?: all }) { filter = it }
             }
         }
-        days.forEachIndexed { i, d ->
-            val from = startOfDay(d, zone)
-            val to = startOfDay(d.plusDays(1), zone)
-            val dayEvents = log.filter { it.overlaps(from, to, now) }
-            val s = stats.day(log, d, now)
-            Caption(f.day(d), top = if (i == 0) Spacing.space8 else Spacing.space10)
-            Text(
-                stringResource(R.string.day_summary, f.durationMin(s.totalSleepMin), s.naps, s.feeds),
-                style = Type.bodySmall, color = CochiloTheme.colors.ink,
-            )
-            Spacer(Modifier.height(Spacing.space3))
-            Timeline(dayEvents, from, to, now, zone, daySummary(f, d, dayEvents, from, to, now, zone))
-            Spacer(Modifier.height(Spacing.space1))
-            HourLabels()
-            Spacer(Modifier.height(Spacing.space3))
-            // All kinds: asleep and awake stretches with what happened during each set in (0.35.0); one kind: a plain list.
-            if (shown == null) StretchList(log.filter { it.start in from until to || (it.type == EventType.SLEEP && it.overlaps(from, to, now)) }, log, from, to, now, f, zone, onOpen)
-            else EventList(log.filter { it.start in from until to && it.type == shown }.sortedByDescending { it.start }, now, f, zone, onOpen)
-        }
+        Spacer(Modifier.height(Spacing.space3))
+        EventLegend()
+    }
+    days.forEachIndexed { i, d ->
+        val from = startOfDay(d, zone)
+        val to = startOfDay(d.plusDays(1), zone)
+        val dayEvents = log.filter { it.overlaps(from, to, now) }
+        val s = stats.day(log, d, now)
+        Caption(f.day(d), top = if (i == 0) Spacing.space6 else Spacing.space10)
+        Text(
+            stringResource(R.string.day_summary, f.durationMin(s.totalSleepMin), s.naps, s.feeds),
+            style = Type.bodySmall, color = CochiloTheme.colors.ink,
+        )
+        Spacer(Modifier.height(Spacing.space3))
+        Timeline(dayEvents, from, to, now, zone, daySummary(f, d, dayEvents, from, to, now, zone))
+        Spacer(Modifier.height(Spacing.space1))
+        HourLabels()
+        Spacer(Modifier.height(Spacing.space3))
+        // All kinds: asleep and awake stretches with what happened during each set in (0.35.0); one kind: a plain list.
+        if (shown == null) StretchList(log.filter { it.start in from until to || (it.type == EventType.SLEEP && it.overlaps(from, to, now)) }, log, from, to, now, f, zone, onOpen)
+        else EventList(log.filter { it.start in from until to && it.type == shown }.sortedByDescending { it.start }, now, f, zone, onOpen)
     }
 }
 

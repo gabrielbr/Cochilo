@@ -57,7 +57,35 @@ data class AskExchange(
     val question: String, val reply: Assistant.Reply, val generated: String? = null, val thinking: Boolean = false,
     /** The model answered, but its reply didn't pass the checks (Grounding), so the library's is shown, and says so. */
     val unchecked: Boolean = false,
+    /** A reviewed answer as it was shown, so a saved chat keeps its words and numbers (0.40.0). */
+    val parts: AnswerParts? = null,
 )
+
+/** An exchange as a saved chat keeps it (data.ChatItem); null while the model is still writing. */
+fun AskExchange.toItem(): br.gabriel.cochilo.data.ChatItem? {
+    if (thinking) return null
+    return when {
+        generated != null -> br.gabriel.cochilo.data.ChatItem(question, "generated", generated = generated)
+        reply is Assistant.Reply.About -> br.gabriel.cochilo.data.ChatItem(
+            question, "about", topic = reply.topic.name, data = parts?.data, info = parts?.info, tryIt = parts?.tryIt, source = parts?.source, unchecked = unchecked,
+        )
+        reply is Assistant.Reply.SeeSomeone -> br.gabriel.cochilo.data.ChatItem(question, "care", care = reply.care.name)
+        else -> br.gabriel.cochilo.data.ChatItem(question, "not_sure", unchecked = unchecked)
+    }
+}
+
+/** A saved exchange back on screen, with its words as they were. */
+fun br.gabriel.cochilo.data.ChatItem.toExchange(): AskExchange {
+    val topic = topic?.let { t -> Topic.entries.firstOrNull { it.name == t } }
+    val careOf = care?.let { c -> Assistant.Care.entries.firstOrNull { it.name == c } }
+    val reply = when {
+        kind == "about" && topic != null -> Assistant.Reply.About(topic)
+        kind == "care" && careOf != null -> Assistant.Reply.SeeSomeone(careOf)
+        else -> Assistant.Reply.NotSure(emptyList())
+    }
+    val parts = if (kind == "about" && info != null) AnswerParts(data, info, tryIt, source) else null
+    return AskExchange(question, reply, generated = generated, unchecked = unchecked, parts = parts)
+}
 
 /**
  * Ask Cochilo (docs/assistant.md): this week's numbers first, then questions answered from the
@@ -78,6 +106,10 @@ fun AskScreen(
     modelGetting: Boolean = false,
     /** The model took the app down last time, so it's paused (0.39.1): a "not sure" reply offers to try again. */
     onResumeModel: (() -> Unit)? = null,
+    /** Called after every change, so the chat is saved (0.40.0). */
+    onChange: (List<AskExchange>) -> Unit = {},
+    /** At the top: the way to the other chats. */
+    chats: (@Composable () -> Unit)? = null,
 ) {
     val context = LocalContext.current
     val exchanges = remember { mutableStateListOf(*initial.toTypedArray()) }
@@ -89,7 +121,8 @@ fun AskScreen(
         text = ""
         // Health, medicine and the mother still go to a person; known topics keep their reviewed
         // answers. Only "not sure" questions go to the model, grounded and checked (Grounding).
-        if (reply !is Assistant.Reply.NotSure || generate == null) { exchanges += AskExchange(q.trim(), reply); return }
+        val parts = (reply as? Assistant.Reply.About)?.let { answer(context, it.topic, facts, f) }
+        if (reply !is Assistant.Reply.NotSure || generate == null) { exchanges += AskExchange(q.trim(), reply, parts = parts); onChange(exchanges.toList()); return }
         val i = exchanges.size
         exchanges += AskExchange(q.trim(), reply, thinking = true)
         scope.launch {
@@ -97,14 +130,20 @@ fun AskScreen(
             val out = answer?.reply?.let(br.gabriel.cochilo.domain.assistant.Grounding::clean)
             val ok = out != null && br.gabriel.cochilo.domain.assistant.Grounding.check(out, answer.prompt) == br.gabriel.cochilo.domain.assistant.Grounding.Verdict.OK
             if (i < exchanges.size) exchanges[i] = exchanges[i].copy(thinking = false, generated = if (ok) out else null, unchecked = !ok)
+            onChange(exchanges.toList())
         }
     }
     fun askTopic(t: Topic) {
         val q = context.getString(questionRes(t))
-        exchanges += AskExchange(q, Assistant.Reply.About(t))
+        exchanges += AskExchange(q, Assistant.Reply.About(t), parts = answer(context, t, facts, f))
+        onChange(exchanges.toList())
     }
     ScrollPage {
         Text(stringResource(R.string.ask_line), style = Type.meta, color = CochiloTheme.colors.muted)
+        if (chats != null) {
+            Spacer(Modifier.height(Spacing.space4))
+            chats()
+        }
         val insights = insights(context, facts, f)
         if (insights.isNotEmpty()) {
             Caption(stringResource(R.string.ask_this_week), top = Spacing.space6)
@@ -125,7 +164,7 @@ fun AskScreen(
                         Text(stringResource(R.string.ask_unchecked), style = Type.meta, color = CochiloTheme.colors.muted)
                         Spacer(Modifier.height(Spacing.space2))
                     }
-                    ReplyCard(x.reply, facts, f, onTopic = ::askTopic)
+                    ReplyCard(x.reply, facts, f, onTopic = ::askTopic, parts = x.parts)
                     if (onResumeModel != null && x.reply is Assistant.Reply.NotSure && x === exchanges.last()) {
                         Spacer(Modifier.height(Spacing.space2))
                         Text(stringResource(R.string.ask_model_paused), style = Type.meta, color = CochiloTheme.colors.muted)
@@ -225,7 +264,7 @@ private fun QuestionBubble(q: String) {
 }
 
 @Composable
-private fun ReplyCard(reply: Assistant.Reply, facts: Assistant.Facts, f: Format, onTopic: (Topic) -> Unit) {
+private fun ReplyCard(reply: Assistant.Reply, facts: Assistant.Facts, f: Format, onTopic: (Topic) -> Unit, parts: AnswerParts? = null) {
     val c = CochiloTheme.colors
     val context = LocalContext.current
     Column(
@@ -239,7 +278,7 @@ private fun ReplyCard(reply: Assistant.Reply, facts: Assistant.Facts, f: Format,
             // The suggestions are the "You could ask" chips just below, so they aren't repeated here.
             is Assistant.Reply.NotSure -> Text(stringResource(R.string.ask_not_sure), style = Type.body, color = c.ink)
             is Assistant.Reply.About -> {
-                val a = answer(context, reply.topic, facts, f)
+                val a = parts ?: answer(context, reply.topic, facts, f)
                 if (a.data != null) {
                     Text(stringResource(R.string.ask_from_log), style = Type.meta, color = c.muted)
                     Text(a.data, style = Type.body, color = c.ink)
@@ -370,4 +409,45 @@ private fun careRes(c: Assistant.Care): Int = when (c) {
     Assistant.Care.BABY_HEALTH -> R.string.ask_care_baby_health
     Assistant.Care.MEDICINE -> R.string.ask_care_medicine
     Assistant.Care.MOTHER -> R.string.ask_care_mother
+}
+
+/**
+ * Ask's chats (0.40.0): a new one first (the screen's one action), then the saved ones, newest
+ * first, each one tap to open. Deleting is one tap, with Undo instead of "are you sure?".
+ */
+@Composable
+fun ChatsScreen(
+    chats: List<br.gabriel.cochilo.data.Chat>, f: Format, onNew: () -> Unit, onOpen: (String) -> Unit,
+    onDelete: (br.gabriel.cochilo.data.Chat) -> Unit, deleted: br.gabriel.cochilo.data.Chat?, onUndo: () -> Unit,
+) {
+    val c = CochiloTheme.colors
+    ScrollPage {
+        Text(stringResource(R.string.chats_line), style = Type.meta, color = c.muted)
+        Spacer(Modifier.height(Spacing.space4))
+        Button(stringResource(R.string.chats_new), onNew, ButtonKind.PRIMARY, Modifier.fillMaxWidth())
+        if (deleted != null) {
+            Spacer(Modifier.height(Spacing.space4))
+            br.gabriel.cochilo.ui.kit.RowGroup {
+                br.gabriel.cochilo.ui.kit.ListRow(stringResource(R.string.chats_deleted, deleted.title)) {
+                    Button(stringResource(R.string.undo), onUndo)
+                }
+            }
+        }
+        if (chats.isEmpty()) {
+            Spacer(Modifier.height(Spacing.space6))
+            Text(stringResource(R.string.chats_empty), style = Type.bodySmall, color = c.muted)
+            return@ScrollPage
+        }
+        br.gabriel.cochilo.ui.kit.Caption(stringResource(R.string.chats_saved), top = Spacing.space8)
+        br.gabriel.cochilo.ui.kit.RowGroup {
+            chats.forEachIndexed { i, chat ->
+                if (i > 0) br.gabriel.cochilo.ui.kit.Hairline()
+                br.gabriel.cochilo.ui.kit.ListRow(
+                    chat.title, meta = stringResource(R.string.chats_meta, f.dayTime(chat.updated), chat.items.size),
+                    onClick = { onOpen(chat.id) },
+                    trailing = { br.gabriel.cochilo.ui.kit.IconButton(R.drawable.gg_ic_close, stringResource(R.string.chats_delete, chat.title), { onDelete(chat) }) },
+                )
+            }
+        }
+    }
 }

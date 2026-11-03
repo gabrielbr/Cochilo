@@ -39,6 +39,7 @@
     <string name="action_finish">Terminar</string>
     <string name="empty_today_title">Nada registrado hoje</string>
     <string name="empty_today_line">Comece um sono, ou toque em + para registrar uma mamada ou uma fralda quando acontecer.</string>
+    <string name="caption_days">Dia a dia</string>
 
     <string name="type_sleep">Sono</string>
     <string name="type_feed">Mamada</string>
@@ -419,6 +420,16 @@
     <string name="ask_model_paused">A IA no celular fechou o app da última vez, então ela está pausada. Por enquanto as respostas vêm da lista.</string>
     <string name="ask_model_resume">Tentar a IA no celular de novo</string>
     <string name="ask_open">Pergunte ao Cochilo</string>
+    <string name="chats_title">Conversas</string>
+    <string name="chats_line">Uma conversa por assunto: sonecas, noites, rotina… Elas ficam neste celular e não entram nos backups.</string>
+    <string name="chats_new">Nova conversa</string>
+    <string name="chats_saved">Suas conversas</string>
+    <string name="chats_empty">Nenhuma conversa ainda. Faça uma pergunta e ela fica guardada aqui.</string>
+    <string name="chats_meta">%1$s · perguntas: %2$d</string>
+    <string name="chats_delete">Apagar a conversa %1$s</string>
+    <string name="chats_deleted">Apagada: %1$s</string>
+    <string name="ask_chats_row">Conversas</string>
+    <string name="ask_chats_row_meta">Guardadas: %1$d · comece uma nova ou volte a uma</string>
     <string name="ask_insight_sleep">Sono: %1$s por dia em média (o usual para a idade é %2$s–%3$s h).</string>
     <string name="ask_insight_naps">Sonecas: %1$s por dia, mediana de %2$s.</string>
     <string name="ask_insight_night">Maior trecho: %1$s em média.</string>
