@@ -81,7 +81,7 @@ fun HistoryScreen(log: List<Event>, now: Long, zone: ZoneId, onOpen: (Event) -> 
 
 /** Rhythm (14-day actogram) and the 7-day averages against the reference ranges. */
 @Composable
-fun PatternsScreen(log: List<Event>, now: Long, zone: ZoneId, ageWeeks: Int) {
+fun PatternsScreen(log: List<Event>, now: Long, zone: ZoneId, ageWeeks: Int, onAsk: () -> Unit = {}) {
     val f = Format(LocalContext.current, zone, now)
     val stats = Stats(zone)
     val today = localDate(now, zone)
@@ -89,6 +89,14 @@ fun PatternsScreen(log: List<Event>, now: Long, zone: ZoneId, ageWeeks: Int) {
     val avg = stats.averages(week)
     ScrollPage {
         ScreenTitle(stringResource(R.string.title_patterns), stringResource(R.string.title_patterns))
+        // Ask Cochilo (docs/assistant.md): questions answered from this log, on the phone.
+        androidx.compose.foundation.layout.Spacer(Modifier.height(Spacing.space4))
+        br.gabriel.cochilo.ui.kit.RowGroup {
+            br.gabriel.cochilo.ui.kit.ListRow(
+                stringResource(R.string.ask_entry), meta = stringResource(R.string.ask_entry_meta), onClick = onAsk,
+                trailing = { br.gabriel.cochilo.ui.kit.GIcon(R.drawable.gg_ic_chevron, null, CochiloTheme.colors.muted) },
+            )
+        }
         if (avg == null) {
             EmptyState(stringResource(R.string.empty_patterns_title), stringResource(R.string.empty_patterns_line))
             return@ScrollPage

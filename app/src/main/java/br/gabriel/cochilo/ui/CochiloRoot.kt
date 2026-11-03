@@ -89,6 +89,7 @@ fun CochiloRoot(vm: MainViewModel) {
     var editingLook by remember { mutableStateOf(false) }
     var editingRitual by remember { mutableStateOf(false) }
     var editingPassphrase by remember { mutableStateOf(false) }
+    var asking by rememberSaveable { mutableStateOf(false) }
     val snackbar = remember { SnackbarHostState() }
 
     val exportJson = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { it?.let(vm::exportJson) }
@@ -136,7 +137,16 @@ fun CochiloRoot(vm: MainViewModel) {
             )
             // Phone: tab bar; from 600dp a rail; from 840dp Today beside a second tab (docs/tablet.md).
             run {
-                if (settings) {
+                if (asking) {
+                    androidx.activity.compose.BackHandler { asking = false }
+                    br.gabriel.cochilo.ui.kit.AppShell(
+                        tabs, tab, { tab = it }, showTabs = false,
+                        header = { BackHeader(stringResource(R.string.ask_title), stringResource(R.string.back)) { asking = false } },
+                    ) {
+                        val facts = remember(log, now, weeks) { br.gabriel.cochilo.domain.assistant.Assistant.facts(log, weeks, now, zone, prediction) }
+                        br.gabriel.cochilo.ui.screens.AskScreen(facts, f)
+                    }
+                } else if (settings) {
                     br.gabriel.cochilo.ui.kit.AppShell(
                         tabs, tab, { tab = it }, showTabs = false,
                         header = { BackHeader(stringResource(R.string.title_settings), stringResource(R.string.back)) { settings = false } },
@@ -213,7 +223,7 @@ fun CochiloRoot(vm: MainViewModel) {
                                             onAdjust = vm::adjustEnd,
                                         )
                                         2 -> HistoryScreen(log, now, zone) { editing = Editing(it, false) }
-                                        else -> PatternsScreen(log, now, zone, weeks)
+                                        else -> PatternsScreen(log, now, zone, weeks, onAsk = { asking = true })
                                     }
                                 }
                                 val animated: @Composable (Int) -> Unit = { target ->
