@@ -20,7 +20,7 @@ Android lets the font size go up to 200%. Every screen must still show every wor
     00 · 06 · 12 · 18), because the chart has a spoken summary, and their band widens with them.
   `CappedFontScale` and `LABEL_SCALE_CAP` in `ui/kit/Kit.kt`. Everything else grows in full.
 - **Checked by screenshots.** `ScreensSnapshotTest` keeps 200% shots of Today (awake and asleep),
-  the open Log menu, Day, History, Patterns and Settings (`*_font200_light`).
+  the open Log menu, Day, Today's days (`history_font200_light`), Patterns and Settings (`*_font200_light`).
 
 ## Elsewhere
 

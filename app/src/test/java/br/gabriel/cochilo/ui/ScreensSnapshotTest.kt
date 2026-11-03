@@ -43,7 +43,7 @@ import br.gabriel.cochilo.ui.kit.Tab
 import br.gabriel.cochilo.ui.kit.TabBar
 import br.gabriel.cochilo.ui.screens.DayScreen
 import br.gabriel.cochilo.ui.screens.VerticalTimeline
-import br.gabriel.cochilo.ui.screens.HistoryScreen
+import br.gabriel.cochilo.ui.screens.HistoryDays
 import br.gabriel.cochilo.ui.screens.PatternsScreen
 import br.gabriel.cochilo.ui.screens.SettingsScreen
 import br.gabriel.cochilo.ui.screens.TodayScreen
@@ -106,7 +106,6 @@ class ScreensSnapshotTest {
                 val tabs = listOf(
                     Tab(stringResource(R.string.tab_today), R.drawable.gg_ic_home),
                     Tab(stringResource(R.string.tab_day), R.drawable.gg_ic_day),
-                    Tab(stringResource(R.string.tab_history), R.drawable.gg_ic_list),
                     Tab(stringResource(R.string.tab_patterns), R.drawable.gg_ic_chart),
                 )
                 if (settings) {
@@ -128,7 +127,6 @@ class ScreensSnapshotTest {
                         when (t) {
                             0 -> TodayScreen(log, p, now, zone, {}, {}, {}, {}, {})
                             1 -> DayScreen(log, now, zone, onOpen = {}, initialDay = LocalDateTime.of(2026, 10, 30, 12, 0).toLocalDate())
-                            2 -> HistoryScreen(log, now, zone) {}
                             else -> PatternsScreen(log, now, zone, weeks)
                         }
                     }
@@ -185,8 +183,8 @@ class ScreensSnapshotTest {
     @Test fun today_font200_light() { big(); paparazzi.snapshot { Chrome(false, 0) } }
     @Test fun today_sleeping_font200_light() { big(); paparazzi.snapshot { Chrome(false, 0, sleepingLog) } }
     @Test fun log_button_open_font200_light() { big(); paparazzi.snapshot { Chrome(false, 0, logHover = br.gabriel.cochilo.ui.kit.LogHover(1)) } }
-    @Test fun history_font200_light() { big(); paparazzi.snapshot { Chrome(false, 2) } }
-    @Test fun patterns_font200_light() { big(); paparazzi.snapshot { Chrome(false, 3) } }
+    @Test fun history_font200_light() { big(); paparazzi.snapshot { DaysShot(false) } }
+    @Test fun patterns_font200_light() { big(); paparazzi.snapshot { Chrome(false, 2) } }
     @Test fun day_font200_light() { big(); paparazzi.snapshot { Chrome(false, 1) } }
     @Test fun settings_font200_light() { big(); paparazzi.snapshot { Chrome(false, 0, settings = true) } }
 
@@ -217,19 +215,28 @@ class ScreensSnapshotTest {
     private val tabletPortrait = DeviceConfig.PIXEL_5.copy(screenWidth = 1600, screenHeight = 2560, xdpi = 320, ydpi = 320, density = com.android.resources.Density.XHIGH, nightMode = NightMode.NOTNIGHT)
     private val foldOpen = DeviceConfig.PIXEL_5.copy(screenWidth = 2208, screenHeight = 1840, xdpi = 420, ydpi = 420, density = com.android.resources.Density.create(420), nightMode = NightMode.NOTNIGHT, orientation = com.android.resources.ScreenOrientation.LANDSCAPE)
     @Test fun today_tablet_light() { paparazzi.unsafeUpdateConfig(tabletPortrait); paparazzi.snapshot { Chrome(false, 0) } }
-    @Test fun patterns_tablet_light() { paparazzi.unsafeUpdateConfig(tabletPortrait); paparazzi.snapshot { Chrome(false, 3) } }
+    @Test fun patterns_tablet_light() { paparazzi.unsafeUpdateConfig(tabletPortrait); paparazzi.snapshot { Chrome(false, 2) } }
     @Test fun today_foldable_light() { paparazzi.unsafeUpdateConfig(foldOpen); paparazzi.snapshot { Chrome(false, 0) } }
-    @Test fun history_foldable_dark() { paparazzi.unsafeUpdateConfig(foldOpen.copy(nightMode = NightMode.NIGHT)); paparazzi.snapshot { Chrome(true, 2) } }
+    @Test fun history_foldable_dark() { paparazzi.unsafeUpdateConfig(foldOpen.copy(nightMode = NightMode.NIGHT)); paparazzi.snapshot { DaysShot(true) } }
     @Test fun settings_foldable_light() { paparazzi.unsafeUpdateConfig(foldOpen); paparazzi.snapshot { Chrome(false, 0, settings = true) } }
 
     @Test fun today_light() { light(); paparazzi.snapshot { Chrome(false, 0) } }
     @Test fun today_dark() { dark(); paparazzi.snapshot { Chrome(true, 0) } }
     @Test fun today_sleeping_dark() { dark(); paparazzi.snapshot { Chrome(true, 0, sleepingLog) } }
     @Test fun today_ptBR_light() { pt(false); paparazzi.snapshot { Chrome(false, 0) } }
-    @Test fun history_light() { light(); paparazzi.snapshot { Chrome(false, 2) } }
-    @Test fun patterns_light() { light(); paparazzi.snapshot { Chrome(false, 3) } }
-    @Test fun patterns_dark() { dark(); paparazzi.snapshot { Chrome(true, 3) } }
-    @Test fun patterns_ptBR_dark() { pt(true); paparazzi.snapshot { Chrome(true, 3) } }
+    /** Today's day-by-day part (0.40.0: History moved here), with its filters. */
+    @Test fun history_light() { light(); paparazzi.snapshot { DaysShot(false) } }
+
+    @Composable
+    private fun DaysShot(dark: Boolean) {
+        CochiloTheme(dark) { br.gabriel.cochilo.ui.kit.Frame { br.gabriel.cochilo.ui.screens.ScrollPage {
+            br.gabriel.cochilo.ui.kit.Caption(stringResource(R.string.caption_days))
+            HistoryDays(log, now, zone, {}, top = CTokens.Spacing.space2)
+        } } }
+    }
+    @Test fun patterns_light() { light(); paparazzi.snapshot { Chrome(false, 2) } }
+    @Test fun patterns_dark() { dark(); paparazzi.snapshot { Chrome(true, 2) } }
+    @Test fun patterns_ptBR_dark() { pt(true); paparazzi.snapshot { Chrome(true, 2) } }
     @Test fun day_light() { light(); paparazzi.snapshot { Chrome(false, 1) } }
     /** The Day tab's hour-by-hour list on its own, so its start is in the picture. */
     @Test fun day_hour_by_hour_light() {
@@ -281,7 +288,7 @@ class ScreensSnapshotTest {
         val places = listOf(Kinds.SLING, Kinds.CRIB, Kinds.SLING, Kinds.ARMS)
         var i = 0
         val withPlaces = log.map { if (it.type == EventType.SLEEP && !it.isNightSleep(zone)) it.copy(kind = places[i++ % places.size]) else it }
-        paparazzi.snapshot { Chrome(false, 3, withPlaces) }
+        paparazzi.snapshot { Chrome(false, 2, withPlaces) }
     }
     @Test fun ticks_sheet_light() {
         light()
@@ -323,6 +330,22 @@ class ScreensSnapshotTest {
     }
     @Test fun ask_light() { light(); paparazzi.snapshot { AskShot(false, listOf("Why are the naps so short?")) } }
     @Test fun ask_care_ptBR_dark() { pt(true); paparazzi.snapshot { AskShot(true, listOf("Ela está com febre, o que faço?")) } }
+    /** Ask's chats (0.40.0): a new one first, then the saved ones, each one tap; delete with Undo. */
+    @Test fun chats_ptBR_light() {
+        pt(false)
+        val chats = listOf(
+            br.gabriel.cochilo.data.Chat("a", now - 3_600_000, now - 3_600_000, "o quão devem demorar as sonecas do Dante?", List(2) { br.gabriel.cochilo.data.ChatItem("q", "not_sure") }),
+            br.gabriel.cochilo.data.Chat("b", now - 86_400_000, now - 86_400_000, "Por que acorda tão cedo?", List(3) { br.gabriel.cochilo.data.ChatItem("q", "not_sure") }),
+        )
+        paparazzi.snapshot {
+            CochiloTheme(false) { Frame { Column(Modifier.fillMaxSize()) {
+                BackHeader(stringResource(R.string.chats_title), stringResource(R.string.back)) {}
+                Box(Modifier.weight(1f)) {
+                    br.gabriel.cochilo.ui.screens.ChatsScreen(chats, Format(androidx.compose.ui.platform.LocalContext.current, zone, now), {}, {}, {}, deleted = chats[1], onUndo = {})
+                }
+            } } }
+        }
+    }
     /** The owner's own question (0.38.0): now answered from the log. */
     @Test fun ask_nap_length_ptBR_light() { pt(false); paparazzi.snapshot { AskShot(false, listOf("o quão devem demorar as sonecas do Dante?")) } }
     @Test fun ask_not_sure_light() { light(); paparazzi.snapshot { AskShot(false, listOf("What colour is the sky?"), getModel = true) } }
@@ -441,7 +464,7 @@ class ScreensSnapshotTest {
                 add(Event(type = EventType.PUMP, start = d.atTime(if (back % 2 == 0) 22 else 9, 0).atZone(zone).toInstant().toEpochMilli(), end = d.atTime(if (back % 2 == 0) 22 else 9, 15).atZone(zone).toInstant().toEpochMilli(), amountMl = 90))
             }
         }
-        paparazzi.snapshot { Chrome(false, 3, synthetic) }
+        paparazzi.snapshot { Chrome(false, 2, synthetic) }
     }
     @Test fun day_today_expected_light() {
         light()

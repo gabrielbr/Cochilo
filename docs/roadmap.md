@@ -70,6 +70,7 @@ other moments and the age notes need Tatá's sign-off.
 
 ## Shipped from this plan
 
+- **0.40.0**: History moves to the end of Today (three tabs); Ask keeps chats, one per topic ([flows.md](flows.md), [assistant.md](assistant.md)).
 - **0.39.0**: Today without the log rows; the Log button does it all (the owner's ask; [flows.md](flows.md)).
 - **0.38.0**: Ask Cochilo in the header of every tab, a nap-length answer, and the whole log for the on-device AI ([assistant.md](assistant.md)).
 - **0.37.0**: the on-device AI downloads itself in one tap on the family build, from this repository's releases ([assistant.md](assistant.md)).

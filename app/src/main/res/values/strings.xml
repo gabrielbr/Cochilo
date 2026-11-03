@@ -46,6 +46,7 @@
     <string name="action_finish">Finish</string>
     <string name="empty_today_title">Nothing logged today</string>
     <string name="empty_today_line">Start a sleep, or tap + to log a feed or a diaper when it happens.</string>
+    <string name="caption_days">Day by day</string>
 
     <string name="type_sleep">Sleep</string>
     <string name="type_feed">Feed</string>
@@ -444,6 +445,16 @@
     <string name="ask_model_paused">The on-device AI stopped the app last time, so it\'s paused. Answers come from the list for now.</string>
     <string name="ask_model_resume">Try the on-device AI again</string>
     <string name="ask_open">Ask Cochilo</string>
+    <string name="chats_title">Chats</string>
+    <string name="chats_line">One chat per topic: naps, nights, the routine… They stay on this phone and aren\'t in backups.</string>
+    <string name="chats_new">New chat</string>
+    <string name="chats_saved">Your chats</string>
+    <string name="chats_empty">No chats yet. Ask a question and it\'s kept here.</string>
+    <string name="chats_meta">%1$s · questions: %2$d</string>
+    <string name="chats_delete">Delete the chat %1$s</string>
+    <string name="chats_deleted">Deleted: %1$s</string>
+    <string name="ask_chats_row">Chats</string>
+    <string name="ask_chats_row_meta">Saved: %1$d · start a new one or go back to one</string>
     <string name="ask_insight_sleep">Sleep: %1$s a day on average (usual for this age %2$s–%3$s h).</string>
     <string name="ask_insight_naps">Naps: %1$s a day, %2$s at the median.</string>
     <string name="ask_insight_night">Longest stretch: %1$s on average.</string>

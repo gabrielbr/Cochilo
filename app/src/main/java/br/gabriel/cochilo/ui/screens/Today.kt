@@ -132,19 +132,9 @@ fun TodayScreen(
             }
         }
 
-        Caption(stringResource(R.string.caption_timeline))
-        Timeline(todays, from, to, now, zone, daySummary(f, today, todays, from, to, now, zone))
-        Spacer(Modifier.height(Spacing.space1))
-        HourLabels()
-        Spacer(Modifier.height(Spacing.space3))
-        EventLegend()
-
-        Caption(stringResource(R.string.caption_today_log))
-        if (todays.isEmpty()) {
-            EmptyState(stringResource(R.string.empty_today_title), stringResource(R.string.empty_today_line))
-        } else {
-            EventList(todays.sortedByDescending { it.start }, now, f, zone, onOpen)
-        }
+        // History, day by day with its filters, today first (0.40.0): it used to be a tab of its own.
+        Caption(stringResource(R.string.caption_days))
+        HistoryDays(log, now, zone, onOpen, top = Spacing.space2)
     }
 }
 

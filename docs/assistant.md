@@ -38,7 +38,7 @@ Settings. It isn't on Today: Today is for logging with a baby in arms.
    change, mostly contact naps.
 5. A field and **Ask** for anything else.
 
-Nothing is stored: the conversation lives only while the screen is open, and it never leaves the
+(Until 0.40.0) nothing was stored: the conversation lived only while the screen was open, and it never left the
 phone (no permission added; the play build still has no INTERNET).
 
 **What it understands (14 topics):** the next sleep, short naps, how long naps last (0.38.0), night wakings, early mornings,
@@ -168,6 +168,24 @@ aborts inside MediaPipe's native code, which Kotlin can't catch, so the whole ap
 - **No crash loop.** A flag is written (synchronously) before the model writes and cleared after.
   If it's still set at the next start, the model took the app down, so it's paused. Answers come
   from the library, and a "not sure" reply says so with "Try the on-device AI again".
+
+## 0.40.0: chats, one per topic
+
+The owner: "make sure the user is also able to create chats. Not a single chat. So the user can
+have different topics with the agent."
+
+- **Opening Ask** (the header icon or the Patterns row) starts a **new chat**: one tap to a
+  question, as before. Nothing is saved until the first question.
+- **Chats** (the row at the top of Ask, one tap) lists them, newest first, titled with their first
+  question, with when and how many questions. Tap one to go back to it; **New chat** is the
+  screen's one action. A chat is deleted with the ✕ on its row, and Undo brings it back (no "are
+  you sure?").
+- **Answers are kept as they were shown**: a reviewed answer's words and the numbers of that day,
+  the model's checked words, or a "see someone" reply, so an old chat never changes under her
+  (`data.ChatItem`).
+- **On the phone only**: `chats.json` in the app's own storage (`data.ChatStore`, tested in
+  `ChatStoreTest`). At most 50 chats; the oldest goes. Chats are not in backups or exports: they're
+  her questions, not the baby's log.
 
 ## iPhone
 

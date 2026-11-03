@@ -56,10 +56,11 @@ import br.gabriel.cochilo.ui.kit.TabBar
 import br.gabriel.cochilo.ui.screens.BabySheet
 import br.gabriel.cochilo.ui.screens.DayScreen
 import br.gabriel.cochilo.ui.screens.EventSheet
-import br.gabriel.cochilo.ui.screens.HistoryScreen
 import br.gabriel.cochilo.ui.screens.PatternsScreen
 import br.gabriel.cochilo.ui.screens.ScrollPage
 import br.gabriel.cochilo.ui.screens.SettingsScreen
+import br.gabriel.cochilo.ui.screens.toExchange
+import br.gabriel.cochilo.ui.screens.toItem
 import br.gabriel.cochilo.ui.screens.TodayScreen
 import br.gabriel.cochilo.ui.screens.newEvent
 import br.gabriel.cochilo.ui.theme.CTokens
@@ -90,6 +91,11 @@ fun CochiloRoot(vm: MainViewModel) {
     var editingRitual by remember { mutableStateOf(false) }
     var editingPassphrase by remember { mutableStateOf(false) }
     var asking by rememberSaveable { mutableStateOf(false) }
+    // Ask's chats (0.40.0): the open one (a new id until its first question), and the list.
+    var chatId by rememberSaveable { mutableStateOf(java.util.UUID.randomUUID().toString()) }
+    var showingChats by rememberSaveable { mutableStateOf(false) }
+    var deletedChat by androidx.compose.runtime.remember { mutableStateOf<br.gabriel.cochilo.data.Chat?>(null) }
+    fun newChat() { chatId = java.util.UUID.randomUUID().toString(); showingChats = false }
     var showingModel by remember { mutableStateOf(false) }
     val pickModel = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { it?.let(vm::importModel) }
     val snackbar = remember { SnackbarHostState() }
@@ -134,16 +140,35 @@ fun CochiloRoot(vm: MainViewModel) {
             val tabs = listOf(
                 Tab(stringResource(R.string.tab_today), R.drawable.gg_ic_home),
                 Tab(stringResource(R.string.tab_day), R.drawable.gg_ic_day),
-                Tab(stringResource(R.string.tab_history), R.drawable.gg_ic_list),
                 Tab(stringResource(R.string.tab_patterns), R.drawable.gg_ic_chart),
             )
             // Phone: tab bar; from 600dp a rail; from 840dp Today beside a second tab (docs/tablet.md).
             run {
-                if (asking) {
-                    androidx.activity.compose.BackHandler { asking = false }
+                if (asking && showingChats) {
+                    androidx.activity.compose.BackHandler { showingChats = false; deletedChat = null }
                     br.gabriel.cochilo.ui.kit.AppShell(
                         tabs, tab, { tab = it }, showTabs = false,
-                        header = { BackHeader(stringResource(R.string.ask_title), stringResource(R.string.back)) { asking = false } },
+                        header = { BackHeader(stringResource(R.string.chats_title), stringResource(R.string.back)) { showingChats = false; deletedChat = null } },
+                    ) {
+                        br.gabriel.cochilo.ui.screens.ChatsScreen(
+                            vm.chats.collectAsState().value, f,
+                            onNew = { newChat(); deletedChat = null },
+                            onOpen = { chatId = it; showingChats = false; deletedChat = null },
+                            onDelete = { chat ->
+                                vm.deleteChat(chat.id); deletedChat = chat
+                                if (chat.id == chatId) chatId = java.util.UUID.randomUUID().toString()
+                            },
+                            deleted = deletedChat,
+                            onUndo = { deletedChat?.let(vm::restoreChat); deletedChat = null },
+                        )
+                    }
+                } else if (asking) {
+                    androidx.activity.compose.BackHandler { asking = false }
+                    val savedChats = vm.chats.collectAsState().value
+                    val current = savedChats.firstOrNull { it.id == chatId }
+                    br.gabriel.cochilo.ui.kit.AppShell(
+                        tabs, tab, { tab = it }, showTabs = false,
+                        header = { BackHeader(current?.title ?: stringResource(R.string.ask_title), stringResource(R.string.back)) { asking = false } },
                     ) {
                         val facts = remember(log, now, weeks) { br.gabriel.cochilo.domain.assistant.Assistant.facts(log, weeks, now, zone, prediction) }
                         val model = vm.modelState.collectAsState().value
@@ -156,13 +181,28 @@ fun CochiloRoot(vm: MainViewModel) {
                             br.gabriel.cochilo.domain.assistant.Digest.lines(log, baby?.name, weeks, now, zone, facts, pt)
                         }
                         val paused = vm.modelPaused.collectAsState().value
-                        br.gabriel.cochilo.ui.screens.AskScreen(
-                            facts, f, generate = if (ready && !paused) vm::generate else null,
-                            onResumeModel = if (ready && paused) vm::resumeModel else null,
-                            onGetModel = if (canGet) ({ showingModel = true }) else null,
-                            digest = digest,
-                            modelGetting = model is br.gabriel.cochilo.ai.ModelState.Getting,
-                        )
+                        // A fresh screen for each chat: its own questions, saved as they come.
+                        androidx.compose.runtime.key(chatId) {
+                            val id = chatId
+                            br.gabriel.cochilo.ui.screens.AskScreen(
+                                facts, f, initial = current?.items?.map { it.toExchange() } ?: emptyList(),
+                                generate = if (ready && !paused) vm::generate else null,
+                                onResumeModel = if (ready && paused) vm::resumeModel else null,
+                                onGetModel = if (canGet) ({ showingModel = true }) else null,
+                                digest = digest,
+                                modelGetting = model is br.gabriel.cochilo.ai.ModelState.Getting,
+                                onChange = { list -> vm.saveChat(id, list.mapNotNull { it.toItem() }) },
+                                chats = {
+                                    br.gabriel.cochilo.ui.kit.RowGroup {
+                                        br.gabriel.cochilo.ui.kit.ListRow(
+                                            stringResource(R.string.ask_chats_row), meta = stringResource(R.string.ask_chats_row_meta, savedChats.size),
+                                            onClick = { showingChats = true },
+                                            trailing = { br.gabriel.cochilo.ui.kit.GIcon(R.drawable.gg_ic_chevron, null, CochiloTheme.colors.muted) },
+                                        )
+                                    }
+                                },
+                            )
+                        }
                     }
                 } else if (settings) {
                     br.gabriel.cochilo.ui.kit.AppShell(
@@ -220,7 +260,7 @@ fun CochiloRoot(vm: MainViewModel) {
                         header = {
                             Header(headerName, status) {
                                 // Ask Cochilo from every tab, one tap (0.38.0): it used to be a row deep in Patterns.
-                                if (babyState is BabyState.Ready) IconButton(R.drawable.gg_ic_chat, stringResource(R.string.ask_open), { asking = true })
+                                if (babyState is BabyState.Ready) IconButton(R.drawable.gg_ic_chat, stringResource(R.string.ask_open), { newChat(); asking = true })
                                 IconButton(R.drawable.gg_ic_gear, stringResource(R.string.settings), { settings = true })
                             }
                         },
@@ -253,7 +293,6 @@ fun CochiloRoot(vm: MainViewModel) {
                                             expected = (prediction as? Predictor.Result.Awake)?.let { it.windowStart to it.windowEnd },
                                             onAdjust = vm::adjustEnd,
                                         )
-                                        2 -> HistoryScreen(log, now, zone) { editing = Editing(it, false) }
                                         else -> {
                                             // A note from Tatá when one is due (in-app-marketing.md): rules in Suggestions.
                                             vm.suggestionTick.collectAsState().value
@@ -264,7 +303,7 @@ fun CochiloRoot(vm: MainViewModel) {
                                             val due = if (band == null) vm.suggestion(log, weeks, now, sleeping) else null
                                             if (due != null) androidx.compose.runtime.LaunchedEffect(due.moment) { vm.suggestionShown(due.moment) }
                                             PatternsScreen(
-                                                log, now, zone, weeks, onAsk = { asking = true },
+                                                log, now, zone, weeks, onAsk = { newChat(); asking = true },
                                                 tataNote = when {
                                                     band != null -> { { br.gabriel.cochilo.ui.screens.TataAgeNote(band, vm.catalog.noteProduct(band), vm.catalog.noteUrl(band), onClose = { vm.closeAgeNote(band) }) } }
                                                     due != null -> { { br.gabriel.cochilo.ui.screens.TataSuggestion(due, vm.catalog.url(due.moment), onDismiss = { vm.dismissSuggestion(due.moment) }) } }

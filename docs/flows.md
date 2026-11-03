@@ -63,6 +63,27 @@ Code: `lastOf`, `lastKind`, `lastKindAmong`, `Event.rememberedFrom` in `domain/Q
 (tested in `QuickLogTest`); the Log menu in `LogMenu.kt` (Today's rows until 0.39.0); the sheet's line in `Sheets.kt`.
 This replaced the earlier "next: other breast" suggestion: the app shows what happened, she decides.
 
+## History on Today, and Ask's chats (0.40.0)
+
+The owner: "move everything from the History page to the recent items on the home page. We don't
+need both. Make sure filters are kept." Today's own "Today" timeline and list were the first day
+of History, twice. Now Today ends with **Day by day**:
+- the filter chips (All, then each kind that has entries) and the legend;
+- each day, today first, with its summary, timeline and entries grouped asleep and awake (a plain
+  list when filtered).
+
+The History tab is gone: three tabs, Today, Day and Patterns. On a wide screen, Today stays at the
+start with Day beside it.
+
+| Flow | Before | Now |
+|---|---|---|
+| See an earlier day's entries | History tab (1), scroll | scroll Today |
+| Show one kind | History tab (1), a chip (1) | a chip on Today (1) |
+| Open an entry | 1 tap | 1 tap |
+| Ask a new question | the header icon (1) | the header icon (1): it opens a new chat |
+| Go back to an old chat | — | the header icon (1), Chats (1), the chat (1) |
+| Delete a chat | — | Chats (1), its ✕ (1); Undo (1) |
+
 ## Today without the log rows (0.39.0)
 
 The owner: "remove the register items of the home screen; they are not needed there anymore and
@@ -171,7 +192,7 @@ log changes and goes through `Entries`, like every other button.
 
 ## Reading the data (0.21.0)
 
-- **History filters:** one row of chips under the title, "All" then each kind that has entries
+- **History filters** (on Today's Day by day since 0.40.0): one row of chips, "All" then each kind that has entries
   (Sleep, Feed, Pump, Diaper…). One tap shows only that kind's entries; the day's timeline stays
   whole, so the context is never lost. Days without that kind are left out.
 - **The expected window on the ring:** on today's Day ring, while the baby is awake, the predicted
