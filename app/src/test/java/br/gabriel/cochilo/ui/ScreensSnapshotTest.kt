@@ -220,6 +220,13 @@ class ScreensSnapshotTest {
     @Test fun history_foldable_dark() { paparazzi.unsafeUpdateConfig(foldOpen.copy(nightMode = NightMode.NIGHT)); paparazzi.snapshot { DaysShot(true) } }
     @Test fun settings_foldable_light() { paparazzi.unsafeUpdateConfig(foldOpen); paparazzi.snapshot { Chrome(false, 0, settings = true) } }
 
+    /** A night waking (docs/nights.md, 0.42.0): the night's sleep ended 40 min ago; back to sleep or up for the day. */
+    @Test fun today_night_waking_ptBR_light() {
+        pt(false)
+        val waking = log.filter { it.type != EventType.SLEEP || it.start < now - 3 * 3_600_000L }.filter { it.end != null } +
+            Event(type = EventType.SLEEP, start = now - 150 * 60_000L, end = now - 40 * 60_000L, night = true)
+        paparazzi.snapshot { Chrome(false, 0, waking) }
+    }
     @Test fun today_light() { light(); paparazzi.snapshot { Chrome(false, 0) } }
     @Test fun today_dark() { dark(); paparazzi.snapshot { Chrome(true, 0) } }
     @Test fun today_sleeping_dark() { dark(); paparazzi.snapshot { Chrome(true, 0, sleepingLog) } }

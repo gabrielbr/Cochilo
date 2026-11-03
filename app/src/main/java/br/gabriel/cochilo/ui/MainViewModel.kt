@@ -1,5 +1,6 @@
 package br.gabriel.cochilo.ui
 
+import br.gabriel.cochilo.domain.isNightSleep
 import android.app.Application
 import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
@@ -138,8 +139,30 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         val running = events.all().filter { it.type == EventType.SLEEP && it.end == null }.map { it.id }
         entries.wakeUp(System.currentTimeMillis() - minutesAgo * 60_000L)
         refreshNow()
-        events.all().filter { it.id in running }.maxByOrNull { it.start }
-            ?.let { askDetails(it); celebrate(br.gabriel.cochilo.domain.Trigger.WokeUp(it, before)) }
+        events.all().filter { it.id in running }.maxByOrNull { it.start }?.let {
+            // A night waking isn't the end of the night (docs/nights.md): no "where did she sleep?"
+            // in the dark; the night's place is asked at Up for the day.
+            if (!it.isNightSleep(zone)) askDetails(it)
+            celebrate(br.gabriel.cochilo.domain.Trigger.WokeUp(it, before))
+        }
+    }
+
+    /** Up for the day (docs/nights.md): the night ends now, or [minutesAgo] minutes ago. */
+    fun upForDay(minutesAgo: Int = 0) = viewModelScope.launch {
+        val before = predictionNow(System.currentTimeMillis())
+        val running = events.all().firstOrNull { it.type == EventType.SLEEP && it.end == null }
+        entries.upForDay(System.currentTimeMillis() - minutesAgo * 60_000L)
+        refreshNow()
+        // The night's first sleep carries where she slept (one question for the whole night).
+        val sleeps = events.all().filter { it.type == EventType.SLEEP }
+        sleeps.maxByOrNull { it.start }?.let { last -> br.gabriel.cochilo.domain.Nights.containing(sleeps, last, zone).firstOrNull()?.let { askDetails(it) } }
+        running?.let { r -> events.all().firstOrNull { it.id == r.id }?.let { celebrate(br.gabriel.cochilo.domain.Trigger.WokeUp(it, before)) } }
+    }
+
+    /** Nap or the night, one tap on Today's sleep card. */
+    fun setNight(e: Event, night: Boolean) = viewModelScope.launch {
+        entries.setNight(e.id, night)
+        refreshNow()
     }
 
     // Details after (docs/flows.md): the one question an entry still has once it ends.

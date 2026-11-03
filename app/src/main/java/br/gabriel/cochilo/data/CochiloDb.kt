@@ -55,7 +55,7 @@ interface BabyDao {
     suspend fun upsert(baby: Baby)
 }
 
-@Database(entities = [Event::class, Baby::class], version = 3, exportSchema = true)
+@Database(entities = [Event::class, Baby::class], version = 4, exportSchema = true)
 @TypeConverters(Converters::class)
 abstract class CochiloDb : RoomDatabase() {
     abstract fun events(): EventDao
@@ -64,7 +64,7 @@ abstract class CochiloDb : RoomDatabase() {
     companion object {
         fun create(context: Context): CochiloDb =
             Room.databaseBuilder(context, CochiloDb::class.java, "cochilo.db")
-                .addMigrations(MEDICINE_TYPE, BABY_LOOK)
+                .addMigrations(MEDICINE_TYPE, BABY_LOOK, NIGHTS)
                 .build()
 
         /**
@@ -87,6 +87,21 @@ abstract class CochiloDb : RoomDatabase() {
         }
 
         const val LOOK_SQL = "ALTER TABLE baby ADD COLUMN look TEXT NOT NULL DEFAULT ''"
+
+        /**
+         * 3 → 4: a sleep knows if it's the night or a nap, and a night knows when the baby was up
+         * for the day (docs/nights.md, 0.42.0). Existing rows get null: they keep the clock rule.
+         */
+        val NIGHTS = object : Migration(3, 4) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                NIGHTS_SQL.forEach(db::execSQL)
+            }
+        }
+
+        val NIGHTS_SQL = listOf(
+            "ALTER TABLE events ADD COLUMN night INTEGER",
+            "ALTER TABLE events ADD COLUMN upForDay INTEGER",
+        )
 
         /** Kept as plain SQL so a JVM test can run it against SQLite. */
         const val MEDICINE_SQL = """

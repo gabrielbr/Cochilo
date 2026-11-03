@@ -79,13 +79,12 @@ class Stats(private val zone: ZoneId = ZoneId.systemDefault()) {
         )
     }
 
-    /** Wakings in the night that starts at 19:00 on [date] and ends 07:00 the next day. */
-    fun nightWakings(sleeps: List<Event>, date: LocalDate): Int {
-        val from = startOfDay(date, zone) + NIGHT_START_HOUR * HOUR
-        val to = startOfDay(date.plusDays(1), zone) + NIGHT_END_HOUR * HOUR
-        val night = sleeps.filter { it.start in from until to && it.isNightSleep(zone) }.sortedBy { it.start }
-        return (night.size - 1).coerceAtLeast(0)
-    }
+    /**
+     * Wakings in the night that began on [date]'s evening: the gaps between its sleeps, from bedtime
+     * to up for the day (Nights.of, 0.42.0; it used to be any sleeps starting 19:00–07:00).
+     */
+    fun nightWakings(sleeps: List<Event>, date: LocalDate): Int =
+        (Nights.of(sleeps, date, zone).size - 1).coerceAtLeast(0)
 
     fun days(events: List<Event>, endDate: LocalDate, count: Int, now: Long): List<DayStats> =
         (count - 1 downTo 0).map { day(events, endDate.minusDays(it.toLong()), now) }

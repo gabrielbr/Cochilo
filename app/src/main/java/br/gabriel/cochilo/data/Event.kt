@@ -65,6 +65,13 @@ data class Event(
     val expressedAt: Long? = null,
     val note: String? = null,
     val updatedAt: Long = System.currentTimeMillis(),
+    /**
+     * A sleep's part of the day (docs/nights.md, 0.42.0): true for the night, false for a nap.
+     * Null for entries made before 0.42.0, which are read by the clock (19:00–07:00).
+     */
+    val night: Boolean? = null,
+    /** On a night's last sleep: the baby was up for the day when it ended (the night is over). */
+    val upForDay: Boolean? = null,
 ) {
     val running: Boolean get() = type.hasDuration && end == null
     fun durationMs(now: Long): Long = ((end ?: now) - start).coerceAtLeast(0)

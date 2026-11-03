@@ -54,7 +54,7 @@ it once from Napper on the phone.
 - The backup JSON is sealed with **AES-256-GCM** (random 12-byte IV, 128-bit tag; the format name
   is authenticated too). Any change to the file, or a wrong passphrase, fails the tag check.
 - The locked file is JSON: `{"format": "cochilo-backup-sealed", "version": 1, "kdf", "iterations",
-  "salt", "iv", "data"}`. Inside is the ordinary backup (`BackupFile`, still version 3), so
+  "salt", "iv", "data"}`. Inside is the ordinary backup (`BackupFile`, version 4 since 0.42.0: sleeps may say night or nap, [nights.md](nights.md)), so
   everything an older backup could do, a locked one can.
 - `SealedFile.VERSION` is the lock's own version; a newer one is refused as "made by a newer
   Cochilo", like the backup itself.

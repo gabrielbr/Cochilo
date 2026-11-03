@@ -49,7 +49,7 @@ object NapperImport {
         for (m in records) {
             val row = Row.of(m) ?: run { skipped++; null } ?: continue
             when (row.category) {
-                "NAP" -> out += sleep(row, row.start, row.end, "nap", noteOf(howSlept(m, labels), m["comment"]))
+                "NAP" -> out += sleep(row, row.start, row.end, "nap", noteOf(howSlept(m, labels), m["comment"]), night = false)
                 "BED_TIME", "WOKE_UP" -> markers += row
                 "NIGHT_WAKING" -> wakings += row
                 "NURSING" -> out += nursing(row, m, labels)
@@ -85,7 +85,7 @@ object NapperImport {
                 if (w.start > cursor) out += sleep(bed, cursor, w.start, "night-${part++}", if (part == 1) noteOf(howSlept(bed.raw, labels), bed.raw["comment"]) else null)
                 cursor = maxOf(cursor, w.end)
             }
-            if (wake.start > cursor) out += sleep(bed, cursor, wake.start, "night-${part++}", if (part == 1) noteOf(howSlept(bed.raw, labels), bed.raw["comment"]) else null)
+            if (wake.start > cursor) out += sleep(bed, cursor, wake.start, "night-${part++}", if (part == 1) noteOf(howSlept(bed.raw, labels), bed.raw["comment"]) else null, last = true)
         }
         // A waking's own words (e.g. "voltou a dormir no colo") are kept as a note at its time.
         for (w in wakings) {
@@ -125,8 +125,9 @@ object NapperImport {
         note = note?.trim()?.ifEmpty { null }, updatedAt = row.updatedAt,
     )
 
-    private fun sleep(row: Row, start: Long, end: Long, part: String, note: String?) =
-        event(row, EventType.SLEEP, start, end, null, note = note, part = part)
+    /** A Napper nap ([night] false) or a part of a Napper night; a night's last part was up for the day (docs/nights.md). */
+    private fun sleep(row: Row, start: Long, end: Long, part: String, note: String?, last: Boolean = false, night: Boolean = true) =
+        event(row, EventType.SLEEP, start, end, null, note = note, part = part).copy(night = night, upForDay = if (night && last) true else null)
 
     private fun nursing(row: Row, m: Map<String, String>, labels: NapperLabels): Event {
         val left = m["breastLeftSeconds"]?.toDoubleOrNull()?.toInt() ?: 0

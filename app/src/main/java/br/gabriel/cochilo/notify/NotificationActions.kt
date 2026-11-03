@@ -25,6 +25,7 @@ class NotificationActions : BroadcastReceiver() {
                 when (intent.action) {
                     START_SLEEP -> entries.startSleep()
                     WOKE_UP -> entries.wakeUp()
+                    UP_FOR_DAY -> entries.upForDay()
                     FINISH -> id?.let { entries.finish(it) }
                     SWITCH -> id?.let { entries.switchSide(it) }
                     FEED_LEFT -> entries.startBreastfeed(br.gabriel.cochilo.data.Kinds.BREAST_LEFT)
@@ -48,6 +49,8 @@ class NotificationActions : BroadcastReceiver() {
     companion object {
         const val START_SLEEP = "br.gabriel.cochilo.START_SLEEP"
         const val WOKE_UP = "br.gabriel.cochilo.WOKE_UP"
+        /** The night is over (docs/nights.md), from the notification during a night waking. */
+        const val UP_FOR_DAY = "br.gabriel.cochilo.UP_FOR_DAY"
         const val FINISH = "br.gabriel.cochilo.FINISH"
         const val SWITCH = "br.gabriel.cochilo.SWITCH"
         const val TICK = "br.gabriel.cochilo.TICK"

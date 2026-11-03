@@ -12,11 +12,32 @@ class Entries(private val events: EventDao) {
      * Starts a sleep now, unless one is already running (only one sleep runs at a time). Nothing
      * else is asked: where it happened is asked when the baby wakes (details after, 0.28.0).
      */
-    suspend fun startSleep(now: Long = System.currentTimeMillis()): Event? {
+    suspend fun startSleep(now: Long = System.currentTimeMillis(), zone: java.time.ZoneId = java.time.ZoneId.systemDefault()): Event? {
         val all = events.all()
         if (all.any { it.type == EventType.SLEEP && it.end == null }) return null
-        return Event(type = EventType.SLEEP, start = now, updatedAt = now)
+        // Nap or the night (docs/nights.md): guessed from an open night, the baby's own bedtime and
+        // the hour; one tap on Today changes it. During a night waking this is "back to sleep".
+        val sleeps = all.filter { it.type == EventType.SLEEP }.sortedBy { it.start }
+        val bedtime = br.gabriel.cochilo.domain.Predictor(zone).bedtimeMinute(sleeps, now)
+        val night = br.gabriel.cochilo.domain.Nights.guess(all, now, zone, bedtime)
+        return Event(type = EventType.SLEEP, start = now, updatedAt = now, night = night)
             .also { events.upsert(it) }
+    }
+
+    /**
+     * Up for the day (docs/nights.md): the night is over. A running night sleep ends now; the
+     * night's last sleep is marked, so its end is the morning wake and the next sleep is a nap.
+     */
+    suspend fun upForDay(now: Long = System.currentTimeMillis()) {
+        wakeUp(now)
+        val last = events.all().filter { it.type == EventType.SLEEP && it.end != null }.maxByOrNull { it.start } ?: return
+        if (last.upForDay != true) events.upsert(last.copy(upForDay = true, night = last.night ?: true, updatedAt = now))
+    }
+
+    /** Nap or the night, changed by hand (one tap on Today). */
+    suspend fun setNight(id: String, night: Boolean, now: Long = System.currentTimeMillis()) {
+        val e = events.byId(id) ?: return
+        events.upsert(e.copy(night = night, upForDay = if (night) e.upForDay else null, updatedAt = now))
     }
 
     /** Ends every running sleep now. */
