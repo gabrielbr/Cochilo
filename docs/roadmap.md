@@ -50,8 +50,9 @@ Each is grounded in `docs/research.md` or the Tatá Slings plans (`docs/tata-sli
 ### 3.2c Tatá Slings inside the app
 
 The non-intrusive plan in [tata-slings/in-app-marketing.md](tata-slings/in-app-marketing.md):
-notes by age and log moments in Patterns (step 1, the fabric line, shipped in 0.31.0),
-never on Today, at night, or on safety screens. Needs Tatá's catalog, notes and sign-off.
+notes by age and log moments in Patterns (step 1, the fabric line, shipped in 0.31.0; step 4's
+first moment, naps in arms, live in 0.36.0), never on Today, at night, or on safety screens. The
+other moments and the age notes need Tatá's sign-off.
 
 ### 3.3 Two parents
 - **Second phone**: today through export/import. Next: a local Wi-Fi sync between the two phones
@@ -69,6 +70,7 @@ never on Today, at night, or on safety screens. Needs Tatá's catalog, notes and
 
 ## Shipped from this plan
 
+- **0.36.0**: Tatá marketing step 4 starts: the naps-in-arms suggestion is live, signed off by Tatá ([in-app-marketing.md](tata-slings/in-app-marketing.md) §12).
 - **0.35.0**: asleep and awake in the timelines, and the Log menu's cascade (the owner's ask; [flows.md](flows.md)).
 - **0.34.0**: Tatá marketing step 3: notes by age, twelve drafts, all off until Tatá approves ([in-app-marketing.md](tata-slings/in-app-marketing.md)).
 - **0.33.0**: window reminders, 30 and 15 minutes before the next sleep window ([notifications.md](notifications.md)).

@@ -71,6 +71,11 @@ dressed in the Tatá Slings brand (teal, plum-grey ink, Pérola, Libre Franklin,
 - **Her fabrics**: Settings › Appearance › Fabric wraps the Today card in one of Tatá's slings
   (eleven, photographed from her shop); under the picked one, a quiet link to that sling in the shop
   ([in-app-marketing.md](docs/tata-slings/in-app-marketing.md)). [docs/tata-slings/textures.md](docs/tata-slings/textures.md).
+- **Tatá's suggestions**: rarely, a signed note from Tatá in Patterns, when the baby's own log makes
+  one of her products useful. Since 0.36.0 one is on: lots of naps in arms in the first three months
+  → her sling. Never at night, while the baby sleeps, in the first week, or after "Don't show
+  again"; Settings › Notifications turns them all off
+  ([in-app-marketing.md](docs/tata-slings/in-app-marketing.md)).
 - **Slide to log**: on Today's log rows, slide instead of tapping. Feed: left = left breast, right =
   right breast. Diaper: Wet · Both · Dirty. Slide a running breastfeed to switch side. Tap still
   opens the full sheet. How many taps each entry costs, and why: [docs/flows.md](docs/flows.md).
