@@ -70,6 +70,8 @@ dressed in the Tatá Slings brand (teal, plum-grey ink, Pérola, Libre Franklin,
   an "i" that explains what it's for, in English and Portuguese.
 - **Patterns**: a 14-day actogram (the day/night rhythm forming) and 7-day averages next to the
   reference range for the baby's age.
+- **Tablets and foldables**: a rail instead of the tab bar from 600dp, and Today beside a second
+  tab from 840dp (an unfolded foldable). [docs/tablet.md](docs/tablet.md).
 - **Large text**: every screen works up to the phone's 200% font size; chips wrap, nothing is cut
   off. [docs/accessibility.md](docs/accessibility.md).
 - **Settings**: baby's name, birth date and due date (for corrected age), theme, language

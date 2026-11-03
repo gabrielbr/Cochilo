@@ -104,40 +104,43 @@ class ScreensSnapshotTest {
             val weeks = ageWeeks(baby.birthDate, null, now)
             val p = Predictor(zone).predict(log, weeks, now)
             Frame {
-                Column(Modifier.fillMaxSize()) {
-                    if (settings) {
+                val tabs = listOf(
+                    Tab(stringResource(R.string.tab_today), R.drawable.gg_ic_home),
+                    Tab(stringResource(R.string.tab_day), R.drawable.gg_ic_day),
+                    Tab(stringResource(R.string.tab_history), R.drawable.gg_ic_list),
+                    Tab(stringResource(R.string.tab_patterns), R.drawable.gg_ic_chart),
+                )
+                if (settings) {
+                    br.gabriel.cochilo.ui.kit.AppShell(tabs, tab, {}, showTabs = false, header = {
                         BackHeader(stringResource(R.string.title_settings), stringResource(R.string.back)) {}
-                        Box(Modifier.weight(1f)) { SettingsScreen(baby, ThemeMode.SYSTEM, zone, {}, {}, {}, {}, {}, {}, fabric = br.gabriel.cochilo.ui.kit.LocalFabric.current) }
-                        return@Column
-                    }
-                    val f = Format(androidx.compose.ui.platform.LocalContext.current, zone, now)
-                    val status = when (p) {
-                        is Predictor.Result.Sleeping -> stringResource(R.string.status_sleeping, f.duration(now - p.since))
-                        is Predictor.Result.Awake -> stringResource(R.string.status_awake, f.duration(now - p.since))
-                        else -> stringResource(R.string.status_weeks, weeks)
-                    }
+                    }) { SettingsScreen(baby, ThemeMode.SYSTEM, zone, {}, {}, {}, {}, {}, {}, fabric = br.gabriel.cochilo.ui.kit.LocalFabric.current) }
+                    return@Frame
+                }
+                val f = Format(androidx.compose.ui.platform.LocalContext.current, zone, now)
+                val status = when (p) {
+                    is Predictor.Result.Sleeping -> stringResource(R.string.status_sleeping, f.duration(now - p.since))
+                    is Predictor.Result.Awake -> stringResource(R.string.status_awake, f.duration(now - p.since))
+                    else -> stringResource(R.string.status_weeks, weeks)
+                }
+                br.gabriel.cochilo.ui.kit.AppShell(tabs, tab, {}, header = {
                     Header(baby.name, status) { IconButton(R.drawable.gg_ic_gear, stringResource(R.string.settings), {}) }
-                    Box(Modifier.weight(1f)) {
-                        when (tab) {
+                }) { width ->
+                    val screen: @Composable (Int) -> Unit = { t ->
+                        when (t) {
                             0 -> TodayScreen(log, p, now, zone, {}, {}, {}, {}, {})
                             1 -> DayScreen(log, now, zone, onOpen = {}, initialDay = LocalDateTime.of(2026, 10, 30, 12, 0).toLocalDate())
                             2 -> HistoryScreen(log, now, zone) {}
                             else -> PatternsScreen(log, now, zone, weeks)
                         }
-                        LogButton(
-                            logMenuItems(androidx.compose.ui.platform.LocalContext.current, f, log, p is Predictor.Result.Sleeping),
-                            stringResource(R.string.log_button), stringResource(R.string.log_close),
-                            {}, { _, _ -> }, preview = logHover,
-                        )
                     }
-                    TabBar(
-                        listOf(
-                            Tab(stringResource(R.string.tab_today), R.drawable.gg_ic_home),
-                            Tab(stringResource(R.string.tab_day), R.drawable.gg_ic_day),
-                            Tab(stringResource(R.string.tab_history), R.drawable.gg_ic_list),
-                            Tab(stringResource(R.string.tab_patterns), R.drawable.gg_ic_chart),
-                        ), tab,
-                    ) {}
+                    if (width == br.gabriel.cochilo.ui.kit.WidthClass.EXPANDED) {
+                        br.gabriel.cochilo.ui.kit.TwoPanes({ screen(0) }, { screen(if (tab == 0) 1 else tab) })
+                    } else screen(tab)
+                    LogButton(
+                        logMenuItems(androidx.compose.ui.platform.LocalContext.current, f, log, p is Predictor.Result.Sleeping),
+                        stringResource(R.string.log_button), stringResource(R.string.log_close),
+                        {}, { _, _ -> }, preview = logHover,
+                    )
                 }
             }
         }
@@ -216,6 +219,16 @@ class ScreensSnapshotTest {
         add(Event(type = EventType.SLEEP, start = at(31, 14, 0), end = at(31, 14, 35)))
     }
     @Test fun today_after_a_short_nap_light() { light(); paparazzi.snapshot { Chrome(false, 0, shortNapLog) } }
+
+    // Wide screens (docs/tablet.md): a tablet in portrait is MEDIUM (the rail), an unfolded
+    // foldable or a tablet on its side is EXPANDED (Today beside a second tab).
+    private val tabletPortrait = DeviceConfig.PIXEL_5.copy(screenWidth = 1600, screenHeight = 2560, xdpi = 320, ydpi = 320, density = com.android.resources.Density.XHIGH, nightMode = NightMode.NOTNIGHT)
+    private val foldOpen = DeviceConfig.PIXEL_5.copy(screenWidth = 2208, screenHeight = 1840, xdpi = 420, ydpi = 420, density = com.android.resources.Density.create(420), nightMode = NightMode.NOTNIGHT, orientation = com.android.resources.ScreenOrientation.LANDSCAPE)
+    @Test fun today_tablet_light() { paparazzi.unsafeUpdateConfig(tabletPortrait); paparazzi.snapshot { Chrome(false, 0) } }
+    @Test fun patterns_tablet_light() { paparazzi.unsafeUpdateConfig(tabletPortrait); paparazzi.snapshot { Chrome(false, 3) } }
+    @Test fun today_foldable_light() { paparazzi.unsafeUpdateConfig(foldOpen); paparazzi.snapshot { Chrome(false, 0) } }
+    @Test fun history_foldable_dark() { paparazzi.unsafeUpdateConfig(foldOpen.copy(nightMode = NightMode.NIGHT)); paparazzi.snapshot { Chrome(true, 2) } }
+    @Test fun settings_foldable_light() { paparazzi.unsafeUpdateConfig(foldOpen); paparazzi.snapshot { Chrome(false, 0, settings = true) } }
 
     @Test fun today_light() { light(); paparazzi.snapshot { Chrome(false, 0) } }
     @Test fun today_dark() { dark(); paparazzi.snapshot { Chrome(true, 0) } }

@@ -3,6 +3,12 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.25.0 — 2026-11-03
+
+**Tablets and foldables.** On a wider screen the tabs move to a rail at the side and the screen
+keeps a readable width; unfolded, Today stays on the left with Day, History or Patterns beside
+it, so the timer and Start sleep never leave the screen. Phones are unchanged. `docs/tablet.md`.
+
 ## 0.24.0 — 2026-11-03
 
 **The last nap counts.** After a short nap the next one is expected sooner, and after a long one
