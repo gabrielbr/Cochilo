@@ -8,7 +8,12 @@ picker opens on the current fabric (remember actions). Default: Plain.
 
 Eleven crops from the product photos on tataslings.com.br (2026-11-02), fabric only (no label,
 seam, face or hand), 384 × 384 px WebP, 244 KB together, in `app/src/main/res/drawable-nodpi/`.
-They tile mirrored at the edges, so no seam shows. © Tatá Slings, used with the owner's
+Since 0.26.0 each is a true repeating tile, so it repeats like cloth: before, the photos were
+mirrored at their edges, which turned prints like Tropical and Balão into a kaleidoscope.
+`scripts/seamless_tile.py` makes the tile from the crop: a thin border off (edge folds and lens
+falloff), the light flattened (divided by a very soft blur of itself, so tiles don't show as
+lighter and darker blocks), then blended with its own half-offset copy, so the tile's edges are
+the photo's middle and join across the wrap. © Tatá Slings, used with the owner's
 permission; source photo per file in the design system's `assets/textures/tata-slings/README.md`.
 
 | Plain fabrics | Prints |
@@ -40,7 +45,8 @@ no contrast trade at all.
 
 ## Adding a fabric
 
-1. Crop a square of fabric only from her photo (no label or seam), 384 px WebP q78.
+1. Crop a square of fabric only from her photo (no label or seam), 384 px, then
+   `python3 scripts/seamless_tile.py crop.png tex_<key>.webp` (WebP q78, a repeating tile).
 2. Add it to the design system's `assets/textures/tata-slings/` with its source, then to
    `res/drawable-nodpi/tex_<key>.webp`.
 3. Add the `Fabric` entry and `fabric_<key>` (her product name, `translatable="false"`) to both

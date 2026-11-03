@@ -70,11 +70,14 @@ enum class Fabric(val key: String, @StringRes val label: Int, @DrawableRes val t
 /** The fabric the person picked, provided once at the root. */
 val LocalFabric = staticCompositionLocalOf { Fabric.PLAIN }
 
-/** The fabric as a brush, mirrored at its edges so the photo tiles without a seam. */
+/**
+ * The fabric as a brush. Since 0.26.0 each photo is a true repeating tile
+ * (scripts/seamless_tile.py), so it repeats like cloth instead of mirroring into a kaleidoscope.
+ */
 @Composable
 fun fabricBrush(@DrawableRes texture: Int): Brush {
     val img = ImageBitmap.imageResource(texture)
-    return remember(img) { ShaderBrush(ImageShader(img, TileMode.Mirror, TileMode.Mirror)) }
+    return remember(img) { ShaderBrush(ImageShader(img, TileMode.Repeated, TileMode.Repeated)) }
 }
 
 /**
