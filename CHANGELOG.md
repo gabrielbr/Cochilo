@@ -3,6 +3,14 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.24.0 — 2026-11-03
+
+**The last nap counts.** After a short nap the next one is expected sooner, and after a long one
+later, by as much as your baby's own log shows (sleep pressure, from the two-process model). The
+card says what it did: "Last nap 35m, shorter than the usual 1h 18m, so 18m sooner." The predictor
+is now tested on a synthetic year, from 8 weeks to a year old, which also found and fixed a case
+where a late nap ending at bedtime could give a bedtime with no time awake. `docs/prediction.md`.
+
 ## 0.23.0 — 2026-11-03
 
 **Locked backups.** Settings › Data › Protect backups: set a passphrase, and every backup you

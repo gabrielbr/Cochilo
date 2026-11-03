@@ -29,7 +29,7 @@ Each is grounded in `docs/research.md` or the Tatá Slings plans (`docs/tata-sli
 | Feature | Why (source) | What it is |
 |---|---|---|
 | **Notes from Tatá by age** | The brand voice; trust (monetization §6.5) | One short note per age band, signed, reviewed against AAP 2022 |
-| **Smarter prediction (phase 2)** | Two-process model (§2.1, §7.2) | Weight recent days more, separate first nap / later naps / bedtime, still showing its numbers |
+| **Prediction, the clock part** | Two-process model (§2.1, §7.2) | Process C: a fitted circadian curve (bedtime and the first nap pulled towards the baby's own clock as it forms), and a live sleep-pressure line on the Day tab |
 
 ## 3. UX improvements
 
@@ -55,10 +55,10 @@ Each is grounded in `docs/research.md` or the Tatá Slings plans (`docs/tata-sli
 | **Upstream the design-system patches** | Six patches wait in `design-system/`; merging them makes the system the source of truth again |
 | **Seamless fabric tiles** | Prints mirror at their edges (Tropical); retouch each photo into a true repeating tile |
 | **On-device checks with TalkBack** | Paparazzi checks pixels, not the reading order |
-| **Predictor tests on a year of synthetic data** | Every rule tested, as the product rule asks |
 
 ## Shipped from this plan
 
+- **0.24.0**: the last nap's length in the prediction (phase 2, sleep pressure) and a synthetic year of tests ([prediction.md](prediction.md)).
 - **0.23.0**: locked backups with an optional passphrase ([backup.md](backup.md)).
 - **0.22.0**: large text, 200% font scale ([accessibility.md](accessibility.md)).
 - **0.21.0**: History filters by kind; the expected window on today's ring ([flows.md](flows.md)).
@@ -76,9 +76,9 @@ Each is grounded in `docs/research.md` or the Tatá Slings plans (`docs/tata-sli
 
 | When | What | Why first |
 |---|---|---|
-| **Soon** | Quality pass: seamless fabric tiles, prediction tests | Research-backed, small, and on the brand's subject |
+| **Soon** | Quality pass: seamless fabric tiles, tablet layout | Research-backed, small, and on the brand's subject |
 | **Later** | Notes from Tatá (waiting for her writing) | Needs Tatá's writing and the monetization plan's order of work |
-| **Exploring** | Wi-Fi sync between two phones; Wear OS; smarter prediction | Bigger builds; worth a design spike first |
+| **Exploring** | Wi-Fi sync between two phones; Wear OS; the prediction's clock part | Bigger builds; worth a design spike first |
 
 Each of these lands like the rest: design system first, docs with the change, screenshots looked
 at, a PR, merged and released with a note in English and Portuguese.

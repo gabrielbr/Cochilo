@@ -154,6 +154,11 @@ log changes and goes through `Entries`, like every other button.
   "Expected next sleep" in the legend and in what TalkBack reads ("Next sleep expected between
   15:51 and 16:11").
 
+## The last nap in the prediction (0.24.0)
+
+No tap changes. The prediction card adds one line, only when the last nap moved the window by 5
+minutes or more, so it is read, not acted on. [prediction.md](prediction.md).
+
 ## Locked backups (0.23.0)
 
 | Flow | Taps | Remembers |

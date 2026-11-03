@@ -75,6 +75,17 @@ class PredictorTest {
         assertTrue(r.at in at(20, 19, 30)..at(20, 20, 30))
     }
 
+    @Test fun aLateNapStillLeavesTimeBeforeBedtime() {
+        // Today's last nap ends at 20:10, after the learned 20:00 bedtime.
+        val events = regularDays(10..19) + listOf(
+            sleep(20, 8, 0, 20, 9, 0), sleep(20, 10, 30, 20, 11, 30),
+            sleep(20, 13, 0, 20, 14, 30), sleep(20, 18, 40, 20, 20, 10),
+        )
+        val r = predictor.predict(events, 13, at(20, 20, 10)) as Predictor.Result.Awake
+        assertEquals(Predictor.Next.BEDTIME, r.next)
+        assertTrue("bedtime ${r.wakeMinutes} min after waking", r.wakeMinutes >= 60)
+    }
+
     @Test fun learnsBedtime() {
         val events = regularDays(10..19)
         assertEquals(20 * 60, predictor.bedtimeMinute(events.sortedBy { it.start }, at(20, 12)))
