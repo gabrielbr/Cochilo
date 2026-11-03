@@ -363,6 +363,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     fun refreshModel() = modelSource.refresh()
     fun downloadModel() = modelSource.download()
+    fun modelOnMobileData() = modelSource.useMobileData()
     fun importModel(uri: Uri) = viewModelScope.launch { modelSource.import(uri) }
     fun removeModel() {
         model?.close(); model = null; modelFile = null

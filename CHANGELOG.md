@@ -3,6 +3,14 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.37.0 — 2026-11-03
+
+**The on-device AI downloads itself.** When you want Ask Cochilo to answer questions beyond its
+list, tap Download (about 550 MB), from Settings or right under an answer it couldn't give. The app
+downloads it on Wi-Fi in the background, with its progress in the notification, and checks it
+before using it; on mobile data it waits for Wi-Fi unless you tap "Download now on mobile data".
+No more finding the file yourself. `docs/assistant.md`.
+
 ## 0.36.0 — 2026-11-03
 
 **Tatá's first suggestion is on.** Tatá approved her note on naps in arms. In the first three

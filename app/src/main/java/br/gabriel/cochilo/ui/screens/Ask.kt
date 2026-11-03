@@ -66,6 +66,8 @@ fun AskScreen(
     facts: Assistant.Facts, f: Format, initial: List<AskExchange> = emptyList(),
     /** Phase 2: the on-device model, when it's ready; it answers only what the library can't. */
     generate: (suspend (String) -> String?)? = null,
+    /** The model isn't on the phone yet: under a "not sure" reply, one row opens its sheet. */
+    onGetModel: (() -> Unit)? = null,
 ) {
     val context = LocalContext.current
     val exchanges = remember { mutableStateListOf(*initial.toTypedArray()) }
@@ -109,6 +111,15 @@ fun AskScreen(
                 x.thinking -> ThinkingCard()
                 x.generated != null -> GeneratedCard(x.generated)
                 else -> ReplyCard(x.reply, facts, f, onTopic = ::askTopic)
+            }
+            if (onGetModel != null && x.reply is Assistant.Reply.NotSure && x.generated == null && !x.thinking && x === exchanges.last()) {
+                Spacer(Modifier.height(Spacing.space2))
+                br.gabriel.cochilo.ui.kit.RowGroup {
+                    br.gabriel.cochilo.ui.kit.ListRow(
+                        stringResource(R.string.ask_get_model), meta = stringResource(R.string.ask_get_model_meta), onClick = onGetModel,
+                        trailing = { br.gabriel.cochilo.ui.kit.GIcon(R.drawable.gg_ic_chevron, null, CochiloTheme.colors.muted) },
+                    )
+                }
             }
         }
         Caption(stringResource(R.string.ask_suggested), top = Spacing.space6)

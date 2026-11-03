@@ -70,6 +70,7 @@ other moments and the age notes need Tatá's sign-off.
 
 ## Shipped from this plan
 
+- **0.37.0**: the on-device AI downloads itself in one tap on the family build, from this repository's releases ([assistant.md](assistant.md)).
 - **0.36.0**: Tatá marketing step 4 starts: the naps-in-arms suggestion is live, signed off by Tatá ([in-app-marketing.md](tata-slings/in-app-marketing.md) §12).
 - **0.35.0**: asleep and awake in the timelines, and the Log menu's cascade (the owner's ask; [flows.md](flows.md)).
 - **0.34.0**: Tatá marketing step 3: notes by age, twelve drafts, all off until Tatá approves ([in-app-marketing.md](tata-slings/in-app-marketing.md)).

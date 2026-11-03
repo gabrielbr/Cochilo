@@ -221,12 +221,31 @@ the Log button. Its link is one tap; "Don't show again" is one tap and final.
 No logging flow changes. From Settings, the picked fabric's sling in the shop is one tap ("See it
 in the shop ›"). It isn't on Today, the Log button, any sheet or the night.
 
+## Getting the on-device AI (0.37.0)
+
+The owner: "the download of the Gemma model is terrible UX; the app should download it when the
+user decides to use it." Before, the family build sent her to Hugging Face for a 550 MB file,
+behind a sign-in and Google's terms, and then to the file picker. Now the app does it:
+
+| Flow | Taps |
+|---|---|
+| Get the model, from Ask | ask something beyond the list › "Answer questions like this on the phone" (1) › Download (1) |
+| Get the model, from Settings | On-device AI (1) › Download (1) |
+| On mobile data | it waits for Wi-Fi; "Download now on mobile data" (1) if she'd rather not wait |
+| Stop | Stop the download (1), or cancel it from the notification |
+
+It's Android's download manager: it keeps going with the app closed, shows its progress in the
+notification and resumes after a dropped connection. When it arrives it's checked (a `.task`, the
+right size, the published SHA-256) before Ask uses it. "Choose a file instead" stays, one tap
+further, for a phone with the file already on it. The play build was already one tap (the Play
+Store downloads it); it now says when it's waiting for Wi-Fi too.
+
 ## On-device AI (0.30.0)
 
 | Flow | Taps |
 |---|---|
 | Get the model (play) | Settings › On-device AI (1) › Download (1); the Play Store does the rest |
-| Get the model (family build) | Settings › On-device AI (1) › Choose the model file (1) › the file (1) |
+| Get the model (family build) | Settings › On-device AI (1) › Choose the model file (1) › the file (1); since 0.37.0, Download (1) (above) |
 | Ask something beyond the list | type, Ask (1); the answer appears when the phone has written it |
 
 Nothing else changes: the 13 topics answer at once from the library, as before.
