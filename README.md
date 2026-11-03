@@ -73,7 +73,8 @@ dressed in the Tatá Slings brand (teal, plum-grey ink, Pérola, Libre Franklin,
   opens the full sheet. How many taps each entry costs, and why: [docs/flows.md](docs/flows.md).
 - **Notifications**: a quiet live notification, asleep or awake, with a running clock, the expected
   wake or next nap, a timeline bar and Woke up / Start sleep; running timers get Finish (and Switch
-  side). [docs/notifications.md](docs/notifications.md).
+  side). Window reminders 30 and 15 minutes before the next nap or bedtime, with Start routine.
+  [docs/notifications.md](docs/notifications.md).
 - **"i" buttons**: each kind of entry (on the log rows, the sleep panel and each entry's sheet) has
   an "i" that explains what it's for, in English and Portuguese.
 - **Patterns**: a 14-day actogram (the day/night rhythm forming) and 7-day averages next to the

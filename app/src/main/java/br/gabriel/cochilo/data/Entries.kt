@@ -25,6 +25,10 @@ class Entries(private val events: EventDao) {
             .forEach { events.upsert(it.copy(end = now, updatedAt = now)) }
     }
 
+    /** A routine (nap or bedtime, [kind]) begins now: the window reminder's Start routine. */
+    suspend fun logRoutine(kind: String, now: Long = System.currentTimeMillis()): Event =
+        Event(type = EventType.ROUTINE, start = now, kind = kind, updatedAt = now).also { events.upsert(it) }
+
     /** Ends a running timer now. */
     suspend fun finish(id: String, now: Long = System.currentTimeMillis()) {
         val e = events.byId(id) ?: return

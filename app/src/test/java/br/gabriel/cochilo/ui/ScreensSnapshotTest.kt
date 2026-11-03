@@ -400,6 +400,20 @@ class ScreensSnapshotTest {
         pt(true); paparazzi.snapshot { TataNoteShot(true, br.gabriel.cochilo.domain.Suggestions.Suggestion(br.gabriel.cochilo.domain.Suggestions.Moment.ROUTINE_STEADY, "tata_naninha", 5)) }
     }
 
+    /** Settings › Notifications with the window reminders (30 and 15 min before the next window). */
+    @Test fun reminders_settings_ptBR_light() {
+        pt(false)
+        paparazzi.snapshot {
+            CochiloTheme(false) { br.gabriel.cochilo.ui.kit.Frame { Column(Modifier.padding(CTokens.Spacing.space6)) {
+                br.gabriel.cochilo.ui.kit.RowGroup {
+                    br.gabriel.cochilo.ui.kit.SwitchRow(stringResource(R.string.live_notification), stringResource(R.string.live_notification_meta), true, {})
+                    Hairline()
+                    br.gabriel.cochilo.ui.screens.ReminderRows(true, {}, setOf(30, 15), {})
+                }
+            } } }
+        }
+    }
+
     @Test fun passphrase_sheet_light() {
         light()
         paparazzi.snapshot { CochiloTheme(false) { br.gabriel.cochilo.ui.kit.Frame { androidx.compose.foundation.layout.Column(Modifier.padding(br.gabriel.cochilo.ui.theme.CTokens.Spacing.space6)) {

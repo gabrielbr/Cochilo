@@ -48,6 +48,12 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     fun setLiveNotification(on: Boolean) = ctx.prefs.setLiveNotification(on)
 
+    /** Window reminders (docs/notifications.md): 30 and 15 minutes before the next window. */
+    val reminders: StateFlow<Boolean> = ctx.prefs.reminders
+    fun setReminders(on: Boolean) = ctx.prefs.setReminders(on)
+    val reminderLeads: StateFlow<Set<Int>> = ctx.prefs.reminderLeads
+    fun setReminderLeads(leads: Set<Int>) = ctx.prefs.setReminderLeads(leads)
+
     /** The fabric that wraps the Today card (remembered: the picker opens on it). */
     val fabric: StateFlow<String?> = ctx.prefs.fabric
 

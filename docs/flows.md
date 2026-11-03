@@ -155,6 +155,15 @@ log changes and goes through `Entries`, like every other button.
   "Expected next sleep" in the legend and in what TalkBack reads ("Next sleep expected between
   15:51 and 16:11").
 
+## Window reminders (0.33.0)
+
+| Flow | Taps |
+|---|---|
+| Start the routine from the reminder | 1 (Start routine), from the shade, without opening the app |
+| Turn reminders off / pick 30 or 15 min | Settings › Notifications: 1 |
+
+Remembers: the leads chosen. The routine logged is the one for what's next (nap or bedtime).
+
 ## Tatá's notes (0.32.0)
 
 No flow changes: a note (when Tatá approves one) sits at the end of Patterns, never on Today or

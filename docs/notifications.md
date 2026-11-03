@@ -58,8 +58,40 @@ shows the same timeline on every Android version (not just 16) in the app's own 
 toolchain moves to API 36, `ProgressStyle` can replace the bitmap and make the notification a
 "Live update" (status-bar chip) too.
 
+## Window reminders (0.33.0)
+
+The owner's request: a heads-up **30 and 15 minutes before each sleep window**, to bring
+attention to the window in time to start the preparation (the routine).
+
+**What the person sees:** "Nap window in 30 min" (or "Bedtime window in 15 min"), "Expected about
+3:51–4:11 PM. A good moment to start the routine.", and one button, **Start routine**, which logs a
+nap or bedtime routine at once (one tap) and takes the reminder away. A tap on the body opens the
+app. The reminder goes away by itself when the window closes, or as soon as a sleep starts.
+
+**Settings › Notifications › Window reminders:** on by default; under it, one tap picks when: **30
+and 15 min** (default), **30 min** or **15 min**. Turning it on asks for the notification
+permission if it wasn't given.
+
+**The rules** (`domain/Reminders.kt`, tested in `RemindersTest`):
+- Only while the baby is awake and the app has a guess (the prediction's window, `windowStart`).
+- Each lead fires once per window; a window that moves by less than 20 minutes (a newer guess)
+  is the same window and isn't announced again.
+- **Late is skipped, not sent:** a reminder more than 10 minutes late (the phone was asleep, or the
+  window moved earlier) is dropped. An alarm firing up to 2 minutes early still counts.
+- **Quiet night:** none from 21:00 to 06:00. A bedtime at 20:30 still gets its 20:00 and 20:15.
+- When the alarm fires, the prediction is read again; the reminder is sent only if it's still due.
+
+**How it's built:** `notify/SleepReminders.kt`. Its own channel, **"Window reminders"**, at default
+importance: it can make the phone's notification sound, and the person can silence it or turn it off
+in Android's settings without touching the quiet live notification. The alarm is
+`setAndAllowWhileIdle` (wakes the phone even in Doze, give or take a few minutes): **no new
+permission** (no exact-alarm permission). It's set again after every change to the log, the
+baby or the setting, and after each alarm. Start routine is `Entries.logRoutine`, through the same
+receiver as the other buttons.
+
+**Known limit:** after the phone restarts, reminders resume once the app, the widget or the tile
+next updates (a boot receiver would need a permission the family build doesn't have).
+
 ## Not built yet
 
-- Reminders (e.g. "the nap window opens in 10 minutes"): useful, but it would make sound; to
-  decide with Tatá how and when, and as its own setting.
 - Live updates / status-bar chip (Android 16): see above.

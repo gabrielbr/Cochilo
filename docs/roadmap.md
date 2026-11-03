@@ -69,6 +69,7 @@ never on Today, at night, or on safety screens. Needs Tatá's catalog, notes and
 
 ## Shipped from this plan
 
+- **0.33.0**: window reminders, 30 and 15 minutes before the next sleep window ([notifications.md](notifications.md)).
 - **0.32.0**: Tatá marketing step 2: the suggestion rules, the catalog and the Tatá note, all off until Tatá approves ([in-app-marketing.md](tata-slings/in-app-marketing.md)).
 - **0.31.0**: Tatá marketing step 1: the fabric's shop line; the safety sheet links to her guide ([in-app-marketing.md](tata-slings/in-app-marketing.md)).
 - **0.30.0**: Ask Cochilo, phase 2: the optional on-device model ([assistant.md](assistant.md)).

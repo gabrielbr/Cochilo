@@ -539,4 +539,16 @@
     <string name="tata_note_routine">Rotinas de dormir nesta semana: %1$d. Com a rotina firme, a Naninha pode virar um dos passos.</string>
     <string name="tata_note_daylight">Pouca luz do dia nesta semana. Um passeio entre 12h e 16h conta, de sling ou de carrinho.</string>
     <string name="tata_note_six_months">Por volta dos 6 meses, brincar e explorar ocupam mais do tempo acordado. Os brinquedos TatáT.O. foram feitos por uma terapeuta ocupacional para essa fase.</string>
+    <!-- Lembretes da janela (docs/notifications.md). -->
+    <string name="reminders">Lembretes da janela</string>
+    <string name="reminders_meta">Antes da próxima soneca ou da hora de dormir, para começar a rotina</string>
+    <string name="reminders_both">30 e 15 min</string>
+    <string name="reminders_30">30 min</string>
+    <string name="reminders_15">15 min</string>
+    <string name="reminder_channel">Lembretes da janela</string>
+    <string name="reminder_channel_meta">30 e 15 minutos antes de a próxima janela de sono abrir</string>
+    <string name="reminder_nap_title">Janela da soneca em %1$d min</string>
+    <string name="reminder_bed_title">Janela de dormir em %1$d min</string>
+    <string name="reminder_text">Prevista por volta de %1$s–%2$s. Um bom momento para começar a rotina.</string>
+    <string name="reminder_start_routine">Começar a rotina</string>
 </resources>

@@ -30,6 +30,11 @@ class NotificationActions : BroadcastReceiver() {
                     FEED_LEFT -> entries.startBreastfeed(br.gabriel.cochilo.data.Kinds.BREAST_LEFT)
                     FEED_RIGHT -> entries.startBreastfeed(br.gabriel.cochilo.data.Kinds.BREAST_RIGHT)
                     TICK -> Unit
+                    REMIND -> SleepReminders.fire(app)
+                    START_ROUTINE -> {
+                        id?.let { entries.logRoutine(it) }
+                        androidx.core.app.NotificationManagerCompat.from(app).cancel(SleepReminders.ID)
+                    }
                 }
                 LiveNotifications.refresh(app)
                 br.gabriel.cochilo.widget.CochiloWidget.refresh(app)
@@ -46,6 +51,9 @@ class NotificationActions : BroadcastReceiver() {
         const val FINISH = "br.gabriel.cochilo.FINISH"
         const val SWITCH = "br.gabriel.cochilo.SWITCH"
         const val TICK = "br.gabriel.cochilo.TICK"
+        /** A window reminder's alarm, and its Start routine button (docs/notifications.md). */
+        const val REMIND = "br.gabriel.cochilo.REMIND"
+        const val START_ROUTINE = "br.gabriel.cochilo.START_ROUTINE"
         /** The widget's breasts: start a breastfeed on that side (or switch to it). */
         const val FEED_LEFT = "br.gabriel.cochilo.FEED_LEFT"
         const val FEED_RIGHT = "br.gabriel.cochilo.FEED_RIGHT"
