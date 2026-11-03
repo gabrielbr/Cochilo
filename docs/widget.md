@@ -33,4 +33,4 @@ most often, one tap each from the home screen, without opening the app.
   fails if they drift. Sizes are the design system's (dimens.xml); the family is Libre Franklin.
 - Privacy: it reads only the phone's own log. No permission is added to either build.
 
-Design system: the Home widget component (0.10.0, patch `design-system/0005-…`).
+Design system: the Home widget component (0.10.0); since 0.40.1 it's a Cochilo component, in `design/product/cochilo/components.md`.

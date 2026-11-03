@@ -1,7 +1,7 @@
 {
-  "$comment": "Vendored from the Gabriel Design System (see design/core/CORE.md). The core scale and its rules; never edited here: change it in the design system and re-sync.",
+  "$comment": "Vendored from the Gabriel Design System (design/core/CORE.md).",
   "name": "Gabriel Design System",
-  "version": "0.27.0",
+  "version": "0.28.0",
   "core": {
     "$comment": "Shared by every app. Every layer must include every core token (scripts/check_tokens.py enforces it).",
     "color": [

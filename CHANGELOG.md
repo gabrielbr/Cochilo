@@ -3,6 +3,13 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.41.1 — 2026-11-03
+
+**No change you can see.** The Gabriel Design System released 0.28.0. It took in the general
+parts of Cochilo's old design patches and dropped everything that is Cochilo's or Tatá's. Cochilo
+now builds from that real release, and the old patches are gone. Every value in the app is the
+same. `design/core/CORE.md`.
+
 ## 0.41.0 — 2026-11-03
 
 **Share to Cochilo.** Cochilo now appears in Android's share sheet. In Napper, tap Export and pick

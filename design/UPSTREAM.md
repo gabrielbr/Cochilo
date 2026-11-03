@@ -5,12 +5,16 @@ The owner's decision (2026-11-03):
 - Tatá Slings (a partner brand) and Cochilo's own pieces live **in Cochilo** (`design/brand`,
   `design/product`).
 
-Before that, 24 patches in `../design-system/` carried everything to the design system, brand and
+Before that, 24 patches in `../design-system/` (deleted in 0.41.1, in git history) carried everything to the design system, brand and
 product included. This file sorts them, and is the brief for the one PR that makes the design
 system's `main` the real source of the core again.
 
-**Status:** not started. The design system repo has to be opened for it, and the owner asked to
-be asked first (AGENTS.md "Never guess a repo").
+**Status: done.** Merged as the design system's PR #6, released as **0.28.0** (2026-11-03).
+Cochilo re-synced `design/core/` to it in 0.41.1 and deleted `../design-system/`. This file stays
+as the record of how the 24 patches were sorted.
+
+**From now on**, a core change goes straight to the design system as its own PR and release
+(its `docs/products.md`), then Cochilo re-syncs (`core/CORE.md`). Nothing waits here.
 
 ## The patches, sorted
 

@@ -163,7 +163,6 @@ The debug build installs as `br.gabriel.cochilo.debug`, beside a release build.
 | `.../ui/screens` | Today (with the days, `HistoryDays`), Day, Patterns, Ask and its chats, Settings, sheets |
 | `app/src/test` | Predictor, stats and backup tests; Paparazzi screenshots of every screen |
 | `design/` | How it looks, in three layers: the Gabriel Design System core (vendored), the Tatá Slings brand, the Cochilo layer; `build.py` makes `CTokens.kt` ([design/README.md](design/README.md)) |
-| `design-system/` | The old patches to the design system (0001–0024), kept until the upstream PR in `design/UPSTREAM.md` lands |
 
 Rules for working here: [AGENTS.md](AGENTS.md). Plans for Cochilo as a Tatá Slings product
 (monetization, voice, design system, marketing): [docs/tata-slings](docs/tata-slings/README.md).

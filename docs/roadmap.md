@@ -65,11 +65,11 @@ other moments and the age notes need Tatá's sign-off.
 
 | Item | Why |
 |---|---|
-| **Upstream the core parts of the design-system patches** | Since 0.40.1 the brand and the Cochilo layer live in `design/`; the generic parts of patches 0001–0024 still have to go to the design system ([design/UPSTREAM.md](../design/UPSTREAM.md)), then `design/core/` re-syncs from a real release |
 | **On-device checks with TalkBack** | Paparazzi checks pixels, not the reading order |
 
 ## Shipped from this plan
 
+- **0.41.1**: the design system released 0.28.0 with the generic parts of Cochilo's patches; Cochilo re-synced to it and deleted the patches ([design/core/CORE.md](../design/core/CORE.md)).
 - **0.41.0**: Share to Cochilo: Napper's export (or a backup) from any app's share sheet imports at once ([backup.md](backup.md)).
 - **0.40.1**: the design in three layers in `design/` (core vendored, Tatá brand, Cochilo layer); the design system stays generic ([design/README.md](../design/README.md)).
 - **0.40.0**: History moves to the end of Today (three tabs); Ask keeps chats, one per topic ([flows.md](flows.md), [assistant.md](assistant.md)).
