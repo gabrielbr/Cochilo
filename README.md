@@ -39,7 +39,9 @@ dressed in the Tatá Slings brand (teal, plum-grey ink, Pérola, Libre Franklin,
   [docs/rituals.md](docs/rituals.md).
 - **What changed**: real changes in the last week, in neutral words; day / night milk.
   [docs/changes.md](docs/changes.md).
-- **Where the baby slept**: crib, arms, sling, pram, car, remembered; naps by place in Patterns;
+- **Details after**: start a sleep (or a feed, pumping, daylight) in one tap; where she slept, which
+  side or how much is asked once it ends, with the last answer marked. [docs/flows.md](docs/flows.md).
+- **Where the baby slept**: crib, arms, sling, pram, car, asked on waking; naps by place in Patterns;
   T.I.C.K.S. the first time the sling is picked. [docs/places.md](docs/places.md).
 - **Earlier and the tile**: "Fell asleep 5 · 10 · 15 min ago" in one tap; Start sleep / Woke up from
   the quick-settings tile. [docs/flows.md](docs/flows.md).

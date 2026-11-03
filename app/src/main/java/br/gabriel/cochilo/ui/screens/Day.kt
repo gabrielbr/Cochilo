@@ -132,7 +132,8 @@ internal fun VerticalTimeline(
     previewDrag: Pair<Int, Int>? = null,
 ) {
     val c = CochiloTheme.colors
-    var lastSleepEnd: Long? = null
+    // Newest first (0.28.0): what just happened is at the top, like History.
+    var newerSleepStart: Long? = null
     val sleepsSorted = allSleeps.filter { it.type == EventType.SLEEP }.sortedBy { it.start }
     var sleepIndex = 0
     val later = stringResource(R.string.adjust_later)
@@ -142,10 +143,12 @@ internal fun VerticalTimeline(
         Modifier.fillMaxWidth().clip(RoundedCornerShape(Radius.radiusM)).background(c.surface)
             .padding(vertical = Spacing.space3)
     ) {
-        for (e in events) {
+        for (e in events.sortedByDescending { it.start }) {
             if (e.type == EventType.SLEEP) {
-                lastSleepEnd?.let { end -> if (e.start > end) TimelineGap(stringResource(R.string.awake_gap, f.duration(clockSpan(end, e.start)))) }
-                lastSleepEnd = e.end ?: now
+                // The awake time between this sleep and the newer one above it.
+                val end = e.end
+                newerSleepStart?.let { next -> if (end != null && next > end) TimelineGap(stringResource(R.string.awake_gap, f.duration(clockSpan(end, next)))) }
+                newerSleepStart = e.start
             }
             // A sleep's bar grows 4dp for every 10 minutes, so long sleeps look long.
             val bar = if (e.type.hasDuration) Spacing.space1 * (e.durationMs(now) / 600_000f).coerceAtMost(80f) else null

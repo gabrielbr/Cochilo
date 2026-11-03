@@ -50,6 +50,7 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -347,7 +348,12 @@ fun Chip(text: String, kind: ChipKind) {
 
 /** Filter chips: 32dp pills inside 48dp targets, single selection. */
 @Composable
-fun <T> FilterChips(options: List<T>, selected: T?, label: (T) -> String, onDark: Boolean = false, onSelect: (T) -> Unit) {
+fun <T> FilterChips(
+    options: List<T>, selected: T?, label: (T) -> String, onDark: Boolean = false,
+    /** The option used last (remember actions): outlined in [lastColor] with a dot, the word only spoken. */
+    last: T? = null, lastColor: Color? = null, lastSpoken: String? = null,
+    onSelect: (T) -> Unit,
+) {
     val c = CochiloTheme.colors
     androidx.compose.foundation.layout.FlowRow(horizontalArrangement = Arrangement.spacedBy(Spacing.space2)) {
         options.forEach { o ->
@@ -362,16 +368,27 @@ fun <T> FilterChips(options: List<T>, selected: T?, label: (T) -> String, onDark
                 // The pick is a blush (selected), so teal stays the screen's one action.
                 // On the night panel ([onDark]) the unpicked chips are outlines in the panel's colours.
                 val bg = animatedColor(if (on) c.selected else if (onDark) c.panel else c.surface)
+                val isLast = !on && last != null && o == last && lastColor != null
                 Box(
                     Modifier
                         .pressScale(src)
                         .heightIn(min = Spacing.space8)
                         .clip(RoundedCornerShape(Radius.radiusL))
                         .background(bg)
-                        .border(Size.hairline, animatedColor(if (on) c.selected else if (onDark) c.onPanelMuted else c.line), RoundedCornerShape(Radius.radiusL))
+                        .border(
+                            if (isLast) Size.outline else Size.hairline,
+                            if (isLast) lastColor!! else animatedColor(if (on) c.selected else if (onDark) c.onPanelMuted else c.line),
+                            RoundedCornerShape(Radius.radiusL),
+                        )
+                        .then(if (isLast && lastSpoken != null) Modifier.semantics { stateDescription = lastSpoken } else Modifier)
                         .padding(horizontal = Spacing.space3),
                     contentAlignment = Alignment.Center,
-                ) { Text(label(o), style = Type.bodySmall, color = animatedColor(if (on) c.onSelected else if (onDark) c.onPanel else c.ink)) }
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        if (isLast) { LastDot(lastColor!!); Spacer(Modifier.width(Spacing.space1)) }
+                        Text(label(o), style = Type.bodySmall, color = animatedColor(if (on) c.onSelected else if (onDark) c.onPanel else c.ink))
+                    }
+                }
             }
         }
     }

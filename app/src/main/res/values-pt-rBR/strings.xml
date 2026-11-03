@@ -396,4 +396,11 @@
     <string name="adjust_later">Terminou 5 minutos depois</string>
     <string name="adjust_earlier">Terminou 5 minutos antes</string>
     <string name="adjusted">Agora termina às %1$s</string>
+    <string name="details_where">Onde %1$s dormiu?</string>
+    <string name="details_feed_kind">Qual foi a mamada?</string>
+    <string name="details_bottle_amount">Quanto foi a mamadeira?</string>
+    <string name="details_daylight">Onde foi a luz do dia?</string>
+    <string name="details_pumped">Quanto foi extraído?</string>
+    <string name="details_skip">Agora não</string>
+    <string name="last_used">usado da última vez</string>
 </resources>

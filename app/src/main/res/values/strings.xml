@@ -421,4 +421,11 @@
     <string name="adjust_later">Ended 5 minutes later</string>
     <string name="adjust_earlier">Ended 5 minutes sooner</string>
     <string name="adjusted">Now ends at %1$s</string>
+    <string name="details_where">Where did %1$s sleep?</string>
+    <string name="details_feed_kind">Which feed was it?</string>
+    <string name="details_bottle_amount">How much was the bottle?</string>
+    <string name="details_daylight">Where was the daylight?</string>
+    <string name="details_pumped">How much was pumped?</string>
+    <string name="details_skip">Not now</string>
+    <string name="last_used">used last time</string>
 </resources>

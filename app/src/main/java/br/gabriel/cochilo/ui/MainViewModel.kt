@@ -68,6 +68,11 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     val zone: ZoneId get() = ZoneId.systemDefault()
 
     init {
+        // Details after: something ended from the widget, the notification or the tile? Ask now.
+        viewModelScope.launch {
+            br.gabriel.cochilo.domain.Details.pending(events.all(), System.currentTimeMillis(), ctx.prefs.detailsAsked.toSet())
+                ?.let { _details.value = it }
+        }
         viewModelScope.launch {
             while (true) {
                 _now.value = System.currentTimeMillis()
@@ -126,13 +131,40 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         entries.wakeUp(System.currentTimeMillis() - minutesAgo * 60_000L)
         refreshNow()
         events.all().filter { it.id in running }.maxByOrNull { it.start }
-            ?.let { celebrate(br.gabriel.cochilo.domain.Trigger.WokeUp(it, before)) }
+            ?.let { askDetails(it); celebrate(br.gabriel.cochilo.domain.Trigger.WokeUp(it, before)) }
     }
+
+    // Details after (docs/flows.md): the one question an entry still has once it ends.
+    private val _details = MutableStateFlow<Event?>(null)
+    val details: StateFlow<Event?> = _details
+
+    private fun askDetails(e: Event) {
+        if (br.gabriel.cochilo.domain.Details.askAfter(e) == null) return
+        ctx.prefs.detailsAsked = ctx.prefs.detailsAsked + e.id
+        _details.value = e
+    }
+
+    /** The answer: a kind (place, breast, daylight) or an amount. */
+    fun answerDetails(e: Event, kind: String? = null, amountMl: Int? = null) = viewModelScope.launch {
+        _details.value = null
+        val current = events.byId(e.id) ?: return@launch
+        events.upsert(current.copy(kind = kind ?: current.kind, amountMl = amountMl ?: current.amountMl, updatedAt = System.currentTimeMillis()))
+        refreshNow()
+        if (e.type == EventType.SLEEP) maybeTicks(kind)
+        // A bottle picked after a feed still needs its amount: ask that next.
+        events.byId(e.id)?.let { askDetailsAgain(it) }
+    }
+
+    private fun askDetailsAgain(e: Event) {
+        if (br.gabriel.cochilo.domain.Details.askAfter(e) != null) _details.value = e
+    }
+
+    fun skipDetails() { _details.value = null }
 
     fun finish(e: Event) = viewModelScope.launch {
         entries.finish(e.id)
         refreshNow()
-        events.byId(e.id)?.let { celebrate(br.gabriel.cochilo.domain.Trigger.Logged(it)) }
+        events.byId(e.id)?.let { askDetails(it); celebrate(br.gabriel.cochilo.domain.Trigger.Logged(it)) }
     }
 
     /**

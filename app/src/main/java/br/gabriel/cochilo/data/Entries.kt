@@ -9,13 +9,13 @@ import br.gabriel.cochilo.domain.otherBreast
 class Entries(private val events: EventDao) {
 
     /**
-     * Starts a sleep now, unless one is already running (only one sleep runs at a time), in the
-     * place used last (remember actions: crib, arms, sling…), so every button remembers it.
+     * Starts a sleep now, unless one is already running (only one sleep runs at a time). Nothing
+     * else is asked: where it happened is asked when the baby wakes (details after, 0.28.0).
      */
     suspend fun startSleep(now: Long = System.currentTimeMillis()): Event? {
         val all = events.all()
         if (all.any { it.type == EventType.SLEEP && it.end == null }) return null
-        return Event(type = EventType.SLEEP, start = now, kind = br.gabriel.cochilo.domain.Places.last(all), updatedAt = now)
+        return Event(type = EventType.SLEEP, start = now, updatedAt = now)
             .also { events.upsert(it) }
     }
 
