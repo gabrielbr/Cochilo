@@ -155,6 +155,17 @@ log changes and goes through `Entries`, like every other button.
   "Expected next sleep" in the legend and in what TalkBack reads ("Next sleep expected between
   15:51 and 16:11").
 
+## Ask Cochilo (0.29.0)
+
+| Flow | Taps |
+|---|---|
+| Open it | Patterns › Questions about sleep (1) |
+| Ask a suggested question | 1 chip |
+| Ask your own | type, then Ask (1) |
+
+Nothing on Today or the Log button changes. The suggested questions put what stands out in her
+log first, so the likeliest question is one tap. [assistant.md](assistant.md).
+
 ## Details after (0.28.0)
 
 Start fast; say what it was once it's over. A timed entry starts with one tap and nothing else;

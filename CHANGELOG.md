@@ -3,6 +3,15 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.29.0 — 2026-11-03
+
+**Ask Cochilo.** Patterns › Questions about sleep: this week in four plain lines, then questions
+answered from your baby's own log and from the research the app rests on (short naps, nights,
+early mornings, bedtime, wake windows, daylight, routines, contact naps, the 4-month change, safe
+sleep), with suggested questions one tap away. Everything is worked out on the phone; nothing is
+stored or sent. Questions about health, medicines or how you're feeling are pointed to a person
+(the paediatrician, SAMU 192, CVV 188), never answered by the app. `docs/assistant.md`.
+
 ## 0.28.0 — 2026-11-03
 
 **Start fast, details after.** Start sleep is one tap with nothing to choose; when the baby wakes,

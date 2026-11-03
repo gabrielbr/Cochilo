@@ -333,6 +333,28 @@ class ScreensSnapshotTest {
             br.gabriel.cochilo.ui.screens.DetailsBody(pump, log + pump, "Bebê", {}, {}, {})
         } } } }
     }
+    /** Ask Cochilo: this week's numbers, a question answered from the log, and a health question sent to a person. */
+    @Composable
+    private fun AskShot(dark: Boolean, questions: List<String>) {
+        CochiloTheme(dark) {
+            val weeks = ageWeeks(baby.birthDate, null, now)
+            val p = Predictor(zone).predict(log, weeks, now)
+            val facts = br.gabriel.cochilo.domain.assistant.Assistant.facts(log, weeks, now, zone, p)
+            val f = Format(androidx.compose.ui.platform.LocalContext.current, zone, now)
+            Frame {
+                Column(Modifier.fillMaxSize()) {
+                    BackHeader(stringResource(R.string.ask_title), stringResource(R.string.back)) {}
+                    Box(Modifier.weight(1f)) {
+                        br.gabriel.cochilo.ui.screens.AskScreen(facts, f, questions.map { br.gabriel.cochilo.ui.screens.AskExchange(it, br.gabriel.cochilo.domain.assistant.Assistant.ask(it, facts)) })
+                    }
+                }
+            }
+        }
+    }
+    @Test fun ask_light() { light(); paparazzi.snapshot { AskShot(false, listOf("Why are the naps so short?")) } }
+    @Test fun ask_care_ptBR_dark() { pt(true); paparazzi.snapshot { AskShot(true, listOf("Ela está com febre, o que faço?")) } }
+    @Test fun ask_not_sure_light() { light(); paparazzi.snapshot { AskShot(false, listOf("What colour is the sky?")) } }
+
     @Test fun passphrase_sheet_light() {
         light()
         paparazzi.snapshot { CochiloTheme(false) { br.gabriel.cochilo.ui.kit.Frame { androidx.compose.foundation.layout.Column(Modifier.padding(br.gabriel.cochilo.ui.theme.CTokens.Spacing.space6)) {

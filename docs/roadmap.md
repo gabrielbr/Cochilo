@@ -40,6 +40,18 @@ Each is grounded in `docs/research.md` or the Tatá Slings plans (`docs/tata-sli
 - **Wear OS tile**: Start sleep / Woke up and the breasts from the wrist, for when both hands hold
   the baby.
 
+### 3.2b Ask Cochilo, phase 2
+
+The on-device model for open questions (LiteRT-LM + a small Gemma, Android and iOS), grounded in
+phase 1's facts and reviewed answers. Needs the owner's decision on how the model file reaches
+the phone ([assistant.md](assistant.md) §5).
+
+### 3.2c Tatá Slings inside the app
+
+The non-intrusive plan in [tata-slings/in-app-marketing.md](tata-slings/in-app-marketing.md):
+Settings › Loja Tatá Slings, the fabric picker line, notes by age and log moments in Patterns,
+never on Today, at night, or on safety screens. Needs Tatá's catalog, notes and sign-off.
+
 ### 3.3 Two parents
 - **Second phone**: today through export/import. Next: a local Wi-Fi sync between the two phones
   (no server, no account; the data still never leaves the home).
@@ -56,6 +68,8 @@ Each is grounded in `docs/research.md` or the Tatá Slings plans (`docs/tata-sli
 
 ## Shipped from this plan
 
+- **0.29.0**: Ask Cochilo, phase 1: a local assistant from the log and reviewed answers ([assistant.md](assistant.md)).
+- **0.28.0**: details after the main action; Day's timeline newest first ([flows.md](flows.md)).
 - **0.27.0**: drag to adjust a sleep's end on the Day tab ([flows.md](flows.md)).
 - **0.26.0**: seamless fabric tiles ([textures.md](tata-slings/textures.md)).
 - **0.25.0**: tablets and foldables, a rail and two panes ([tablet.md](tablet.md)).

@@ -22,11 +22,14 @@ class Format(
      * The language the app is showing, from its own strings (locale_tag), so dates read in the same
      * language as the words around them, whatever the system's locale says.
      */
-    private val locale: Locale get() = Locale.forLanguageTag(context.getString(R.string.locale_tag))
+    val locale: Locale get() = Locale.forLanguageTag(context.getString(R.string.locale_tag))
     private val timeFmt: DateTimeFormatter
         get() = DateTimeFormatter.ofPattern(if (DateFormat.is24HourFormat(context)) "HH:mm" else "h:mm a", locale)
 
     fun time(ms: Long): String = timeFmt.format(Instant.ofEpochMilli(ms).atZone(zone))
+
+    /** A clock time from minutes after midnight (late evenings past 24:00 wrap): 1170 → "7:30 PM". */
+    fun clock(minuteOfDay: Int): String = timeFmt.format(java.time.LocalTime.of((minuteOfDay / 60) % 24, minuteOfDay % 60))
 
     /** "1h 20m", "35m", "0m". */
     fun duration(ms: Long): String {
