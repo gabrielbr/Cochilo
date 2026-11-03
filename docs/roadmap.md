@@ -65,11 +65,12 @@ other moments and the age notes need Tatá's sign-off.
 
 | Item | Why |
 |---|---|
-| **Upstream the design-system patches** | Six patches wait in `design-system/`; merging them makes the system the source of truth again |
+| **Upstream the core parts of the design-system patches** | Since 0.40.1 the brand and the Cochilo layer live in `design/`; the generic parts of patches 0001–0024 still have to go to the design system ([design/UPSTREAM.md](../design/UPSTREAM.md)), then `design/core/` re-syncs from a real release |
 | **On-device checks with TalkBack** | Paparazzi checks pixels, not the reading order |
 
 ## Shipped from this plan
 
+- **0.40.1**: the design in three layers in `design/` (core vendored, Tatá brand, Cochilo layer); the design system stays generic ([design/README.md](../design/README.md)).
 - **0.40.0**: History moves to the end of Today (three tabs); Ask keeps chats, one per topic ([flows.md](flows.md), [assistant.md](assistant.md)).
 - **0.39.0**: Today without the log rows; the Log button does it all (the owner's ask; [flows.md](flows.md)).
 - **0.38.0**: Ask Cochilo in the header of every tab, a nap-length answer, and the whole log for the on-device AI ([assistant.md](assistant.md)).

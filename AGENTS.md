@@ -26,20 +26,31 @@ then [docs/research.md](docs/research.md) for the science the features rest on.
 - **Never guess a repo or project.** Work in Cochilo. If a request seems to point at another repo
   (PulseLoop, the design system…), ask before opening it.
 
-## The design system decides how it looks
+## The design decides how it looks: three layers ([design/README.md](design/README.md))
 
-The UI follows the [Gabriel Design System](https://github.com/gabrielbr/Gabriel-Deisgn-System),
-layer `cochilo`, dressed in the **Tatá Slings brand** (`brands.tata-slings`, the design system's
-`docs/brands.md`): Cochilo is a Tatá Slings product. The brand sets the colour values (teal accent,
-plum-grey ink, Pérola page, Amora Log button since 0.8.0 "Tecidos"), the one family (Libre Franklin) and the mark; every other standard is the
-system's. Its AGENTS.md and DESIGN.md are the rules; the short version:
+Cochilo is a **Tatá Slings** product built on the **Gabriel Design System**, the owner's own
+boilerplate, which is in Gabriel's brand. Since 0.40.1 the design is in three layers:
+- **core**: the Gabriel Design System, vendored at a pinned version in `design/core/`;
+- **brand**: Tatá Slings, in `design/brand/tata-slings/`: the colour values (teal accent, plum-grey
+  ink, Pérola page, Amora Log button), the one family (Libre Franklin), the mark and her textures;
+- **product**: Cochilo's own tokens and components, in `design/product/cochilo/`.
 
+Every standard not set by the brand or the product is the core's. Its AGENTS.md and DESIGN.md are
+the rules; the short version:
+
+- **Where a design change goes.**
+  - Could any of the owner's apps use it? It's **core**: change it in the design system (ask
+    before opening that repo), release it, re-sync `design/core/` (`design/core/CORE.md`).
+  - Is it about Tatá's look? It's **brand**: `design/brand/tata-slings/brand.json`.
+  - Only Cochilo's? It's **product**: `design/product/cochilo/layer.json` and `components.md`.
+  - Never edit `design/core/` here. What still has to go upstream is in `design/UPSTREAM.md`.
 - **Tokens only.** Every colour, size, radius, duration and type role comes from
   `ui/theme/CTokens.kt` (through `CochiloTheme.colors`, `CTokens.Spacing/Radius/Size`, `Type`).
-  No literal dp, sp, ms or colour in a screen. If something is missing, add it to the design
-  system first, then copy the regenerated `CTokens.kt` here.
-- **Never edit `CTokens.kt` by hand.** It is `generated/cochilo/CTokens.kt` from the design system,
-  copied as is; `python3 scripts/drift.py --cochilo ../Cochilo` there must report 0 differences.
+  No literal dp, sp, ms or colour in a screen. If something is missing, add it to the right layer
+  and run `python3 design/build.py`.
+- **Never edit `CTokens.kt` by hand.** `python3 design/build.py` writes it from the three layers
+  with the core's own generator; `python3 design/build.py --check` (CI runs it) fails if it
+  differs, or if a check fails (scale, type floor, brand limits, contrast in all three themes).
 - **Teal is the one action, nothing else.** No highlighter behind titles; the active tab and a
   picked chip use `selected` (a blush), the screen's edge uses `frame-line` (a soft hem). Captions
   are sentence case; buttons are pills. Why: [docs/design-review.md](docs/design-review.md).
@@ -95,6 +106,7 @@ system's. Its AGENTS.md and DESIGN.md are the rules; the short version:
 ## Before you push
 
 ```sh
+python3 design/build.py --check && python3 -m unittest discover -s design -p "test_*.py"
 ./gradlew :app:testGithubDebugUnitTest :app:testPlayDebugUnitTest \
   :app:assembleGithubDebug :app:assemblePlayDebug :app:lintGithubDebug :app:lintPlayDebug
 ```

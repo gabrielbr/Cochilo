@@ -7,8 +7,9 @@
 ## Status: what the app ships (Cochilo 0.8.0)
 
 Cochilo wears this brand through the Gabriel Design System's **brands** concept (design system
-0.6.0, `docs/brands.md` there; the change waits as a patch in
-[`design-system/`](../../design-system/README.md)). A brand swaps colour roles, the type family and
+0.6.0). Since Cochilo 0.40.1 the brand's values live in this repo, in
+[`design/brand/tata-slings/`](../../design/brand/tata-slings/brand.md), and the app builds them with
+the design system's vendored core ([design/README.md](../../design/README.md)). A brand swaps colour roles, the type family and
 the mark, and nothing else, so the app follows every Gabriel standard and looks like Tatá's.
 
 | Part of this proposal | In the app? |

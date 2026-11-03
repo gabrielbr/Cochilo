@@ -14,6 +14,8 @@ jobs:
           java-version: "21"
       # The Ubuntu runner ships the Android SDK (ANDROID_HOME); AGP fetches any missing platform.
       - uses: gradle/actions/setup-gradle@v4
+      # The design's three layers build CTokens.kt (design/README.md): it must match, and every check pass.
+      - run: python3 design/build.py --check && python3 -m unittest discover -s design -p "test_*.py"
       # Both builds (docs/distribution.md). assemble*/test* also run the permission check: play may ask
       # for no permission at all, github only for INTERNET and REQUEST_INSTALL_PACKAGES.
       - run: >

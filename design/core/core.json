@@ -1,0 +1,216 @@
+{
+  "$comment": "Vendored from the Gabriel Design System (see design/core/CORE.md). The core scale and its rules; never edited here: change it in the design system and re-sync.",
+  "name": "Gabriel Design System",
+  "version": "0.27.0",
+  "core": {
+    "$comment": "Shared by every app. Every layer must include every core token (scripts/check_tokens.py enforces it).",
+    "color": [
+      {
+        "name": "page",
+        "value": {
+          "light": "#F2F2F2",
+          "dark": "#121214"
+        },
+        "usage": "Screen background inside the mint frame.",
+        "alias": {
+          "pulseloop": "background"
+        }
+      },
+      {
+        "name": "surface",
+        "value": {
+          "light": "#FFFFFF",
+          "dark": "#1C1B1F"
+        },
+        "usage": "Header, tab bar, fields, cards, sheets.",
+        "alias": {
+          "pulseloop": "card"
+        }
+      },
+      {
+        "name": "ink",
+        "value": {
+          "light": "#17161A",
+          "dark": "#F2F2F2"
+        },
+        "usage": "Text, icons, secondary buttons, the recorder panel in light.",
+        "alias": {
+          "pulseloop": "textPrimary"
+        }
+      },
+      {
+        "name": "muted",
+        "value": {
+          "light": "#5E5D63",
+          "dark": "#A8A7AD"
+        },
+        "usage": "Meta text, captions, row values. 5.9:1 on page in light.",
+        "alias": {
+          "pulseloop": "textSecondary"
+        }
+      },
+      {
+        "name": "line",
+        "value": {
+          "light": "#E2E2E4",
+          "dark": "#2C2B30"
+        },
+        "usage": "Hairlines under rows, field and chip borders. Never for text.",
+        "alias": {
+          "pulseloop": "borderSubtle"
+        }
+      },
+      {
+        "name": "mint",
+        "value": {
+          "light": "#43F3B7",
+          "dark": "#43F3B7"
+        },
+        "usage": "The one primary action per screen, the title highlighter, the active tab pill, progress chips, the 4dp frame. Text on it is ink.",
+        "alias": {
+          "pulseloop": "MINT"
+        }
+      },
+      {
+        "name": "on-mint",
+        "value": {
+          "light": "#033423",
+          "dark": "#033423"
+        },
+        "usage": "Small text on a mint fill (chips). 9:1 on mint.",
+        "alias": {
+          "pulseloop": "onAccent"
+        }
+      },
+      {
+        "name": "coral",
+        "value": {
+          "light": "#E9554D",
+          "dark": "#FF7A70"
+        },
+        "usage": "Stop button fill and the recording dot. Text and icons on it use on-coral.",
+        "alias": {
+          "pulseloop": "danger"
+        }
+      },
+      {
+        "name": "coral-text",
+        "value": {
+          "light": "#B8322A",
+          "dark": "#FF9A92"
+        },
+        "usage": "Alert text, destructive button text and outline, on page, surface or coral-soft."
+      },
+      {
+        "name": "coral-soft",
+        "value": {
+          "light": "#FDECEA",
+          "dark": "#3A1A17"
+        },
+        "usage": "Tint behind coral-text chips (Interrupted, Needs attention) so 12px text passes 4.5:1."
+      }
+    ],
+    "spacing": [
+      {
+        "name": "space-1",
+        "value": "4px",
+        "usage": "Icon gap, chip padding."
+      },
+      {
+        "name": "space-2",
+        "value": "8px",
+        "usage": "Inside a row, between label and value; under a caption."
+      },
+      {
+        "name": "space-3",
+        "value": "12px",
+        "usage": "Between stacked lines in one item; caption to its rows."
+      },
+      {
+        "name": "space-4",
+        "value": "16px",
+        "usage": "Row vertical padding; row inset inside a group; item vertical padding."
+      },
+      {
+        "name": "space-6",
+        "value": "24px",
+        "usage": "Page gutter on phones; between items in a group."
+      },
+      {
+        "name": "space-8",
+        "value": "32px",
+        "usage": "Page top under the header; page gutter on screens 600dp and wider."
+      },
+      {
+        "name": "space-10",
+        "value": "40px",
+        "usage": "Above a section caption. The only gap between sections."
+      },
+      {
+        "name": "space-12",
+        "value": "48px",
+        "usage": "Minimum control height and touch target."
+      },
+      {
+        "name": "space-16",
+        "value": "64px",
+        "usage": "Tab bar and large Record button height."
+      }
+    ],
+    "radius": [
+      {
+        "name": "radius-s",
+        "value": "4px",
+        "usage": "Buttons, chips, fields, monogram."
+      },
+      {
+        "name": "radius-m",
+        "value": "8px",
+        "usage": "Cards and the recorder panel."
+      },
+      {
+        "name": "radius-l",
+        "value": "16px",
+        "usage": "Pills: filter chips, tab pill, the app switch, sheet top corners."
+      },
+      {
+        "name": "radius-round",
+        "value": "999px",
+        "usage": "Play button and slider thumb."
+      }
+    ],
+    "size": [
+      {
+        "name": "frame",
+        "value": "4px",
+        "usage": "The mint border around every screen."
+      },
+      {
+        "name": "hairline",
+        "value": "1px",
+        "usage": "Row dividers."
+      }
+    ],
+    "motion": [
+      {
+        "name": "motion-standard",
+        "value": "150ms",
+        "usage": "Presses, colour changes, tab crossfades, small fades."
+      },
+      {
+        "name": "motion-emphasised",
+        "value": "250ms",
+        "usage": "Screens opening and closing, content rising in, sheets, the frame fading back to mint."
+      }
+    ],
+    "type": {
+      "family": "\"Ubuntu Mono\", ui-monospace, Menlo, monospace",
+      "faces": [
+        "ubuntu_mono.ttf (400)",
+        "ubuntu_mono_bold.ttf (700)",
+        "ubuntu_mono_bold_italic.ttf (700 italic)"
+      ],
+      "floor": 12
+    }
+  }
+}

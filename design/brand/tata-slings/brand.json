@@ -1,0 +1,199 @@
+{
+  "$comment": "The Tatá Slings brand (design/brand/tata-slings/brand.md): it swaps colour roles and the one type family of the layers that wear it, nothing else. Mechanism and limits: the core's brands rule (check_brands).",
+  "tata-slings": {
+    "name": "Tatá Slings",
+    "doc": "design/brand/tata-slings/brand.md",
+    "source": "tataslings.com.br, measured 2026-11-02: teal #5DC2BB (logo, buttons), navy #13293D (accent), Libre Franklin (the whole site). Pérola and Cereja are her fabric names.",
+    "type": {
+      "family": "\"Libre Franklin\", system-ui, sans-serif",
+      "faces": [
+        "libre_franklin_regular.ttf (400)",
+        "libre_franklin_semibold.ttf (600)",
+        "libre_franklin_bold.ttf (700)"
+      ],
+      "licence": "SIL Open Font License 1.1"
+    },
+    "color": [
+      {
+        "replaces": "page",
+        "value": {
+          "light": "#FBF5F1",
+          "dark": "#141017",
+          "night": "#0D0806"
+        },
+        "usage": "Pérola with a blush of Rosa Chá; plum-black at night."
+      },
+      {
+        "replaces": "surface",
+        "value": {
+          "light": "#FFFFFF",
+          "dark": "#1D1822",
+          "night": "#170F0B"
+        },
+        "usage": "White cards; plum-grey in dark."
+      },
+      {
+        "replaces": "ink",
+        "value": {
+          "light": "#2B2233",
+          "dark": "#F3EEF2",
+          "night": "#E9A25F"
+        },
+        "usage": "A warm plum-grey (0.7.0, was navy): softer than navy, still 14:1 on page."
+      },
+      {
+        "replaces": "muted",
+        "value": {
+          "light": "#6E6475",
+          "dark": "#B5AAB9",
+          "night": "#B67A47"
+        },
+        "usage": "Warm grey with a little plum."
+      },
+      {
+        "replaces": "line",
+        "value": {
+          "light": "#EEDFD8",
+          "dark": "#2E2734",
+          "night": "#2B1C14"
+        },
+        "usage": "A rosé hairline. Never text."
+      },
+      {
+        "replaces": "mint",
+        "value": {
+          "light": "#5DC2BB",
+          "dark": "#5DC2BB",
+          "night": "#E0A060"
+        },
+        "usage": "The brand teal (logo, site buttons) in the brand-accent role: one filled action per screen, the frame, the active tab. Fill only, never text (2.1:1 on white)."
+      },
+      {
+        "replaces": "on-mint",
+        "value": {
+          "light": "#2B2233",
+          "dark": "#141017",
+          "night": "#0D0806"
+        },
+        "usage": "Plum-grey on teal."
+      },
+      {
+        "replaces": "coral",
+        "value": {
+          "light": "#E07A6B",
+          "dark": "#FF9C8E",
+          "night": "#B5432E"
+        },
+        "usage": "Cereja, a fabric name. Stop and destructive fills; ink on it 5.1:1 (light)."
+      },
+      {
+        "replaces": "coral-text",
+        "value": {
+          "light": "#B5473A",
+          "dark": "#FF9C8E",
+          "night": "#E07A5A"
+        },
+        "usage": "Cereja as text. 5.0:1 on page, 4.6:1 on coral-soft (light)."
+      },
+      {
+        "replaces": "coral-soft",
+        "value": {
+          "light": "#FBE9E5",
+          "dark": "#3A2220",
+          "night": "#2A120C"
+        },
+        "usage": "The tint behind coral-text chips."
+      },
+      {
+        "replaces": "panel",
+        "value": {
+          "light": "#2E2238",
+          "dark": "#1A1320",
+          "night": "#120A07"
+        },
+        "usage": "The sleep panel: a plum night (0.7.0, was navy)."
+      },
+      {
+        "replaces": "on-panel",
+        "value": {
+          "light": "#FBF5F1",
+          "dark": "#F3EEF2",
+          "night": "#E9A25F"
+        },
+        "usage": "Pérola on the plum night."
+      },
+      {
+        "replaces": "on-panel-muted",
+        "value": {
+          "light": "#B9AFC2",
+          "dark": "#B5AAB9",
+          "night": "#B67A47"
+        },
+        "usage": "Secondary text on the plum night."
+      },
+      {
+        "replaces": "snackbar",
+        "value": {
+          "light": "#2B2233",
+          "dark": "#F3EEF2",
+          "night": "#E9A25F"
+        },
+        "usage": "Plum-grey on light, near-white on dark."
+      },
+      {
+        "replaces": "snackbar-action",
+        "value": {
+          "light": "#5DC2BB",
+          "dark": "#1E6E68",
+          "night": "#5A2A10"
+        },
+        "usage": "Teal on the plum snackbar; deep teal on the dark theme's light one."
+      },
+      {
+        "replaces": "fab",
+        "value": {
+          "light": "#8A3566",
+          "dark": "#E59AC6",
+          "night": "#B8642F"
+        },
+        "usage": "Amora, the berry fabric: the Log button. Warm and easy to find, and not the teal of the one action."
+      },
+      {
+        "replaces": "on-fab",
+        "value": {
+          "light": "#FFF7FA",
+          "dark": "#2B1022",
+          "night": "#0D0806"
+        },
+        "usage": "On Amora."
+      },
+      {
+        "replaces": "selected",
+        "value": {
+          "light": "#F6DDE3",
+          "dark": "#4A2D40",
+          "night": "#3A2416"
+        },
+        "usage": "A blush of Rosa Chá and Amora behind the active tab and a picked chip; the ink on it is 12:1."
+      },
+      {
+        "replaces": "on-selected",
+        "value": {
+          "light": "#2B2233",
+          "dark": "#F3EEF2",
+          "night": "#E9A25F"
+        },
+        "usage": "Ink on the blush."
+      },
+      {
+        "replaces": "frame-line",
+        "value": {
+          "light": "#F1D9D3",
+          "dark": "#2A2030",
+          "night": "#241610"
+        },
+        "usage": "A soft Rosa Chá hem round the screen; plum at night."
+      }
+    ]
+  }
+}

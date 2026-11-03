@@ -1,0 +1,922 @@
+{
+  "$comment": "Cochilo's own tokens (design/product/cochilo/README.md): the core tokens it pulls with \"@\", plus what only Cochilo has (kind colours, the Log button, the night light, sleep's bigger round…), and the contrast pairs it must pass in all three themes.",
+  "layer": {
+    "$comment": "Cochilo, the baby sleep tracker (gabrielbr/Cochilo), Jetpack Compose (br.gabriel.cochilo.ui.theme). Light and dark. Type roles, sizes and spacing copy uikit, so the Compose kit reads like the Views kit (the D-1 direction of travel). Fairy mode is not carried: Cochilo's profile is the baby, not the person holding the phone (D-12). Dressed as a Tatá Slings product (brands.tata-slings, docs/brands.md). From 0.7.0 its data colours are her fabrics, each kind's icon sits in a soft round of its colour, and its corners are rounder (docs/brands.md, \"Tecidos\").",
+    "consumers": [
+      "Cochilo (Cochilo/app)"
+    ],
+    "themes": [
+      "light",
+      "dark",
+      "night"
+    ],
+    "theme_fallback": {
+      "night": "dark"
+    },
+    "brand": "tata-slings",
+    "color": [
+      "@page",
+      "@surface",
+      "@ink",
+      "@muted",
+      "@line",
+      "@mint",
+      "@on-mint",
+      "@coral",
+      "@coral-text",
+      "@coral-soft",
+      {
+        "name": "panel",
+        "pair": true,
+        "value": {
+          "light": "#17161A",
+          "dark": "#000000"
+        },
+        "usage": "The sleep panel while the baby sleeps: a dark block, so the screen gets dimmer, not brighter, at night."
+      },
+      {
+        "name": "on-panel",
+        "pair": true,
+        "value": {
+          "light": "#FFFFFF",
+          "dark": "#F2F2F2"
+        },
+        "usage": "Text and the timer on panel."
+      },
+      {
+        "name": "on-panel-muted",
+        "value": {
+          "light": "#B9B8BE",
+          "dark": "#A8A7AD"
+        },
+        "usage": "Secondary text on panel."
+      },
+      {
+        "name": "snackbar",
+        "value": "{ink}",
+        "usage": "Snackbar ground; its text is page, its action is snackbar-action."
+      },
+      {
+        "name": "snackbar-action",
+        "pair": true,
+        "value": {
+          "light": "#43F3B7",
+          "dark": "#0A7A55"
+        },
+        "usage": "The snackbar's action, same values as uikit's: mint on the dark light-theme ground, deep mint on the light dark-theme ground (4.8:1)."
+      },
+      {
+        "name": "fab",
+        "value": "{ink}",
+        "usage": "The Log button, the main action in the thumb's corner on every tab. Not the screen's one accent action (that stays mint): a second, quieter fill. Its icon is on-fab."
+      },
+      {
+        "name": "on-fab",
+        "value": "{page}",
+        "usage": "The plus on the Log button, and text on a highlighted Log menu row."
+      },
+      {
+        "name": "selected",
+        "value": "{mint}",
+        "usage": "What is picked in a set that isn't an action: the active tab's pill, a picked filter chip. Under the brand a soft blush, so teal stays the one action (0.11.0)."
+      },
+      {
+        "name": "on-selected",
+        "value": "{on-mint}",
+        "usage": "Icon and text on selected."
+      },
+      {
+        "name": "frame-line",
+        "value": "{mint}",
+        "usage": "The frame round the screen. Under the brand a soft blush edge, like a fabric hem, not a teal rule (0.11.0)."
+      },
+      {
+        "name": "event-night",
+        "value": {
+          "light": "#5B4B8A",
+          "dark": "#B7A6E6",
+          "night": "#D29560"
+        },
+        "usage": "Data: night sleep. Lavanda, one of her fabrics. On the timeline, the charts and as the line of its kind's icon. Always beside a word."
+      },
+      {
+        "name": "event-nap",
+        "value": {
+          "light": "#3D6FA3",
+          "dark": "#8FB8E8",
+          "night": "#B8703C"
+        },
+        "usage": "Data: naps. Imensidão blue, so a nap and a night are told apart by hue as well as by the word. On the timeline, the charts and as the line of its kind's icon. Always beside a word."
+      },
+      {
+        "name": "event-feed",
+        "value": {
+          "light": "#B0503F",
+          "dark": "#F0A898",
+          "night": "#E0805C"
+        },
+        "usage": "Data: feeds (breast, bottle, solids). Rosa Chá, deepened to be seen. On the timeline, the charts and as the line of its kind's icon. Always beside a word."
+      },
+      {
+        "name": "event-pump",
+        "value": {
+          "light": "#8A3566",
+          "dark": "#E59AC6",
+          "night": "#C76B5A"
+        },
+        "usage": "Data: pumping sessions. Amora. On the timeline, the charts and as the line of its kind's icon. Always beside a word."
+      },
+      {
+        "name": "event-diaper",
+        "value": {
+          "light": "#3E7350",
+          "dark": "#8CCB9F",
+          "night": "#A88A4E"
+        },
+        "usage": "Data: diaper changes. Trevo. On the timeline, the charts and as the line of its kind's icon. Always beside a word."
+      },
+      {
+        "name": "event-daylight",
+        "value": {
+          "light": "#8C6A00",
+          "dark": "#FFD25C",
+          "night": "#E2B25A"
+        },
+        "usage": "Data: time outdoors in daylight. Mel. On the timeline, the charts and as the line of its kind's icon. Always beside a word."
+      },
+      {
+        "name": "event-routine",
+        "value": {
+          "light": "#1E6E68",
+          "dark": "#7FD6CF",
+          "night": "#9E7A55"
+        },
+        "usage": "Data: routines (bath, bedtime). Turquesa, the brand teal deepened. On the timeline, the charts and as the line of its kind's icon. Always beside a word."
+      },
+      {
+        "name": "event-medicine",
+        "value": {
+          "light": "#A3324A",
+          "dark": "#FF94A8",
+          "night": "#D06A4E"
+        },
+        "usage": "Data: medicine. Cereja. On the timeline, the charts and as the line of its kind's icon. Always beside a word."
+      },
+      {
+        "name": "event-note",
+        "value": {
+          "light": "#7A5A44",
+          "dark": "#D6B9A2",
+          "night": "#B08A70"
+        },
+        "usage": "Data: notes. Capuccino. On the timeline, the charts and as the line of its kind's icon. Always beside a word."
+      },
+      {
+        "name": "event-night-soft",
+        "value": {
+          "light": "#E4DDF2",
+          "dark": "#3A3158",
+          "night": "#33200F"
+        },
+        "usage": "The round behind the night icon (a soft tint of event-night). Never text, never alone."
+      },
+      {
+        "name": "event-nap-soft",
+        "value": {
+          "light": "#D9E6F3",
+          "dark": "#273B55",
+          "night": "#2E1C10"
+        },
+        "usage": "The round behind the nap icon (a soft tint of event-nap). Never text, never alone."
+      },
+      {
+        "name": "event-feed-soft",
+        "value": {
+          "light": "#F6D9D1",
+          "dark": "#563029",
+          "night": "#36190F"
+        },
+        "usage": "The round behind the feed icon (a soft tint of event-feed). Never text, never alone."
+      },
+      {
+        "name": "event-pump-soft",
+        "value": {
+          "light": "#F1D5E4",
+          "dark": "#522A47",
+          "night": "#331814"
+        },
+        "usage": "The round behind the pump icon (a soft tint of event-pump). Never text, never alone."
+      },
+      {
+        "name": "event-diaper-soft",
+        "value": {
+          "light": "#D6E9DB",
+          "dark": "#284634",
+          "night": "#2A2312"
+        },
+        "usage": "The round behind the diaper icon (a soft tint of event-diaper). Never text, never alone."
+      },
+      {
+        "name": "event-daylight-soft",
+        "value": {
+          "light": "#F5E6BC",
+          "dark": "#4A3C17",
+          "night": "#33260E"
+        },
+        "usage": "The round behind the daylight icon (a soft tint of event-daylight). Never text, never alone."
+      },
+      {
+        "name": "event-routine-soft",
+        "value": {
+          "light": "#D3EFEC",
+          "dark": "#1E4744",
+          "night": "#2B2116"
+        },
+        "usage": "The round behind the routine icon (a soft tint of event-routine). Never text, never alone."
+      },
+      {
+        "name": "event-medicine-soft",
+        "value": {
+          "light": "#F6D3DA",
+          "dark": "#572934",
+          "night": "#36160F"
+        },
+        "usage": "The round behind the medicine icon (a soft tint of event-medicine). Never text, never alone."
+      },
+      {
+        "name": "event-note-soft",
+        "value": {
+          "light": "#EBDFD4",
+          "dark": "#47392E",
+          "night": "#2E2219"
+        },
+        "usage": "The round behind the note icon (a soft tint of event-note). Never text, never alone."
+      },
+      {
+        "name": "illustration-skin-1",
+        "value": {
+          "light": "#F6D7C3",
+          "dark": "#F6D7C3"
+        },
+        "usage": "Illustration (the baby avatar, docs/components.md): Skin tone 1, the lightest. The same in both themes: a baby doesn't change colour at night. Never UI state, never text."
+      },
+      {
+        "name": "illustration-skin-2",
+        "value": {
+          "light": "#EBC1A0",
+          "dark": "#EBC1A0"
+        },
+        "usage": "Illustration (the baby avatar, docs/components.md): Skin tone 2. The same in both themes: a baby doesn't change colour at night. Never UI state, never text."
+      },
+      {
+        "name": "illustration-skin-3",
+        "value": {
+          "light": "#D7A27E",
+          "dark": "#D7A27E"
+        },
+        "usage": "Illustration (the baby avatar, docs/components.md): Skin tone 3. The same in both themes: a baby doesn't change colour at night. Never UI state, never text."
+      },
+      {
+        "name": "illustration-skin-4",
+        "value": {
+          "light": "#B97F5A",
+          "dark": "#B97F5A"
+        },
+        "usage": "Illustration (the baby avatar, docs/components.md): Skin tone 4. The same in both themes: a baby doesn't change colour at night. Never UI state, never text."
+      },
+      {
+        "name": "illustration-skin-5",
+        "value": {
+          "light": "#8D5A3B",
+          "dark": "#8D5A3B"
+        },
+        "usage": "Illustration (the baby avatar, docs/components.md): Skin tone 5. The same in both themes: a baby doesn't change colour at night. Never UI state, never text."
+      },
+      {
+        "name": "illustration-skin-6",
+        "value": {
+          "light": "#5E3A26",
+          "dark": "#5E3A26"
+        },
+        "usage": "Illustration (the baby avatar, docs/components.md): Skin tone 6, the deepest. The same in both themes: a baby doesn't change colour at night. Never UI state, never text."
+      },
+      {
+        "name": "illustration-hair-black",
+        "value": {
+          "light": "#2A2220",
+          "dark": "#2A2220"
+        },
+        "usage": "Illustration (the baby avatar, docs/components.md): Hair: black. The same in both themes: a baby doesn't change colour at night. Never UI state, never text."
+      },
+      {
+        "name": "illustration-hair-brown",
+        "value": {
+          "light": "#6B4430",
+          "dark": "#6B4430"
+        },
+        "usage": "Illustration (the baby avatar, docs/components.md): Hair: brown. The same in both themes: a baby doesn't change colour at night. Never UI state, never text."
+      },
+      {
+        "name": "illustration-hair-blond",
+        "value": {
+          "light": "#D9B26A",
+          "dark": "#D9B26A"
+        },
+        "usage": "Illustration (the baby avatar, docs/components.md): Hair: blond. The same in both themes: a baby doesn't change colour at night. Never UI state, never text."
+      },
+      {
+        "name": "illustration-hair-red",
+        "value": {
+          "light": "#B45A32",
+          "dark": "#B45A32"
+        },
+        "usage": "Illustration (the baby avatar, docs/components.md): Hair: red. The same in both themes: a baby doesn't change colour at night. Never UI state, never text."
+      },
+      {
+        "name": "illustration-catchlight",
+        "value": {
+          "light": "#FFFFFF",
+          "dark": "#FFFFFF"
+        },
+        "usage": "Illustration (the baby avatar): the small light in an open eye, so the eyes read on every skin tone. The same in both themes."
+      },
+      {
+        "name": "illustration-cheek",
+        "value": {
+          "light": "#F2A7A0",
+          "dark": "#F2A7A0"
+        },
+        "usage": "Illustration (the baby avatar, docs/components.md): The cheeks' blush. The same in both themes: a baby doesn't change colour at night. Never UI state, never text."
+      },
+      {
+        "name": "illustration-face-line",
+        "value": {
+          "light": "#241A1C",
+          "dark": "#241A1C"
+        },
+        "usage": "Illustration (the baby avatar, docs/components.md): Eyes, mouth and the drawing's line, on any skin tone. The same in both themes: a baby doesn't change colour at night. Never UI state, never text."
+      },
+      {
+        "name": "illustration-wrap",
+        "value": {
+          "light": "#E8B4A8",
+          "dark": "#E8B4A8"
+        },
+        "usage": "Illustration (the baby avatar, docs/components.md): The Rosa Chá sling the baby is wrapped in. The same in both themes: a baby doesn't change colour at night. Never UI state, never text."
+      },
+      {
+        "name": "illustration-wrap-edge",
+        "value": {
+          "light": "#C98476",
+          "dark": "#C98476"
+        },
+        "usage": "Illustration (the baby avatar, docs/components.md): The sling's folds. The same in both themes: a baby doesn't change colour at night. Never UI state, never text."
+      },
+      {
+        "name": "illustration-bow",
+        "value": {
+          "light": "#8A3566",
+          "dark": "#8A3566"
+        },
+        "usage": "Illustration (the baby avatar, docs/components.md): Amora: the bow, when the parent chose “girl”. The same in both themes: a baby doesn't change colour at night. Never UI state, never text."
+      }
+    ],
+    "type": [
+      {
+        "name": "Display",
+        "styles": [
+          {
+            "name": "display",
+            "fontSize": "30px",
+            "lineHeight": "36px",
+            "fontWeight": 600
+          },
+          {
+            "name": "timer",
+            "fontSize": "56px",
+            "lineHeight": "64px",
+            "fontWeight": 700,
+            "letterSpacing": "-1px"
+          }
+        ]
+      },
+      {
+        "name": "Text",
+        "styles": [
+          {
+            "name": "title",
+            "fontSize": "22px",
+            "lineHeight": "28px",
+            "fontWeight": 700
+          },
+          {
+            "name": "label",
+            "fontSize": "16px",
+            "lineHeight": "22px",
+            "fontWeight": 700
+          },
+          {
+            "name": "body",
+            "fontSize": "16px",
+            "lineHeight": "24px",
+            "fontWeight": 400
+          },
+          {
+            "name": "body-small",
+            "fontSize": "14px",
+            "lineHeight": "22px",
+            "fontWeight": 400
+          },
+          {
+            "name": "meta",
+            "fontSize": "13px",
+            "lineHeight": "20px",
+            "fontWeight": 400
+          },
+          {
+            "name": "caption",
+            "fontSize": "13px",
+            "lineHeight": "18px",
+            "fontWeight": 600,
+            "letterSpacing": "0px"
+          }
+        ]
+      }
+    ],
+    "spacing": [
+      "@space-1",
+      "@space-2",
+      "@space-3",
+      "@space-4",
+      "@space-6",
+      "@space-8",
+      "@space-10",
+      "@space-12",
+      "@space-16"
+    ],
+    "radius": [
+      {
+        "name": "radius-s",
+        "value": "8px",
+        "usage": "Buttons, chips, fields, the monogram: the system's radius-m, so Cochilo is soft like fabric (0.7.0)."
+      },
+      {
+        "name": "radius-m",
+        "value": "16px",
+        "usage": "Cards and the sleep panel: the system's radius-l."
+      },
+      "@radius-l",
+      "@radius-round"
+    ],
+    "size": [
+      "@frame",
+      {
+        "name": "header",
+        "value": "56px",
+        "usage": "Header height."
+      },
+      {
+        "name": "tabbar",
+        "value": "64px",
+        "usage": "Tab bar height."
+      },
+      {
+        "name": "button",
+        "value": "52px",
+        "usage": "Buttons and fields."
+      },
+      {
+        "name": "monogram",
+        "value": "32px",
+        "usage": "The CO_ mark in the header."
+      },
+      "@hairline",
+      {
+        "name": "row-min",
+        "value": "56px",
+        "usage": "Minimum row height: a one-handed tap at 3am."
+      },
+      {
+        "name": "timeline",
+        "value": "24px",
+        "usage": "Height of the 24-hour timeline bar and of one day in the actogram."
+      },
+      {
+        "name": "kind-badge",
+        "value": "36px",
+        "usage": "The round of colour behind an entry kind's icon (the icon stays 22dp inside)."
+      },
+      {
+        "name": "kind-badge-lead",
+        "value": "44px",
+        "usage": "Sleep's round, a size up from kind-badge: sleep is what Cochilo is for, so it leads every list, menu and timeline (0.9.0)."
+      },
+      {
+        "name": "outline",
+        "value": "2px",
+        "usage": "A strong outline: the option used last time (in its kind's colour) and the picked fabric swatch."
+      },
+      {
+        "name": "avatar",
+        "value": "112px",
+        "usage": "The baby avatar where it is the subject (onboarding, the look picker, the empty Today, celebrations)."
+      },
+      {
+        "name": "rail",
+        "value": "80px",
+        "usage": "Navigation rail width: the tab bar stands on its side from the medium width (0.21.0)."
+      },
+      {
+        "name": "content-max",
+        "value": "600px",
+        "usage": "The widest a screen's column grows on a tablet or an unfolded phone, so lines stay readable and the thumb's reach is kept."
+      },
+      {
+        "name": "width-medium",
+        "value": "600px",
+        "usage": "Window width from which the rail replaces the tab bar (Android's medium window class)."
+      },
+      {
+        "name": "width-expanded",
+        "value": "840px",
+        "usage": "Window width from which Today and a second tab sit side by side (Android's expanded window class)."
+      }
+    ],
+    "motion": [
+      "@motion-standard",
+      "@motion-emphasised",
+      {
+        "name": "motion-stagger",
+        "value": "35ms",
+        "usage": "The delay between one item and the next when a list opens in a cascade (the Log menu), nearest the finger first. Each item still moves for motion-emphasised; snaps with Remove animations."
+      }
+    ]
+  },
+  "contrast": [
+    {
+      "fg": "ink",
+      "bg": "page",
+      "min": 4.5,
+      "layers": [
+        "cochilo"
+      ]
+    },
+    {
+      "fg": "ink",
+      "bg": "surface",
+      "min": 4.5,
+      "layers": [
+        "cochilo"
+      ]
+    },
+    {
+      "fg": "muted",
+      "bg": "page",
+      "min": 4.5,
+      "layers": [
+        "cochilo"
+      ]
+    },
+    {
+      "fg": "muted",
+      "bg": "surface",
+      "min": 4.5,
+      "layers": [
+        "cochilo"
+      ]
+    },
+    {
+      "fg": "on-mint",
+      "bg": "mint",
+      "min": 4.5,
+      "layers": [
+        "cochilo"
+      ]
+    },
+    {
+      "fg": "coral-text",
+      "bg": "page",
+      "min": 4.5,
+      "layers": [
+        "cochilo"
+      ]
+    },
+    {
+      "fg": "coral-text",
+      "bg": "surface",
+      "min": 4.5,
+      "layers": [
+        "cochilo"
+      ]
+    },
+    {
+      "fg": "coral-text",
+      "bg": "coral-soft",
+      "min": 4.5,
+      "layers": [
+        "cochilo"
+      ]
+    },
+    {
+      "fg": "on-panel",
+      "bg": "panel",
+      "min": 4.5,
+      "layers": [
+        "cochilo"
+      ]
+    },
+    {
+      "fg": "on-panel-muted",
+      "bg": "panel",
+      "min": 4.5,
+      "layers": [
+        "cochilo"
+      ]
+    },
+    {
+      "fg": "page",
+      "bg": "snackbar",
+      "min": 4.5,
+      "layers": [
+        "cochilo"
+      ]
+    },
+    {
+      "fg": "snackbar-action",
+      "bg": "snackbar",
+      "min": 4.5,
+      "layers": [
+        "cochilo"
+      ],
+      "note": "Snackbar action (was mint, audit A-2)."
+    },
+    {
+      "fg": "event-night",
+      "bg": "surface",
+      "min": 3.0,
+      "layers": [
+        "cochilo"
+      ],
+      "note": "Graphic (a timeline block), WCAG 1.4.11."
+    },
+    {
+      "fg": "event-night",
+      "bg": "page",
+      "min": 3.0,
+      "layers": [
+        "cochilo"
+      ],
+      "note": "Graphic (a timeline block), WCAG 1.4.11."
+    },
+    {
+      "fg": "event-nap",
+      "bg": "surface",
+      "min": 3.0,
+      "layers": [
+        "cochilo"
+      ],
+      "note": "Graphic (a timeline block), WCAG 1.4.11."
+    },
+    {
+      "fg": "event-nap",
+      "bg": "page",
+      "min": 3.0,
+      "layers": [
+        "cochilo"
+      ],
+      "note": "Graphic (a timeline block), WCAG 1.4.11."
+    },
+    {
+      "fg": "event-feed",
+      "bg": "surface",
+      "min": 3.0,
+      "layers": [
+        "cochilo"
+      ],
+      "note": "Graphic (a timeline block), WCAG 1.4.11."
+    },
+    {
+      "fg": "event-feed",
+      "bg": "page",
+      "min": 3.0,
+      "layers": [
+        "cochilo"
+      ],
+      "note": "Graphic (a timeline block), WCAG 1.4.11."
+    },
+    {
+      "fg": "event-pump",
+      "bg": "surface",
+      "min": 3.0,
+      "layers": [
+        "cochilo"
+      ],
+      "note": "Graphic (a timeline block), WCAG 1.4.11."
+    },
+    {
+      "fg": "event-pump",
+      "bg": "page",
+      "min": 3.0,
+      "layers": [
+        "cochilo"
+      ],
+      "note": "Graphic (a timeline block), WCAG 1.4.11."
+    },
+    {
+      "fg": "event-diaper",
+      "bg": "surface",
+      "min": 3.0,
+      "layers": [
+        "cochilo"
+      ],
+      "note": "Graphic (a timeline block), WCAG 1.4.11."
+    },
+    {
+      "fg": "event-diaper",
+      "bg": "page",
+      "min": 3.0,
+      "layers": [
+        "cochilo"
+      ],
+      "note": "Graphic (a timeline block), WCAG 1.4.11."
+    },
+    {
+      "fg": "event-daylight",
+      "bg": "surface",
+      "min": 3.0,
+      "layers": [
+        "cochilo"
+      ],
+      "note": "Graphic (a timeline block), WCAG 1.4.11."
+    },
+    {
+      "fg": "event-daylight",
+      "bg": "page",
+      "min": 3.0,
+      "layers": [
+        "cochilo"
+      ],
+      "note": "Graphic (a timeline block), WCAG 1.4.11."
+    },
+    {
+      "fg": "on-fab",
+      "bg": "fab",
+      "min": 4.5,
+      "layers": [
+        "cochilo"
+      ]
+    },
+    {
+      "fg": "fab",
+      "bg": "page",
+      "min": 3.0,
+      "layers": [
+        "cochilo"
+      ],
+      "note": "Graphic (the Log button), WCAG 1.4.11."
+    },
+    {
+      "fg": "event-routine",
+      "bg": "surface",
+      "min": 3.0,
+      "layers": [
+        "cochilo"
+      ],
+      "note": "Graphic (a timeline mark, an icon line), WCAG 1.4.11."
+    },
+    {
+      "fg": "event-routine",
+      "bg": "page",
+      "min": 3.0,
+      "layers": [
+        "cochilo"
+      ],
+      "note": "Graphic (a timeline mark, an icon line), WCAG 1.4.11."
+    },
+    {
+      "fg": "event-medicine",
+      "bg": "surface",
+      "min": 3.0,
+      "layers": [
+        "cochilo"
+      ],
+      "note": "Graphic (a timeline mark, an icon line), WCAG 1.4.11."
+    },
+    {
+      "fg": "event-medicine",
+      "bg": "page",
+      "min": 3.0,
+      "layers": [
+        "cochilo"
+      ],
+      "note": "Graphic (a timeline mark, an icon line), WCAG 1.4.11."
+    },
+    {
+      "fg": "event-note",
+      "bg": "surface",
+      "min": 3.0,
+      "layers": [
+        "cochilo"
+      ],
+      "note": "Graphic (a timeline mark, an icon line), WCAG 1.4.11."
+    },
+    {
+      "fg": "event-note",
+      "bg": "page",
+      "min": 3.0,
+      "layers": [
+        "cochilo"
+      ],
+      "note": "Graphic (a timeline mark, an icon line), WCAG 1.4.11."
+    },
+    {
+      "fg": "event-night",
+      "bg": "event-night-soft",
+      "min": 3.0,
+      "layers": [
+        "cochilo"
+      ],
+      "note": "The icon's line on its round, WCAG 1.4.11."
+    },
+    {
+      "fg": "event-nap",
+      "bg": "event-nap-soft",
+      "min": 3.0,
+      "layers": [
+        "cochilo"
+      ],
+      "note": "The icon's line on its round, WCAG 1.4.11."
+    },
+    {
+      "fg": "event-feed",
+      "bg": "event-feed-soft",
+      "min": 3.0,
+      "layers": [
+        "cochilo"
+      ],
+      "note": "The icon's line on its round, WCAG 1.4.11."
+    },
+    {
+      "fg": "event-pump",
+      "bg": "event-pump-soft",
+      "min": 3.0,
+      "layers": [
+        "cochilo"
+      ],
+      "note": "The icon's line on its round, WCAG 1.4.11."
+    },
+    {
+      "fg": "event-diaper",
+      "bg": "event-diaper-soft",
+      "min": 3.0,
+      "layers": [
+        "cochilo"
+      ],
+      "note": "The icon's line on its round, WCAG 1.4.11."
+    },
+    {
+      "fg": "event-daylight",
+      "bg": "event-daylight-soft",
+      "min": 3.0,
+      "layers": [
+        "cochilo"
+      ],
+      "note": "The icon's line on its round, WCAG 1.4.11."
+    },
+    {
+      "fg": "event-routine",
+      "bg": "event-routine-soft",
+      "min": 3.0,
+      "layers": [
+        "cochilo"
+      ],
+      "note": "The icon's line on its round, WCAG 1.4.11."
+    },
+    {
+      "fg": "event-medicine",
+      "bg": "event-medicine-soft",
+      "min": 3.0,
+      "layers": [
+        "cochilo"
+      ],
+      "note": "The icon's line on its round, WCAG 1.4.11."
+    },
+    {
+      "fg": "event-note",
+      "bg": "event-note-soft",
+      "min": 3.0,
+      "layers": [
+        "cochilo"
+      ],
+      "note": "The icon's line on its round, WCAG 1.4.11."
+    },
+    {
+      "fg": "on-selected",
+      "bg": "selected",
+      "min": 4.5,
+      "layers": [
+        "cochilo"
+      ]
+    }
+  ]
+}
