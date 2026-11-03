@@ -69,7 +69,7 @@ def colour_map(t, layer_name):
         return v
 
     # A theme a token doesn't spell out falls back to another (layer "theme_fallback", e.g.
-    # Cochilo's night light falls back to dark), so a theme only lists the roles it changes.
+    # a night theme that falls back to dark), so a theme only lists the roles it changes.
     fallback = layer.get("theme_fallback", {})
 
     def filled(v):

@@ -7,11 +7,12 @@
 Outputs (commit them with the tokens change):
   generated/uikit/UiTokens.java         drop-in for NotTheOmiAIApp ui-kit (br.gabriel.ui)
   generated/pulseloop/GTokens.kt        Compose values for PulseLoop (com.pulseloop.ui.theme)
-  generated/cochilo/CTokens.kt          Compose values for Cochilo, light + dark (br.gabriel.cochilo.ui.theme)
   generated/web/uikit.css               CSS custom properties, light + dark, for prototypes
   generated/web/pulseloop.css           CSS custom properties, dark
-  generated/web/cochilo.css             CSS custom properties, light + dark
   DESIGN.md                             the YAML frontmatter only; the prose is hand-written
+
+A product with its own layer and brand in its own repo (docs/products.md) calls compose_kt() and
+css() from its build with that layer; nothing for it is written here.
 """
 import pathlib
 import sys
@@ -117,23 +118,24 @@ def pulseloop_kt(t):
     return "\n".join(o) + "\n"
 
 
-# ---- cochilo: Kotlin / Compose, light + dark -----------------------------------------------------
+# ---- Compose (Kotlin) for a product layer, every theme it ships ----------------------------------
 
-def cochilo_kt(t):
-    r = resolve(t, "cochilo")
-    layer = t["layers"]["cochilo"]
-    colours = colour_map(t, "cochilo")
+def compose_kt(t, layer_name, package, object_name, intro):
+    """A product's Compose tokens object (docs/products.md): one Palette per theme, then Spacing,
+    Radius, Size, Motion, the Brand it wears (if any) and Type. A product built on this system
+    (e.g. Cochilo, in its own repo) calls this from its own build with its layer; [intro] is the
+    object's doc comment, one line per entry."""
+    r = resolve(t, layer_name)
+    layer = t["layers"][layer_name]
+    colours = colour_map(t, layer_name)
     usage = {tok["name"]: tok.get("usage", "") for tok in r["color"]}
-    b = brand(t, "cochilo")
-    for n, u in brand_usage(t, "cochilo").items():
+    b = brand(t, layer_name)
+    for n, u in brand_usage(t, layer_name).items():
         usage[n] = f"{b['name']}: {u}"
-    o = [f"// {HEADER.format(v=t['version'])}", "package br.gabriel.cochilo.ui.theme", "",
+    o = [f"// {HEADER.format(v=t['version'])}", f"package {package}", "",
          "import androidx.compose.ui.graphics.Color", "import androidx.compose.ui.unit.dp", "",
-         "/**",
-         " * Gabriel Design System values for Cochilo. Screens read colours through CochiloTheme.colors,",
-         " * which picks Light or Dark; sizes are dp, type sizes sp, durations ms.",
-         " */",
-         "object CTokens {",
+         "/**", *[f" * {line}" for line in intro], " */",
+         f"object {object_name} {{",
          "    /** One theme's colours. Every name exists in both themes. */",
          "    class Palette(",
          ]
@@ -269,8 +271,6 @@ def outputs(t):
         ROOT / "generated/pulseloop/GTokens.kt": pulseloop_kt(t),
         ROOT / "generated/web/uikit.css": css(t, "uikit"),
         ROOT / "generated/web/pulseloop.css": css(t, "pulseloop"),
-        ROOT / "generated/cochilo/CTokens.kt": cochilo_kt(t),
-        ROOT / "generated/web/cochilo.css": css(t, "cochilo"),
         design: with_frontmatter(body, design_frontmatter(t)),
     }
 

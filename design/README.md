@@ -13,7 +13,7 @@ is split by who owns each decision:
 | **Product** | Cochilo's own tokens (kind colours, the Log button, the night light theme, sleep's bigger round…), its contrast pairs, its components | [product/cochilo/](product/cochilo/) | Here |
 
 Until Cochilo 0.40.0 the brand and the product lived in the design system too, and every change
-went there as a patch (`../design-system/`). The owner decided (2026-11-03) that the boilerplate
+went there as a patch (the old `design-system/` folder, deleted in 0.41.1 once the design system released 0.28.0). The owner decided (2026-11-03) that the boilerplate
 stays generic and Gabriel-branded, and a partner's brand and a product's own pieces live with the
 product. The brand lives here, not in its own repo, until a second Tatá Slings product exists.
 
@@ -22,7 +22,7 @@ product. The brand lives here, not in its own repo, until a second Tatá Slings 
 1. **Could any of the owner's apps use it?** A new spacing step, a motion duration, a generic
    component (a link style, a checklist, a conversation pattern), an accessibility rule. That's
    **core**. Make it in the design system (a PR there), release it, then re-sync `core/`. If it
-   can't wait, note it in [UPSTREAM.md](UPSTREAM.md) and say so in the PR.
+   can't wait for a design-system release, say so in the PR and open that PR straight after.
 2. **Is it about Tatá Slings' look?** A brand colour value, the type family, the mark, a texture.
    That's **brand**: edit `brand/tata-slings/`.
 3. **Is it only Cochilo's?** A kind's colour, the Log button, the night light, a component only
@@ -68,6 +68,6 @@ The full token format is the core's: `core/scripts/tokens_lib.py`, and the desig
   [textures/](brand/tata-slings/textures/) with source and permission.
 - [product/cochilo/README.md](product/cochilo/README.md) and
   [components.md](product/cochilo/components.md): Cochilo's layer and its components.
-- [UPSTREAM.md](UPSTREAM.md): what still has to go into the design system, and the plan for that PR.
+- [UPSTREAM.md](UPSTREAM.md): the record of how the old patches went into the design system (done, 0.28.0).
 - [audits/](audits/): the design audits written in the design system for Cochilo (0.5.0 to
   0.27.0). New ones go in `../docs/audits/` with the release they belong to.

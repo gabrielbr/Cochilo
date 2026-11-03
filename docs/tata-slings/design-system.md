@@ -98,7 +98,7 @@ dark; the line on its soft round is ≥ 3.9:1, on the page ≥ 4.7:1):
 Icon sets looked at first: Phosphor duotone (MIT), IconPark TwoTone (Apache 2.0), Tabler (MIT,
 lines only), Fluent Emoji flat (MIT, illustrated). None has a diaper, a breast pump and a sling
 together, so Cochilo keeps the design system's own line set and gives it colour and a round.
-Design system 0.7.0 (patch `design-system/0002-…`), audit `audits/2026-11-02-v0.7.0-tecidos.md` there.
+Design system 0.7.0, audit `design/audits/2026-11-02-v0.7.0-tecidos.md` (the values are in `design/brand/tata-slings/` since 0.40.1).
 
 ### Brand palette (as first proposed; see 3a for what ships)
 

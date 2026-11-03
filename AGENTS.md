@@ -43,7 +43,8 @@ the rules; the short version:
     before opening that repo), release it, re-sync `design/core/` (`design/core/CORE.md`).
   - Is it about Tatá's look? It's **brand**: `design/brand/tata-slings/brand.json`.
   - Only Cochilo's? It's **product**: `design/product/cochilo/layer.json` and `components.md`.
-  - Never edit `design/core/` here. What still has to go upstream is in `design/UPSTREAM.md`.
+  - Never edit `design/core/` here. A core change is a design-system PR and release first (its
+    `docs/products.md`), then a re-sync here.
 - **Tokens only.** Every colour, size, radius, duration and type role comes from
   `ui/theme/CTokens.kt` (through `CochiloTheme.colors`, `CTokens.Spacing/Radius/Size`, `Type`).
   No literal dp, sp, ms or colour in a screen. If something is missing, add it to the right layer

@@ -6,7 +6,7 @@ the design system's `docs/components.md` at 0.27.0, moved here in Cochilo 0.40.1
 **Which rows are whose:**
 - A row that is generic (any app could use it: Frame, Header, Tab bar, Rail, Quiet link,
   Checklist, Conversation, Filter chips…) belongs to the **core**. Those changes go upstream
-  ([../../UPSTREAM.md](../../UPSTREAM.md)); this copy then follows the core.
+  as design-system PRs (its `docs/products.md`); this copy then follows the core.
 - A row only Cochilo has (Log button, Slide row, Kind icon, Last mark, Fabric frame and picker,
   Baby avatar, Celebration, Home widget, Earlier chips, the quick-settings tile, the expected
   window, drag to adjust, the cascade, asleep and awake, the Tatá note) is **Cochilo's**, and is

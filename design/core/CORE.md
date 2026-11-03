@@ -5,14 +5,17 @@ doesn't need the design system's repo to build.
 
 | | |
 |---|---|
-| Copied from | `gabrielbr/Gabriel-Deisgn-System`, version **0.27.0** |
-| What that is | The design system's `main` at `26e4f2d` (0.4.0), plus Cochilo's patches 0001–0024 (`../../design-system/`), applied locally at `cc86ad3` |
+| Copied from | `gabrielbr/Gabriel-Deisgn-System`, release **0.28.0** (`main` at `8623bc0`, its PR #6) |
 | Files | `core.json` (the `core` section of `tokens/tokens.json`); `scripts/tokens_lib.py`, `gen_tokens.py`, `check_tokens.py` (unchanged copies) |
-| Copied on | 2026-11-03 (Cochilo 0.40.1) |
+| Copied on | 2026-11-03 (Cochilo 0.41.1) |
 
-**Not yet an upstream release.** 0.27.0 exists only with Cochilo's patches applied: the design
-system's own `main` is still at 0.4.0. [../UPSTREAM.md](../UPSTREAM.md) is the plan to fix that.
-After that PR is merged and released, re-sync from the released tag and update this table.
+0.28.0 is the design system's first release made this way: it took in the generic parts of
+Cochilo's old patches, and dropped Cochilo's layer and the Tatá brand, which live here now. Its
+`docs/products.md` describes this setup from the design system's side.
+
+History: Cochilo 0.40.1 vendored a local 0.27.0, built from the design system's `main` (0.4.0)
+plus Cochilo's 24 patches. That folder (`design-system/`) was deleted in 0.41.1 once 0.28.0 was
+released; the patches are in git history.
 
 ## Rules
 
