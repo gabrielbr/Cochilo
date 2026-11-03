@@ -38,6 +38,13 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.semantics.customActions
+import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
@@ -163,13 +170,57 @@ private fun androidx.compose.foundation.layout.BoxScope.HourLabel(text: String, 
  * A lasting entry (sleep, a feed) is a bar as tall as [barHeight]; an instant is a dot.
  */
 @Composable
-fun TimelineRow(time: String, color: Color, barHeight: Dp?, label: String, meta: String?, onClick: () -> Unit, icon: (@Composable () -> Unit)? = null, prominent: Boolean = false) {
+fun TimelineRow(
+    time: String, color: Color, barHeight: Dp?, label: String, meta: String?, onClick: () -> Unit,
+    icon: (@Composable () -> Unit)? = null, prominent: Boolean = false,
+    /** A finished sleep: press, hold and drag to move its end (docs/flows.md). */
+    adjust: TimelineAdjust? = null,
+    /** For screenshots: show the row as if dragged this many steps. */
+    previewSteps: Int? = null,
+) {
     val c = CochiloTheme.colors
     val src = remember { MutableInteractionSource() }
+    var dragPx by remember { androidx.compose.runtime.mutableFloatStateOf(0f) }
+    var holding by remember { androidx.compose.runtime.mutableStateOf(previewSteps != null) }
+    val stepPx = with(LocalDensity.current) { ADJUST_STEP.toPx() }
+    val steps = previewSteps ?: br.gabriel.cochilo.domain.Adjust.steps(dragPx, stepPx)
+    val haptic = androidx.compose.ui.platform.LocalHapticFeedback.current
+    val gesture = if (adjust == null) Modifier else Modifier
+        .pointerInput(adjust) {
+            detectDragGesturesAfterLongPress(
+                onDragStart = { holding = true; dragPx = 0f; haptic.performHapticFeedback(androidx.compose.ui.hapticfeedback.HapticFeedbackType.LongPress) },
+                onDragEnd = {
+                    val s = br.gabriel.cochilo.domain.Adjust.steps(dragPx, stepPx)
+                    holding = false; dragPx = 0f
+                    if (s != 0) adjust.onCommit(s)
+                },
+                onDragCancel = { holding = false; dragPx = 0f },
+                onDrag = { change, amount ->
+                    change.consume()
+                    val before = br.gabriel.cochilo.domain.Adjust.steps(dragPx, stepPx)
+                    dragPx += amount.y
+                    // A light tick at each 5-minute step, so the hand feels the count.
+                    if (br.gabriel.cochilo.domain.Adjust.steps(dragPx, stepPx) != before) haptic.performHapticFeedback(androidx.compose.ui.hapticfeedback.HapticFeedbackType.TextHandleMove)
+                },
+            )
+        }
+        .semantics {
+            customActions = listOf(
+                androidx.compose.ui.semantics.CustomAccessibilityAction(adjust.laterLabel) { adjust.onCommit(1); true },
+                androidx.compose.ui.semantics.CustomAccessibilityAction(adjust.earlierLabel) { adjust.onCommit(-1); true },
+            )
+        }
+    val preview = if (holding && adjust != null) adjust.preview(steps) else null
+    // While held, the bar follows the drag (4dp per 10 minutes, like the rest of the timeline).
+    val shownBar = if (holding && barHeight != null && adjust != null) (barHeight + Spacing.space1 * (adjust.deltaMinutes(steps) / 10f)).coerceAtLeast(Spacing.space2) else barHeight
     val base = Modifier.fillMaxWidth()
     // At least as tall as the bar, and as tall as its words need (sleep's bigger round and two lines).
-    val sized = base.heightIn(min = if (barHeight != null) maxOf(barHeight, Size.rowMin) else Size.rowMin).height(IntrinsicSize.Min)
-    Row(sized.clickable(src, indication = null, role = Role.Button, onClick = onClick).pressScale(src)) {
+    val sized = base.heightIn(min = if (shownBar != null) maxOf(shownBar, Size.rowMin) else Size.rowMin).height(IntrinsicSize.Min)
+    Row(
+        sized.background(animatedColor(if (holding) c.selected else c.surface))
+            .then(gesture)
+            .clickable(src, indication = null, role = Role.Button, onClick = onClick).pressScale(src)
+    ) {
         Text(time, style = Type.meta, color = c.muted, textAlign = TextAlign.End, maxLines = 1, modifier = Modifier.width(Spacing.space16 + Spacing.space2).padding(top = Spacing.space1))
         Box(Modifier.width(Spacing.space8).fillMaxHeight(), contentAlignment = Alignment.TopCenter) {
             Box(Modifier.width(Size.hairline).fillMaxHeight().background(c.line))
@@ -191,11 +242,31 @@ fun TimelineRow(time: String, color: Color, barHeight: Dp?, label: String, meta:
                 }
                 Text(label, style = if (prominent) Type.label else Type.body, color = c.ink)
             }
-            if (meta != null) Text(meta, style = Type.meta, color = c.muted)
+            when {
+                // While dragging: the new end, live, in ink.
+                preview != null -> Text(preview, style = Type.meta, color = c.onSelected, modifier = Modifier.semantics { liveRegion = androidx.compose.ui.semantics.LiveRegionMode.Polite })
+                meta != null -> Text(meta, style = Type.meta, color = c.muted)
+            }
             Spacer(Modifier.height(Spacing.space3))
         }
     }
 }
+
+/** 12dp of drag per 5-minute step: fine enough to aim, coarse enough not to jitter. */
+private val ADJUST_STEP = Spacing.space3
+
+/**
+ * What a draggable sleep row needs: [preview] says the new end for a number of steps (null when it
+ * can't move), [deltaMinutes] how far the end moved, [onCommit] saves it; the two labels are
+ * TalkBack's actions ("Ended 5 minutes later / sooner").
+ */
+class TimelineAdjust(
+    val preview: (Int) -> String?,
+    val deltaMinutes: (Int) -> Int,
+    val onCommit: (Int) -> Unit,
+    val laterLabel: String,
+    val earlierLabel: String,
+)
 
 /** Between two sleeps: the rail continues and says how long the baby was awake. */
 @Composable

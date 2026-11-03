@@ -187,6 +187,15 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         celebrate(br.gabriel.cochilo.domain.Trigger.Logged(e))
     }
 
+    /** Drag to adjust: [e] now ended at [end]; Undo puts it back. */
+    fun adjustEnd(e: Event, end: Long) = viewModelScope.launch {
+        events.upsert(e.copy(end = end, updatedAt = System.currentTimeMillis()))
+        refreshNow()
+        _messages.send(UiMessage(str(R.string.adjusted, Format(ctx, zone).time(end)), str(R.string.undo)) {
+            viewModelScope.launch { events.upsert(e.copy(updatedAt = System.currentTimeMillis())); refreshNow() }
+        })
+    }
+
     fun delete(e: Event) = viewModelScope.launch {
         events.delete(e)
         _messages.send(UiMessage(str(R.string.deleted), str(R.string.undo)) {

@@ -250,7 +250,24 @@ class ScreensSnapshotTest {
                     val to = day.plusDays(1).toInstant().toEpochMilli()
                     val f = Format(androidx.compose.ui.platform.LocalContext.current, zone, now)
                     Column(Modifier.fillMaxSize().padding(CTokens.Spacing.space4)) {
-                        VerticalTimeline(log.filter { it.overlaps(from, to, now) }.sortedBy { it.start }, now, f, zone) {}
+                        VerticalTimeline(log.filter { it.overlaps(from, to, now) }.sortedBy { it.start }, now, f, zone, onOpen = {})
+                    }
+                }
+            }
+        }
+    }
+    /** Drag to adjust: the second sleep of the day held and dragged three steps down (+15m). */
+    @Test fun day_dragging_a_sleep_light() {
+        light()
+        paparazzi.snapshot {
+            CochiloTheme(false) {
+                Frame {
+                    val day = LocalDateTime.of(2026, 10, 30, 0, 0).atZone(zone)
+                    val from = day.toInstant().toEpochMilli()
+                    val to = day.plusDays(1).toInstant().toEpochMilli()
+                    val f = Format(androidx.compose.ui.platform.LocalContext.current, zone, now)
+                    Column(Modifier.fillMaxSize().padding(CTokens.Spacing.space4)) {
+                        VerticalTimeline(log.filter { it.overlaps(from, to, now) }.sortedBy { it.start }, now, f, zone, {}, onAdjust = { _, _ -> }, allSleeps = log, previewDrag = 1 to 3)
                     }
                 }
             }

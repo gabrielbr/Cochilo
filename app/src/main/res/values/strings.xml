@@ -416,4 +416,9 @@
     <string name="unlock_line">Type the passphrase it was exported with.</string>
     <string name="unlock_wrong">That passphrase doesn\'t open it. Try again.</string>
     <string name="unlock_open">Open and import</string>
+    <string name="adjust_hint">Hold a sleep and drag to change when it ended.</string>
+    <string name="adjust_preview">Woke up %1$s · %2$s</string>
+    <string name="adjust_later">Ended 5 minutes later</string>
+    <string name="adjust_earlier">Ended 5 minutes sooner</string>
+    <string name="adjusted">Now ends at %1$s</string>
 </resources>

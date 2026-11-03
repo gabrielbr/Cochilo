@@ -3,6 +3,12 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.27.0 — 2026-11-03
+
+**Drag to adjust.** On the Day tab, hold a sleep and drag it down or up to change when it ended,
+in 5-minute steps, with the new time shown as you drag and Undo after. It never runs into the next
+sleep or into the future. TalkBack has two actions for it. `docs/flows.md`.
+
 ## 0.26.0 — 2026-11-03
 
 **Her fabrics, like cloth.** The eleven Tatá fabrics behind the Today card now repeat like a bolt

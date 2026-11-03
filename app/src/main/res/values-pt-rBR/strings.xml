@@ -391,4 +391,9 @@
     <string name="unlock_line">Digite a senha com que ele foi exportado.</string>
     <string name="unlock_wrong">Essa senha não abre. Tente de novo.</string>
     <string name="unlock_open">Abrir e importar</string>
+    <string name="adjust_hint">Segure um sono e arraste para mudar quando terminou.</string>
+    <string name="adjust_preview">Acordou %1$s · %2$s</string>
+    <string name="adjust_later">Terminou 5 minutos depois</string>
+    <string name="adjust_earlier">Terminou 5 minutos antes</string>
+    <string name="adjusted">Agora termina às %1$s</string>
 </resources>

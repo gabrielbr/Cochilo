@@ -58,6 +58,10 @@ fun DayScreen(
     log: List<Event>, now: Long, zone: ZoneId, onOpen: (Event) -> Unit, initialDay: LocalDate? = null,
     /** The next sleep's expected window (from the prediction), shown on today's ring. */
     expected: Pair<Long, Long>? = null,
+    /** Drag to adjust: a finished sleep's new end (docs/flows.md). */
+    onAdjust: (Event, Long) -> Unit = { _, _ -> },
+    /** For screenshots: one sleep shown mid-drag (its index among the day's sleeps, steps). */
+    previewDrag: Pair<Int, Int>? = null,
 ) {
     val f = Format(LocalContext.current, zone, now)
     val today = localDate(now, zone)
@@ -114,14 +118,26 @@ fun DayScreen(
             EmptyState(stringResource(R.string.empty_day_title), stringResource(R.string.empty_day_line))
             return@ScrollPage
         }
-        VerticalTimeline(events, now, f, zone, onOpen)
+        Text(stringResource(R.string.adjust_hint), style = Type.meta, color = CochiloTheme.colors.muted, modifier = Modifier.padding(bottom = Spacing.space2))
+        VerticalTimeline(events, now, f, zone, onOpen, onAdjust = { e, end -> onAdjust(e, end) }, allSleeps = log, previewDrag = previewDrag)
     }
 }
 
 @Composable
-internal fun VerticalTimeline(events: List<Event>, now: Long, f: Format, zone: ZoneId, onOpen: (Event) -> Unit) {
+internal fun VerticalTimeline(
+    events: List<Event>, now: Long, f: Format, zone: ZoneId, onOpen: (Event) -> Unit,
+    onAdjust: ((Event, Long) -> Unit)? = null,
+    /** Every sleep, so a drag stops at the next one even across midnight. */
+    allSleeps: List<Event> = events,
+    previewDrag: Pair<Int, Int>? = null,
+) {
     val c = CochiloTheme.colors
     var lastSleepEnd: Long? = null
+    val sleepsSorted = allSleeps.filter { it.type == EventType.SLEEP }.sortedBy { it.start }
+    var sleepIndex = 0
+    val later = stringResource(R.string.adjust_later)
+    val earlier = stringResource(R.string.adjust_earlier)
+    val previewWords = stringResource(R.string.adjust_preview)
     Column(
         Modifier.fillMaxWidth().clip(RoundedCornerShape(Radius.radiusM)).background(c.surface)
             .padding(vertical = Spacing.space3)
@@ -142,7 +158,24 @@ internal fun VerticalTimeline(events: List<Event>, now: Long, f: Format, zone: Z
                 onClick = { onOpen(e) },
                 icon = { br.gabriel.cochilo.ui.kit.KindIcon(e, zone) },
                 prominent = e.type == br.gabriel.cochilo.data.EventType.SLEEP,
+                adjust = if (onAdjust != null && br.gabriel.cochilo.domain.Adjust.canAdjust(e)) {
+                    val next = sleepsSorted.firstOrNull { it.start > e.start && it.id != e.id }?.start
+                    fun end(steps: Int) = br.gabriel.cochilo.domain.Adjust.newEnd(e, steps, now, next)
+                    br.gabriel.cochilo.ui.kit.TimelineAdjust(
+                        preview = { steps ->
+                            val to = end(steps) ?: e.end!!
+                            val delta = ((to - e.end!!) / br.gabriel.cochilo.domain.MINUTE).toInt()
+                            val sign = if (delta > 0) "+" else if (delta < 0) "−" else ""
+                            previewWords.format(f.time(to), sign + f.durationMin(kotlin.math.abs(delta)))
+                        },
+                        deltaMinutes = { steps -> end(steps)?.let { ((it - e.end!!) / br.gabriel.cochilo.domain.MINUTE).toInt() } ?: 0 },
+                        onCommit = { steps -> end(steps)?.let { onAdjust(e, it) } },
+                        laterLabel = later, earlierLabel = earlier,
+                    )
+                } else null,
+                previewSteps = if (e.type == EventType.SLEEP && previewDrag?.first == sleepIndex) previewDrag.second else null,
             )
+            if (e.type == EventType.SLEEP) sleepIndex++
         }
     }
 }

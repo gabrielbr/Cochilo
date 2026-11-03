@@ -97,6 +97,11 @@ one commit on top of the design system's `main` at 0.4.0 (self-update):
 - **0.21.1:** the fabric tiles repeat without a seam. Audit
   `audits/2026-11-03-v0.21.1-seamless-fabrics.md`.
 
+**[0018-Drag-to-adjust-0.22.0.patch](0018-Drag-to-adjust-0.22.0.patch)**, on top of 0017:
+
+- **0.22.0:** the vertical timeline's drag to adjust. Audit
+  `audits/2026-11-03-v0.22.0-drag-to-adjust.md`.
+
 All checked on a fresh checkout of the design system's `main`: `git am` applies it,
 `check_tokens.py` reports 0 errors, the tests pass, and `drift.py --cochilo` against this repo
 reports 0 differences.
