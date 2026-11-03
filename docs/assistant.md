@@ -148,6 +148,27 @@ was useless. Three causes, three fixes:
 **The entry point.** Ask is now in the header of every tab: the chat icon before Settings, one
 tap from anywhere (design system 0.27.0). The row in Patterns stays.
 
+## 0.39.1: asking no longer crashes the app
+
+The owner: "when I make questions the app crashes." The 0.38.0 digest made the prompt much longer
+than the model's window (1280 tokens, prompt and answer together). A prompt that overflows it
+aborts inside MediaPipe's native code, which Kotlin can't catch, so the whole app closed. Fixes:
+
+- **The prompt always fits.** The model counts the prompt's tokens (`sizeInTokens`).
+  `Grounding.fit` keeps the fullest prompt within 1280 − 320 (room for the answer), dropping the
+  digest's last lines first; tested in `GroundingTest`. The digest now runs most important first:
+  - the name, age and now;
+  - this week;
+  - the age references;
+  - today's sleeps;
+  - then the 7 days one by one.
+- **One answer at a time.** A lock around the engine: two questions asked quickly no longer run
+  it twice at once, and Remove never closes it mid-answer.
+- **CPU.** The engine runs on the CPU; the GPU path crashes natively on some phones.
+- **No crash loop.** A flag is written (synchronously) before the model writes and cleared after.
+  If it's still set at the next start, the model took the app down, so it's paused. Answers come
+  from the library, and a "not sure" reply says so with "Try the on-device AI again".
+
 ## iPhone
 
 The engine (`domain/assistant/`) has no Android imports on purpose. For an iPhone release it

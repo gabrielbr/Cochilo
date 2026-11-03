@@ -416,6 +416,8 @@
     <string name="ask_not_sure">Posso ajudar com sonecas e quanto duram, noites, hora de dormir, janelas de sono, luz do dia, rotina e sonecas no colo, usando seus registros. Experimente uma das perguntas abaixo.</string>
     <string name="ask_unchecked">A IA no celular escreveu uma resposta que não consegui conferir com os seus registros, então aqui vai o que eu sei.</string>
     <string name="ask_model_getting">A IA no celular ainda está baixando. Pergunte de novo quando estiver pronta, e ela responde a partir dos seus registros.</string>
+    <string name="ask_model_paused">A IA no celular fechou o app da última vez, então ela está pausada. Por enquanto as respostas vêm da lista.</string>
+    <string name="ask_model_resume">Tentar a IA no celular de novo</string>
     <string name="ask_open">Pergunte ao Cochilo</string>
     <string name="ask_insight_sleep">Sono: %1$s por dia em média (o usual para a idade é %2$s–%3$s h).</string>
     <string name="ask_insight_naps">Sonecas: %1$s por dia, mediana de %2$s.</string>

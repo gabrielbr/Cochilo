@@ -29,6 +29,18 @@ class GroundingTest {
         assertEquals(Verdict.OK, Grounding.check("Dorme 9,7 a 15,9 horas.", prompt))
     }
 
+    /** 0.39.1: a prompt longer than the model's window crashed the app; fit drops the last facts first. */
+    @Test fun the_prompt_is_trimmed_to_fit() {
+        val many = (1..50).map { "Fact number $it about the baby." }
+        val full = Grounding.prompt("Q?", many, passages, portuguese = false)
+        val fitted = Grounding.fit("Q?", many, passages, portuguese = false) { it.length <= full.length / 2 }!!
+        assertTrue(fitted.length <= full.length / 2)
+        assertTrue(fitted.contains("Fact number 1 about"))
+        assertTrue(!fitted.contains("Fact number 50 about"))
+        assertTrue(fitted.trimEnd().endsWith("Answer:"))
+        assertEquals(null, Grounding.fit("Q?", many, passages, portuguese = false) { false })
+    }
+
     @Test fun invented_numbers_are_refused() {
         assertEquals(Verdict.INVENTED_NUMBER, Grounding.check("Most babies sleep 18 hours at this age.", prompt))
     }

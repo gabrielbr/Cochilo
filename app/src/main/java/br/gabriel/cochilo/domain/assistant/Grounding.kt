@@ -46,6 +46,26 @@ If the facts and texts don't answer the question, say only: "I can't answer that
 
     private const val MAX_QUESTION_CHARS = 200
 
+    /**
+     * The fullest prompt that [fits] (0.39.1): a prompt longer than the model's window crashed the
+     * app natively. Facts come most important first (Digest), so the last ones go first, then the
+     * passages. Null when even the rules and the question alone don't fit.
+     */
+    fun fit(question: String, facts: List<String>, passages: List<String>, portuguese: Boolean, fits: (String) -> Boolean): String? {
+        var f = facts
+        var p = passages
+        while (true) {
+            val prompt = prompt(question, f, p, portuguese)
+            if (fits(prompt)) return prompt
+            when {
+                f.size > 1 -> f = f.dropLast(1)
+                p.isNotEmpty() -> p = p.dropLast(1)
+                f.isNotEmpty() -> f = emptyList()
+                else -> return null
+            }
+        }
+    }
+
     /** Why a reply was thrown away, or OK. */
     enum class Verdict { OK, EMPTY, TOO_LONG, JUDGES, MEDICAL, INVENTED_NUMBER }
 

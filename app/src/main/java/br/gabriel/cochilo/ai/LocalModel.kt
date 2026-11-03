@@ -12,6 +12,8 @@ import java.io.File
 interface LocalModel {
     /** The model's continuation of [prompt]. Slow (seconds): call it off the main thread. */
     fun generate(prompt: String): String
+    /** How many tokens [text] takes, so a prompt never overflows the model's window. */
+    fun tokens(text: String): Int
     fun close()
 }
 
@@ -22,15 +24,21 @@ class MediaPipeModel(context: Context, file: File) : LocalModel {
         LlmInference.LlmInferenceOptions.builder()
             .setModelPath(file.absolutePath)
             .setMaxTokens(MAX_TOKENS)
+            // CPU: the GPU path crashes natively on some phones, and a 1B model is quick enough on CPU.
+            .setPreferredBackend(LlmInference.Backend.CPU)
             .build(),
     )
 
     override fun generate(prompt: String): String = engine.generateResponse(prompt)
 
+    override fun tokens(text: String): Int = engine.sizeInTokens(text)
+
     override fun close() = engine.close()
 
-    private companion object {
+    companion object {
         /** Prompt and answer together; the answers are four short sentences. */
         const val MAX_TOKENS = 1280
+        /** Room kept for the answer: a prompt may use the rest, and is trimmed to fit (Grounding.fit). */
+        const val REPLY_TOKENS = 320
     }
 }

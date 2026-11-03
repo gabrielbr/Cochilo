@@ -21,6 +21,17 @@ class Prefs(context: Context) {
         _theme.value = mode
     }
 
+    /**
+     * Set just before the on-device model writes, cleared after (0.39.1). Still set at the next
+     * start means the model took the app down (a native crash can't be caught), so it's paused.
+     */
+    val modelWasRunning: Boolean get() = sp.getBoolean("model_running", false)
+
+    fun setModelRunning(on: Boolean) {
+        // commit(), not apply(): it must be on disk before a native crash.
+        sp.edit(commit = true) { putBoolean("model_running", on) }
+    }
+
     private val _live = MutableStateFlow(sp.getBoolean("live_notification", true))
     /** Show the live notification (the current sleep or wake stretch, and running timers). */
     val liveNotification: StateFlow<Boolean> = _live
