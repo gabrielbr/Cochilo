@@ -60,8 +60,32 @@ costs the fewest taps. Audit of every entry type (2026-11-02):
 | Fabric (a setting) | the Today card wears it | — | the picker opens with it ringed | — |
 
 Code: `lastOf`, `lastKind`, `lastKindAmong`, `Event.rememberedFrom` in `domain/QuickLog.kt`
-(tested in `QuickLogTest`); the rows in `Today.kt` (`QuickLog`); the sheet's line in `Sheets.kt`.
+(tested in `QuickLogTest`); the Log menu in `LogMenu.kt` (Today's rows until 0.39.0); the sheet's line in `Sheets.kt`.
 This replaced the earlier "next: other breast" suggestion: the app shows what happened, she decides.
+
+## Today without the log rows (0.39.0)
+
+The owner: "remove the register items of the home screen; they are not needed there anymore and
+are confusing." Since 0.7.0 the Log button logged everything the rows did, from every tab, and
+marked what was used last. The rows on Today repeated it, a second way to do the same thing, and
+pushed the timeline and today's entries below the fold.
+
+What Today keeps:
+- the sleep panel, with Start sleep or Woke up and the Earlier chips;
+- the next-sleep card and the daylight nudge;
+- running timers, with Finish and the breastfeed's slide to switch side;
+- the timeline and today's entries.
+
+| Flow | Before | Now |
+|---|---|---|
+| Log a breastfeed side | slide on Today's Feed row (1 move) | Log button: press, drag to Feed › Left (1 move), from any tab |
+| Log a diaper | slide on the row (1 move) | press, drag to Diaper › Wet (1 move) |
+| A kind's full sheet | tap its row (1) | press and let go on the kind, or tap + then the kind (2 taps) |
+| What a kind is ("i") | the row's "i" (1) | the sheet's "i" (2 taps away) |
+
+No common entry costs more; it's one move from anywhere instead of from Today only. The empty
+state now points to the + ("Start a sleep, or tap + to log a feed or a diaper"). The widget and
+the quick-settings tile are unchanged.
 
 ## The Log button (0.7.0)
 

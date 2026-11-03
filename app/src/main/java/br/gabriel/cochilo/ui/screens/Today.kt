@@ -3,8 +3,6 @@ package br.gabriel.cochilo.ui.screens
 import br.gabriel.cochilo.domain.clockSpan
 import br.gabriel.cochilo.data.Kinds
 import br.gabriel.cochilo.domain.otherBreast
-import br.gabriel.cochilo.domain.lastKindAmong
-import br.gabriel.cochilo.domain.lastOf
 import br.gabriel.cochilo.ui.kit.SlideOption
 import br.gabriel.cochilo.ui.kit.SlideRow
 import br.gabriel.cochilo.ui.kit.kindColor
@@ -134,13 +132,6 @@ fun TodayScreen(
             }
         }
 
-        Caption(stringResource(R.string.caption_log))
-        QuickLog(
-            onNew, onQuick,
-            last = EventType.entries.associateWith { lastOf(log, it) },
-            lastKinds = EventType.entries.associateWith { t -> lastKindAmong(log, t, slideKinds(t)) },
-        )
-
         Caption(stringResource(R.string.caption_timeline))
         Timeline(todays, from, to, now, zone, daySummary(f, today, todays, from, to, now, zone))
         Spacer(Modifier.height(Spacing.space1))
@@ -256,83 +247,3 @@ private fun PredictionCard(p: Predictor.Result.Awake, now: Long, f: Format) {
     }
 }
 
-/** Every other log type: secondary outlines, two to a row (the one mint action is Start sleep). */
-@Composable
-internal fun QuickLog(
-    onNew: (EventType) -> Unit,
-    onQuick: (EventType, String?) -> Unit = { _, _ -> },
-    /** The last entry of each type: remember actions (AGENTS.md). */
-    last: Map<EventType, Event?> = emptyMap(),
-    /** The last kind used among each row's slide options (e.g. the last breast). */
-    lastKinds: Map<EventType, String?> = emptyMap(),
-    previewActive: Pair<EventType, Int>? = null,
-) {
-    val f = Format(LocalContext.current)
-    val types = listOf(EventType.FEED, EventType.DIAPER, EventType.SLEEP, EventType.MEDICINE, EventType.PUMP, EventType.DAYLIGHT, EventType.ROUTINE, EventType.NOTE)
-    // One row per kind of entry. Tap: the full sheet, opened on what was done last. Slide: log at
-    // once (feed left or right, diaper wet/both/dirty…). Each row says what was done last, and
-    // the slide marks that option, so the person sees it before choosing.
-    br.gabriel.cochilo.ui.kit.RowGroup {
-        types.forEachIndexed { i, t ->
-            if (i > 0) Hairline()
-            val prev = last[t]
-            val base = slideOptions(t, f)
-            // The last of this row's own options: for Feed, the last breast, even if a bottle came after.
-            val lastOption = lastKinds[t]
-            val spokenLast = stringResource(R.string.slide_last_spoken, "%s")
-            val options = base.map {
-                val isLast = lastOption != null && it.key == lastOption
-                // The Last mark is seen (outline and dot); TalkBack says it.
-                it.copy(last = isLast, a11y = if (isLast) spokenLast.replace("%s", it.a11y) else it.a11y)
-            }
-            val lastWords = when {
-                lastOption != null && base.any { it.key == lastOption } -> (f.kindName(lastOption) ?: lastOption).lowercase()
-                t == EventType.PUMP -> prev?.amountMl?.let { stringResource(R.string.ml, it) }
-                t == EventType.MEDICINE -> prev?.let { e -> listOfNotNull(e.note, f.dayTime(e.start)).joinToString(" · ") }
-                else -> null
-            }
-            // The slide hint; what was done last gets its own line after a Last dot.
-            val hint = if (options.isNotEmpty()) stringResource(R.string.slide_hint, options.joinToString(" · ") { it.label }) else null
-            SlideRow(
-                label = f.typeName(t),
-                meta = hint,
-                leading = { br.gabriel.cochilo.ui.kit.KindIcon(t) },
-                options = options,
-                onTap = { onNew(t) },
-                onPick = { o -> onQuick(t, o.key.takeIf { it.isNotEmpty() }) },
-                previewActive = previewActive?.takeIf { it.first == t }?.second,
-                accent = CochiloTheme.colors.kindColor(t),
-                last = lastWords,
-                lastSpoken = lastWords?.let { stringResource(R.string.row_last, it) },
-                prominent = t.leads,
-            ) { InfoButton(f.typeName(t), stringResource(infoText(t))) }
-        }
-    }
-}
-
-/** The kinds each log row's slide offers (keys of slideOptions). */
-internal fun slideKinds(t: EventType): Set<String> = when (t) {
-    EventType.FEED -> setOf(Kinds.BREAST_LEFT, Kinds.BREAST_RIGHT)
-    EventType.DIAPER -> setOf(Kinds.WET, Kinds.BOTH, Kinds.DIRTY)
-    EventType.DAYLIGHT -> setOf(Kinds.OUTDOORS, Kinds.WINDOW)
-    EventType.ROUTINE -> setOf(Kinds.NAP_ROUTINE, Kinds.BEDTIME_ROUTINE)
-    else -> emptySet()
-}
-
-/** What a slide on each log row can log, left to right. */
-@Composable
-private fun slideOptions(t: EventType, f: Format): List<SlideOption> {
-    val ctx = LocalContext.current
-    fun opt(kind: String, label: String) = SlideOption(kind, label, ctx.getString(R.string.a11y_log, listOfNotNull(f.typeName(t), f.kindName(kind)).joinToString(" · ")))
-    return when (t) {
-        EventType.FEED -> listOf(
-            opt(Kinds.BREAST_LEFT, stringResource(R.string.slide_left)),
-            opt(Kinds.BREAST_RIGHT, stringResource(R.string.slide_right)),
-        )
-        EventType.DIAPER -> listOf(Kinds.WET, Kinds.BOTH, Kinds.DIRTY).map { opt(it, f.kindName(it) ?: it) }
-        EventType.DAYLIGHT -> listOf(Kinds.OUTDOORS, Kinds.WINDOW).map { opt(it, f.kindName(it) ?: it) }
-        EventType.ROUTINE -> listOf(Kinds.NAP_ROUTINE, Kinds.BEDTIME_ROUTINE).map { opt(it, f.kindName(it) ?: it) }
-        EventType.PUMP -> listOf(SlideOption("", stringResource(R.string.slide_start), stringResource(R.string.a11y_log, f.typeName(t))))
-        else -> emptyList()
-    }
-}
