@@ -8,8 +8,16 @@ object ModelFile {
     /** A real model is hundreds of MB; anything this small was the wrong file. */
     const val MIN_BYTES = 50L * 1024 * 1024
 
-    /** `.task` files are zip archives: they start with "PK". */
-    fun looksLikeTask(head: ByteArray): Boolean = head.size >= 2 && head[0] == 'P'.code.toByte() && head[1] == 'K'.code.toByte()
+    /**
+     * Whether the first bytes could be a model. `.task` files used to be zip archives ("PK"), but
+     * Google's current Gemma `.task` isn't (0.37.1), so the container isn't checked: only that it
+     * isn't text, the usual wrong file (an HTML error page, JSON, a note). A download is checked
+     * against its published SHA-256 as well; the runtime refuses anything else it can't load.
+     */
+    fun looksLikeTask(head: ByteArray): Boolean {
+        val first = head.firstOrNull { it != ' '.code.toByte() && it != '\n'.code.toByte() && it != '\r'.code.toByte() && it != '\t'.code.toByte() }?.toInt()?.toChar() ?: return false
+        return first != '<' && first != '{' && first != '['
+    }
 
     fun check(head: ByteArray, bytes: Long): ModelState.Reason? = when {
         !looksLikeTask(head) -> ModelState.Reason.NOT_A_MODEL

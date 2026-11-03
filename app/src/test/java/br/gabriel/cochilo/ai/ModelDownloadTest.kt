@@ -27,7 +27,7 @@ class ModelDownloadTest {
         try {
             f.writeBytes(byteArrayOf('P'.code.toByte(), 'K'.code.toByte()) + ByteArray(10))
             assertEquals(ModelState.Reason.TOO_SMALL, ModelDownload.verify(f, ModelDownload.sha256(f)))
-            f.writeBytes(ByteArray(10))
+            f.writeBytes("<html>Not Found</html>".toByteArray())
             assertEquals(ModelState.Reason.NOT_A_MODEL, ModelDownload.verify(f, ModelDownload.sha256(f)))
             assertFalse(ModelDownload.sha256(f) == "0".repeat(64))
         } finally { f.delete() }

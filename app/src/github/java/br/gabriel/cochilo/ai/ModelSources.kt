@@ -177,7 +177,7 @@ private class DownloadSource(private val context: Context) : ModelSource {
         cancelDownload()
         val resolver = context.contentResolver
         val size = runCatching { resolver.openAssetFileDescriptor(uri, "r")?.use { it.length } }.getOrNull()?.takeIf { it > 0 }
-        val head = runCatching { resolver.openInputStream(uri)?.use { s -> ByteArray(2).also { s.read(it) } } }.getOrNull() ?: ByteArray(0)
+        val head = runCatching { resolver.openInputStream(uri)?.use { s -> ByteArray(16).also { s.read(it) } } }.getOrNull() ?: ByteArray(0)
         ModelFile.check(head, size ?: Long.MAX_VALUE)?.let { _state.value = ModelState.Failed(it); return@withContext }
         if (size != null && context.filesDir.usableSpace < size + ModelFile.MIN_BYTES) {
             _state.value = ModelState.Failed(ModelState.Reason.NO_SPACE); return@withContext

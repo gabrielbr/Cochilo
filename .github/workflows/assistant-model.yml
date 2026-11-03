@@ -25,7 +25,10 @@ jobs:
         run: |
           if [ -z "$HF_TOKEN" ]; then echo "::error::Set the HF_TOKEN secret (a read token from an account that accepted the Gemma terms)."; exit 1; fi
           curl -fL --retry 3 -H "Authorization: Bearer $HF_TOKEN" -o "$FILE" "$SOURCE"
-          head -c 2 "$FILE" | grep -q PK || { echo "::error::Not a .task file"; exit 1; }
+          # Google's current .task isn't a zip, so only rule out a text answer (an error page) and a short file.
+          echo "First bytes:"; head -c 16 "$FILE" | od -An -tx1 -c
+          case "$(head -c 1 "$FILE")" in "<"|"{"|"[") echo "::error::Hugging Face sent text, not the model"; exit 1;; esac
+          [ "$(stat -c %s "$FILE")" -gt 100000000 ] || { echo "::error::The file is too small to be the model"; exit 1; }
           sha256sum "$FILE" > "$FILE.sha256"
           cat "$FILE.sha256"; ls -la "$FILE"
           cat > GEMMA-NOTICE.txt <<'NOTICE'
