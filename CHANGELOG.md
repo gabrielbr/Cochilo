@@ -3,6 +3,12 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.26.0 — 2026-11-03
+
+**Her fabrics, like cloth.** The eleven Tatá fabrics behind the Today card now repeat like a bolt
+of fabric instead of mirroring at the edges, which turned prints like Tropical and Balão into a
+kaleidoscope. No seams, no lighter or darker blocks. `docs/tata-slings/textures.md`.
+
 ## 0.25.0 — 2026-11-03
 
 **Tablets and foldables.** On a wider screen the tabs move to a rail at the side and the screen

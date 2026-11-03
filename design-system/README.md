@@ -92,6 +92,11 @@ one commit on top of the design system's `main` at 0.4.0 (self-update):
 - **0.21.0:** wide screens: `rail`, `content-max`, `width-medium`, `width-expanded`; the Navigation
   rail. Audit `audits/2026-11-03-v0.21.0-wide-screens.md`.
 
+**[0017-Seamless-fabrics-0.21.1.patch](0017-Seamless-fabrics-0.21.1.patch)**, on top of 0016:
+
+- **0.21.1:** the fabric tiles repeat without a seam. Audit
+  `audits/2026-11-03-v0.21.1-seamless-fabrics.md`.
+
 All checked on a fresh checkout of the design system's `main`: `git am` applies it,
 `check_tokens.py` reports 0 errors, the tests pass, and `drift.py --cochilo` against this repo
 reports 0 differences.
