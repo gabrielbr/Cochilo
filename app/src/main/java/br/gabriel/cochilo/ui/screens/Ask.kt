@@ -453,63 +453,67 @@ fun ChatsScreen(
 }
 
 /**
- * The glimpse (0.45.0, docs/assistant.md): the one question most worth asking now, from her own
- * log, for the end of Today. Null when the log is too short to say anything, or when the only
- * question left is the next sleep (Today's card already says it).
+ * The glimpse (0.45.0, docs/assistant.md): the one thing worth reading now, for the end of Today.
+ * - **From her log** ([Glimpse.tip] false): what stands out (short naps, early mornings, little
+ *   daylight, contact naps), once a few days are logged.
+ * - **Otherwise, a tip from the studies** ([Glimpse.tip] true): one of Ask Cochilo's reviewed
+ *   answers with its source, a different one each day. It's never empty, and never the next
+ *   sleep (Today's card already says it).
  */
-fun glimpseTopic(facts: Assistant.Facts, day: Long): Topic? {
-    if (facts.daysLogged < GLIMPSE_DAYS) return null
-    // What stands out in her log first (short naps, early mornings, little daylight, contact naps).
-    val standsOut = Assistant.suggestions(facts).firstOrNull { it in GLIMPSE_STANDOUT }
-    if (standsOut != null) return standsOut
-    // Otherwise one of the everyday questions with her numbers, a different one each day.
-    val everyday = GLIMPSE_EVERYDAY.filter { hasData(it, facts) }
-    return everyday.getOrNull(Math.floorMod(day, everyday.size.coerceAtLeast(1).toLong()).toInt())
+data class Glimpse(val topic: Topic, val tip: Boolean)
+
+fun glimpse(facts: Assistant.Facts, day: Long): Glimpse {
+    if (facts.daysLogged >= GLIMPSE_DAYS) {
+        Assistant.suggestions(facts).firstOrNull { it in GLIMPSE_STANDOUT }?.let { return Glimpse(it, tip = false) }
+    }
+    val tips = GLIMPSE_TIPS + (if (facts.ageWeeks in FOUR_MONTHS_WEEKS) listOf(Topic.FOUR_MONTHS) else emptyList())
+    return Glimpse(tips[Math.floorMod(day, tips.size.toLong()).toInt()], tip = true)
 }
 
-private val GLIMPSE_STANDOUT = setOf(Topic.SHORT_NAPS, Topic.EARLY_WAKING, Topic.DAYLIGHT, Topic.CONTACT_NAPS)
-private val GLIMPSE_EVERYDAY = listOf(Topic.NIGHT_WAKINGS, Topic.ENOUGH_SLEEP, Topic.WAKE_WINDOWS, Topic.BEDTIME, Topic.NAP_LENGTH)
-
-/** Whether [t]'s answer has her own numbers in it (the glimpse never shows "not enough data"). */
-private fun hasData(t: Topic, facts: Assistant.Facts): Boolean = when (t) {
-    Topic.NIGHT_WAKINGS, Topic.ENOUGH_SLEEP -> facts.averages != null
-    Topic.WAKE_WINDOWS -> facts.windowMedianMin != null
-    Topic.BEDTIME -> facts.bedtimeMinute != null
-    Topic.NAP_LENGTH -> facts.napMedianMin != null && facts.napShortestMin != null && facts.napLongestMin != null
-    else -> true
-}
-
-/** Days of log before the glimpse speaks: like Ask's own "This week", it needs a few days. */
+/** Days of log before her own numbers can stand out: like Ask's own "This week". */
 const val GLIMPSE_DAYS = 3
 
+private val GLIMPSE_STANDOUT = setOf(Topic.SHORT_NAPS, Topic.EARLY_WAKING, Topic.DAYLIGHT, Topic.CONTACT_NAPS)
+
+/** The research tips, one a day: each is a reviewed answer with its study (docs/research.md). */
+private val GLIMPSE_TIPS = listOf(
+    Topic.DAYLIGHT, Topic.ROUTINE, Topic.WAKE_WINDOWS, Topic.NAP_LENGTH, Topic.NIGHT_WAKINGS,
+    Topic.CONTACT_NAPS, Topic.BEDTIME, Topic.FEED_TO_SLEEP, Topic.ENOUGH_SLEEP, Topic.SAFE_SLEEP,
+)
+
+/** "Around 4 months" is a tip only near that age. */
+private val FOUR_MONTHS_WEEKS = 13..22
+
 /**
- * The glimpse on Today: the question, her numbers, and what to try (Ask Cochilo's reviewed
- * answer, on the phone), then "Read the answer", which opens Ask on it.
+ * The glimpse on Today. From her log: the question, her numbers and what to try. A tip: the
+ * question, what the studies say and their source. Then "Read the answer" opens Ask on it.
  */
 @Composable
-fun AskGlimpse(topic: Topic, facts: Assistant.Facts, f: Format, onOpen: (Topic) -> Unit) {
+fun AskGlimpse(g: Glimpse, facts: Assistant.Facts, f: Format, onOpen: (Topic) -> Unit) {
     val context = LocalContext.current
     val c = CochiloTheme.colors
-    val parts = answer(context, topic, facts, f)
+    val parts = answer(context, g.topic, facts, f)
     val noData = stringResource(R.string.ask_no_data)
-    val question = stringResource(questionRes(topic))
+    val question = stringResource(questionRes(g.topic))
     Column(
         Modifier.fillMaxWidth().clip(RoundedCornerShape(Radius.radiusM)).background(c.surface)
             .padding(start = Spacing.space4, end = Spacing.space4, top = Spacing.space4),
     ) {
         Text(question, style = Type.label, color = c.ink)
-        val data = parts.data?.takeIf { it != noData }
-        if (data != null) {
-            Spacer(Modifier.height(Spacing.space2))
-            Text(data, style = Type.bodySmall, color = c.ink)
-        }
-        parts.tryIt?.let {
-            Spacer(Modifier.height(Spacing.space2))
-            Text(it, style = Type.meta, color = c.muted)
+        Spacer(Modifier.height(Spacing.space2))
+        if (!g.tip) {
+            parts.data?.takeIf { it != noData }?.let { Text(it, style = Type.bodySmall, color = c.ink); Spacer(Modifier.height(Spacing.space2)) }
+            parts.tryIt?.let { Text(it, style = Type.meta, color = c.muted) }
+        } else {
+            Text(parts.info, style = Type.bodySmall, color = c.ink)
+            parts.source?.let {
+                Spacer(Modifier.height(Spacing.space2))
+                Text(stringResource(R.string.ask_source, it), style = Type.meta, color = c.muted)
+            }
         }
         br.gabriel.cochilo.ui.kit.QuietLink(
-            stringResource(R.string.glimpse_line), stringResource(R.string.glimpse_open),
-            stringResource(R.string.glimpse_spoken, question), { onOpen(topic) },
+            stringResource(if (g.tip) R.string.glimpse_line_tip else R.string.glimpse_line), stringResource(R.string.glimpse_open),
+            stringResource(R.string.glimpse_spoken, question), { onOpen(g.topic) },
         )
     }
 }

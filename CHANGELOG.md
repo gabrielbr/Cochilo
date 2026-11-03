@@ -11,8 +11,14 @@ Every release of Cochilo, newest first. Releases are on
   feeds, for example.
 - **The sleep card is taller**, and more of her fabric shows around it.
 - **A new last card on Today:** the one question that stands out in your log right now, with your
-  numbers and what to try. "Read the answer" opens Ask Cochilo on it. It's worked out on the
-  phone, from your log, and it shows only by day. `docs/flows.md`, `docs/assistant.md`.
+  numbers and what to try. When nothing stands out, it shows a tip from the studies instead,
+  with its source, a different one each day. "Read the answer" opens Ask Cochilo on it. It's
+  worked out on the phone, and it shows only by day.
+- **Undo on Today.** Start sleep, Woke up, It's a nap / It's the night, Finish, Up for the day and
+  every Save now say what happened, with **Undo**.
+- **Edit and delete, clearly.** Every entry on the Day tab has a pencil: tap the row to edit it.
+  Delete in the sheet works at once, with Undo, instead of asking "are you sure?".
+  `docs/flows.md`, `docs/assistant.md`.
 
 ## 0.44.0 — 2026-11-03
 

@@ -6,16 +6,16 @@ import br.gabriel.cochilo.data.Kinds
 import br.gabriel.cochilo.domain.Predictor
 import br.gabriel.cochilo.domain.assistant.Assistant
 import br.gabriel.cochilo.domain.assistant.Assistant.Topic
-import br.gabriel.cochilo.ui.screens.glimpseTopic
+import br.gabriel.cochilo.ui.screens.Glimpse
+import br.gabriel.cochilo.ui.screens.glimpse
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals
-import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.time.LocalDateTime
 import java.time.ZoneId
 
-/** Today's Ask Cochilo glimpse (0.45.0): what stands out first, never the next sleep, never empty. */
+/** Today's Ask Cochilo glimpse (0.45.0): what stands out in her log first, else a tip from the studies. */
 class GlimpseTest {
     private val zone = ZoneId.of("America/Sao_Paulo")
     private fun at(d: Int, h: Int, m: Int = 0) = LocalDateTime.of(2026, 10, d, h, m).atZone(zone).toInstant().toEpochMilli()
@@ -43,27 +43,30 @@ class GlimpseTest {
         )
     }
 
-    @Test fun what_stands_out_comes_first() {
-        assertEquals(Topic.SHORT_NAPS, glimpseTopic(facts(shortNaps), 0))
+    @Test fun what_stands_out_in_her_log_comes_first() {
+        assertEquals(Glimpse(Topic.SHORT_NAPS, tip = false), glimpse(facts(shortNaps), 0))
     }
 
-    @Test fun otherwise_an_everyday_question_with_her_numbers_a_different_one_each_day() {
+    @Test fun otherwise_a_tip_from_the_studies_a_different_one_each_day() {
         val f = facts(calm)
-        val a = glimpseTopic(f, 0)
-        val b = glimpseTopic(f, 1)
-        assertTrue("$a", a in setOf(Topic.NIGHT_WAKINGS, Topic.ENOUGH_SLEEP, Topic.WAKE_WINDOWS, Topic.BEDTIME, Topic.NAP_LENGTH))
-        assertNotEquals(a, b)
+        val a = glimpse(f, 0)
+        val b = glimpse(f, 1)
+        assertTrue(a.tip && b.tip)
+        assertNotEquals(a.topic, b.topic)
     }
 
-    @Test fun never_the_next_sleep_or_the_age_alone() {
-        for (d in 0L..10L) {
-            val t = glimpseTopic(facts(calm, weeks = 16), d)
-            assertNotEquals(Topic.NEXT_SLEEP, t)
-            assertNotEquals(Topic.FOUR_MONTHS, t)
+    @Test fun a_tip_even_before_a_few_days_are_logged_never_the_next_sleep() {
+        for (d in 0L..20L) {
+            val g = glimpse(facts(emptyList()), d)
+            assertTrue(g.tip)
+            assertNotEquals(Topic.NEXT_SLEEP, g.topic)
         }
     }
 
-    @Test fun silent_until_a_few_days_are_logged() {
-        assertNull(glimpseTopic(facts(calm.filter { it.start >= at(19, 0) }), 0))
+    @Test fun around_four_months_only_near_that_age() {
+        val far = (0L..30L).map { glimpse(facts(calm, weeks = 30), it).topic }
+        val near = (0L..30L).map { glimpse(facts(calm, weeks = 16), it).topic }
+        assertTrue(Topic.FOUR_MONTHS !in far)
+        assertTrue(Topic.FOUR_MONTHS in near)
     }
 }

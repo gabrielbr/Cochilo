@@ -130,8 +130,8 @@ class ScreensSnapshotTest {
                         when (t) {
                             0 -> {
                                 val facts = br.gabriel.cochilo.domain.assistant.Assistant.facts(log, weeks, now, zone, p)
-                                TodayScreen(log, p, now, zone, {}, {}, {}, {}, {}, glimpse = br.gabriel.cochilo.ui.screens.glimpseTopic(facts, br.gabriel.cochilo.domain.localDate(now, zone).toEpochDay())?.let { t ->
-                                    { br.gabriel.cochilo.ui.screens.AskGlimpse(t, facts, f) {} }
+                                TodayScreen(log, p, now, zone, {}, {}, {}, {}, {}, glimpse = br.gabriel.cochilo.ui.screens.glimpse(facts, br.gabriel.cochilo.domain.localDate(now, zone).toEpochDay()).let { g ->
+                                    { br.gabriel.cochilo.ui.screens.AskGlimpse(g, facts, f) {} }
                                 })
                             }
                             1 -> DayScreen(log, now, zone, onOpen = {}, initialDay = LocalDateTime.of(2026, 10, 30, 12, 0).toLocalDate(), initialFilter = dayFilter)

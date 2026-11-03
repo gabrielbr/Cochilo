@@ -217,12 +217,15 @@ fun ListRow(
     lastSpoken: String? = null,
     /** Happened inside an asleep or awake stretch (docs/flows.md): set in under its main row. */
     indent: Boolean = false,
+    /** An entry: tapping edits it, so a pencil says so and TalkBack says "Edit" (0.45.0). */
+    editable: Boolean = false,
     trailing: (@Composable RowScope.() -> Unit)? = null,
 ) {
     val c = CochiloTheme.colors
     val src = remember { MutableInteractionSource() }
     val base = Modifier.fillMaxWidth().heightIn(min = Size.rowMin)
-    val m = if (onClick != null) base.clickable(src, indication = null, role = Role.Button, onClick = onClick).pressScale(src) else base
+    val editLabel = if (editable) androidx.compose.ui.res.stringResource(br.gabriel.cochilo.R.string.edit_entry) else null
+    val m = if (onClick != null) base.clickable(src, indication = null, role = Role.Button, onClickLabel = editLabel, onClick = onClick).pressScale(src) else base
     val vertical = if (prominent) Spacing.space4 else Spacing.space3
     Row(m.padding(start = if (indent) Spacing.space4 + Spacing.space6 else Spacing.space4, end = Spacing.space4, top = vertical, bottom = vertical), verticalAlignment = Alignment.CenterVertically) {
         if (leading != null) {
@@ -241,6 +244,9 @@ fun ListRow(
         if (trailing != null) {
             Spacer(Modifier.width(Spacing.space2))
             trailing()
+        } else if (editable) {
+            Spacer(Modifier.width(Spacing.space2))
+            GIcon(br.gabriel.cochilo.R.drawable.gg_ic_note, null, c.muted)
         }
     }
 }

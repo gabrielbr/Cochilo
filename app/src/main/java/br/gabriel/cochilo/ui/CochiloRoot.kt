@@ -295,8 +295,8 @@ fun CochiloRoot(vm: MainViewModel) {
                                             onSetNight = { e, n -> vm.setNight(e, n) },
                                             glimpse = run {
                                                 val facts = remember(log, now, weeks) { br.gabriel.cochilo.domain.assistant.Assistant.facts(log, weeks, now, zone, prediction) }
-                                                br.gabriel.cochilo.ui.screens.glimpseTopic(facts, br.gabriel.cochilo.domain.localDate(now, zone).toEpochDay())?.let { t ->
-                                                    { br.gabriel.cochilo.ui.screens.AskGlimpse(t, facts, f) { newChat(); askTopic = it; asking = true } }
+                                                br.gabriel.cochilo.ui.screens.glimpse(facts, br.gabriel.cochilo.domain.localDate(now, zone).toEpochDay()).let { g ->
+                                                    { br.gabriel.cochilo.ui.screens.AskGlimpse(g, facts, f) { newChat(); askTopic = it; asking = true } }
                                                 }
                                             },
                                             onFinish = { vm.finish(it) },

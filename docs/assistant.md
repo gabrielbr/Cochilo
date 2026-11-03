@@ -192,14 +192,14 @@ have different topics with the agent."
 Today ends with one Ask Cochilo card. It shows one question, the data line from its reviewed
 answer, and its "try" line, then "Read the answer", which opens a new chat already on it.
 
-`glimpseTopic(facts, day)` (in `ui/screens/Ask.kt`, tested in `GlimpseTest`) picks the question:
-1. **What stands out first:** short naps, early mornings, little daylight or contact naps.
-2. **Otherwise an everyday question** that has her numbers (night wakings, total sleep, wake
-   windows, bedtime, nap length), a different one each day.
+`glimpse(facts, day)` (in `ui/screens/Ask.kt`, tested in `GlimpseTest`) picks what to show:
+1. **What stands out in her log:** short naps, early mornings, little daylight or contact naps,
+   once three days are logged. The card shows her numbers and what to try.
+2. **Otherwise, a tip from the studies:** a reviewed answer's "what the research says" and its
+   source, a different topic each day. "Around 4 months" is included only near that age.
 
-It's silent before three days of log, at night and during a night waking. It never uses the
-model's free text: the glimpse is a reviewed answer, so its numbers are always hers and always
-right.
+It's hidden at night and during a night waking. It never uses the model's free text: the glimpse
+is a reviewed answer, so its words were reviewed and its numbers are always hers.
 
 ## iPhone
 

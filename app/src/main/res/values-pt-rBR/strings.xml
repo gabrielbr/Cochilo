@@ -93,8 +93,6 @@
     <string name="save">Salvar</string>
     <string name="cancel">Cancelar</string>
     <string name="delete">Apagar</string>
-    <string name="delete_confirm_title">Apagar este registro?</string>
-    <string name="delete_confirm_line">Ele sai dos registros e dos padrões.</string>
     <string name="ok">OK</string>
 
     <string name="welcome_title">Boas-vindas ao Cochilo</string>
@@ -176,6 +174,15 @@
     <string name="file_failed">Não deu para usar esse arquivo</string>
     <string name="deleted">Apagado</string>
     <string name="undo">Desfazer</string>
+    <string name="undo_sleep_started">Sono começou</string>
+    <string name="undo_woke_up">Acordou às %1$s</string>
+    <string name="undo_up_for_day">Acordou de vez</string>
+    <string name="undo_made_night">Marcado como a noite</string>
+    <string name="undo_made_nap">Marcado como soneca</string>
+    <string name="undo_finished">Terminou: %1$s</string>
+    <string name="undo_saved">Salvo: %1$s</string>
+    <string name="deleted_what">Apagado: %1$s</string>
+    <string name="edit_entry">Editar</string>
 
     <string name="duration_hm">%1$dh %2$02dm</string>
     <string name="duration_m">%1$dmin</string>
@@ -424,6 +431,7 @@
     <!-- Pergunte ao Cochilo (docs/assistant.md): respostas revisadas. Descrever, sugerir com calma, nunca julgar, nunca diagnosticar. -->
     <string name="glimpse_caption">Pergunte ao Cochilo</string>
     <string name="glimpse_line">Do seu registro, neste celular.</string>
+    <string name="glimpse_line_tip">Dos estudos, neste celular.</string>
     <string name="glimpse_open">Ler a resposta</string>
     <string name="glimpse_spoken">%1$s Ler a resposta do Pergunte ao Cochilo, do seu registro, neste celular.</string>
     <string name="ask_title">Pergunte ao Cochilo</string>

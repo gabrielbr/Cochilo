@@ -125,10 +125,34 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     fun saveBaby(baby: Baby) = viewModelScope.launch { babies.upsert(baby) }
 
+    /**
+     * Undo for everything Today does (0.45.0, the owner: "user should be able to undo stuff on
+     * home"). Runs [action], then offers Undo with [message]: Undo deletes what [action] added and
+     * puts back what it changed or removed. Undo instead of "are you sure?" (AGENTS.md).
+     */
+    private suspend fun <T> undoable(message: (T) -> String, action: suspend () -> T): T {
+        val before = events.all().associateBy { it.id }
+        val result = action()
+        val after = events.all()
+        val added = after.filter { it.id !in before }
+        val changed = after.mapNotNull { a -> before[a.id]?.takeIf { it != a } }
+        val removed = before.values.filter { b -> after.none { it.id == b.id } }
+        if (added.isNotEmpty() || changed.isNotEmpty() || removed.isNotEmpty()) {
+            _messages.send(UiMessage(message(result), str(R.string.undo)) {
+                viewModelScope.launch {
+                    added.forEach { events.delete(it) }
+                    (changed + removed).forEach { events.upsert(it.copy(updatedAt = System.currentTimeMillis())) }
+                    refreshNow()
+                }
+            })
+        }
+        return result
+    }
+
     /** Start sleep now, or [minutesAgo] minutes ago (the Earlier chips). */
     fun startSleep(minutesAgo: Int = 0) = viewModelScope.launch {
         val before = predictionNow(System.currentTimeMillis())
-        val sleep = entries.startSleep(System.currentTimeMillis() - minutesAgo * 60_000L)
+        val sleep = undoable({ str(R.string.undo_sleep_started) }) { entries.startSleep(System.currentTimeMillis() - minutesAgo * 60_000L) }
         refreshNow()
         if (sleep != null) celebrate(br.gabriel.cochilo.domain.Trigger.StartedSleep(sleep, before))
     }
@@ -137,7 +161,8 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     fun wakeUp(minutesAgo: Int = 0) = viewModelScope.launch {
         val before = predictionNow(System.currentTimeMillis())
         val running = events.all().filter { it.type == EventType.SLEEP && it.end == null }.map { it.id }
-        entries.wakeUp(System.currentTimeMillis() - minutesAgo * 60_000L)
+        val at = System.currentTimeMillis() - minutesAgo * 60_000L
+        undoable({ str(R.string.undo_woke_up, Format(ctx, zone).time(at)) }) { entries.wakeUp(at) }
         refreshNow()
         events.all().filter { it.id in running }.maxByOrNull { it.start }?.let {
             // A night waking isn't the end of the night (docs/nights.md): no "where did she sleep?"
@@ -151,7 +176,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     fun upForDay(minutesAgo: Int = 0) = viewModelScope.launch {
         val before = predictionNow(System.currentTimeMillis())
         val running = events.all().firstOrNull { it.type == EventType.SLEEP && it.end == null }
-        entries.upForDay(System.currentTimeMillis() - minutesAgo * 60_000L)
+        undoable({ str(R.string.undo_up_for_day) }) { entries.upForDay(System.currentTimeMillis() - minutesAgo * 60_000L) }
         refreshNow()
         // The night's first sleep carries where she slept (one question for the whole night).
         val sleeps = events.all().filter { it.type == EventType.SLEEP }
@@ -161,7 +186,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     /** Nap or the night, one tap on Today's sleep card. */
     fun setNight(e: Event, night: Boolean) = viewModelScope.launch {
-        entries.setNight(e.id, night)
+        undoable({ str(if (night) R.string.undo_made_night else R.string.undo_made_nap) }) { entries.setNight(e.id, night) }
         refreshNow()
     }
 
@@ -193,7 +218,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     fun skipDetails() { _details.value = null }
 
     fun finish(e: Event) = viewModelScope.launch {
-        entries.finish(e.id)
+        undoable({ str(R.string.undo_finished, Format(ctx, zone).typeName(e.type)) }) { entries.finish(e.id) }
         refreshNow()
         events.byId(e.id)?.let { askDetails(it); celebrate(br.gabriel.cochilo.domain.Trigger.Logged(it)) }
     }
@@ -245,7 +270,7 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     fun save(e: Event) = viewModelScope.launch {
         if (e.type == EventType.SLEEP) maybeTicks(e.kind)
-        events.upsert(e.copy(updatedAt = System.currentTimeMillis()))
+        undoable({ str(R.string.undo_saved, Format(ctx, zone).typeName(e.type)) }) { events.upsert(e.copy(updatedAt = System.currentTimeMillis())) }
         refreshNow()
         celebrate(br.gabriel.cochilo.domain.Trigger.Logged(e))
     }
@@ -264,8 +289,9 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     fun delete(e: Event) = viewModelScope.launch {
         events.delete(e)
-        _messages.send(UiMessage(str(R.string.deleted), str(R.string.undo)) {
-            viewModelScope.launch { events.upsert(e) }
+        refreshNow()
+        _messages.send(UiMessage(str(R.string.deleted_what, Format(ctx, zone).typeName(e.type)), str(R.string.undo)) {
+            viewModelScope.launch { events.upsert(e.copy(updatedAt = System.currentTimeMillis())); refreshNow() }
         })
     }
 

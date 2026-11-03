@@ -79,12 +79,32 @@ of information from the AI that is relevant and valuable based on the user data.
 
 The glimpse picks the question like this:
 - **First, what stands out in her log:** short naps, early mornings, little daylight or many contact
-  naps (`Assistant.suggestions`).
-- **Otherwise, a different everyday question each day:** night wakings, total sleep, wake windows,
-  bedtime or nap length, only when her numbers are there.
-- **Never** the next sleep (the card above says it), never "around 4 months" on its own, and
-  never before three days of log.
+  naps (`Assistant.suggestions`), once three days are logged.
+- **Otherwise, a tip from the studies:** a different reviewed answer each day, with what the
+  research says and its source. The topics are daylight, routine, wake windows, nap length, night
+  wakings, contact naps, bedtime, feeding to sleep, enough sleep and safe sleep, plus "around 4
+  months" near that age.
+- **Never** the next sleep, which the card above already says.
 - **Not shown** between 19:00 and 07:00, or during a night waking.
+
+### Undo, edit and delete (0.45.0)
+
+The owner said: "Actions should be editable. Right now they are not. User should be able to undo
+stuff on home and edit actions on Dia screen. Edit and remove."
+
+Tapping a row always opened its sheet, but nothing said so. A long press on a sleep starts the
+drag, so a row looked fixed. And Delete asked "are you sure?", which breaks the undo rule.
+
+| Flow | Before | Now |
+|---|---|---|
+| Undo Start sleep, Woke up, nap/night, Finish, Up for the day, Save | Edit the entry by hand (3+ taps) | 1 (Undo in the snackbar) |
+| Edit an entry on Day | 1 tap on the row, with no sign it could be tapped | 1 tap on the row; a pencil shows it, and TalkBack says "Edit" |
+| Delete an entry | Row › Delete › Delete (3), no undo | Row › Delete (2), with Undo |
+
+Undo puts back exactly what the action changed: `MainViewModel.undoable` takes the log before and
+after, then deletes what was added and restores what was changed or removed.
+
+
 
 The answer is Ask Cochilo's reviewed one: the same words and numbers as in Ask, worked out on the
 phone. It's never the model's free text.
