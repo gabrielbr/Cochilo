@@ -17,13 +17,41 @@
         android:localeConfig="@xml/locales_config"
         android:supportsRtl="true"
         android:theme="@style/Theme.Cochilo">
+        <!-- singleTask: a file shared from another app (Napper's export) opens Cochilo in its own task,
+             not inside the other app's, and reaches the running app through onNewIntent. -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <!-- Share to Cochilo (docs/backup.md, 0.41.0): a Napper CSV or a Cochilo backup from any app's
+                 share sheet is imported at once, with the same merge as Settings › Import (never deletes).
+                 Reading a shared file needs no permission: the sender grants it for this one file. -->
+            <intent-filter android:label="@string/share_import_label">
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/csv" />
+                <data android:mimeType="text/comma-separated-values" />
+                <data android:mimeType="text/plain" />
+                <data android:mimeType="application/csv" />
+                <data android:mimeType="application/json" />
+                <data android:mimeType="application/vnd.ms-excel" />
+                <data android:mimeType="application/octet-stream" />
+            </intent-filter>
+            <!-- "Open with Cochilo" from a file manager or a downloads list: the same import. -->
+            <intent-filter android:label="@string/share_import_label">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="content" />
+                <data android:mimeType="text/csv" />
+                <data android:mimeType="text/comma-separated-values" />
+                <data android:mimeType="application/csv" />
+                <data android:mimeType="application/json" />
+                <data android:mimeType="application/vnd.ms-excel" />
             </intent-filter>
         </activity>
         <!-- The notification's buttons and its tick; only the app's own PendingIntents reach it. -->

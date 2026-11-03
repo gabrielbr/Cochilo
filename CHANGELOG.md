@@ -3,6 +3,13 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.41.0 — 2026-11-03
+
+**Share to Cochilo.** Cochilo now appears in Android's share sheet. In Napper, tap Export and pick
+Cochilo ("Import into Cochilo"): the logs are imported straight away, the same as Settings ›
+Import, and nothing is ever deleted. It also works for a Cochilo backup shared from e-mail or
+a chat, and for "Open with" on a CSV or JSON file. `docs/backup.md`.
+
 ## 0.40.1 — 2026-11-03
 
 **No change you can see.** Behind the scenes, Cochilo's look now lives in this repo in three

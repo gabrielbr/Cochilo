@@ -166,6 +166,7 @@
     <string name="napper_sides">Left %1$d min, right %2$d min</string>
     <string name="imported">Imported. New: %1$d. Updated: %2$d.</string>
     <string name="import_failed">That file isn\'t a Cochilo backup</string>
+    <string name="share_import_label">Import into Cochilo</string>
     <string name="file_failed">Couldn\'t use that file</string>
     <string name="deleted">Deleted</string>
     <string name="undo">Undo</string>

@@ -14,6 +14,37 @@ can be locked with a passphrase, so a file left in a drive, an email or a chat c
 - **There is no recovery.** Cochilo has no account and no server, so a lost passphrase means those
   files can't be opened by anyone. The sheet says so in plain words: write it down.
 
+## Share to Cochilo (0.41.0)
+
+Another app's share sheet lists **Cochilo** ("Import into Cochilo") for a CSV, a JSON or text file.
+"Open with" lists it too, for a CSV or JSON from a file manager or the downloads list.
+
+Picking it imports at once, with the same code as Settings › Import (`MainViewModel.importContent`):
+- **a locked backup** opens with the passphrase this phone keeps, or asks for it;
+- **a Napper logs CSV** is read by `NapperImport`;
+- **a Cochilo backup** is merged.
+
+The merge only adds and updates (the newest edit wins). It never deletes, so a share needs no
+"are you sure?". The usual message says what was added. Something else shared by mistake (a link,
+a photo's caption) just says it isn't a backup, and nothing changes.
+
+How:
+- `MainActivity` has two intent filters: `SEND` for those types, and `VIEW` for `content:` files.
+- It is `singleTask`, so Cochilo opens in its own task rather than inside the sender's, and a
+  running Cochilo gets the share through `onNewIntent`.
+- `backup/ShareImport.kt` reads the shared file (`EXTRA_STREAM` or the clip data) or the shared
+  text (`EXTRA_TEXT`). A share is handled once, not again on rotation.
+- No permission is added: the sender grants read access to that one file. The play build still has
+  no `INTERNET`.
+
+Tested by building; Android's share sheet itself can't run in the unit tests (no device), so try
+it once from Napper on the phone.
+
+| Flow | Taps |
+|---|---|
+| Napper → Cochilo | in Napper: Export (1), pick Cochilo in the share sheet (1); nothing to tap in Cochilo |
+| Before | Export in Napper, save the file, open Cochilo, Settings, Import from Napper, find the file |
+
 ## How it's locked
 
 `backup/Sealed.kt`, pure JVM crypto with unit tests (`SealedTest`):

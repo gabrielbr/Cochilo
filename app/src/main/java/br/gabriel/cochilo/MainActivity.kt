@@ -21,6 +21,8 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // A file shared to Cochilo (0.41.0): imported once, not again when the activity is recreated.
+        if (savedInstanceState == null) importShared(intent)
         setContent {
             val mode by vm.theme.collectAsState()
             val dark = when (mode) {
@@ -49,6 +51,23 @@ class MainActivity : ComponentActivity() {
                 androidx.compose.runtime.CompositionLocalProvider(br.gabriel.cochilo.ui.kit.LocalFabric provides br.gabriel.cochilo.ui.kit.Fabric.of(fabric)) { CochiloRoot(vm) }
             }
         }
+    }
+
+    override fun onNewIntent(intent: android.content.Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        importShared(intent)
+    }
+
+    /** A share or an "open with": the file (or the shared text) goes through the same import as Settings. */
+    private fun importShared(intent: android.content.Intent?) {
+        val shared = br.gabriel.cochilo.backup.ShareImport.from(intent) ?: return
+        when (shared) {
+            is br.gabriel.cochilo.backup.ShareImport.Shared.File -> vm.importFile(shared.uri)
+            is br.gabriel.cochilo.backup.ShareImport.Shared.Text -> vm.importText(shared.text)
+        }
+        // Handled: a later rotation or return mustn't import it again.
+        intent?.action = null
     }
 
     override fun onResume() {

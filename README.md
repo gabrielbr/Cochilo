@@ -133,6 +133,10 @@ sooner"). The card always says which numbers it used. Tested on a synthetic year
   bedtime to the next wake-up, split around night wakings), feeds, bottles, diapers and medicine
   notes. Like a backup import it never deletes, and importing the same file twice adds nothing.
   Napper's measurements file isn't read (Cochilo doesn't track growth).
+- **Share to Cochilo** (since 0.41.0): in Napper (or any app, a file manager, an e-mail), Export or
+  Share, then pick **Cochilo** ("Import into Cochilo") in Android's share sheet. The file is
+  imported straight away, the same as Settings › Import, and a message says how many entries were
+  added. "Open with Cochilo" on a CSV or JSON works too. [docs/backup.md](docs/backup.md).
 
 ## Build
 

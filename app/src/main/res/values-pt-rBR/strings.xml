@@ -153,6 +153,7 @@
     <string name="napper_sides">Esquerdo %1$d min, direito %2$d min</string>
     <string name="imported">Importado. Novos: %1$d. Atualizados: %2$d.</string>
     <string name="import_failed">Esse arquivo não é um backup do Cochilo</string>
+    <string name="share_import_label">Importar no Cochilo</string>
     <string name="file_failed">Não deu para usar esse arquivo</string>
     <string name="deleted">Apagado</string>
     <string name="undo">Desfazer</string>
