@@ -176,13 +176,15 @@ internal fun VerticalTimeline(
 
     @Composable
     fun Entry(e: Event, indent: Boolean) {
-        // A sleep's bar grows 4dp for every 10 minutes, so long sleeps look long.
-        val bar = if (e.type.hasDuration) Spacing.space1 * (e.durationMs(now) / 600_000f).coerceAtMost(80f) else null
+        // A block's height follows its length (TimelineScale, 0.46.0): two hours of sleep is
+        // plainly longer than ten minutes of feeding.
+        val bar = if (e.type.hasDuration) Spacing.space1 * br.gabriel.cochilo.domain.TimelineScale.units((e.durationMs(now) / br.gabriel.cochilo.domain.MINUTE).toInt()) else null
         TimelineRow(
             // The time column reads only the stretches' starts, so it runs in order; an entry inside one says its time in its meta.
             time = if (indent) "" else f.time(e.start),
             color = c.eventColor(e, zone),
             barHeight = bar,
+            durationMinutes = if (e.type.hasDuration) (e.durationMs(now) / br.gabriel.cochilo.domain.MINUTE).toInt() else null,
             label = eventLabel(e, f, zone),
             meta = eventMeta(e, now, f),
             onClick = { onOpen(e) },
@@ -215,7 +217,11 @@ internal fun VerticalTimeline(
     ) {
         for (s in stretches) {
             if (s.asleep) Entry(s.sleep!!, indent = false)
-            else TimelineAwake(s.start?.let { f.time(it) } ?: "", stringResource(R.string.stretch_awake), awakeMeta(s, now, f))
+            else TimelineAwake(
+                s.start?.let { f.time(it) } ?: "", stringResource(R.string.stretch_awake), awakeMeta(s, now, f),
+                // Awake on the same scale, as an outline: the gaps between sleeps read too.
+                barHeight = s.start?.let { st -> Spacing.space1 * br.gabriel.cochilo.domain.TimelineScale.units(((s.end ?: now) - st).div(br.gabriel.cochilo.domain.MINUTE).toInt()) },
+            )
             for (e in s.during) Entry(e, indent = true)
         }
         for (e in leftovers) Entry(e, indent = false)

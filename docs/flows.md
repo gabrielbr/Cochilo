@@ -63,6 +63,29 @@ Code: `lastOf`, `lastKind`, `lastKindAmong`, `Event.rememberedFrom` in `domain/Q
 (tested in `QuickLogTest`); the Log menu in `LogMenu.kt` (Today's rows until 0.39.0); the sheet's line in `Sheets.kt`.
 This replaced the earlier "next: other breast" suggestion: the app shows what happened, she decides.
 
+## The timeline shows how long things lasted (0.46.0)
+
+The owner said: "Right now each block is not proportional to its amount of time. It doesn't need
+to be 1:1, but visually it must be easy to understand that 2 hours of sleep is more time than 10
+minutes of breastfeeding."
+
+Before, a bar grew 4dp every 10 minutes, but every row was at least 48dp and the bar filled its
+row. So anything under about two hours looked the same height.
+
+Now each bar has its own height from `TimelineScale` (tested in `TimelineScaleTest`): `space1` ×
+1.5 × √minutes, from 8dp to 192dp.
+
+| Entry | Height |
+|---|---|
+| 10-minute feed | 19dp |
+| 20-minute feed | 27dp |
+| 40-minute nap | 38dp |
+| 2-hour nap | 66dp (3.5× the feed) |
+| 10-hour night | 147dp |
+
+Awake stretches get an outlined bar on the same scale, so the gaps between sleeps read too. A
+drag-to-adjust follows the same scale while held. No taps change.
+
 ## Today ends with Ask Cochilo; the filter goes to Day (0.45.0)
 
 The owner said: "The Dia a dia section in home can be removed. It makes no sense to have there.
