@@ -42,7 +42,6 @@ import br.gabriel.cochilo.ui.kit.IconButton
 import br.gabriel.cochilo.ui.kit.Tab
 import br.gabriel.cochilo.ui.kit.TabBar
 import br.gabriel.cochilo.ui.screens.DayScreen
-import br.gabriel.cochilo.ui.screens.QuickLog
 import br.gabriel.cochilo.ui.screens.VerticalTimeline
 import br.gabriel.cochilo.ui.screens.HistoryScreen
 import br.gabriel.cochilo.ui.screens.PatternsScreen
@@ -173,13 +172,6 @@ class ScreensSnapshotTest {
         }
     }
 
-    /** What was logged last of each type, as Today passes it (remember actions). */
-    private val lastEntries get() = EventType.entries.associateWith { t -> log.filter { it.type == t }.maxByOrNull { it.start } }
-
-    private val lastKinds get() = EventType.entries.associateWith { t ->
-        br.gabriel.cochilo.domain.lastKindAmong(log, t, br.gabriel.cochilo.ui.screens.slideKinds(t))
-    }
-
     private val sleepingLog get() = log + Event(type = EventType.SLEEP, start = at(31, 14, 50))
 
     private fun light() = paparazzi.unsafeUpdateConfig(DeviceConfig.PIXEL_5.copy(nightMode = NightMode.NOTNIGHT))
@@ -268,28 +260,6 @@ class ScreensSnapshotTest {
                     val f = Format(androidx.compose.ui.platform.LocalContext.current, zone, now)
                     Column(Modifier.fillMaxSize().padding(CTokens.Spacing.space4)) {
                         VerticalTimeline(log.filter { it.overlaps(from, to, now) }.sortedBy { it.start }, now, f, zone, {}, onAdjust = { _, _ -> }, allSleeps = log, previewDrag = 1 to 3)
-                    }
-                }
-            }
-        }
-    }
-    /** The log buttons, each with its "i", in Portuguese (the longer labels). */
-    @Test fun quick_log_ptBR_light() {
-        pt(false)
-        paparazzi.snapshot {
-            CochiloTheme(false) {
-                Frame { Column(Modifier.fillMaxSize().padding(CTokens.Spacing.space4)) { QuickLog({}, last = lastEntries, lastKinds = lastKinds) } }
-            }
-        }
-    }
-    /** Mid-slide on Feed: the row has become Left | Right, with Right under the finger. */
-    @Test fun quick_log_sliding_light() {
-        light()
-        paparazzi.snapshot {
-            CochiloTheme(false) {
-                Frame {
-                    Column(Modifier.fillMaxSize().padding(CTokens.Spacing.space4)) {
-                        QuickLog({}, last = lastEntries, lastKinds = lastKinds, previewActive = EventType.FEED to 1)
                     }
                 }
             }

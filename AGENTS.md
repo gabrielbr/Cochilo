@@ -13,7 +13,7 @@ then [docs/research.md](docs/research.md) for the science the features rest on.
   (squash) and run the Release workflow with the next version and a one-line note in English and
   Portuguese. Never leave a finished PR waiting.
 - **Fewest taps.** Every action costs the fewest taps it can: the common entries are one move
-  (the Log button's press-and-drag, slide to log, the home-screen widget, the quick-settings tile, the Earlier chips, one-tap buttons, notification buttons); details stay one tap away, never in the way;
+  (the Log button's press-and-drag, the home-screen widget, the quick-settings tile, the Earlier chips, one-tap buttons, notification buttons); details stay one tap away, never in the way;
   undo instead of "are you sure?" where it's safe. Every change that adds or changes a flow updates
   the tap audit in [docs/flows.md](docs/flows.md) and must not make a common entry cost more.
 - **Remember actions.** What was done last is shown and offered first: the last breast is marked

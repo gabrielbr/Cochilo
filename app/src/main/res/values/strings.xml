@@ -40,13 +40,12 @@
     <string name="wind_down">Wind down: dim the lights, warm or red light only.</string>
 
     <!-- Logging -->
-    <string name="caption_log">Log</string>
     <string name="caption_running">Running</string>
     <string name="caption_timeline">Today</string>
     <string name="caption_today_log">Today\'s log</string>
     <string name="action_finish">Finish</string>
     <string name="empty_today_title">Nothing logged today</string>
-    <string name="empty_today_line">Start a sleep or log a feed when it happens.</string>
+    <string name="empty_today_line">Start a sleep, or tap + to log a feed or a diaper when it happens.</string>
 
     <string name="type_sleep">Sleep</string>
     <string name="type_feed">Feed</string>
@@ -220,7 +219,6 @@
     <string name="info_note">Note: anything else worth remembering, such as medicine, a cold, teething or a new place.</string>
     <string name="info_ring">Midnight is at the top and the day goes round clockwise. Sleep is the outer ring; feeds, pumping and daylight are inside; dots mark diapers.</string>
     <!-- Slide-to-log shortcuts on the log rows. -->
-    <string name="slide_hint">Slide: %1$s</string>
     <string name="slide_left">Left</string>
     <string name="slide_right">Right</string>
     <string name="slide_start">Start</string>
@@ -246,7 +244,6 @@
     <string name="info_medicine">Medicine: what was given and when, with the name and dose in the note. Handy to know whether the last dose was long enough ago. Follow the paediatrician\'s instructions.</string>
     <!-- Remember actions: what was done last. -->
     <string name="slide_last_spoken">%1$s, used last</string>
-    <string name="row_last">Last: %1$s</string>
     <string name="sheet_last">Last time: %1$s · %2$s</string>
     <!-- The Log button (docs/flows.md). -->
     <string name="log_button">Log an entry: hold and drag to a kind, then to a choice</string>

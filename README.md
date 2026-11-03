@@ -19,7 +19,7 @@ dressed in the Tatá Slings brand (teal, plum-grey ink, Pérola, Libre Franklin,
 
 - **Today**: awake/asleep timer with one action (Start sleep / Woke up), the next nap or bedtime
   with its window and the reason for it, running timers (a feed, a walk outside), quick log
-  buttons, a 24-hour timeline and the day's entries. Tap any entry to edit or delete it.
+  buttons (since 0.39.0 the Log button in the corner, not a list of rows), a 24-hour timeline and the day's entries. Tap any entry to edit or delete it.
 - **Day**: one day two ways. A 24-hour ring (midnight at the top; sleep on the outer ring, feeds,
   pumping and daylight inside, dots for diapers) with the total sleep in the middle, then every
   entry hour by hour on a vertical rail, as the day's two states: each sleep (a bar as long as it
@@ -77,14 +77,16 @@ dressed in the Tatá Slings brand (teal, plum-grey ink, Pérola, Libre Franklin,
   → her sling. Never at night, while the baby sleeps, in the first week, or after "Don't show
   again"; Settings › Notifications turns them all off
   ([in-app-marketing.md](docs/tata-slings/in-app-marketing.md)).
-- **Slide to log**: on Today's log rows, slide instead of tapping. Feed: left = left breast, right =
-  right breast. Diaper: Wet · Both · Dirty. Slide a running breastfeed to switch side. Tap still
-  opens the full sheet. How many taps each entry costs, and why: [docs/flows.md](docs/flows.md).
+- **The Log button** (the round + in the corner of every tab): press, drag to a kind and its
+  option (Feed › Left or Right, Diaper › Wet · Both · Dirty…), let go, and it's logged; tap a kind
+  for its full sheet. What was used last is marked. Today has no list of log rows since 0.39.0:
+  the Log button does it all. Slide a running breastfeed to switch side. How many taps each entry
+  costs, and why: [docs/flows.md](docs/flows.md).
 - **Notifications**: a quiet live notification, asleep or awake, with a running clock, the expected
   wake or next nap, a timeline bar and Woke up / Start sleep; running timers get Finish (and Switch
   side). Window reminders 30 and 15 minutes before the next nap or bedtime, with Start routine.
   [docs/notifications.md](docs/notifications.md).
-- **"i" buttons**: each kind of entry (on the log rows, the sleep panel and each entry's sheet) has
+- **"i" buttons**: each kind of entry (on the sleep panel and each entry's sheet) has
   an "i" that explains what it's for, in English and Portuguese.
 - **Patterns**: a 14-day actogram (the day/night rhythm forming) and 7-day averages next to the
   reference range for the baby's age.

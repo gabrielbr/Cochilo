@@ -3,6 +3,13 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.39.0 — 2026-11-03
+
+**Today is simpler.** The list of log rows is gone from Today: the Log button (the round + in the
+corner) already logs all of it from any tab, with what you used last marked. Today keeps the sleep
+panel, the next nap, running timers, the timeline and today's entries, which now sit higher.
+`docs/flows.md`.
+
 ## 0.38.0 — 2026-11-03
 
 **Ask Cochilo knows your log, and it's one tap away.** Ask now sits at the top of every tab (the

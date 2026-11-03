@@ -33,13 +33,12 @@
     <string name="chip_past">Passou da janela</string>
     <string name="wind_down">Hora de acalmar: luz baixa, só luz quente ou vermelha.</string>
 
-    <string name="caption_log">Registrar</string>
     <string name="caption_running">Em andamento</string>
     <string name="caption_timeline">Hoje</string>
     <string name="caption_today_log">Registros de hoje</string>
     <string name="action_finish">Terminar</string>
     <string name="empty_today_title">Nada registrado hoje</string>
-    <string name="empty_today_line">Comece um sono ou registre uma mamada quando acontecer.</string>
+    <string name="empty_today_line">Comece um sono, ou toque em + para registrar uma mamada ou uma fralda quando acontecer.</string>
 
     <string name="type_sleep">Sono</string>
     <string name="type_feed">Mamada</string>
@@ -206,7 +205,6 @@
     <string name="info_note">Nota: qualquer coisa que valha lembrar, como remédio, resfriado, dentes nascendo ou um lugar novo.</string>
     <string name="info_ring">A meia-noite fica no topo e o dia gira no sentido horário. O sono é o anel de fora; mamadas, ordenha e luz do dia ficam dentro; os pontos marcam as fraldas.</string>
     <!-- Atalhos de deslizar nas linhas de registro. -->
-    <string name="slide_hint">Deslize: %1$s</string>
     <string name="slide_left">Esquerdo</string>
     <string name="slide_right">Direito</string>
     <string name="slide_start">Começar</string>
@@ -232,7 +230,6 @@
     <string name="info_medicine">Remédio: o que foi dado e quando, com o nome e a dose na nota. Ajuda a saber se a última dose foi há tempo suficiente. Siga as orientações do pediatra.</string>
     <!-- Lembrar ações: o que foi feito por último. -->
     <string name="slide_last_spoken">%1$s, usado por último</string>
-    <string name="row_last">Último: %1$s</string>
     <string name="sheet_last">Da última vez: %1$s · %2$s</string>
     <!-- O botão Registrar (docs/flows.md). -->
     <string name="log_button">Registrar: segure e arraste até um tipo, depois até uma opção</string>
