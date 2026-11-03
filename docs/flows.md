@@ -154,6 +154,13 @@ log changes and goes through `Entries`, like every other button.
   "Expected next sleep" in the legend and in what TalkBack reads ("Next sleep expected between
   15:51 and 16:11").
 
+## Tablets and foldables (0.25.0)
+
+Phones: no change. Expanded (840dp and up): Today stays on screen beside the picked tab, so Start
+sleep / Woke up and the Earlier chips cost one tap from History or Patterns too, instead of a tab
+switch plus the tap. The Log button keeps its one move on every width.
+[tablet.md](tablet.md).
+
 ## The last nap in the prediction (0.24.0)
 
 No tap changes. The prediction card adds one line, only when the last nap moved the window by 5

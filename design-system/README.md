@@ -87,6 +87,11 @@ one commit on top of the design system's `main` at 0.4.0 (self-update):
 - **0.20.0:** large text: min heights, flowing chip rows, the label scale cap. Audit
   `audits/2026-11-03-v0.20.0-large-text.md`.
 
+**[0016-Wide-screens-0.21.0.patch](0016-Wide-screens-0.21.0.patch)**, on top of 0015:
+
+- **0.21.0:** wide screens: `rail`, `content-max`, `width-medium`, `width-expanded`; the Navigation
+  rail. Audit `audits/2026-11-03-v0.21.0-wide-screens.md`.
+
 All checked on a fresh checkout of the design system's `main`: `git am` applies it,
 `check_tokens.py` reports 0 errors, the tests pass, and `drift.py --cochilo` against this repo
 reports 0 differences.

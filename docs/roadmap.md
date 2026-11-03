@@ -51,13 +51,13 @@ Each is grounded in `docs/research.md` or the Tatá Slings plans (`docs/tata-sli
 
 | Item | Why |
 |---|---|
-| **Tablet and foldable layout** | Android guidance: a navigation rail and two panes on wide screens |
 | **Upstream the design-system patches** | Six patches wait in `design-system/`; merging them makes the system the source of truth again |
 | **Seamless fabric tiles** | Prints mirror at their edges (Tropical); retouch each photo into a true repeating tile |
 | **On-device checks with TalkBack** | Paparazzi checks pixels, not the reading order |
 
 ## Shipped from this plan
 
+- **0.25.0**: tablets and foldables, a rail and two panes ([tablet.md](tablet.md)).
 - **0.24.0**: the last nap's length in the prediction (phase 2, sleep pressure) and a synthetic year of tests ([prediction.md](prediction.md)).
 - **0.23.0**: locked backups with an optional passphrase ([backup.md](backup.md)).
 - **0.22.0**: large text, 200% font scale ([accessibility.md](accessibility.md)).
@@ -76,7 +76,7 @@ Each is grounded in `docs/research.md` or the Tatá Slings plans (`docs/tata-sli
 
 | When | What | Why first |
 |---|---|---|
-| **Soon** | Quality pass: seamless fabric tiles, tablet layout | Research-backed, small, and on the brand's subject |
+| **Soon** | Quality pass: seamless fabric tiles | Research-backed, small, and on the brand's subject |
 | **Later** | Notes from Tatá (waiting for her writing) | Needs Tatá's writing and the monetization plan's order of work |
 | **Exploring** | Wi-Fi sync between two phones; Wear OS; the prediction's clock part | Bigger builds; worth a design spike first |
 

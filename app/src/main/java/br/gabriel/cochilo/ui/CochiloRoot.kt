@@ -128,10 +128,19 @@ fun CochiloRoot(vm: MainViewModel) {
     androidx.compose.runtime.CompositionLocalProvider(br.gabriel.cochilo.ui.kit.LocalBabyLook provides look) {
     Frame {
         Box(Modifier.fillMaxSize().safeDrawingPadding()) {
-            Column(Modifier.fillMaxSize()) {
+            val tabs = listOf(
+                Tab(stringResource(R.string.tab_today), R.drawable.gg_ic_home),
+                Tab(stringResource(R.string.tab_day), R.drawable.gg_ic_day),
+                Tab(stringResource(R.string.tab_history), R.drawable.gg_ic_list),
+                Tab(stringResource(R.string.tab_patterns), R.drawable.gg_ic_chart),
+            )
+            // Phone: tab bar; from 600dp a rail; from 840dp Today beside a second tab (docs/tablet.md).
+            run {
                 if (settings) {
-                    BackHeader(stringResource(R.string.title_settings), stringResource(R.string.back)) { settings = false }
-                    Box(Modifier.weight(1f)) {
+                    br.gabriel.cochilo.ui.kit.AppShell(
+                        tabs, tab, { tab = it }, showTabs = false,
+                        header = { BackHeader(stringResource(R.string.title_settings), stringResource(R.string.back)) { settings = false } },
+                    ) {
                         SettingsScreen(
                             baby, theme, zone,
                             onEditBaby = { editingBaby = true },
@@ -166,24 +175,22 @@ fun CochiloRoot(vm: MainViewModel) {
                         is Predictor.Result.Awake -> stringResource(R.string.status_awake, f.duration(now - prediction.since))
                         Predictor.Result.NeedData -> if (baby != null) stringResource(R.string.status_weeks, weeks) else stringResource(R.string.status_no_data)
                     }
-                    Header(baby?.name?.ifBlank { null } ?: stringResource(R.string.app_name), status) {
-                        IconButton(R.drawable.gg_ic_gear, stringResource(R.string.settings), { settings = true })
-                    }
-                    Box(Modifier.weight(1f)) {
+                    val headerName = baby?.name?.ifBlank { null } ?: stringResource(R.string.app_name)
+                    br.gabriel.cochilo.ui.kit.AppShell(
+                        tabs, tab, { tab = it }, showTabs = babyState is BabyState.Ready,
+                        header = {
+                            Header(headerName, status) {
+                                IconButton(R.drawable.gg_ic_gear, stringResource(R.string.settings), { settings = true })
+                            }
+                        },
+                    ) { width ->
                         when (babyState) {
                             BabyState.Loading -> Unit
                             // The first run: meet the baby, then how the baby looks (docs/onboarding.md).
                             BabyState.Missing -> br.gabriel.cochilo.ui.screens.Onboarding(zone, onDone = { vm.saveBaby(it) })
                             is BabyState.Ready -> {
                                 val reduce = CochiloTheme.reduceMotion
-                                AnimatedContent(
-                                    targetState = tab,
-                                    transitionSpec = {
-                                        val d = if (reduce) 0 else CTokens.Motion.motionStandard
-                                        fadeIn(tween(d, easing = SystemEasing)) togetherWith fadeOut(tween(d, easing = SystemEasing))
-                                    },
-                                    label = "tab",
-                                ) { t ->
+                                val screen: @Composable (Int) -> Unit = { t ->
                                     when (t) {
                                         0 -> TodayScreen(
                                             log, prediction, now, zone,
@@ -208,6 +215,20 @@ fun CochiloRoot(vm: MainViewModel) {
                                         else -> PatternsScreen(log, now, zone, weeks)
                                     }
                                 }
+                                val animated: @Composable (Int) -> Unit = { target ->
+                                    AnimatedContent(
+                                        targetState = target,
+                                        transitionSpec = {
+                                            val d = if (reduce) 0 else CTokens.Motion.motionStandard
+                                            fadeIn(tween(d, easing = SystemEasing)) togetherWith fadeOut(tween(d, easing = SystemEasing))
+                                        },
+                                        label = "tab",
+                                    ) { screen(it) }
+                                }
+                                // Wide: Today stays at the start, the picked tab beside it (Day when Today is picked).
+                                if (width == br.gabriel.cochilo.ui.kit.WidthClass.EXPANDED) {
+                                    br.gabriel.cochilo.ui.kit.TwoPanes({ screen(0) }, { animated(if (tab == 0) 1 else tab) })
+                                } else animated(tab)
                                 // A little celebration when what she was trying for happens (docs/celebrations.md).
                                 val cheer = vm.celebration.collectAsState().value
                                 if (cheer != null) {
@@ -251,17 +272,6 @@ fun CochiloRoot(vm: MainViewModel) {
                                 )
                             }
                         }
-                    }
-                    if (babyState is BabyState.Ready) {
-                        TabBar(
-                            listOf(
-                                Tab(stringResource(R.string.tab_today), R.drawable.gg_ic_home),
-                                Tab(stringResource(R.string.tab_day), R.drawable.gg_ic_day),
-                                Tab(stringResource(R.string.tab_history), R.drawable.gg_ic_list),
-                                Tab(stringResource(R.string.tab_patterns), R.drawable.gg_ic_chart),
-                            ),
-                            tab,
-                        ) { tab = it }
                     }
                 }
             }
