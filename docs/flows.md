@@ -155,6 +155,16 @@ log changes and goes through `Entries`, like every other button.
   "Expected next sleep" in the legend and in what TalkBack reads ("Next sleep expected between
   15:51 and 16:11").
 
+## On-device AI (0.30.0)
+
+| Flow | Taps |
+|---|---|
+| Get the model (play) | Settings › On-device AI (1) › Download (1); the Play Store does the rest |
+| Get the model (family build) | Settings › On-device AI (1) › Choose the model file (1) › the file (1) |
+| Ask something beyond the list | type, Ask (1); the answer appears when the phone has written it |
+
+Nothing else changes: the 13 topics answer at once from the library, as before.
+
 ## Ask Cochilo (0.29.0)
 
 | Flow | Taps |

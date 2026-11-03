@@ -40,11 +40,12 @@ Each is grounded in `docs/research.md` or the Tatá Slings plans (`docs/tata-sli
 - **Wear OS tile**: Start sleep / Woke up and the breasts from the wrist, for when both hands hold
   the baby.
 
-### 3.2b Ask Cochilo, phase 2
+### 3.2b Ask Cochilo, next
 
-The on-device model for open questions (LiteRT-LM + a small Gemma, Android and iOS), grounded in
-phase 1's facts and reviewed answers. Needs the owner's decision on how the model file reaches
-the phone ([assistant.md](assistant.md) §5).
+- Set the `ASSISTANT_MODEL_URL` secret so the Play pack carries the model (a Gemma file the store
+  may redistribute under Gemma's terms).
+- Upgrade Kotlin, then swap MediaPipe for LiteRT-LM in `ai/LocalModel.kt`; measure speed and
+  battery on a 4 GB phone; consider Gemma 3n for phones that can take it.
 
 ### 3.2c Tatá Slings inside the app
 
@@ -68,6 +69,7 @@ never on Today, at night, or on safety screens. Needs Tatá's catalog, notes and
 
 ## Shipped from this plan
 
+- **0.30.0**: Ask Cochilo, phase 2: the optional on-device model ([assistant.md](assistant.md)).
 - **0.29.0**: Ask Cochilo, phase 1: a local assistant from the log and reviewed answers ([assistant.md](assistant.md)).
 - **0.28.0**: details after the main action; Day's timeline newest first ([flows.md](flows.md)).
 - **0.27.0**: drag to adjust a sleep's end on the Day tab ([flows.md](flows.md)).

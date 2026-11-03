@@ -33,6 +33,7 @@ import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import br.gabriel.cochilo.R
+import kotlinx.coroutines.launch
 import br.gabriel.cochilo.domain.Predictor
 import br.gabriel.cochilo.domain.assistant.Assistant
 import br.gabriel.cochilo.domain.assistant.Assistant.Topic
@@ -48,8 +49,11 @@ import br.gabriel.cochilo.ui.theme.CTokens.Spacing
 import br.gabriel.cochilo.ui.theme.CochiloTheme
 import br.gabriel.cochilo.ui.theme.Type
 
-/** One question and its reply, kept only while the screen is open (nothing is stored). */
-data class AskExchange(val question: String, val reply: Assistant.Reply)
+/**
+ * One question and its reply, kept only while the screen is open (nothing is stored). [generated]:
+ * the on-device model's checked answer (phase 2); [thinking] while it writes.
+ */
+data class AskExchange(val question: String, val reply: Assistant.Reply, val generated: String? = null, val thinking: Boolean = false)
 
 /**
  * Ask Cochilo (docs/assistant.md): this week's numbers first, then questions answered from the
@@ -58,14 +62,30 @@ data class AskExchange(val question: String, val reply: Assistant.Reply)
  * answer.
  */
 @Composable
-fun AskScreen(facts: Assistant.Facts, f: Format, initial: List<AskExchange> = emptyList()) {
+fun AskScreen(
+    facts: Assistant.Facts, f: Format, initial: List<AskExchange> = emptyList(),
+    /** Phase 2: the on-device model, when it's ready; it answers only what the library can't. */
+    generate: (suspend (String) -> String?)? = null,
+) {
     val context = LocalContext.current
     val exchanges = remember { mutableStateListOf(*initial.toTypedArray()) }
     var text by remember { mutableStateOf("") }
+    val scope = androidx.compose.runtime.rememberCoroutineScope()
     fun ask(q: String) {
         if (q.isBlank()) return
-        exchanges += AskExchange(q.trim(), Assistant.ask(q, facts))
+        val reply = Assistant.ask(q, facts)
         text = ""
+        // Health, medicine and the mother still go to a person; known topics keep their reviewed
+        // answers. Only "not sure" questions go to the model, grounded and checked (Grounding).
+        if (reply !is Assistant.Reply.NotSure || generate == null) { exchanges += AskExchange(q.trim(), reply); return }
+        val i = exchanges.size
+        exchanges += AskExchange(q.trim(), reply, thinking = true)
+        scope.launch {
+            val prompt = groundedPrompt(context, q, facts, f)
+            val out = generate(prompt)?.let(br.gabriel.cochilo.domain.assistant.Grounding::clean)
+            val ok = out != null && br.gabriel.cochilo.domain.assistant.Grounding.check(out, prompt) == br.gabriel.cochilo.domain.assistant.Grounding.Verdict.OK
+            if (i < exchanges.size) exchanges[i] = exchanges[i].copy(thinking = false, generated = if (ok) out else null)
+        }
     }
     fun askTopic(t: Topic) {
         val q = context.getString(questionRes(t))
@@ -85,7 +105,11 @@ fun AskScreen(facts: Assistant.Facts, f: Format, initial: List<AskExchange> = em
             Spacer(Modifier.height(Spacing.space6))
             QuestionBubble(x.question)
             Spacer(Modifier.height(Spacing.space2))
-            ReplyCard(x.reply, facts, f, onTopic = ::askTopic)
+            when {
+                x.thinking -> ThinkingCard()
+                x.generated != null -> GeneratedCard(x.generated)
+                else -> ReplyCard(x.reply, facts, f, onTopic = ::askTopic)
+            }
         }
         Caption(stringResource(R.string.ask_suggested), top = Spacing.space6)
         val asked = exchanges.mapNotNull { (it.reply as? Assistant.Reply.About)?.topic }.toSet()
@@ -102,6 +126,43 @@ fun AskScreen(facts: Assistant.Facts, f: Format, initial: List<AskExchange> = em
 }
 
 private const val MAX_QUESTION = 200
+
+/** The reviewed passages the model may draw on: what stands out this week, plus safe sleep. */
+private const val PASSAGES = 4
+
+/** The model's prompt: this week's facts and the most relevant reviewed answers (docs/assistant.md). */
+fun groundedPrompt(context: Context, question: String, facts: Assistant.Facts, f: Format): String {
+    val topics = (Assistant.suggestions(facts) + Topic.SAFE_SLEEP).distinct().take(PASSAGES)
+    val passages = topics.flatMap { t -> answer(context, t, facts, f).let { listOfNotNull(it.info, it.tryIt) } }
+    val portuguese = context.getString(R.string.locale_tag).startsWith("pt")
+    return br.gabriel.cochilo.domain.assistant.Grounding.prompt(question, insights(context, facts, f), passages, portuguese)
+}
+
+@Composable
+private fun ThinkingCard() {
+    val c = CochiloTheme.colors
+    Text(
+        stringResource(R.string.ask_thinking), style = Type.meta, color = c.muted,
+        modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(Radius.radiusM)).background(c.surface)
+            .border(Size.hairline, c.line, RoundedCornerShape(Radius.radiusM)).padding(Spacing.space4)
+            .semantics { liveRegion = LiveRegionMode.Polite },
+    )
+}
+
+/** The model's answer, always labelled as such. */
+@Composable
+private fun GeneratedCard(text: String) {
+    val c = CochiloTheme.colors
+    Column(
+        Modifier.fillMaxWidth().clip(RoundedCornerShape(Radius.radiusM)).background(c.surface)
+            .border(Size.hairline, c.line, RoundedCornerShape(Radius.radiusM)).padding(Spacing.space4)
+            .semantics(mergeDescendants = true) { liveRegion = LiveRegionMode.Polite },
+    ) {
+        Text(text, style = Type.body, color = c.ink)
+        Spacer(Modifier.height(Spacing.space3))
+        Text(stringResource(R.string.ask_generated_label), style = Type.meta, color = c.muted)
+    }
+}
 
 /** Under this share of short naps, the answer says most naps already run long. */
 private const val MOSTLY_LONG_PERCENT = 34

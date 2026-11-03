@@ -59,6 +59,9 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             signingConfig = signingConfigs.getByName("release")
         }
+        // Ask Cochilo's on-device model runs on ARM phones; leaving out the x86 libraries keeps the
+        // family APK small (docs/assistant.md). Play splits by ABI by itself.
+        named("release") { ndk { abiFilters += listOf("arm64-v8a", "armeabi-v7a") } }
         debug {
             applicationIdSuffix = ".debug"
             versionNameSuffix = "-debug"
@@ -88,13 +91,29 @@ android {
     lint {
         checkReleaseBuilds = false
     }
+
+    // Ask Cochilo's model for the play build: an on-demand asset pack the Play Store downloads
+    // (docs/assistant.md). Bundles only; the github APK imports the model file instead.
+    assetPacks += ":assistant_model"
 }
 
-// The permission promise, checked on every build: play asks only to post notifications; github
-// adds exactly the two that self-update needs. A library that sneaks in INTERNET fails the build here.
+// The permission promise, checked on every build: play asks to post notifications and, for Play
+// Asset Delivery to unpack Ask Cochilo's model, to run its foreground extraction service (the
+// Play Store does the download; still no INTERNET); github adds exactly the two that self-update
+// needs. A library that sneaks in INTERNET fails the build here.
 val notifications = "android.permission.POST_NOTIFICATIONS" // the live notification, both builds
+// Play Asset Delivery (play only): its foreground extraction service, and WorkManager's three
+// (wake lock, reschedule after reboot, read whether a network is up). None can send anything:
+// without INTERNET the app has no way to reach the network (docs/distribution.md).
+val modelExtraction = setOf(
+    "android.permission.FOREGROUND_SERVICE",
+    "android.permission.FOREGROUND_SERVICE_DATA_SYNC",
+    "android.permission.WAKE_LOCK",
+    "android.permission.RECEIVE_BOOT_COMPLETED",
+    "android.permission.ACCESS_NETWORK_STATE",
+)
 val allowedPermissions = mapOf(
-    "play" to setOf(notifications),
+    "play" to setOf(notifications) + modelExtraction,
     "github" to setOf(notifications, "android.permission.INTERNET", "android.permission.REQUEST_INSTALL_PACKAGES"),
 )
 androidComponents {
@@ -145,6 +164,11 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.6")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.6")
     debugImplementation("androidx.compose.ui:ui-tooling")
+
+    // Ask Cochilo, phase 2: the on-device model runtime (docs/assistant.md). No permissions.
+    implementation("com.google.mediapipe:tasks-genai:0.10.35")
+    // The play build gets the model as a Play asset pack.
+    "playImplementation"("com.google.android.play:asset-delivery:2.3.0")
 
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.jetbrains.kotlin:kotlin-test:2.0.21")

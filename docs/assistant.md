@@ -10,7 +10,7 @@ judging; running on any Android and, later, on iPhone.
 |---|---|---|---|
 | **1. Facts** | Computes everything with numbers from her log: naps, short-nap share, night wakings, longest stretch, bedtime and its spread, early mornings, daylight, contact naps, routines, the next sleep | Pure Kotlin on the phone (`domain/assistant/Assistant.kt`), reusing `Stats`, `Predictor`, `Reference` | **Shipped, 0.29.0** |
 | **2. Guide** | Understands the question, routes health, medicine and the mother's wellbeing to a person, and answers from a reviewed library tied to [research.md](research.md), filled with layer 1's numbers | Pure Kotlin + reviewed strings in English and Portuguese | **Shipped, 0.29.0** |
-| **3. Conversation** | An optional small on-device model for questions outside the library and a more natural voice. It is only allowed to phrase layer 1's facts and layer 2's reviewed content, never to invent numbers or advice | LiteRT-LM (Google AI Edge) with a Gemma model, on Android and iOS | **Planned, needs a decision (§5)** |
+| **3. Conversation** | An optional small on-device model for questions outside the library. It is only allowed to phrase layer 1's facts and layer 2's reviewed content, never to invent numbers or advice | MediaPipe LLM Inference with a small Gemma, on Android (and iOS later) | **Shipped, 0.30.0** |
 
 Why this order: layers 1 and 2 are what make it **safe and honest**. The numbers are computed,
 not generated, so they can't be hallucinated. Every answer can be reviewed by Tatá before it
@@ -63,39 +63,51 @@ both languages for words that scold, blame or call a phase a step back ("should"
 **When it doesn't know**, it says so and lists what it can help with, with the suggested
 questions under it. It never guesses outside its library.
 
-## Phase 2: the on-device model (to decide)
+## Phase 2: the on-device model (0.30.0)
 
-**Engine:** [LiteRT-LM](https://ai.google.dev/edge/litert-lm/overview), Google's open-source
-on-device LLM runtime, on Android (CPU/GPU/NPU) and iOS (CPU/GPU, a Swift SDK in early preview).
-It's the one runtime that covers both platforms with the same model files.
+Decided 2026-11-03 by the owner: **Play delivery for the play build, file import for the family
+build**. Optional and off until the parent gets the model; phase 1 is always there.
 
-**Model:** the smallest chat-ready Gemma that answers well in Portuguese. Gemma 3 1B (4-bit,
-roughly 0.5–0.6 GB) is the realistic floor for "any Android with 4 GB of RAM". Gemma 3n E2B
-(about 3 GB) is better but too large for older phones. The 270M models are for embeddings and
-function calling, not chat. To check on real phones before choosing: speed on a 4 GB mid-range
-Android, battery use, and quality in pt-BR.
+**Runtime:** MediaPipe LLM Inference (`com.google.mediapipe:tasks-genai`), the same `.task` model
+files on Android and iOS, with no permissions of its own. It sits behind `ai/LocalModel.kt`, so it
+can be swapped for [LiteRT-LM](https://ai.google.dev/edge/litert-lm/overview) (Google's newer
+runtime) in one class. LiteRT-LM's Android library is built with Kotlin 2.2+, which this project's
+Kotlin 2.0 can't read yet; that swap follows a Kotlin upgrade (roadmap).
 
-**How it stays safe:**
-- Layer 2 runs first; health, medicine and the mother still get the fixed replies, and the
-  model never sees those questions.
-- The prompt holds only layer 1's facts and the matching reviewed passages, and the model is told
-  to answer only from them.
-- Every reply is checked against the never-judge words and against numbers that aren't in the
-  facts; one that fails falls back to the library answer.
-- Always labelled "Not medical advice"; it never says it monitors the baby.
+**Model:** a small Gemma as a `.task` file (Gemma 3 1B, 4-bit, about 550 MB). The model is never in
+git and never inside the APK.
 
-**The decision it needs (the owner's):** the model file is hundreds of MB and has to reach the
-phone.
+| | **play** | **github** (family) |
+|---|---|---|
+| How the model arrives | An on-demand **Play asset pack** (`:assistant_model`): the Play Store downloads it; the app only asks for it | The parent **chooses the file** (Settings › Ask Cochilo › On-device AI › Choose the model file); it's copied into the app's own storage, with progress |
+| Where it comes from | The Release workflow puts it in the pack when the `ASSISTANT_MODEL_URL` secret is set (and `HF_TOKEN` if the host needs one); without it the pack ships empty and the app says "Not in this build" | Downloaded once by the parent from Google's model page (Hugging Face `litert-community`, Gemma 3 1B IT, the int4 `.task`; accepting Gemma's terms there), then chosen in the app |
+| Checks | The pack's file must exist | Must be a `.task` (a zip: starts with "PK"), at least 50 MB, and fit in free space (`ai/ModelFile.kt`, tested) |
+| Remove | Remove the model (the pack is removed) | Remove the model (the file is deleted) |
 
-| Option | Play build (no INTERNET) | Family build (github) | Trade-off |
-|---|---|---|---|
-| **A. Play Asset Delivery** (an on-demand asset pack, downloaded by the Play Store) | Works, if the app itself needs no INTERNET for it (to verify) | n/a | Cleanest for Play; ties the model to Play |
-| **B. Download from a GitHub release** | Not possible | Needs INTERNET for one more thing than the self-update | Changes a product rule |
-| **C. Import the model file** (like a backup: the parent picks the file) | Works | Works | No rule changes; one more step for the parent |
-| **D. Ship it inside the app** | Works | Works | The app grows from MBs to over 0.5 GB |
+**What the model may answer:** only questions the library doesn't know ("not sure"). Health,
+medicine and the mother still get the fixed replies, and the model never sees them. The 13 topics
+keep their reviewed answers.
 
-Recommendation: **A for Play, C for the family build**, with the model off by default and Phase 1
-always there. Until that's decided, Phase 1 is the assistant.
+**How it stays grounded** (`domain/assistant/Grounding.kt`, tested in `GroundingTest`):
+- The prompt is the rules, this week's facts (the "This week" lines) and the reviewed answers of
+  the topics that stand out (plus safe sleep), then the question. Rules: answer in at most 4 short
+  sentences, only from those, no numbers or studies of its own, no medical advice, medicines or
+  diagnoses, never judge, and say "I can't answer that from your log" when they don't answer it.
+- Every reply is checked before it's shown. It's thrown away if it's empty, longer than 700
+  characters, judges ("should", "wrong", "regression"…), mentions medicine or diagnosis, or
+  contains **any number that isn't in the prompt**. A thrown-away reply shows the library's
+  "not sure" answer instead.
+- A model answer is always labelled: "Written on this phone by a small AI model, from your log.
+  It can make mistakes."
+
+**Permissions** (enforced by `check<Variant>Permissions`): the play build gains Play Asset
+Delivery's foreground extraction service (`FOREGROUND_SERVICE`, `FOREGROUND_SERVICE_DATA_SYNC`)
+and WorkManager's `WAKE_LOCK`, `RECEIVE_BOOT_COMPLETED` and `ACCESS_NETWORK_STATE` (read-only:
+whether a network is up). **Still no `INTERNET`**: the Play Store downloads the pack, and the app
+can't reach the network. The github build gains nothing.
+
+**Size:** the runtime's native libraries add about 46 MB to the family APK (ARM 64- and 32-bit;
+x86 left out). Play splits by ABI, so a Play install adds about half that.
 
 ## iPhone
 
@@ -109,5 +121,12 @@ iOS runtime runs the same model files for phase 2.
 - `domain/assistant/Assistant.kt`: facts, question matching, safety routing, suggestions.
 - `ui/screens/Ask.kt`: the screen, the answer builder (`answer`, `insights`, testable).
 - Strings `ask_*` in `values/strings.xml` and `values-pt-rBR/strings.xml`: the reviewed library.
+- `domain/assistant/Grounding.kt`: the model's prompt and the reply check.
+- `ai/LocalModel.kt` (the runtime), `ai/ModelState.kt` (states and the `ModelSource` interface),
+  `ai/ModelFile.kt` (file checks and copy); `src/play/.../ai/ModelSources.kt` (Play asset pack) and
+  `src/github/.../ai/ModelSources.kt` (file import); `ui/screens/ModelSheet.kt`.
+- `assistant_model/` (the asset pack module); the Release workflow's "Assistant model" step.
 - Tests: `AssistantTest` (safety, both languages, word-boundary matching, facts, suggestions,
-  never-judge). Screenshots: `ask_light`, `ask_care_ptBR_dark`, `ask_not_sure_light`.
+  never-judge), `GroundingTest`, `ModelFileTest`. Screenshots: `ask_light`, `ask_care_ptBR_dark`,
+  `ask_not_sure_light`, `ask_generated_light`, `model_sheet_play_light`,
+  `model_sheet_import_copying_light`, `model_sheet_ready_ptBR_dark`.

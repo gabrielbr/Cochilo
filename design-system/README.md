@@ -107,6 +107,11 @@ one commit on top of the design system's `main` at 0.4.0 (self-update):
 - **0.23.0:** the Conversation pattern (Ask Cochilo). Audit
   `audits/2026-11-03-v0.23.0-conversation.md`.
 
+**[0020-Model-answer-0.23.1.patch](0020-Model-answer-0.23.1.patch)**, on top of 0019:
+
+- **0.23.1:** an on-device model's answer, always labelled. Audit
+  `audits/2026-11-03-v0.23.1-model-answer.md`.
+
 All checked on a fresh checkout of the design system's `main`: `git am` applies it,
 `check_tokens.py` reports 0 errors, the tests pass, and `drift.py --cochilo` against this repo
 reports 0 differences.

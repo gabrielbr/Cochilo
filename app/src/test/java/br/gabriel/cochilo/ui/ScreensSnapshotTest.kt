@@ -355,6 +355,37 @@ class ScreensSnapshotTest {
     @Test fun ask_care_ptBR_dark() { pt(true); paparazzi.snapshot { AskShot(true, listOf("Ela está com febre, o que faço?")) } }
     @Test fun ask_not_sure_light() { light(); paparazzi.snapshot { AskShot(false, listOf("What colour is the sky?")) } }
 
+    /** On-device AI (docs/assistant.md): the sheet in its states, and an answer from the model. */
+    @Composable
+    private fun ModelShot(dark: Boolean, state: br.gabriel.cochilo.ai.ModelState, kind: br.gabriel.cochilo.ai.ModelSource.Kind) {
+        CochiloTheme(dark) { br.gabriel.cochilo.ui.kit.Frame { androidx.compose.foundation.layout.Column(Modifier.padding(br.gabriel.cochilo.ui.theme.CTokens.Spacing.space6)) {
+            br.gabriel.cochilo.ui.screens.ModelBody(state, kind, {}, {}, {}, {})
+        } } }
+    }
+    @Test fun model_sheet_play_light() { light(); paparazzi.snapshot { ModelShot(false, br.gabriel.cochilo.ai.ModelState.Absent, br.gabriel.cochilo.ai.ModelSource.Kind.PLAY_DOWNLOAD) } }
+    @Test fun model_sheet_import_copying_light() { light(); paparazzi.snapshot { ModelShot(false, br.gabriel.cochilo.ai.ModelState.Getting(0.42f), br.gabriel.cochilo.ai.ModelSource.Kind.FILE_IMPORT) } }
+    @Test fun model_sheet_ready_ptBR_dark() { pt(true); paparazzi.snapshot { ModelShot(true, br.gabriel.cochilo.ai.ModelState.Ready(java.io.File("model.task"), 555L * 1024 * 1024), br.gabriel.cochilo.ai.ModelSource.Kind.PLAY_DOWNLOAD) } }
+    @Test fun ask_generated_light() {
+        light()
+        paparazzi.snapshot {
+            CochiloTheme(false) {
+                val weeks = ageWeeks(baby.birthDate, null, now)
+                val facts = br.gabriel.cochilo.domain.assistant.Assistant.facts(log, weeks, now, zone, Predictor(zone).predict(log, weeks, now))
+                val f = Format(androidx.compose.ui.platform.LocalContext.current, zone, now)
+                Frame { Column(Modifier.fillMaxSize()) {
+                    BackHeader(stringResource(R.string.ask_title), stringResource(R.string.back)) {}
+                    Box(Modifier.weight(1f)) {
+                        br.gabriel.cochilo.ui.screens.AskScreen(facts, f, listOf(
+                            br.gabriel.cochilo.ui.screens.AskExchange("Does a warm bath help before bed?", br.gabriel.cochilo.domain.assistant.Assistant.Reply.NotSure(emptyList()),
+                                generated = "A calm, repeated routine before bed is linked to easier bedtimes, and a bath can be one of its steps. This week the baby slept 14h 16m a day on average."),
+                            br.gabriel.cochilo.ui.screens.AskExchange("And a story?", br.gabriel.cochilo.domain.assistant.Assistant.Reply.NotSure(emptyList()), thinking = true),
+                        ))
+                    }
+                } }
+            }
+        }
+    }
+
     @Test fun passphrase_sheet_light() {
         light()
         paparazzi.snapshot { CochiloTheme(false) { br.gabriel.cochilo.ui.kit.Frame { androidx.compose.foundation.layout.Column(Modifier.padding(br.gabriel.cochilo.ui.theme.CTokens.Spacing.space6)) {
