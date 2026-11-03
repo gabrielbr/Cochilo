@@ -63,6 +63,20 @@ Code: `lastOf`, `lastKind`, `lastKindAmong`, `Event.rememberedFrom` in `domain/Q
 (tested in `QuickLogTest`); the Log menu in `LogMenu.kt` (Today's rows until 0.39.0); the sheet's line in `Sheets.kt`.
 This replaced the earlier "next: other breast" suggestion: the app shows what happened, she decides.
 
+## From Tatá (0.44.0)
+
+[in-app-marketing.md](tata-slings/in-app-marketing.md) §13. Her notes went from the end of
+Patterns, when one was due, to a tab of their own.
+
+| Flow | Before | Now |
+|---|---|---|
+| Read the note for the baby's age | Never shown (none approved); at best, scroll to the end of Patterns | 1 (the From Tatá tab) |
+| Read the next or earlier notes | Not possible | 1, or 2 for the earlier ones |
+| This week's tip | Scroll to the end of Patterns | 1 (the tab, "This week") |
+| Open her shop | Settings › scroll to About (2+) | 2 (tab › Her shop) |
+
+No common entry changes: the Log button, Today and the widget are as before.
+
 ## Less is more (0.43.0)
 
 The owner: "reduce clutter and less valuable information and actions." Every element went

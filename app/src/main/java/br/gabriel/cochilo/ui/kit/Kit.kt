@@ -545,9 +545,9 @@ fun QuietLink(line: String, action: String, spoken: String, onClick: () -> Unit,
  */
 @Composable
 fun TataNote(
-    text: String, byline: String,
+    text: String, byline: String?,
     linkLine: String?, linkAction: String?, linkSpoken: String?, onLink: (() -> Unit)?,
-    dismiss: String, onDismiss: () -> Unit,
+    dismiss: String? = null, onDismiss: (() -> Unit)? = null,
 ) {
     val c = CochiloTheme.colors
     Column(
@@ -556,17 +556,22 @@ fun TataNote(
             .padding(start = Spacing.space4, end = Spacing.space4, top = Spacing.space4),
     ) {
         Text(text, style = Type.body, color = c.ink)
-        Spacer(Modifier.height(Spacing.space2))
-        Text(byline, style = Type.meta, color = c.muted)
+        // In the From Tatá tab her byline is said once, under the title (0.44.0), not on each note.
+        if (byline != null) {
+            Spacer(Modifier.height(Spacing.space2))
+            Text(byline, style = Type.meta, color = c.muted)
+        }
         if (linkLine != null && linkAction != null && onLink != null) {
             Spacer(Modifier.height(Spacing.space2))
             QuietLink(linkLine, linkAction, linkSpoken ?: linkAction, onLink)
         }
-        val src = remember { MutableInteractionSource() }
-        Box(
-            Modifier.heightIn(min = Spacing.space12).clickable(src, indication = null, role = Role.Button, onClick = onDismiss).pressScale(src),
-            contentAlignment = Alignment.CenterStart,
-        ) { Text(dismiss, style = Type.meta, color = c.muted) }
+        if (dismiss != null && onDismiss != null) {
+            val src = remember { MutableInteractionSource() }
+            Box(
+                Modifier.heightIn(min = Spacing.space12).clickable(src, indication = null, role = Role.Button, onClick = onDismiss).pressScale(src),
+                contentAlignment = Alignment.CenterStart,
+            ) { Text(dismiss, style = Type.meta, color = c.muted) }
+        } else Spacer(Modifier.height(Spacing.space4))
     }
 }
 

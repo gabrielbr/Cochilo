@@ -25,9 +25,10 @@ class CatalogTest {
         assertEquals(setOf(Moment.ARMS_NAPS), catalog.approved)
     }
 
-    @Test fun every_age_band_has_a_note_entry_none_approved_most_without_a_product() {
+    /** All twelve notes approved for the From Tatá tab (the owner, 0.44.0); one carries a product. */
+    @Test fun every_age_band_has_a_note_entry_all_approved_most_without_a_product() {
         for (b in br.gabriel.cochilo.domain.AgeNotes.Band.entries) assertTrue("$b", catalog.notes.any { it.band == b.name })
-        assertEquals(emptySet<br.gabriel.cochilo.domain.AgeNotes.Band>(), catalog.approvedNotes)
+        assertEquals(br.gabriel.cochilo.domain.AgeNotes.Band.entries.toSet(), catalog.approvedNotes)
         assertEquals(1, catalog.notes.count { it.product != null })
         assertEquals("https://tataslings.com.br/tata-facil-sling/?utm_source=cochilo&utm_medium=app&utm_campaign=note_m1_2", catalog.noteUrl(br.gabriel.cochilo.domain.AgeNotes.Band.M1_2))
         assertEquals(null, catalog.noteUrl(br.gabriel.cochilo.domain.AgeNotes.Band.M3_4))

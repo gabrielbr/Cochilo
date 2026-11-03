@@ -1,5 +1,5 @@
 {
-  "comment": "Tatá's suggestions (docs/tata-slings/in-app-marketing.md). Shipped inside the app: no remote config. A moment or an age note shows only when approved is true, set after Tatá signs it off. Paths are the shop's own category pages, checked 2026-11-03.",
+  "comment": "Tatá's suggestions (docs/tata-slings/in-app-marketing.md). Shipped inside the app: no remote config. A moment or an age note shows only when approved is true, set after Tatá signs it off. Paths are the shop's own category pages, checked 2026-11-03. Age notes approved by the owner for Tatá on 2026-11-03 (0.44.0).",
   "version": 1,
   "moments": [
     {
@@ -30,53 +30,53 @@
   "notes": [
     {
       "band": "M0_1",
-      "approved": false
+      "approved": true
     },
     {
       "band": "M1_2",
-      "approved": false,
+      "approved": true,
       "product": "tata_facil_sling",
       "path": "tata-facil-sling/"
     },
     {
       "band": "M2_3",
-      "approved": false
+      "approved": true
     },
     {
       "band": "M3_4",
-      "approved": false
+      "approved": true
     },
     {
       "band": "M4_6",
-      "approved": false
+      "approved": true
     },
     {
       "band": "M6_8",
-      "approved": false
+      "approved": true
     },
     {
       "band": "M8_10",
-      "approved": false
+      "approved": true
     },
     {
       "band": "M10_12",
-      "approved": false
+      "approved": true
     },
     {
       "band": "M12_15",
-      "approved": false
+      "approved": true
     },
     {
       "band": "M15_18",
-      "approved": false
+      "approved": true
     },
     {
       "band": "M18_21",
-      "approved": false
+      "approved": true
     },
     {
       "band": "M21_24",
-      "approved": false
+      "approved": true
     }
   ]
 }

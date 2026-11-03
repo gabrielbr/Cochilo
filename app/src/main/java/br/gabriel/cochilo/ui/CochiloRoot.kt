@@ -141,6 +141,7 @@ fun CochiloRoot(vm: MainViewModel) {
                 Tab(stringResource(R.string.tab_today), R.drawable.gg_ic_home),
                 Tab(stringResource(R.string.tab_day), R.drawable.gg_ic_day),
                 Tab(stringResource(R.string.tab_patterns), R.drawable.gg_ic_chart),
+                Tab(stringResource(R.string.tab_tata), R.drawable.gg_ic_heart),
             )
             // Phone: tab bar; from 600dp a rail; from 840dp Today beside a second tab (docs/tablet.md).
             run {
@@ -296,22 +297,22 @@ fun CochiloRoot(vm: MainViewModel) {
                                             onAdjust = vm::adjustEnd,
                                             showAdjustHint = !vm.adjustHintSeen.collectAsState().value,
                                         )
+                                        2 -> PatternsScreen(log, now, zone, weeks)
                                         else -> {
-                                            // A note from Tatá when one is due (in-app-marketing.md): rules in Suggestions.
+                                            // From Tatá (0.44.0, in-app-marketing.md §13): her notes in a tab of their own.
                                             vm.suggestionTick.collectAsState().value
                                             vm.tataSuggestions.collectAsState().value
                                             val sleeping = prediction is Predictor.Result.Sleeping
-                                            // One Tatá card at most: her note for the baby's age first (content), else a suggestion.
-                                            val band = vm.ageNote(weeks, now, sleeping)
-                                            val due = if (band == null) vm.suggestion(log, weeks, now, sleeping) else null
+                                            val due = vm.suggestion(log, weeks, now, sleeping)
                                             if (due != null) androidx.compose.runtime.LaunchedEffect(due.moment) { vm.suggestionShown(due.moment) }
-                                            PatternsScreen(
-                                                log, now, zone, weeks,
-                                                tataNote = when {
-                                                    band != null -> { { br.gabriel.cochilo.ui.screens.TataAgeNote(band, vm.catalog.noteProduct(band), vm.catalog.noteUrl(band), onClose = { vm.closeAgeNote(band) }) } }
-                                                    due != null -> { { br.gabriel.cochilo.ui.screens.TataSuggestion(due, vm.catalog.url(due.moment), onDismiss = { vm.dismissSuggestion(due.moment) }) } }
-                                                    else -> null
-                                                },
+                                            br.gabriel.cochilo.ui.screens.TataScreen(
+                                                babyName = baby?.name ?: "", ageWeeks = weeks,
+                                                noteProduct = vm.catalog::noteProduct, noteUrl = vm.catalog::noteUrl,
+                                                // No shop links at night or while the baby sleeps (§2), like every suggestion.
+                                                shopLinks = !sleeping && !br.gabriel.cochilo.domain.isNightStart(now, zone),
+                                                suggestion = due, suggestionUrl = due?.let { vm.catalog.url(it.moment) },
+                                                onDismissSuggestion = { due?.let { vm.dismissSuggestion(it.moment) } },
+                                                onShop = { br.gabriel.cochilo.ui.screens.openShop(context, br.gabriel.cochilo.store.Store.about) },
                                             )
                                         }
                                     }

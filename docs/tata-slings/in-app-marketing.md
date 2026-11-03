@@ -239,8 +239,8 @@ the words as drafted. It is the first Tatá card a parent can actually see.
 - **When:** under 13 weeks, with 5 or more naps in arms in the last 7 days. Every rule in §2 still
   holds: never while the baby sleeps, never between 19:00 and 07:00, never in the first 7 days,
   once a week at most, and "Don't show again" is final. It shows for a week, then retires for good.
-- **Where:** Patterns, under the week's data. A due age note would come first, but none is
-  approved yet.
+- **Where:** Patterns, under the week's data, until 0.44.0. Since then it's in the From Tatá tab,
+  under "This week" (§13).
 - **The words** (pt-BR / en): "Sonecas no colo nesta semana: 6. Soneca no colo é normal nessa
   idade. O sling deixa as mãos livres enquanto o bebê dorme pertinho." / "Naps in arms this week:
   6. Contact naps are normal at this age. A sling keeps your hands free while the baby sleeps
@@ -256,6 +256,35 @@ the words as drafted. It is the first Tatá card a parent can actually see.
   agrees: `ROUTINE_STEADY` (the Naninha), then `LITTLE_DAYLIGHT`, then `SIX_MONTHS`.
 - **Turning on the next:** set that moment's `approved` to `true` in `assets/tata/catalog.json`,
   add it to `CatalogTest.only_the_moments_tata_signed_off_are_approved`, and note the date here.
+
+## 13. From Tatá, a tab of its own (0.44.0)
+
+The owner: "The card with Tatá's tips and content, I can't find. This should be a top level menu
+item in the bottom nav bar." He was right that it was hard to find. The age notes were all
+waiting for approval, so none ever showed, and the one live moment fires only under 13 weeks.
+
+- **The tab:** **From Tatá / Da Tatá**, the fourth in the bottom bar (and the rail), with
+  `gg_ic_heart` (design system 0.30.0). It's a place the parent chose to go, like Settings, so it
+  fits §1.
+- **The notes are approved.** All twelve age notes were approved by the owner for Tatá on
+  2026-11-03, with the words as drafted (`catalog.json`, `CatalogTest`).
+- **What it shows, in order:**
+  1. Her byline, once, under the title.
+  2. **This week**: the suggestion, if one is due. It follows the same rules as before (§2, §12):
+     once a week at most, and "Don't show again" is final.
+  3. **For {baby}'s age**: the note for the baby's band.
+  4. **Coming up**: the next band's note.
+  5. **Earlier notes: n**, one tap away.
+  6. **Her shop**: the brand row, the same as Settings › About.
+- **No shop links at night or while the baby sleeps** (§2). The notes are still there to read
+  then; only "See the sling" hides. The suggestion itself never shows then (`Suggestions.pick`).
+- **Patterns no longer carries a Tatá card.** The tab replaces it, so there's one place for her
+  notes, not two (less-is-more question 2).
+- **Unchanged:**
+  - never on Today, the Log button, a sheet, the notification, the widget or the tile;
+  - no badges;
+  - the "Sugestões da Tatá" switch still turns the suggestions off. The notes are content and
+    stay.
 
 ## 8. Open questions for Tatá
 

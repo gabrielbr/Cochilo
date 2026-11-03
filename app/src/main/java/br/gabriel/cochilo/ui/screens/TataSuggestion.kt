@@ -19,7 +19,10 @@ import br.gabriel.cochilo.ui.kit.TataNote
  * about a product ([product] and [url]), and "Got it", which closes it for this age band.
  */
 @Composable
-fun TataAgeNote(band: br.gabriel.cochilo.domain.AgeNotes.Band, product: String?, url: String?, onClose: () -> Unit) {
+fun TataAgeNote(
+    band: br.gabriel.cochilo.domain.AgeNotes.Band, product: String?, url: String?,
+    onClose: (() -> Unit)? = null, signed: Boolean = true,
+) {
     val context = LocalContext.current
     val text = stringResource(
         when (band) {
@@ -39,10 +42,10 @@ fun TataAgeNote(band: br.gabriel.cochilo.domain.AgeNotes.Band, product: String?,
     )
     val link = if (product != null && url != null) productLink(product) else null
     TataNote(
-        text = text, byline = stringResource(R.string.tata_byline),
+        text = text, byline = if (signed) stringResource(R.string.tata_byline) else null,
         linkLine = link?.let { stringResource(R.string.tata_link_line) }, linkAction = link?.first, linkSpoken = link?.second,
         onLink = if (link != null) { { runCatching { context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) } } } else null,
-        dismiss = stringResource(R.string.age_note_close), onDismiss = onClose,
+        dismiss = if (onClose != null) stringResource(R.string.age_note_close) else null, onDismiss = onClose,
     )
 }
 
@@ -56,7 +59,7 @@ private fun productLink(product: String): Pair<String, String> = when (product) 
 }
 
 @Composable
-fun TataSuggestion(s: Suggestions.Suggestion, url: String?, onDismiss: () -> Unit) {
+fun TataSuggestion(s: Suggestions.Suggestion, url: String?, onDismiss: () -> Unit, signed: Boolean = true) {
     val context = LocalContext.current
     val text = when (s.moment) {
         Suggestions.Moment.ARMS_NAPS -> stringResource(R.string.tata_note_arms_naps, s.count ?: 0)
@@ -66,7 +69,7 @@ fun TataSuggestion(s: Suggestions.Suggestion, url: String?, onDismiss: () -> Uni
     }
     val (action, spoken) = productLink(s.product)
     TataNote(
-        text = text, byline = stringResource(R.string.tata_byline),
+        text = text, byline = if (signed) stringResource(R.string.tata_byline) else null,
         linkLine = stringResource(R.string.tata_link_line), linkAction = action, linkSpoken = spoken,
         onLink = url?.let { u -> { runCatching { context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(u)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) } } },
         dismiss = stringResource(R.string.tata_dont_show), onDismiss = onDismiss,

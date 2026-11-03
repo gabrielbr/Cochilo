@@ -66,6 +66,8 @@ class ScreensSnapshotTest {
     private fun at(day: Int, h: Int, m: Int = 0) = LocalDateTime.of(2026, 10, day, h, m).atZone(zone).toInstant().toEpochMilli()
     private val now = at(31, 15, 10)
     private val baby = Baby(name = "Bebê", birthDate = at(1, 0) - 12L * 7 * 86_400_000)
+    /** The suggestion the From Tatá tab shows this week, if any (set by a test). */
+    private var tataDue: br.gabriel.cochilo.domain.Suggestions.Suggestion? = null
 
     private val log: List<Event> = buildList {
         for (d in 17..30) {
@@ -107,6 +109,7 @@ class ScreensSnapshotTest {
                     Tab(stringResource(R.string.tab_today), R.drawable.gg_ic_home),
                     Tab(stringResource(R.string.tab_day), R.drawable.gg_ic_day),
                     Tab(stringResource(R.string.tab_patterns), R.drawable.gg_ic_chart),
+                    Tab(stringResource(R.string.tab_tata), R.drawable.gg_ic_heart),
                 )
                 if (settings) {
                     br.gabriel.cochilo.ui.kit.AppShell(tabs, tab, {}, showTabs = false, header = {
@@ -127,7 +130,12 @@ class ScreensSnapshotTest {
                         when (t) {
                             0 -> TodayScreen(log, p, now, zone, {}, {}, {}, {}, {})
                             1 -> DayScreen(log, now, zone, onOpen = {}, initialDay = LocalDateTime.of(2026, 10, 30, 12, 0).toLocalDate())
-                            else -> PatternsScreen(log, now, zone, weeks)
+                            2 -> PatternsScreen(log, now, zone, weeks)
+                            else -> br.gabriel.cochilo.ui.screens.TataScreen(
+                                baby.name, weeks, { if (it == br.gabriel.cochilo.domain.AgeNotes.Band.M1_2) "tata_facil_sling" else null },
+                                { "https://tataslings.com.br/" }, shopLinks = true, suggestion = tataDue,
+                                suggestionUrl = "https://tataslings.com.br/",
+                            )
                         }
                     }
                     if (width == br.gabriel.cochilo.ui.kit.WidthClass.EXPANDED) {
@@ -244,6 +252,13 @@ class ScreensSnapshotTest {
     @Test fun patterns_light() { light(); paparazzi.snapshot { Chrome(false, 2) } }
     @Test fun patterns_dark() { dark(); paparazzi.snapshot { Chrome(true, 2) } }
     @Test fun patterns_ptBR_dark() { pt(true); paparazzi.snapshot { Chrome(true, 2) } }
+    /** From Tatá (0.44.0): her notes in a tab of their own. */
+    @Test fun tata_tab_light() { light(); paparazzi.snapshot { Chrome(false, 3) } }
+    @Test fun tata_tab_ptBR_dark() { pt(true); paparazzi.snapshot { Chrome(true, 3) } }
+    @Test fun tata_tab_this_week_light() {
+        light(); tataDue = br.gabriel.cochilo.domain.Suggestions.Suggestion(br.gabriel.cochilo.domain.Suggestions.Moment.ARMS_NAPS, "tata_facil_sling", 6)
+        paparazzi.snapshot { Chrome(false, 3) }
+    }
     @Test fun day_light() { light(); paparazzi.snapshot { Chrome(false, 1) } }
     /** The Day tab's hour-by-hour list on its own, so its start is in the picture. */
     @Test fun day_hour_by_hour_light() {

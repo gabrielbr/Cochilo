@@ -8,6 +8,15 @@
     <string name="tab_today">Today</string>
     <string name="tab_history">History</string>
     <string name="tab_patterns">Patterns</string>
+    <string name="tab_tata">From Tatá</string>
+    <string name="title_tata">From Tatá</string>
+    <string name="tata_this_week">This week</string>
+    <string name="tata_for_age">For %1$s\'s age</string>
+    <string name="tata_for_age_plain">For this age</string>
+    <string name="tata_coming_up">Coming up</string>
+    <string name="tata_earlier_show">Earlier notes: %1$d</string>
+    <string name="tata_earlier_hide">Hide earlier notes</string>
+    <string name="tata_shop_caption">Her shop</string>
     <string name="settings">Settings</string>
     <string name="back">Back</string>
 

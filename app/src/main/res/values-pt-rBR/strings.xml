@@ -5,6 +5,15 @@
     <string name="tab_today">Hoje</string>
     <string name="tab_history">Histórico</string>
     <string name="tab_patterns">Padrões</string>
+    <string name="tab_tata">Da Tatá</string>
+    <string name="title_tata">Da Tatá</string>
+    <string name="tata_this_week">Esta semana</string>
+    <string name="tata_for_age">Para a idade de %1$s</string>
+    <string name="tata_for_age_plain">Para esta idade</string>
+    <string name="tata_coming_up">A seguir</string>
+    <string name="tata_earlier_show">Notas anteriores: %1$d</string>
+    <string name="tata_earlier_hide">Esconder as anteriores</string>
+    <string name="tata_shop_caption">A loja dela</string>
     <string name="settings">Ajustes</string>
     <string name="back">Voltar</string>
 
