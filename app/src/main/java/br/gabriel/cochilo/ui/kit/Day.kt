@@ -38,6 +38,8 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.heading
+import androidx.compose.foundation.border
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
 import androidx.compose.runtime.getValue
@@ -177,6 +179,8 @@ fun TimelineRow(
     adjust: TimelineAdjust? = null,
     /** For screenshots: show the row as if dragged this many steps. */
     previewSteps: Int? = null,
+    /** Happened inside an asleep or awake stretch: the entry is set in under its main row. */
+    indent: Boolean = false,
 ) {
     val c = CochiloTheme.colors
     val src = remember { MutableInteractionSource() }
@@ -234,7 +238,7 @@ fun TimelineRow(
                 Box(Modifier.padding(top = Spacing.space2).size(Spacing.space3).clip(RoundedCornerShape(Radius.radiusRound)).background(color))
             }
         }
-        Column(Modifier.weight(1f).padding(start = Spacing.space2, end = Spacing.space2)) {
+        Column(Modifier.weight(1f).padding(start = if (indent) Spacing.space2 + Spacing.space6 else Spacing.space2, end = Spacing.space2)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 if (icon != null) {
                     icon()
@@ -268,16 +272,31 @@ class TimelineAdjust(
     val earlierLabel: String,
 )
 
-/** Between two sleeps: the rail continues and says how long the baby was awake. */
+/**
+ * An awake stretch, the other main state beside sleep (docs/flows.md, "Asleep and awake"): the time
+ * it began, a hollow mark on the rail (awake isn't an entry, so it has no data colour), and how long
+ * it lasted. Not a button; TalkBack reads it as a heading so a stretch can be skipped to.
+ */
 @Composable
-fun TimelineGap(text: String) {
+fun TimelineAwake(time: String, label: String, meta: String?) {
     val c = CochiloTheme.colors
-    Row(Modifier.fillMaxWidth().height(IntrinsicSize.Min)) {
-        Spacer(Modifier.width(Spacing.space16 + Spacing.space2))
-        Box(Modifier.width(Spacing.space8).fillMaxHeight(), contentAlignment = Alignment.Center) {
+    Row(
+        Modifier.fillMaxWidth().heightIn(min = Size.rowMin).height(IntrinsicSize.Min)
+            .semantics(mergeDescendants = true) { heading() }
+    ) {
+        Text(time, style = Type.meta, color = c.muted, textAlign = TextAlign.End, maxLines = 1, modifier = Modifier.width(Spacing.space16 + Spacing.space2).padding(top = Spacing.space1))
+        Box(Modifier.width(Spacing.space8).fillMaxHeight(), contentAlignment = Alignment.TopCenter) {
             Box(Modifier.width(Size.hairline).fillMaxHeight().background(c.line))
+            Box(
+                Modifier.padding(top = Spacing.space2).size(Spacing.space3).clip(RoundedCornerShape(Radius.radiusRound))
+                    .background(c.surface).border(Size.hairline, c.muted, RoundedCornerShape(Radius.radiusRound))
+            )
         }
-        Text(text, style = Type.meta, color = c.muted, modifier = Modifier.padding(start = Spacing.space2, top = Spacing.space1, bottom = Spacing.space3))
+        Column(Modifier.weight(1f).padding(start = Spacing.space2, end = Spacing.space2)) {
+            Text(label, style = Type.body, color = c.ink)
+            if (meta != null) Text(meta, style = Type.meta, color = c.muted)
+            Spacer(Modifier.height(Spacing.space3))
+        }
     }
 }
 

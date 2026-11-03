@@ -74,7 +74,9 @@ fun HistoryScreen(log: List<Event>, now: Long, zone: ZoneId, onOpen: (Event) -> 
             Spacer(Modifier.height(Spacing.space1))
             HourLabels()
             Spacer(Modifier.height(Spacing.space3))
-            EventList(log.filter { it.start in from until to && (shown == null || it.type == shown) }.sortedByDescending { it.start }, now, f, zone, onOpen)
+            // All kinds: asleep and awake stretches with what happened during each set in (0.35.0); one kind: a plain list.
+            if (shown == null) StretchList(log.filter { it.start in from until to || (it.type == EventType.SLEEP && it.overlaps(from, to, now)) }, log, from, to, now, f, zone, onOpen)
+            else EventList(log.filter { it.start in from until to && it.type == shown }.sortedByDescending { it.start }, now, f, zone, onOpen)
         }
     }
 }

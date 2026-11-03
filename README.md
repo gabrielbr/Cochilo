@@ -22,9 +22,12 @@ dressed in the Tatá Slings brand (teal, plum-grey ink, Pérola, Libre Franklin,
   buttons, a 24-hour timeline and the day's entries. Tap any entry to edit or delete it.
 - **Day**: one day two ways. A 24-hour ring (midnight at the top; sleep on the outer ring, feeds,
   pumping and daylight inside, dots for diapers) with the total sleep in the middle, then every
-  entry hour by hour on a vertical rail: sleeps as bars as long as they lasted, and the awake time
-  between them. Arrows move between days; tap an entry to edit it.
-- **History**: every day with its summary, timeline and entries.
+  entry hour by hour on a vertical rail, as the day's two states: each sleep (a bar as long as it
+  lasted) and each awake stretch (a hollow ring, with its length), newest first, and every feed,
+  diaper or walk set in under the stretch it happened in. Arrows move between days; tap an entry
+  to edit it.
+- **History**: every day with its summary, timeline and entries, grouped the same way (asleep and
+  awake, with what happened during each set in); filtered to one kind, a plain list.
 - **Icons**: every kind of entry has its line icon (a drop, a bottle, a spoon, a pump, a diaper,
   the moon, the sun, a bath, a capsule, a pencil), always beside its name (`ui/kit/Icons.kt`).
 - **Medicine**: its own entry type and log row; the name and dose go in the note.

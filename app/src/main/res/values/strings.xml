@@ -204,7 +204,7 @@
     <string name="caption_vertical">Hour by hour</string>
     <string name="ring_sleep">sleep</string>
     <string name="ring_counts">Naps:\u00A0%1$d · Feeds:\u00A0%2$d · Diapers:\u00A0%3$d</string>
-    <string name="awake_gap">Awake %1$s</string>
+    <string name="stretch_awake">Awake</string>
     <string name="empty_day_title">Nothing on this day</string>
     <string name="empty_day_line">Entries you log show up here, hour by hour.</string>
 

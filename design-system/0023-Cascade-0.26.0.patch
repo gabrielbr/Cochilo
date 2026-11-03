@@ -1,0 +1,239 @@
+From dc7e2cbb944c3c2dfc8fcf8438ec814e1970d8e3 Mon Sep 17 00:00:00 2001
+From: Gabriel Lopes <ogabriel@gmail.com>
+Date: Tue, 3 Nov 2026 12:13:18 +0000
+Subject: [PATCH] 0.26.0: the cascade (motion-stagger) and the asleep-and-awake
+ timeline
+
+---
+ CHANGELOG.md                         | 12 +++++++
+ DESIGN.md                            |  2 +-
+ VERSION                              |  2 +-
+ audits/2026-11-03-v0.26.0-cascade.md | 48 ++++++++++++++++++++++++++++
+ docs/components.md                   |  2 ++
+ generated/cochilo/CTokens.kt         |  3 +-
+ generated/pulseloop/GTokens.kt       |  2 +-
+ generated/uikit/UiTokens.java        |  2 +-
+ generated/web/cochilo.css            |  3 +-
+ generated/web/pulseloop.css          |  2 +-
+ generated/web/uikit.css              |  2 +-
+ tokens/tokens.json                   |  7 ++--
+ 12 files changed, 77 insertions(+), 10 deletions(-)
+ create mode 100644 audits/2026-11-03-v0.26.0-cascade.md
+
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+index df0aa3c..cb7ad85 100644
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -3,6 +3,18 @@
+ Semantic versioning (AGENTS.md "Versioning"). Each entry says what changed for each app and what
+ the app has to do.
+ 
++## 0.26.0 — 2026-11-03
++
++The cascade, and asleep and awake (minor: a Cochilo motion token and a timeline pattern).
++
++- Cochilo `motion-stagger` 35ms: the delay between items as a menu opens in a cascade.
++  components.md: Cascade (Log menu), item by item, nearest the button first, on a soft arc.
++  Cochilo 0.35.0.
++- components.md: Vertical timeline, asleep and awake. The day as its two main states, with every
++  other entry set in under the stretch it happened in; awake is a hollow ring, never a data colour.
++  Cochilo 0.35.0.
++- Audit `audits/2026-11-03-v0.26.0-cascade.md`.
++
+ ## 0.25.0 — 2026-11-03
+ 
+ The Tatá note (minor: a component; no token values change).
+diff --git a/DESIGN.md b/DESIGN.md
+index 62a46ad..f437e81 100644
+--- a/DESIGN.md
++++ b/DESIGN.md
+@@ -1,6 +1,6 @@
+ ---
+ name: Gabriel Design System
+-version: 0.25.0
++version: 0.26.0
+ # GENERATED from tokens/tokens.json by scripts/gen_tokens.py. Edit the tokens, not this block.
+ colors:
+   page: "#F2F2F2"
+diff --git a/VERSION b/VERSION
+index d21d277..4e8f395 100644
+--- a/VERSION
++++ b/VERSION
+@@ -1 +1 @@
+-0.25.0
++0.26.0
+diff --git a/audits/2026-11-03-v0.26.0-cascade.md b/audits/2026-11-03-v0.26.0-cascade.md
+new file mode 100644
+index 0000000..4addf9e
+--- /dev/null
++++ b/audits/2026-11-03-v0.26.0-cascade.md
+@@ -0,0 +1,48 @@
++# Audit: the cascade (0.26.0)
++
++Date: 2026-11-03 · PR: Cochilo 0.35.0 · Auditor: Claude (graphic-design-fundamentals + impeccable)
++
++## Scope
++
++One motion token (`motion-stagger`, Cochilo) and the Cascade pattern for the Log menu: items open
++one after another from the button, on a soft arc. Motion only; no colours.
++
++## graphic-design-fundamentals (§13 checklist)
++
++| # | Question | Result |
++|---|---|---|
++| 1 | Brief | Pass: the menu feels like it pours out of the button, not like a grid appearing |
++| 2 | Concept | Pass: nearest the finger first, like drops |
++| 3 | Hierarchy | Pass: the order of appearance is the order of reach |
++| 4 | Contrast | Pass: unchanged |
++| 5 | Alignment and grid | Pass: end-aligned column bowed at most space3; tap targets move with the items |
++| 6 | Spacing | Pass |
++| 7 | Typography | Pass |
++| 8 | Colour | Pass |
++| 9 | Consistency | Pass: the same two durations and system easing; one new delay token |
++| 10 | Simplicity | Pass: closing stays one sink |
++| 11 | Real-size test | Pass: Cochilo's open-menu screenshots |
++| 12 | Accessibility and ergonomics | Pass: snaps with Remove animations; whole cascade under 0.6s for 8 items |
++| 13 | Production | Pass |
++
++## impeccable (audit)
++
++| # | Dimension | Score | Key finding |
++|---|---|---|---|
++| 1 | Accessibility | 4 | Reduce motion honoured |
++| 2 | Performance | 4 | Graphics-layer offsets only |
++| 3 | Appearance & theming | 4 | — |
++| 4 | Platform conformance | 4 | Staggered entrance per Material motion |
++| 5 | Adaptivity | 4 | Arc in dp, same on tablets |
++| | **Total** | **20/20** | |
++
++## Asleep and awake (the timeline pattern in the same release)
++
++- **Colour:** awake has no data colour. It is a hollow ring outlined in `muted`, so event colours stay
++  data, and teal stays the one action. Passes in light, dark and night: the ring sits on `surface`,
++  and `muted` already passes there as meta text.
++- **Hierarchy:** sleep keeps leading (label role, `kind-badge-lead`); awake is body role. Entries
++  inside a stretch are set in by `space6`, a step on the spacing scale, never a literal.
++- **Reading order:** the time column shows only the stretches' starts, so it runs in order; nested
++  entries keep their time in their meta. TalkBack reads each awake stretch as a heading.
++- **Targets:** awake rows are not buttons; nested rows keep their 48dp rows and their tap to edit.
+diff --git a/docs/components.md b/docs/components.md
+index 6dbd2e6..4c281c0 100644
+--- a/docs/components.md
++++ b/docs/components.md
+@@ -34,10 +34,12 @@ component, the row says so.
+ | Check for updates | About row: version, a secondary button, one result line; release builds only — [self-update.md](self-update.md) | `Ui.checkForUpdates` | `CheckForUpdatesButton` | 🟡 |
+ | Sleep panel | Cochilo: `panel` block, state word over the `timer` role, one PRIMARY (Start sleep / Woke up) | — | Cochilo `SleepPanel` | 🟡 |
+ | Timeline / actogram | Cochilo: 24h bar, `timeline` 24dp high, `event-*` blocks on `line`, hour labels muted, spoken summary | — | Cochilo `Timeline`, `Actogram` | 🟡 |
++| Vertical timeline: asleep and awake | Cochilo: the day as its two main states, newest first. A sleep is a main row (its bar, `kind-badge-lead`, label role); an awake stretch is a main row with a hollow `space3` ring outlined in `muted` on the rail (awake isn't an entry: no data colour, no icon), body role, its range and length in meta, a TalkBack heading. Every other entry sits under the stretch it happened in, set in by `space6`, its time only in its meta, so the time column reads the stretches' starts in order. In a list: the same, with the ring in a `kind-badge-lead`-wide slot | — | Cochilo `TimelineAwake`, `TimelineRow(indent)`, `ListRow(indent)`, `AwakeMark` | ✅ |
+ | Vertical timeline: drag to adjust | Cochilo: press and hold a finished sleep, drag down (later) or up (sooner) in 5-minute steps, 12dp a step; the held row turns `selected`, its bar follows, its meta says the new end live in `on-selected`; a haptic tick per step; let go saves, with Undo; TalkBack gets two actions (5 minutes later / sooner) | — | Cochilo `TimelineRow(adjust)` | ✅ |
+ | Conversation (Ask) | Cochilo: the parent's question right-aligned in `selected` / `on-selected`, at most half the column plus 64dp; the answer a `surface` card with a hairline, meta labels ("From your log", "What can help", the source) over body text; suggested questions as filter chips; one teal Ask. Fixed replies for health, medicine and the parent's wellbeing use the same card, no colour alarm. An answer written by an on-device model uses the same card with a meta label under it that says so, always; while it writes, a meta "Thinking, on this phone…" card (a live region) | — | Cochilo `AskScreen` | ✅ |
+ | Quiet link | A line of context in `muted` meta, then the action in `ink` meta and a chevron, in a 48dp row; the whole row is one button for TalkBack with a full spoken sentence. For the rare link out of the app (Cochilo: the picked fabric's sling in the shop). Never `mint`, never a filled or outlined button, never more than one per screen, never on a safety or logging surface | — | Cochilo `QuietLink` | ✅ |
+ | Tatá note | Cochilo: a short signed note in a `surface` card with a hairline: her words in body `ink` (starting from what the parent logged), her byline in meta `muted`, at most one Quiet link, then "Don't show again" as a meta `muted` text button in a 48dp row. Never `mint`, never a texture behind the words, never an image or a price, never on Today, a sheet, a safety screen, a celebration or at night; at most one on screen | — | Cochilo `TataNote` | ✅ |
++| Cascade (Log menu) | Cochilo: a menu opens item by item, nearest the button first, each one rising `space4` and fading in for `motion-emphasised`, `motion-stagger` apart; the column bows in a soft arc (up to `space3`, deepest in the middle), so it reads as a gesture, not a grid. Closing is one sink, all together. With Remove animations: all at once | — | Cochilo `LogButton` | ✅ |
+ | Slide row | Cochilo: a row that also slides; past the touch slop it becomes its options side by side, the one under the finger in `ink` with a haptic tick; letting go logs, back to start cancels; the last-used option says LAST; tap still opens the sheet; each option is a TalkBack action | — | Cochilo `SlideRow` | 🟡 |
+ | Kind icon | Cochilo: an entry kind's 22dp line icon in its `event-*` colour, on a `kind-badge` (36dp) round of `event-*-soft` (sleep: `kind-badge-lead`, 44dp, with its name in the label role, because sleep leads); always beside the kind's name; on a highlighted row the round is `on-fab` at 18% and the line `on-fab` | — | Cochilo `KindIcon` | 🟡 |
+ | Last mark | Cochilo: the option used last time: an `outline` (2dp) in its kind's `event-*` colour and a `space-2` dot of that colour before its name; on a lit option the dot is `on-fab`. Spoken as "last" by TalkBack, never written. Also before the "last time" line of a row or sheet | — | Cochilo `LastDot`, `SlideOption.last` | 🟡 |
+diff --git a/generated/cochilo/CTokens.kt b/generated/cochilo/CTokens.kt
+index d77c896..9526904 100644
+--- a/generated/cochilo/CTokens.kt
++++ b/generated/cochilo/CTokens.kt
+@@ -1,4 +1,4 @@
+-// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.25.0 — do not edit.
++// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.26.0 — do not edit.
+ package br.gabriel.cochilo.ui.theme
+ 
+ import androidx.compose.ui.graphics.Color
+@@ -280,6 +280,7 @@ object CTokens {
+     object Motion {
+         const val motionStandard = 150
+         const val motionEmphasised = 250
++        const val motionStagger = 35
+     }
+ 
+     /** The brand this app is dressed in (docs/brands.md): its name, and the one type family it uses. */
+diff --git a/generated/pulseloop/GTokens.kt b/generated/pulseloop/GTokens.kt
+index 21735df..9eb5214 100644
+--- a/generated/pulseloop/GTokens.kt
++++ b/generated/pulseloop/GTokens.kt
+@@ -1,4 +1,4 @@
+-// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.25.0 — do not edit.
++// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.26.0 — do not edit.
+ package com.pulseloop.ui.theme
+ 
+ import androidx.compose.ui.graphics.Color
+diff --git a/generated/uikit/UiTokens.java b/generated/uikit/UiTokens.java
+index cc3fd43..06424b4 100644
+--- a/generated/uikit/UiTokens.java
++++ b/generated/uikit/UiTokens.java
+@@ -1,4 +1,4 @@
+-// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.25.0 — do not edit.
++// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.26.0 — do not edit.
+ package br.gabriel.ui;
+ 
+ /**
+diff --git a/generated/web/cochilo.css b/generated/web/cochilo.css
+index 3192051..ab66d57 100644
+--- a/generated/web/cochilo.css
++++ b/generated/web/cochilo.css
+@@ -1,4 +1,4 @@
+-/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.25.0 — do not edit. */
++/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.26.0 — do not edit. */
+ /* Layer: cochilo. Themes: light, dark, night. */
+ 
+ :root {
+@@ -265,6 +265,7 @@
+   --gds-width-expanded: 840px;
+   --gds-motion-standard: 150ms;
+   --gds-motion-emphasised: 250ms;
++  --gds-motion-stagger: 35ms;
+   --gds-text-display: 600 30px/36px var(--gds-font);
+   --gds-text-timer: 700 56px/64px var(--gds-font);
+   --gds-text-title: 700 22px/28px var(--gds-font);
+diff --git a/generated/web/pulseloop.css b/generated/web/pulseloop.css
+index 3e1ab77..9806ed1 100644
+--- a/generated/web/pulseloop.css
++++ b/generated/web/pulseloop.css
+@@ -1,4 +1,4 @@
+-/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.25.0 — do not edit. */
++/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.26.0 — do not edit. */
+ /* Layer: pulseloop. Themes: dark. */
+ 
+ :root {
+diff --git a/generated/web/uikit.css b/generated/web/uikit.css
+index 99b0972..e118542 100644
+--- a/generated/web/uikit.css
++++ b/generated/web/uikit.css
+@@ -1,4 +1,4 @@
+-/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.25.0 — do not edit. */
++/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.26.0 — do not edit. */
+ /* Layer: uikit. Themes: light, dark. */
+ 
+ :root {
+diff --git a/tokens/tokens.json b/tokens/tokens.json
+index 4fd266b..11c71c6 100644
+--- a/tokens/tokens.json
++++ b/tokens/tokens.json
+@@ -1,7 +1,7 @@
+ {
+   "$comment": "Source of truth for every app's design tokens. Edit here, run scripts/gen_tokens.py, commit tokens + generated/ + DESIGN.md together. Schema: docs/tokens.md.",
+   "name": "Gabriel Design System",
+-  "version": "0.25.0",
++  "version": "0.26.0",
+   "core": {
+     "$comment": "Shared by every app. Every layer must include every core token (scripts/check_tokens.py enforces it).",
+     "color": [
+@@ -256,7 +256,10 @@
+         {"name": "width-medium", "value": "600px", "usage": "Window width from which the rail replaces the tab bar (Android's medium window class)."},
+         {"name": "width-expanded", "value": "840px", "usage": "Window width from which Today and a second tab sit side by side (Android's expanded window class)."}
+       ],
+-      "motion": ["@motion-standard", "@motion-emphasised"]
++      "motion": [
++        "@motion-standard", "@motion-emphasised",
++        {"name": "motion-stagger", "value": "35ms", "usage": "The delay between one item and the next when a list opens in a cascade (the Log menu), nearest the finger first. Each item still moves for motion-emphasised; snaps with Remove animations."}
++      ]
+     }
+   },
+   "variants": {
+-- 
+2.43.0
+

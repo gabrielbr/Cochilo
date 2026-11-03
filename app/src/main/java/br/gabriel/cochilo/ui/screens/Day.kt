@@ -39,7 +39,7 @@ import br.gabriel.cochilo.ui.kit.EmptyState
 import br.gabriel.cochilo.ui.kit.IconButton
 import br.gabriel.cochilo.ui.kit.InfoButton
 import br.gabriel.cochilo.ui.kit.ScreenTitle
-import br.gabriel.cochilo.ui.kit.TimelineGap
+import br.gabriel.cochilo.ui.kit.TimelineAwake
 import br.gabriel.cochilo.ui.kit.TimelineRow
 import br.gabriel.cochilo.ui.kit.eventColor
 import br.gabriel.cochilo.ui.theme.CTokens.Radius
@@ -132,53 +132,72 @@ internal fun VerticalTimeline(
     previewDrag: Pair<Int, Int>? = null,
 ) {
     val c = CochiloTheme.colors
-    // Newest first (0.28.0): what just happened is at the top, like History.
-    var newerSleepStart: Long? = null
     val sleepsSorted = allSleeps.filter { it.type == EventType.SLEEP }.sortedBy { it.start }
-    var sleepIndex = 0
     val later = stringResource(R.string.adjust_later)
     val earlier = stringResource(R.string.adjust_earlier)
     val previewWords = stringResource(R.string.adjust_preview)
+    // The day's bounds: the day of the newest entry (the screen passes one day's entries).
+    val day = br.gabriel.cochilo.domain.localDate(events.maxOfOrNull { it.start } ?: now, zone)
+    val from = br.gabriel.cochilo.domain.startOfDay(day, zone)
+    val to = br.gabriel.cochilo.domain.startOfDay(day.plusDays(1), zone)
+    // Asleep and awake (0.35.0): the two main states, newest first; what happened during each is set in under it.
+    val stretches = br.gabriel.cochilo.domain.Stretches.of(events, allSleeps, from, to, now)
+    val placed = stretches.flatMap { s -> s.during.map { it.id } + listOfNotNull(s.sleep?.id) }.toSet()
+    val leftovers = events.filter { it.id !in placed }.sortedByDescending { it.start }
+    var sleepIndex = 0
+
+    @Composable
+    fun Entry(e: Event, indent: Boolean) {
+        // A sleep's bar grows 4dp for every 10 minutes, so long sleeps look long.
+        val bar = if (e.type.hasDuration) Spacing.space1 * (e.durationMs(now) / 600_000f).coerceAtMost(80f) else null
+        TimelineRow(
+            // The time column reads only the stretches' starts, so it runs in order; an entry inside one says its time in its meta.
+            time = if (indent) "" else f.time(e.start),
+            color = c.eventColor(e, zone),
+            barHeight = bar,
+            label = eventLabel(e, f, zone),
+            meta = eventMeta(e, now, f),
+            onClick = { onOpen(e) },
+            icon = { br.gabriel.cochilo.ui.kit.KindIcon(e, zone) },
+            prominent = e.type == EventType.SLEEP,
+            adjust = if (onAdjust != null && br.gabriel.cochilo.domain.Adjust.canAdjust(e)) {
+                val next = sleepsSorted.firstOrNull { it.start > e.start && it.id != e.id }?.start
+                fun end(steps: Int) = br.gabriel.cochilo.domain.Adjust.newEnd(e, steps, now, next)
+                br.gabriel.cochilo.ui.kit.TimelineAdjust(
+                    preview = { steps ->
+                        val to = end(steps) ?: e.end!!
+                        val delta = ((to - e.end!!) / br.gabriel.cochilo.domain.MINUTE).toInt()
+                        val sign = if (delta > 0) "+" else if (delta < 0) "−" else ""
+                        previewWords.format(f.time(to), sign + f.durationMin(kotlin.math.abs(delta)))
+                    },
+                    deltaMinutes = { steps -> end(steps)?.let { ((it - e.end!!) / br.gabriel.cochilo.domain.MINUTE).toInt() } ?: 0 },
+                    onCommit = { steps -> end(steps)?.let { onAdjust(e, it) } },
+                    laterLabel = later, earlierLabel = earlier,
+                )
+            } else null,
+            previewSteps = if (e.type == EventType.SLEEP && previewDrag?.first == sleepIndex) previewDrag.second else null,
+            indent = indent,
+        )
+        if (e.type == EventType.SLEEP) sleepIndex++
+    }
+
     Column(
         Modifier.fillMaxWidth().clip(RoundedCornerShape(Radius.radiusM)).background(c.surface)
             .padding(vertical = Spacing.space3)
     ) {
-        for (e in events.sortedByDescending { it.start }) {
-            if (e.type == EventType.SLEEP) {
-                // The awake time between this sleep and the newer one above it.
-                val end = e.end
-                newerSleepStart?.let { next -> if (end != null && next > end) TimelineGap(stringResource(R.string.awake_gap, f.duration(clockSpan(end, next)))) }
-                newerSleepStart = e.start
-            }
-            // A sleep's bar grows 4dp for every 10 minutes, so long sleeps look long.
-            val bar = if (e.type.hasDuration) Spacing.space1 * (e.durationMs(now) / 600_000f).coerceAtMost(80f) else null
-            TimelineRow(
-                time = f.time(e.start),
-                color = c.eventColor(e, zone),
-                barHeight = bar,
-                label = eventLabel(e, f, zone),
-                meta = eventMeta(e, now, f),
-                onClick = { onOpen(e) },
-                icon = { br.gabriel.cochilo.ui.kit.KindIcon(e, zone) },
-                prominent = e.type == br.gabriel.cochilo.data.EventType.SLEEP,
-                adjust = if (onAdjust != null && br.gabriel.cochilo.domain.Adjust.canAdjust(e)) {
-                    val next = sleepsSorted.firstOrNull { it.start > e.start && it.id != e.id }?.start
-                    fun end(steps: Int) = br.gabriel.cochilo.domain.Adjust.newEnd(e, steps, now, next)
-                    br.gabriel.cochilo.ui.kit.TimelineAdjust(
-                        preview = { steps ->
-                            val to = end(steps) ?: e.end!!
-                            val delta = ((to - e.end!!) / br.gabriel.cochilo.domain.MINUTE).toInt()
-                            val sign = if (delta > 0) "+" else if (delta < 0) "−" else ""
-                            previewWords.format(f.time(to), sign + f.durationMin(kotlin.math.abs(delta)))
-                        },
-                        deltaMinutes = { steps -> end(steps)?.let { ((it - e.end!!) / br.gabriel.cochilo.domain.MINUTE).toInt() } ?: 0 },
-                        onCommit = { steps -> end(steps)?.let { onAdjust(e, it) } },
-                        laterLabel = later, earlierLabel = earlier,
-                    )
-                } else null,
-                previewSteps = if (e.type == EventType.SLEEP && previewDrag?.first == sleepIndex) previewDrag.second else null,
-            )
-            if (e.type == EventType.SLEEP) sleepIndex++
+        for (s in stretches) {
+            if (s.asleep) Entry(s.sleep!!, indent = false)
+            else TimelineAwake(s.start?.let { f.time(it) } ?: "", stringResource(R.string.stretch_awake), awakeMeta(s, now, f))
+            for (e in s.during) Entry(e, indent = true)
         }
+        for (e in leftovers) Entry(e, indent = false)
     }
+}
+
+/** "09:10–11:40 · 2h 30m", "Since 14:20 · 45m", or null when it began before the log knows. */
+@Composable
+internal fun awakeMeta(s: br.gabriel.cochilo.domain.Stretches.Stretch, now: Long, f: Format): String? {
+    val start = s.start ?: return null
+    return if (s.end == null) stringResource(R.string.panel_since, f.time(start)) + " · " + f.duration(clockSpan(start, now))
+    else f.time(start) + "–" + f.time(s.end) + " · " + f.duration(clockSpan(start, s.end))
 }

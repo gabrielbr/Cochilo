@@ -69,6 +69,7 @@ never on Today, at night, or on safety screens. Needs Tatá's catalog, notes and
 
 ## Shipped from this plan
 
+- **0.35.0**: asleep and awake in the timelines, and the Log menu's cascade (the owner's ask; [flows.md](flows.md)).
 - **0.34.0**: Tatá marketing step 3: notes by age, twelve drafts, all off until Tatá approves ([in-app-marketing.md](tata-slings/in-app-marketing.md)).
 - **0.33.0**: window reminders, 30 and 15 minutes before the next sleep window ([notifications.md](notifications.md)).
 - **0.32.0**: Tatá marketing step 2: the suggestion rules, the catalog and the Tatá note, all off until Tatá approves ([in-app-marketing.md](tata-slings/in-app-marketing.md)).

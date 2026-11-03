@@ -214,6 +214,8 @@ fun ListRow(
     last: String? = null,
     lastColor: Color = CochiloTheme.colors.muted,
     lastSpoken: String? = null,
+    /** Happened inside an asleep or awake stretch (docs/flows.md): set in under its main row. */
+    indent: Boolean = false,
     trailing: (@Composable RowScope.() -> Unit)? = null,
 ) {
     val c = CochiloTheme.colors
@@ -221,7 +223,7 @@ fun ListRow(
     val base = Modifier.fillMaxWidth().heightIn(min = Size.rowMin)
     val m = if (onClick != null) base.clickable(src, indication = null, role = Role.Button, onClick = onClick).pressScale(src) else base
     val vertical = if (prominent) Spacing.space4 else Spacing.space3
-    Row(m.padding(horizontal = Spacing.space4, vertical = vertical), verticalAlignment = Alignment.CenterVertically) {
+    Row(m.padding(start = if (indent) Spacing.space4 + Spacing.space6 else Spacing.space4, end = Spacing.space4, top = vertical, bottom = vertical), verticalAlignment = Alignment.CenterVertically) {
         if (leading != null) {
             leading()
             Spacer(Modifier.width(Spacing.space3))
