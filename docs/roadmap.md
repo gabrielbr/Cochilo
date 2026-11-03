@@ -51,7 +51,6 @@ Each is grounded in `docs/research.md` or the Tatá Slings plans (`docs/tata-sli
 
 | Item | Why |
 |---|---|
-| **200% font scale pass** | Audit v0.9.0 P3: the Log menu's labels ellipsize at large font sizes |
 | **Tablet and foldable layout** | Android guidance: a navigation rail and two panes on wide screens |
 | **Upstream the design-system patches** | Six patches wait in `design-system/`; merging them makes the system the source of truth again |
 | **Seamless fabric tiles** | Prints mirror at their edges (Tropical); retouch each photo into a true repeating tile |
@@ -61,6 +60,7 @@ Each is grounded in `docs/research.md` or the Tatá Slings plans (`docs/tata-sli
 
 ## Shipped from this plan
 
+- **0.22.0**: large text, 200% font scale ([accessibility.md](accessibility.md)).
 - **0.21.0**: History filters by kind; the expected window on today's ring ([flows.md](flows.md)).
 - **0.20.0**: the report for the doctor (PDF) ([report.md](report.md)).
 - **0.19.0**: the ritual builder ([rituals.md](rituals.md)).
@@ -76,7 +76,7 @@ Each is grounded in `docs/research.md` or the Tatá Slings plans (`docs/tata-sli
 
 | When | What | Why first |
 |---|---|---|
-| **Soon** | Quality pass: font scale, seamless fabric tiles, encrypted backup, prediction tests | Research-backed, small, and on the brand's subject |
+| **Soon** | Quality pass: seamless fabric tiles, encrypted backup, prediction tests | Research-backed, small, and on the brand's subject |
 | **Later** | Notes from Tatá (waiting for her writing) | Needs Tatá's writing and the monetization plan's order of work |
 | **Exploring** | Wi-Fi sync between two phones; Wear OS; smarter prediction | Bigger builds; worth a design spike first |
 

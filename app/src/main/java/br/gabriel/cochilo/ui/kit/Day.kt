@@ -102,7 +102,8 @@ fun DayRing(
     val dot = with(density) { Spacing.space1.toPx() }
     val hair = with(density) { Size.hairline.toPx() }
     val diameter: Dp = Spacing.space16 * 4
-    val labelBand = Spacing.space6
+    // The hour ticks' band widens with their (capped) font size, so "06" never touches the ring.
+    val labelBand = Spacing.space6 * density.fontScale.coerceIn(1f, LABEL_SCALE_CAP)
     Box(Modifier.size(diameter + labelBand * 2).semantics(mergeDescendants = true) { contentDescription = summary }, contentAlignment = Alignment.Center) {
         Canvas(Modifier.size(diameter)) {
             val span = (to - from).toFloat()
@@ -151,7 +152,10 @@ private fun DrawScope.tick(deg: Float, r0: Float, r1: Float, color: Color, width
 
 @Composable
 private fun androidx.compose.foundation.layout.BoxScope.HourLabel(text: String, at: Alignment) {
-    Text(text, style = Type.meta, color = CochiloTheme.colors.muted, modifier = Modifier.align(at))
+    // Clock ticks, like a chart's axis: they grow only to LABEL_SCALE_CAP so they stay outside the ring.
+    CappedFontScale(LABEL_SCALE_CAP) {
+        Text(text, style = Type.meta, color = CochiloTheme.colors.muted, maxLines = 1, softWrap = false, modifier = Modifier.align(at))
+    }
 }
 
 /**

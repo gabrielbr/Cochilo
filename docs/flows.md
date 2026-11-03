@@ -154,6 +154,12 @@ log changes and goes through `Entries`, like every other button.
   "Expected next sleep" in the legend and in what TalkBack reads ("Next sleep expected between
   15:51 and 16:11").
 
+## Large text (0.22.0)
+
+No tap counts change. At 200% font size every one-move entry keeps its cost: the Log button's
+choices wrap to a second line instead of losing the last one (Dirty), and the Earlier chips wrap
+between chips, so "Fell asleep 15 min ago" is still one tap. [accessibility.md](accessibility.md).
+
 ## Motion (0.10.0)
 
 Every action answers with a small movement, so the hand knows it worked without looking twice
