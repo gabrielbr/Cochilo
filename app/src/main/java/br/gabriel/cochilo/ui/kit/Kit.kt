@@ -132,7 +132,7 @@ fun Monogram() {
 fun Header(name: String, status: String, statusColor: Color = CochiloTheme.colors.muted, trailing: @Composable () -> Unit) {
     val c = CochiloTheme.colors
     Row(
-        Modifier.fillMaxWidth().height(Size.header).background(c.surface).padding(start = Spacing.space4, end = Spacing.space1),
+        Modifier.fillMaxWidth().heightIn(min = Size.header).background(c.surface).padding(start = Spacing.space4, end = Spacing.space1),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Monogram()
@@ -153,12 +153,12 @@ fun Header(name: String, status: String, statusColor: Color = CochiloTheme.color
 fun BackHeader(title: String, backLabel: String, onBack: () -> Unit) {
     val c = CochiloTheme.colors
     Row(
-        Modifier.fillMaxWidth().height(Size.header).background(c.surface).padding(horizontal = Spacing.space1),
+        Modifier.fillMaxWidth().heightIn(min = Size.header).background(c.surface).padding(horizontal = Spacing.space1),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         IconButton(br.gabriel.cochilo.R.drawable.gg_ic_back, backLabel, onBack)
         Spacer(Modifier.width(Spacing.space2))
-        Text(title, style = Type.label, color = c.ink, modifier = Modifier.semantics { heading() })
+        Text(title, style = Type.label, color = c.ink, modifier = Modifier.weight(1f).semantics { heading() })
     }
 }
 
@@ -450,11 +450,25 @@ fun EmptyState(title: String, line: String, action: String? = null, onAction: ((
 
 data class Tab(val label: String, @DrawableRes val icon: Int)
 
-/** Tab bar: 64dp, the active tab is a mint pill behind the icon. */
+/** How far a label beside an icon may grow with the system font size (tab bar). */
+const val LABEL_SCALE_CAP = 1.5f
+
+/** Lets [content]'s text grow with the system font size only up to [cap]. */
+@Composable
+fun CappedFontScale(cap: Float, content: @Composable () -> Unit) {
+    val d = androidx.compose.ui.platform.LocalDensity.current
+    if (d.fontScale <= cap) content()
+    else androidx.compose.runtime.CompositionLocalProvider(
+        androidx.compose.ui.platform.LocalDensity provides androidx.compose.ui.unit.Density(d.density, cap),
+        content = content,
+    )
+}
+
+/** Tab bar: 64dp (more at large font sizes), the active tab is a blush pill behind the icon. */
 @Composable
 fun TabBar(tabs: List<Tab>, selected: Int, onSelect: (Int) -> Unit) {
     val c = CochiloTheme.colors
-    Row(Modifier.fillMaxWidth().height(Size.tabbar).background(c.surface), verticalAlignment = Alignment.CenterVertically) {
+    Row(Modifier.fillMaxWidth().heightIn(min = Size.tabbar).background(c.surface), verticalAlignment = Alignment.CenterVertically) {
         tabs.forEachIndexed { i, t ->
             val on = i == selected
             val src = remember { MutableInteractionSource() }
@@ -470,7 +484,11 @@ fun TabBar(tabs: List<Tab>, selected: Int, onSelect: (Int) -> Unit) {
                         .clip(RoundedCornerShape(Radius.radiusL)).background(animatedColor(if (on) c.selected else c.surface)),
                     contentAlignment = Alignment.Center,
                 ) { GIcon(t.icon, null, animatedColor(if (on) c.onSelected else c.muted)) }
-                Text(t.label, style = Type.caption, color = animatedColor(if (on) c.ink else c.muted))
+                // The icon carries the tab too, so its word grows only to LABEL_SCALE_CAP: at 200% four
+                // words can't share a phone's width. TalkBack reads it in full either way.
+                CappedFontScale(LABEL_SCALE_CAP) {
+                    Text(t.label, style = Type.caption, color = animatedColor(if (on) c.ink else c.muted), maxLines = 1, softWrap = false)
+                }
             }
         }
     }
@@ -490,6 +508,7 @@ fun Swatch(color: Color) {
  * full ("Fell asleep 10 minutes ago").
  */
 @Composable
+@OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
 fun EarlierChips(
     label: String,
     minutes: List<Int>,
@@ -504,8 +523,13 @@ fun EarlierChips(
     val fg = if (onDark) c.onPanel else c.ink
     val muted = if (onDark) c.onPanelMuted else c.muted
     val edge = if (onDark) c.onPanelMuted else c.line
-    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.space2)) {
-        Text(label, style = Type.meta, color = muted, maxLines = 1)
+    // A flow, so at large font sizes the sentence wraps between its words, never inside a chip.
+    androidx.compose.foundation.layout.FlowRow(
+        Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(Spacing.space2),
+        verticalArrangement = Arrangement.Center,
+    ) {
+        Text(label, style = Type.meta, color = muted, maxLines = 1, softWrap = false, modifier = Modifier.align(Alignment.CenterVertically))
         minutes.forEach { m ->
             val src = remember { MutableInteractionSource() }
             val words = spoken(m)
@@ -521,10 +545,10 @@ fun EarlierChips(
                         .border(Size.hairline, edge, RoundedCornerShape(Radius.radiusRound))
                         .padding(horizontal = Spacing.space3),
                     contentAlignment = Alignment.Center,
-                ) { Text(chipLabel(m), style = Type.bodySmall, color = fg) }
+                ) { Text(chipLabel(m), style = Type.bodySmall, color = fg, maxLines = 1, softWrap = false) }
             }
         }
-        if (after.isNotEmpty()) Text(after, style = Type.meta, color = muted, maxLines = 1)
+        if (after.isNotEmpty()) Text(after, style = Type.meta, color = muted, maxLines = 1, softWrap = false, modifier = Modifier.align(Alignment.CenterVertically))
     }
 }
 

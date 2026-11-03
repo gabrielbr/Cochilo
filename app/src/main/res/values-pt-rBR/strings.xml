@@ -11,7 +11,7 @@
     <string name="status_awake">Acordado · %1$s</string>
     <string name="status_sleeping">Dormindo · %1$s</string>
     <string name="status_no_data">Registre o primeiro sono</string>
-    <string name="status_weeks">Idade: %1$d sem</string>
+    <string name="status_weeks">Idade:\u00A0%1$d sem</string>
 
     <string name="panel_awake_for">Acordado há</string>
     <string name="panel_asleep_nap">Na soneca há</string>
@@ -187,7 +187,7 @@
     <string name="caption_ring">O dia como um relógio</string>
     <string name="caption_vertical">Hora a hora</string>
     <string name="ring_sleep">de sono</string>
-    <string name="ring_counts">Sonecas: %1$d · Mamadas: %2$d · Fraldas: %3$d</string>
+    <string name="ring_counts">Sonecas:\u00A0%1$d · Mamadas:\u00A0%2$d · Fraldas:\u00A0%3$d</string>
     <string name="awake_gap">Acordado %1$s</string>
     <string name="empty_day_title">Nada neste dia</string>
     <string name="empty_day_line">Os registros aparecem aqui, hora a hora.</string>
@@ -306,7 +306,7 @@
     <string name="kind_car">Cadeirinha</string>
     <string name="field_place">Onde</string>
     <string name="caption_places">Onde as sonecas aconteceram, últimos 7 dias</string>
-    <string name="naps_count">Sonecas: %1$d</string>
+    <string name="naps_count">Sonecas:\u00A0%1$d</string>
     <string name="places_meta">Sonecas no colo e no sling são normais nos primeiros meses.</string>
     <string name="ticks_title">Sling com segurança: T.I.C.K.S.</string>
     <string name="ticks_line">Cinco checagens rápidas toda vez que o bebê estiver no sling.</string>

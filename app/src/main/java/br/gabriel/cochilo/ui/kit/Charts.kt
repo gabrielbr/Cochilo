@@ -89,15 +89,16 @@ fun Timeline(events: List<Event>, from: Long, to: Long, now: Long?, zone: ZoneId
 @Composable
 fun HourLabels() {
     val c = CochiloTheme.colors
-    Row(Modifier.fillMaxWidth()) {
+    // Axis ticks grow with the font size only to LABEL_SCALE_CAP, so "00" never breaks in two.
+    CappedFontScale(LABEL_SCALE_CAP) { Row(Modifier.fillMaxWidth()) {
         listOf("00", "06", "12", "18", "24").forEachIndexed { i, s ->
             Text(
-                s, style = Type.meta, color = c.muted,
+                s, style = Type.meta, color = c.muted, maxLines = 1, softWrap = false,
                 textAlign = when (i) { 0 -> TextAlign.Start; 4 -> TextAlign.End; else -> TextAlign.Center },
                 modifier = Modifier.weight(if (i == 0 || i == 4) 0.5f else 1f),
             )
         }
-    }
+    } }
 }
 
 data class LegendItem(val label: String, val color: Color)
@@ -124,17 +125,22 @@ fun Legend(items: List<LegendItem>) {
 @Composable
 fun Actogram(days: List<Triple<String, Long, Long>>, events: List<Event>, now: Long, zone: ZoneId, summaries: List<String>) {
     val c = CochiloTheme.colors
+    // The day names are the chart's axis: they grow to LABEL_SCALE_CAP, and their column with them.
+    val scale = androidx.compose.ui.platform.LocalDensity.current.fontScale.coerceIn(1f, LABEL_SCALE_CAP)
+    val labelWidth = (Spacing.space16 + Spacing.space4) * scale
     Column(verticalArrangement = Arrangement.spacedBy(Spacing.space1)) {
         days.forEachIndexed { i, (label, from, to) ->
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(label, style = Type.meta, color = c.muted, modifier = Modifier.width(Spacing.space16 + Spacing.space4), maxLines = 1)
+                CappedFontScale(LABEL_SCALE_CAP) {
+                    Text(label, style = Type.meta, color = c.muted, modifier = Modifier.width(labelWidth), maxLines = 1, softWrap = false)
+                }
                 Column(Modifier.weight(1f)) {
                     Timeline(events, from, to, now, zone, summaries[i])
                 }
             }
         }
         Row {
-            Spacer(Modifier.width(Spacing.space16 + Spacing.space4))
+            Spacer(Modifier.width(labelWidth))
             Column(Modifier.weight(1f)) { HourLabels() }
         }
     }

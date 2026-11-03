@@ -82,6 +82,11 @@ one commit on top of the design system's `main` at 0.4.0 (self-update):
 
 - **0.19.0:** the day ring's expected window. Audit `audits/2026-11-02-v0.19.0-reading.md`.
 
+**[0015-Large-text-0.20.0.patch](0015-Large-text-0.20.0.patch)**, on top of 0014:
+
+- **0.20.0:** large text: min heights, flowing chip rows, the label scale cap. Audit
+  `audits/2026-11-03-v0.20.0-large-text.md`.
+
 All checked on a fresh checkout of the design system's `main`: `git am` applies it,
 `check_tokens.py` reports 0 errors, the tests pass, and `drift.py --cochilo` against this repo
 reports 0 differences.

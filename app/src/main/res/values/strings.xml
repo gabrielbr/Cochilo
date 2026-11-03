@@ -15,7 +15,7 @@
     <string name="status_awake">Awake · %1$s</string>
     <string name="status_sleeping">Sleeping · %1$s</string>
     <string name="status_no_data">Log the first sleep</string>
-    <string name="status_weeks">Age: %1$d wk</string>
+    <string name="status_weeks">Age:\u00A0%1$d wk</string>
 
     <!-- Sleep panel -->
     <string name="panel_awake_for">Awake for</string>
@@ -201,7 +201,7 @@
     <string name="caption_ring">The day as a clock</string>
     <string name="caption_vertical">Hour by hour</string>
     <string name="ring_sleep">sleep</string>
-    <string name="ring_counts">Naps: %1$d · Feeds: %2$d · Diapers: %3$d</string>
+    <string name="ring_counts">Naps:\u00A0%1$d · Feeds:\u00A0%2$d · Diapers:\u00A0%3$d</string>
     <string name="awake_gap">Awake %1$s</string>
     <string name="empty_day_title">Nothing on this day</string>
     <string name="empty_day_line">Entries you log show up here, hour by hour.</string>
@@ -331,7 +331,7 @@
     <string name="kind_car">Car seat</string>
     <string name="field_place">Where</string>
     <string name="caption_places">Where naps happened, last 7 days</string>
-    <string name="naps_count">Naps: %1$d</string>
+    <string name="naps_count">Naps:\u00A0%1$d</string>
     <string name="places_meta">Naps in arms and in the sling are normal in the first months.</string>
     <string name="ticks_title">Babywearing safely: T.I.C.K.S.</string>
     <string name="ticks_line">Five quick checks every time the baby is in the sling.</string>

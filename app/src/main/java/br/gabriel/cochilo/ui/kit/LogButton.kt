@@ -78,6 +78,7 @@ data class LogHover(val item: Int, val option: Int? = null)
  * choices, tap it again for the sheet. After marking menus: the same move whether you look or not.
  */
 @Composable
+@OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
 fun BoxScope.LogButton(
     items: List<LogMenuItem>,
     label: String,
@@ -145,8 +146,13 @@ fun BoxScope.LogButton(
                 val item = items[i]
                 val showChoices = hover?.item == i
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.space2)) {
-                    // The choices share what's left of the row at their own widths; only an overflow shrinks the last.
-                    if (showChoices) Row(Modifier.weight(1f, fill = false), horizontalArrangement = Arrangement.spacedBy(Spacing.space1), verticalAlignment = Alignment.CenterVertically) { item.options.forEachIndexed { j, o ->
+                    // The choices share what's left of the row at their own widths.
+                    // A flow, so at large font sizes the choices wrap to a second line instead of losing the last.
+                    if (showChoices) androidx.compose.foundation.layout.FlowRow(
+                        Modifier.weight(1f, fill = false),
+                        horizontalArrangement = Arrangement.spacedBy(Spacing.space1, Alignment.End),
+                        verticalArrangement = Arrangement.spacedBy(Spacing.space1),
+                    ) { item.options.forEachIndexed { j, o ->
                         val on = hover?.option == j
                         // The Last mark: the option used last time is outlined in the kind's colour.
                         val edge = when {

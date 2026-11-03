@@ -3,6 +3,13 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.22.0 — 2026-11-03
+
+**Large text.** At the phone's largest font size every screen still shows every word: the header's
+status line grows instead of being cut off, the "Fell asleep … min ago" chips and the Log menu's
+choices wrap (Dirty no longer disappears), the tab names fit, and the charts' hours and days stay
+readable. `docs/accessibility.md`.
+
 ## 0.21.0 — 2026-11-02
 
 **Reading the data.** History has one-tap filters by kind (Sleep, Feed, Diaper…), and today's

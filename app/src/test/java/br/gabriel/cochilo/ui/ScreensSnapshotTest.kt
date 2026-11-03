@@ -185,6 +185,16 @@ class ScreensSnapshotTest {
         DeviceConfig.PIXEL_5.copy(locale = "pt-rBR", nightMode = if (night) NightMode.NIGHT else NightMode.NOTNIGHT)
     )
 
+    /** 200% font scale (Android 14's largest): nothing may clip or ellipsize a word that matters. */
+    private fun big() = paparazzi.unsafeUpdateConfig(DeviceConfig.PIXEL_5.copy(nightMode = NightMode.NOTNIGHT, fontScale = 2f))
+    @Test fun today_font200_light() { big(); paparazzi.snapshot { Chrome(false, 0) } }
+    @Test fun today_sleeping_font200_light() { big(); paparazzi.snapshot { Chrome(false, 0, sleepingLog) } }
+    @Test fun log_button_open_font200_light() { big(); paparazzi.snapshot { Chrome(false, 0, logHover = br.gabriel.cochilo.ui.kit.LogHover(1)) } }
+    @Test fun history_font200_light() { big(); paparazzi.snapshot { Chrome(false, 2) } }
+    @Test fun patterns_font200_light() { big(); paparazzi.snapshot { Chrome(false, 3) } }
+    @Test fun day_font200_light() { big(); paparazzi.snapshot { Chrome(false, 1) } }
+    @Test fun settings_font200_light() { big(); paparazzi.snapshot { Chrome(false, 0, settings = true) } }
+
     @Test fun today_light() { light(); paparazzi.snapshot { Chrome(false, 0) } }
     @Test fun today_dark() { dark(); paparazzi.snapshot { Chrome(true, 0) } }
     @Test fun today_sleeping_dark() { dark(); paparazzi.snapshot { Chrome(true, 0, sleepingLog) } }
