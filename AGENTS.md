@@ -21,10 +21,21 @@ then [docs/research.md](docs/research.md) for the science the features rest on.
   kind, daylight, routine), the last bottle and pump amounts and the last medicine are filled in, and
   the sheet says "Last time: … · 14:20". New entry types and kinds follow it, and the audit in
   docs/flows.md lists what each type remembers.
-- **Less is more.** Every new or changed screen, flow, notification or widget goes through
-  [`.claude/skills/less-is-more/SKILL.md`](.claude/skills/less-is-more/SKILL.md): each element
-  must help what she does next, or it moves one tap away, gets grouped, or goes. The audit lists
-  what was cut. Cutting never adds a tap to a common entry.
+- **Three skills on every screen and flow.** Every new or changed screen, flow, sheet,
+  notification or widget is designed with, and then audited against, all three of these skills:
+  1. **`impeccable`**: use it while designing (shape, critique, polish), then run its `critique` and
+     `audit` (native Android). Score the five dimensions and tag findings P0–P3.
+  2. **`graphic-design-fundamentals`**: the owner's design basics. Plan with it, then run its §13
+     critique checklist (hierarchy, contrast, alignment and grid, spacing, typography, colour,
+     consistency, simplicity, real-size test, accessibility, production).
+  3. **`less-is-more`** ([`.claude/skills/less-is-more/SKILL.md`](.claude/skills/less-is-more/SKILL.md)):
+     each element must help what she does next. Otherwise it moves one tap away, gets grouped, or
+     goes. Cutting never adds a tap to a common entry.
+
+  Use them while you work, not only at the end. If a session can't load a skill, read its
+  `SKILL.md` and references and apply them by hand, and say so in the audit. The results go in
+  `docs/audits/<version>-<topic>.md`: one section per skill, and what was cut. Fix any P0 or P1
+  finding, and anything the checklist fails, before merging.
 - **Keep the plan.** Ideas, the owner's suggestions and research-backed features go into
   [docs/roadmap.md](docs/roadmap.md); when one ships, move it out of the plan and into the docs.
 - **Never guess a repo or project.** Work in Cochilo. If a request seems to point at another repo
@@ -75,8 +86,8 @@ the rules; the short version:
   break with 1 (write "Naps: 1").
 - **The baby avatar** (`ui/kit/BabyAvatar.kt`) uses only the `illustration-*` colours, the same in
   both themes; it asks how the baby looks, never race; gender changes details only, never colour.
-- **Audit every release.** Each feature ends with an impeccable critique and the
-  graphic-design-fundamentals checklist in `docs/audits/<version>-<topic>.md`; fix what fails first.
+- **Audit every release.** Each feature ends with the three-skill audit above (impeccable,
+  graphic-design-fundamentals, less-is-more) in `docs/audits/<version>-<topic>.md`; fix what fails first.
 - **Three themes.** Light, dark and the night light (`CTokens.Night`, 19:00–07:00); every new
   colour role needs a night value or falls back to dark, and passes contrast in all three.
 - **Celebrate, never scold.** Celebrations (`domain/Celebrations.kt`) describe what happened,

@@ -13,7 +13,9 @@ the "hold and drag" hint shows only until you've used it once. During a night wa
 only the night and its two buttons: no daylight nudge. Patterns drops "Questions about sleep" (the
 chat icon at the top does the same), puts the night first (night sleep, longest stretch, night
 wakings and the usual bedtime, new), then the day, with feeds and diapers in one row. No tap was
-added anywhere. `docs/flows.md`.
+added anywhere. For whoever works on the app: every screen and flow is now designed and
+audited with three skills: impeccable, graphic-design-fundamentals and less-is-more (AGENTS.md).
+`docs/flows.md`.
 
 ## 0.42.0 — 2026-11-03
 
