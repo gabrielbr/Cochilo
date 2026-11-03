@@ -1,6 +1,6 @@
 ---
 name: less-is-more
-description: Use when designing, reviewing or changing any Cochilo screen, flow, notification or widget, or when the owner asks to reduce clutter. A checklist for removing what doesn't earn its place, for a tired parent using the phone one-handed, often in the dark. Pairs with the impeccable and graphic-design-fundamentals audits.
+description: Use when designing, reviewing or changing any Cochilo screen, flow, notification or widget, or when the owner asks to reduce clutter. A checklist for removing what doesn't earn its place, for a tired parent using the phone one-handed, often in the dark. Pairs with the impeccable and graphic-design-fundamentals skills (in this folder); all three run on every screen and flow (AGENTS.md).
 ---
 
 # Less is more (Cochilo)

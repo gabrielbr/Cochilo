@@ -14,7 +14,8 @@ only the night and its two buttons: no daylight nudge. Patterns drops "Questions
 chat icon at the top does the same), puts the night first (night sleep, longest stretch, night
 wakings and the usual bedtime, new), then the day, with feeds and diapers in one row. No tap was
 added anywhere. For whoever works on the app: every screen and flow is now designed and
-audited with three skills: impeccable, graphic-design-fundamentals and less-is-more (AGENTS.md).
+audited with three skills, impeccable, graphic-design-fundamentals and less-is-more, now kept in
+`.claude/skills/` (from design system 0.29.0; AGENTS.md).
 `docs/flows.md`.
 
 ## 0.42.0 — 2026-11-03

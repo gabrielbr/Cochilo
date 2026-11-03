@@ -22,7 +22,8 @@ then [docs/research.md](docs/research.md) for the science the features rest on.
   the sheet says "Last time: … · 14:20". New entry types and kinds follow it, and the audit in
   docs/flows.md lists what each type remembers.
 - **Three skills on every screen and flow.** Every new or changed screen, flow, sheet,
-  notification or widget is designed with, and then audited against, all three of these skills:
+  notification or widget is designed with, and then audited against, all three skills in
+  [`.claude/skills/`](.claude/skills/) (copied from the design system, [VENDORED.md](.claude/skills/VENDORED.md)):
   1. **`impeccable`**: use it while designing (shape, critique, polish), then run its `critique` and
      `audit` (native Android). Score the five dimensions and tag findings P0–P3.
   2. **`graphic-design-fundamentals`**: the owner's design basics. Plan with it, then run its §13
