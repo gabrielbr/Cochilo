@@ -74,6 +74,8 @@ fun TodayScreen(
     onUpForDay: (Int) -> Unit = {},
     /** Nap or the night, one tap on the sleep card. */
     onSetNight: (Event, Boolean) -> Unit = { _, _ -> },
+    /** The glimpse from Ask Cochilo at the end (0.45.0); by day only, never in a night waking. */
+    glimpse: (@Composable () -> Unit)? = null,
 ) {
     val f = Format(LocalContext.current, zone, now)
     val today = localDate(now, zone)
@@ -138,9 +140,12 @@ fun TodayScreen(
             }
         }
 
-        // History, day by day with its filters, today first (0.40.0): it used to be a tab of its own.
-        Caption(stringResource(R.string.caption_days))
-        HistoryDays(log, now, zone, onOpen, top = Spacing.space2)
+        // No "Day by day" here since 0.45.0 (the owner): past days are the Day tab's arrows, and its
+        // kind filter moved there, on top of the hour-by-hour list.
+        if (glimpse != null && openNight == null && !br.gabriel.cochilo.domain.isNightStart(now, zone)) {
+            Caption(stringResource(R.string.glimpse_caption))
+            glimpse()
+        }
     }
 }
 

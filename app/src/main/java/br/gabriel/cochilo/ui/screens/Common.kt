@@ -97,6 +97,7 @@ fun EventList(events: List<Event>, now: Long, f: Format, zone: ZoneId, onOpen: (
                 onClick = { onOpen(e) },
                 // Sleep leads: what Cochilo is for is a size up in every list.
                 prominent = e.type == br.gabriel.cochilo.data.EventType.SLEEP,
+                editable = true,
             )
         }
     }
@@ -120,7 +121,7 @@ fun StretchList(events: List<Event>, allSleeps: List<Event>, from: Long, to: Lon
             if (gap()) Hairline()
             if (s.asleep) {
                 val e = s.sleep!!
-                ListRow(eventLabel(e, f, zone), meta = eventMeta(e, now, f), leading = { br.gabriel.cochilo.ui.kit.KindIcon(e, zone) }, onClick = { onOpen(e) }, prominent = true)
+                ListRow(eventLabel(e, f, zone), meta = eventMeta(e, now, f), leading = { br.gabriel.cochilo.ui.kit.KindIcon(e, zone) }, onClick = { onOpen(e) }, prominent = true, editable = true)
             } else {
                 Box(Modifier.semantics(mergeDescendants = true) { heading() }) {
                     ListRow(awake, meta = awakeMeta(s, now, f), leading = { br.gabriel.cochilo.ui.kit.AwakeMark() })
@@ -128,12 +129,12 @@ fun StretchList(events: List<Event>, allSleeps: List<Event>, from: Long, to: Lon
             }
             for (e in s.during) {
                 Hairline()
-                ListRow(eventLabel(e, f, zone), meta = eventMeta(e, now, f), leading = { br.gabriel.cochilo.ui.kit.KindIcon(e, zone) }, onClick = { onOpen(e) }, indent = true)
+                ListRow(eventLabel(e, f, zone), meta = eventMeta(e, now, f), leading = { br.gabriel.cochilo.ui.kit.KindIcon(e, zone) }, onClick = { onOpen(e) }, indent = true, editable = true)
             }
         }
         for (e in events.filter { it.id !in placed && it.type != EventType.SLEEP }.sortedByDescending { it.start }) {
             if (gap()) Hairline()
-            ListRow(eventLabel(e, f, zone), meta = eventMeta(e, now, f), leading = { br.gabriel.cochilo.ui.kit.KindIcon(e, zone) }, onClick = { onOpen(e) })
+            ListRow(eventLabel(e, f, zone), meta = eventMeta(e, now, f), leading = { br.gabriel.cochilo.ui.kit.KindIcon(e, zone) }, onClick = { onOpen(e) }, editable = true)
         }
     }
 }

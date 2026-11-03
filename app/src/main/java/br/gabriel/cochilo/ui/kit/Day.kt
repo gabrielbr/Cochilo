@@ -183,6 +183,7 @@ fun TimelineRow(
     indent: Boolean = false,
 ) {
     val c = CochiloTheme.colors
+    val editLabel = androidx.compose.ui.res.stringResource(br.gabriel.cochilo.R.string.edit_entry)
     val src = remember { MutableInteractionSource() }
     var dragPx by remember { androidx.compose.runtime.mutableFloatStateOf(0f) }
     var holding by remember { androidx.compose.runtime.mutableStateOf(previewSteps != null) }
@@ -223,7 +224,7 @@ fun TimelineRow(
     Row(
         sized.background(animatedColor(if (holding) c.selected else c.surface))
             .then(gesture)
-            .clickable(src, indication = null, role = Role.Button, onClick = onClick).pressScale(src)
+            .clickable(src, indication = null, role = Role.Button, onClickLabel = editLabel, onClick = onClick).pressScale(src)
     ) {
         Text(time, style = Type.meta, color = c.muted, textAlign = TextAlign.End, maxLines = 1, modifier = Modifier.width(Spacing.space16 + Spacing.space2).padding(top = Spacing.space1))
         Box(Modifier.width(Spacing.space8).fillMaxHeight(), contentAlignment = Alignment.TopCenter) {
@@ -253,6 +254,8 @@ fun TimelineRow(
             }
             Spacer(Modifier.height(Spacing.space3))
         }
+        // Tap to edit or delete (0.45.0): the pencil says so; the whole row is the target.
+        GIcon(br.gabriel.cochilo.R.drawable.gg_ic_note, null, c.muted, Modifier.padding(top = Spacing.space1, end = Spacing.space3))
     }
 }
 

@@ -129,7 +129,6 @@ fun EventSheet(
     var amount by remember { mutableStateOf(initial.amountMl?.toString() ?: "") }
     var note by remember { mutableStateOf(initial.note ?: "") }
     var picking by remember { mutableStateOf<String?>(null) }
-    var confirmDelete by remember { mutableStateOf(false) }
     // A new routine shows its ritual as a checklist; the ticked steps become its note.
     var ticked by remember(kind) { mutableStateOf(setOf<Int>()) }
 
@@ -152,17 +151,6 @@ fun EventSheet(
             expressedAt = if (t == EventType.PUMP) start else initial.expressedAt,
             note = note.trim().ifEmpty { null } ?: ritualNote,
         )
-    }
-
-    if (confirmDelete) {
-        ConfirmSheet(
-            title = stringResource(R.string.delete_confirm_title),
-            line = stringResource(R.string.delete_confirm_line),
-            confirm = stringResource(R.string.delete),
-            onConfirm = { confirmDelete = false; onDelete(initial) },
-            onDismiss = { confirmDelete = false },
-        )
-        return
     }
 
     Sheet(onDismiss) {
@@ -227,7 +215,8 @@ fun EventSheet(
         Button(cancel, onDismiss, ButtonKind.SECONDARY, Modifier.fillMaxWidth())
         if (!isNew) {
             Spacer(Modifier.height(Spacing.space6))
-            Button(stringResource(R.string.delete), { confirmDelete = true }, ButtonKind.DANGER, Modifier.fillMaxWidth())
+            // Delete at once, with Undo in the snackbar (0.45.0): undo instead of "are you sure?".
+            Button(stringResource(R.string.delete), { onDelete(initial) }, ButtonKind.DANGER, Modifier.fillMaxWidth())
         }
     }
 

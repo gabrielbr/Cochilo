@@ -63,6 +63,54 @@ Code: `lastOf`, `lastKind`, `lastKindAmong`, `Event.rememberedFrom` in `domain/Q
 (tested in `QuickLogTest`); the Log menu in `LogMenu.kt` (Today's rows until 0.39.0); the sheet's line in `Sheets.kt`.
 This replaced the earlier "next: other breast" suggestion: the app shows what happened, she decides.
 
+## Today ends with Ask Cochilo; the filter goes to Day (0.45.0)
+
+The owner said: "The Dia a dia section in home can be removed. It makes no sense to have there.
+Add the filter we have on it to the Dia tab on top of the timeline. On the home tab make the card
+take more vertical screen, giving more space to the texture. At the bottom, a card with a glimpse
+of information from the AI that is relevant and valuable based on the user data."
+
+| What | Before | Now |
+|---|---|---|
+| Day by day on Today | Every day, filters, timelines, lists | Gone; past days are the Day tab's arrows |
+| Kind filter | Today › Day by day (scroll down) | Day tab, above "Hour by hour" (1 tap to the tab, 1 on a chip) |
+| The sleep card | 32dp fabric band on top, 12dp around | 64dp band on top, 16dp around, 32dp inside top and bottom |
+| Ask Cochilo glimpse | Not on Today | The last card on Today, by day: one question, her numbers, what to try; "Read the answer" opens Ask on it (1 tap) |
+
+The glimpse picks the question like this:
+- **First, what stands out in her log:** short naps, early mornings, little daylight or many contact
+  naps (`Assistant.suggestions`), once three days are logged.
+- **Otherwise, a tip from the studies:** a different reviewed answer each day, with what the
+  research says and its source. The topics are daylight, routine, wake windows, nap length, night
+  wakings, contact naps, bedtime, feeding to sleep, enough sleep and safe sleep, plus "around 4
+  months" near that age.
+- **Never** the next sleep, which the card above already says.
+- **Not shown** between 19:00 and 07:00, or during a night waking.
+
+### Undo, edit and delete (0.45.0)
+
+The owner said: "Actions should be editable. Right now they are not. User should be able to undo
+stuff on home and edit actions on Dia screen. Edit and remove."
+
+Tapping a row always opened its sheet, but nothing said so. A long press on a sleep starts the
+drag, so a row looked fixed. And Delete asked "are you sure?", which breaks the undo rule.
+
+| Flow | Before | Now |
+|---|---|---|
+| Undo Start sleep, Woke up, nap/night, Finish, Up for the day, Save | Edit the entry by hand (3+ taps) | 1 (Undo in the snackbar) |
+| Edit an entry on Day | 1 tap on the row, with no sign it could be tapped | 1 tap on the row; a pencil shows it, and TalkBack says "Edit" |
+| Delete an entry | Row › Delete › Delete (3), no undo | Row › Delete (2), with Undo |
+
+Undo puts back exactly what the action changed: `MainViewModel.undoable` takes the log before and
+after, then deletes what was added and restores what was changed or removed.
+
+
+
+The answer is Ask Cochilo's reviewed one: the same words and numbers as in Ask, worked out on the
+phone. It's never the model's free text.
+
+No common entry costs more. The Log button, the Earlier chips and Start sleep are unchanged.
+
 ## From Tatá (0.44.0)
 
 [in-app-marketing.md](tata-slings/in-app-marketing.md) §13. Her notes went from the end of
@@ -244,9 +292,10 @@ log changes and goes through `Entries`, like every other button.
 
 ## Reading the data (0.21.0)
 
-- **History filters** (on Today's Day by day since 0.40.0): one row of chips, "All" then each kind that has entries
-  (Sleep, Feed, Pump, Diaper…). One tap shows only that kind's entries; the day's timeline stays
-  whole, so the context is never lost. Days without that kind are left out.
+- **Kind filters** (on the Day tab since 0.45.0, above the hour-by-hour list; on Today's Day by
+  day 0.40.0–0.44.0): one row of chips, "All" then each kind that day has (Sleep, Feed, Pump,
+  Diaper…). One tap shows only that kind's entries; the ring above stays whole, so the context is
+  never lost.
 - **The expected window on the ring:** on today's Day ring, while the baby is awake, the predicted
   window for the next sleep is a faint band of the nap colour, under the real sleeps, with
   "Expected next sleep" in the legend and in what TalkBack reads ("Next sleep expected between

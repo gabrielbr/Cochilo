@@ -63,7 +63,6 @@
     <string name="action_finish">Finish</string>
     <string name="empty_today_title">Nothing logged today</string>
     <string name="empty_today_line">Start a sleep, or tap + to log a feed or a diaper when it happens.</string>
-    <string name="caption_days">Day by day</string>
 
     <string name="type_sleep">Sleep</string>
     <string name="type_feed">Feed</string>
@@ -102,8 +101,6 @@
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
     <string name="delete">Delete</string>
-    <string name="delete_confirm_title">Delete this entry?</string>
-    <string name="delete_confirm_line">It leaves the log and the patterns.</string>
     <string name="ok">OK</string>
 
     <!-- Onboarding / baby -->
@@ -190,6 +187,15 @@
     <string name="file_failed">Couldn\'t use that file</string>
     <string name="deleted">Deleted</string>
     <string name="undo">Undo</string>
+    <string name="undo_sleep_started">Sleep started</string>
+    <string name="undo_woke_up">Woke up at %1$s</string>
+    <string name="undo_up_for_day">Up for the day</string>
+    <string name="undo_made_night">Marked as the night</string>
+    <string name="undo_made_nap">Marked as a nap</string>
+    <string name="undo_finished">Finished: %1$s</string>
+    <string name="undo_saved">Saved: %1$s</string>
+    <string name="deleted_what">Deleted: %1$s</string>
+    <string name="edit_entry">Edit</string>
 
     <!-- Units and dates -->
     <string name="duration_hm">%1$dh %2$02dm</string>
@@ -448,6 +454,11 @@
     <string name="details_skip">Not now</string>
     <string name="last_used">used last time</string>
     <!-- Ask Cochilo (docs/assistant.md): reviewed answers. Describe, suggest gently, never judge, never diagnose. -->
+    <string name="glimpse_caption">Ask Cochilo</string>
+    <string name="glimpse_line">From your log, on this phone.</string>
+    <string name="glimpse_line_tip">From the studies, on this phone.</string>
+    <string name="glimpse_open">Read the answer</string>
+    <string name="glimpse_spoken">%1$s Read Ask Cochilo\'s answer, from your log, on this phone.</string>
     <string name="ask_title">Ask Cochilo</string>
     <string name="ask_line">Answers from your log and from sleep research, made on this phone. Not medical advice.</string>
     <string name="ask_field">Ask about naps, nights, routines…</string>

@@ -3,6 +3,23 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.45.0 — 2026-11-03
+
+**Today is lighter, and ends with Ask Cochilo.**
+- **Day by day is gone from Today.** Past days are on the Day tab, with its arrows.
+- **The kind filter moved to the Day tab**, above the hour-by-hour list: tap Feed to see only
+  feeds, for example.
+- **The sleep card is taller**, and more of her fabric shows around it.
+- **A new last card on Today:** the one question that stands out in your log right now, with your
+  numbers and what to try. When nothing stands out, it shows a tip from the studies instead,
+  with its source, a different one each day. "Read the answer" opens Ask Cochilo on it. It's
+  worked out on the phone, and it shows only by day.
+- **Undo on Today.** Start sleep, Woke up, It's a nap / It's the night, Finish, Up for the day and
+  every Save now say what happened, with **Undo**.
+- **Edit and delete, clearly.** Every entry on the Day tab has a pencil: tap the row to edit it.
+  Delete in the sheet works at once, with Undo, instead of asking "are you sure?".
+  `docs/flows.md`, `docs/assistant.md`.
+
 ## 0.44.0 — 2026-11-03
 
 **From Tatá, a tab of its own.** Tatá's notes have their own tab in the bottom bar now, with a

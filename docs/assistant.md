@@ -187,6 +187,20 @@ have different topics with the agent."
   `ChatStoreTest`). At most 50 chats; the oldest goes. Chats are not in backups or exports: they're
   her questions, not the baby's log.
 
+## 0.45.0: a glimpse on Today
+
+Today ends with one Ask Cochilo card. It shows one question, the data line from its reviewed
+answer, and its "try" line, then "Read the answer", which opens a new chat already on it.
+
+`glimpse(facts, day)` (in `ui/screens/Ask.kt`, tested in `GlimpseTest`) picks what to show:
+1. **What stands out in her log:** short naps, early mornings, little daylight or contact naps,
+   once three days are logged. The card shows her numbers and what to try.
+2. **Otherwise, a tip from the studies:** a reviewed answer's "what the research says" and its
+   source, a different topic each day. "Around 4 months" is included only near that age.
+
+It's hidden at night and during a night waking. It never uses the model's free text: the glimpse
+is a reviewed answer, so its words were reviewed and its numbers are always hers.
+
 ## iPhone
 
 The engine (`domain/assistant/`) has no Android imports on purpose. For an iPhone release it

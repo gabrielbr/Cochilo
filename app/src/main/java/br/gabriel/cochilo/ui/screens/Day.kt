@@ -1,6 +1,9 @@
 package br.gabriel.cochilo.ui.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -36,6 +40,7 @@ import br.gabriel.cochilo.ui.Format
 import br.gabriel.cochilo.ui.kit.Caption
 import br.gabriel.cochilo.ui.kit.DayRing
 import br.gabriel.cochilo.ui.kit.EmptyState
+import br.gabriel.cochilo.ui.kit.FilterChips
 import br.gabriel.cochilo.ui.kit.IconButton
 import br.gabriel.cochilo.ui.kit.InfoButton
 import br.gabriel.cochilo.ui.kit.ScreenTitle
@@ -64,6 +69,8 @@ fun DayScreen(
     previewDrag: Pair<Int, Int>? = null,
     /** The drag hint shows until the first drag (0.43.0). */
     showAdjustHint: Boolean = true,
+    /** For screenshots: the kind filter already on. */
+    initialFilter: EventType? = null,
 ) {
     val f = Format(LocalContext.current, zone, now)
     val today = localDate(now, zone)
@@ -119,6 +126,24 @@ fun DayScreen(
         Caption(stringResource(R.string.caption_vertical))
         if (events.isEmpty()) {
             EmptyState(stringResource(R.string.empty_day_title), stringResource(R.string.empty_day_line))
+            return@ScrollPage
+        }
+        // The kind filter (0.45.0, from Today's old Day by day): one tap shows one kind of entry;
+        // "All" is the whole day, asleep and awake. Kept across days and the drag.
+        var filter by rememberSaveable { mutableStateOf<String?>(initialFilter?.name) }
+        val kinds = EventType.entries.filter { t -> events.any { it.type == t } }
+        val shown = filter?.let { EventType.valueOf(it) }?.takeIf { it in kinds }
+        if (kinds.size > 1) {
+            val all = stringResource(R.string.filter_all)
+            Box(Modifier.horizontalScroll(rememberScrollState())) {
+                Row(horizontalArrangement = Arrangement.spacedBy(Spacing.space2)) {
+                    FilterChips(listOf<String?>(null) + kinds.map { it.name }, shown?.name, { k -> k?.let { f.typeName(EventType.valueOf(it)) } ?: all }) { filter = it }
+                }
+            }
+            Spacer(Modifier.height(Spacing.space4))
+        }
+        if (shown != null) {
+            EventList(events.filter { it.type == shown && it.start >= from }.sortedByDescending { it.start }, now, f, zone, onOpen)
             return@ScrollPage
         }
         if (showAdjustHint) Text(stringResource(R.string.adjust_hint), style = Type.meta, color = CochiloTheme.colors.muted, modifier = Modifier.padding(bottom = Spacing.space2))
