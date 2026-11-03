@@ -193,13 +193,7 @@ private fun SleepPanel(p: Predictor.Result, now: Long, f: Format, log: List<Even
             )
             Text(stringResource(R.string.panel_since, f.time(since)), style = Type.meta, color = fgMuted)
         }
-        // Where the baby is sleeping: one tap to change (remembered for the next sleep).
-        val running = if (sleeping != null) log.filter { it.type == EventType.SLEEP && it.end == null }.maxByOrNull { it.start } else null
-        if (running != null) {
-            Spacer(Modifier.height(Spacing.space4))
-            Text(stringResource(R.string.field_place), style = Type.meta, color = fgMuted)
-            br.gabriel.cochilo.ui.kit.FilterChips(br.gabriel.cochilo.domain.Places.ALL, running.kind, { f.kindName(it) ?: it }, onDark = true) { onPlace(running, it) }
-        }
+        // Where the baby slept is asked when she wakes (details after, 0.28.0), not here.
         Spacer(Modifier.height(Spacing.space6))
         if (sleeping != null) {
             Button(stringResource(R.string.action_woke_up), { onWoke(0) }, ButtonKind.PRIMARY, Modifier.fillMaxWidth())

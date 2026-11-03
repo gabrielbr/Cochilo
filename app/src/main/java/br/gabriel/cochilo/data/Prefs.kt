@@ -90,6 +90,11 @@ class Prefs(context: Context) {
         _passphrase.value = p
     }
 
+    /** Entries already asked about after they ended (details after), newest last, at most 50. */
+    var detailsAsked: List<String>
+        get() = (sp.getString("details_asked", null) ?: "").split(',').filter { it.isNotEmpty() }
+        set(v) = sp.edit { putString("details_asked", v.takeLast(50).joinToString(",")) }
+
     /** Whether the safe-babywearing check (T.I.C.K.S.) has been shown once. */
     var ticksShown: Boolean
         get() = sp.getBoolean("ticks_shown", false)

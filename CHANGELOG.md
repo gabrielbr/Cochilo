@@ -3,6 +3,14 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.28.0 — 2026-11-03
+
+**Start fast, details after.** Start sleep is one tap with nothing to choose; when the baby wakes,
+one tap says where she slept (the place used last is marked). The same for a feed started
+without a side, a bottle's or pumping's amount and daylight: asked once, when it ends, and "Not
+now" is always there. **Newest first:** the Day tab's hour-by-hour timeline now starts with what
+just happened. `docs/flows.md`.
+
 ## 0.27.0 — 2026-11-03
 
 **Drag to adjust.** On the Day tab, hold a sleep and drag it down or up to change when it ended,

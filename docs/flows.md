@@ -54,7 +54,8 @@ costs the fewest taps. Audit of every entry type (2026-11-02):
 | Medicine | last medicine and when ("Luftal · Today 14:20") | (no slide) | the last medicine's name | ✅ |
 | Sleep | (the Sleep panel shows awake/asleep since) | (no slide) | the last half hour, as before | ✅ |
 | Note | nothing: notes are one-offs | (no slide) | empty | ✅ |
-| Sleep place | the panel shows "Where" while asleep | — | the last place (crib, arms, sling…) | ✅ |
+| Sleep place | asked on Woke up, the last place outlined with a dot (0.28.0) | — | the last place (crib, arms, sling…) | ✅ |
+| Feed kind, bottle ml, pump ml, daylight kind | asked when the timer ends if missing, the last answer marked or filled in (0.28.0) | — | the last one | ✅ |
 | Widget | the breast used last has the Last mark | — | — | — |
 | Fabric (a setting) | the Today card wears it | — | the picker opens with it ringed | — |
 
@@ -153,6 +154,32 @@ log changes and goes through `Entries`, like every other button.
   window for the next sleep is a faint band of the nap colour, under the real sleeps, with
   "Expected next sleep" in the legend and in what TalkBack reads ("Next sleep expected between
   15:51 and 16:11").
+
+## Details after (0.28.0)
+
+Start fast; say what it was once it's over. A timed entry starts with one tap and nothing else;
+the one question it still has is asked when it ends (`domain/Details.kt`, `ui/screens/Details.kt`):
+
+| Ended | Asked | Taps |
+|---|---|---|
+| A sleep (Woke up, the Earlier chips) | "Where did Bebê sleep?" Crib · In arms · Sling · Pram · Car seat | 1 (a place) or 1 (Not now) |
+| A feed started with no side | "Which feed was it?" Left · Right · Bottle · Solids; a bottle then asks its ml | 1, or 2 + typing for a bottle |
+| A bottle with no amount | "How much was the bottle?" filled with the last bottle's ml | Save (1) |
+| Pumping | "How much was pumped?" filled with the last amount | Save (1) |
+| Daylight started with no kind | "Where was the daylight?" Outdoors · By a window | 1 |
+
+- **Starting costs less**: Start sleep is one tap with nothing to decide while holding a baby
+  who is falling asleep; the sleep panel no longer shows the place chips.
+- **Remember actions**: the answer used last is outlined in the kind's colour with a dot (its
+  word only spoken: "used last time"); amounts are filled in.
+- **Never nags**: asked once per entry (`Prefs.detailsAsked`); "Not now" or a swipe down leaves
+  it as it is, still editable from its sheet. Something ended outside the app (widget,
+  notification, tile) is asked the next time the app opens, only within two hours.
+
+## Timeline order (0.28.0)
+
+The Day tab's hour-by-hour timeline lists the newest first, like History: what just happened is
+at the top, and "Awake 1h 30m" sits between a sleep and the newer one above it.
 
 ## Drag to adjust (0.27.0)
 

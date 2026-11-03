@@ -317,6 +317,22 @@ class ScreensSnapshotTest {
         light()
         paparazzi.snapshot { CochiloTheme(false) { br.gabriel.cochilo.ui.kit.Frame { androidx.compose.foundation.layout.Column(Modifier.padding(br.gabriel.cochilo.ui.theme.CTokens.Spacing.space6)) { TicksBody() } } } }
     }
+    /** Details after: the baby woke; where did she sleep? Sling was used last, so it's marked. */
+    @Test fun details_where_light() {
+        light()
+        val nap = Event(type = EventType.SLEEP, start = at(31, 13, 15), end = at(31, 14, 30))
+        val withSling = log + Event(type = EventType.SLEEP, start = at(31, 10, 35), end = at(31, 11, 40), kind = Kinds.SLING) + nap
+        paparazzi.snapshot { CochiloTheme(false) { br.gabriel.cochilo.ui.kit.Frame { androidx.compose.foundation.layout.Column(Modifier.padding(br.gabriel.cochilo.ui.theme.CTokens.Spacing.space6)) {
+            br.gabriel.cochilo.ui.screens.DetailsBody(nap, withSling, "Bebê", {}, {}, {})
+        } } } }
+    }
+    @Test fun details_pumped_ptBR_dark() {
+        pt(true)
+        val pump = Event(type = EventType.PUMP, start = at(31, 15, 0), end = at(31, 15, 20))
+        paparazzi.snapshot { CochiloTheme(true) { br.gabriel.cochilo.ui.kit.Frame { androidx.compose.foundation.layout.Column(Modifier.padding(br.gabriel.cochilo.ui.theme.CTokens.Spacing.space6)) {
+            br.gabriel.cochilo.ui.screens.DetailsBody(pump, log + pump, "Bebê", {}, {}, {})
+        } } } }
+    }
     @Test fun passphrase_sheet_light() {
         light()
         paparazzi.snapshot { CochiloTheme(false) { br.gabriel.cochilo.ui.kit.Frame { androidx.compose.foundation.layout.Column(Modifier.padding(br.gabriel.cochilo.ui.theme.CTokens.Spacing.space6)) {

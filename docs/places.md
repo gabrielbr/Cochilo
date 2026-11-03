@@ -8,10 +8,11 @@ never judged.
 
 Crib, in arms, sling, pram, car seat (`Kinds.CRIB/ARMS/SLING/PRAM/CAR`, the sleep's kind).
 
-- **Remembered:** every new sleep (Today, the Log button, the notification, the widget, the tile)
-  starts in the place used last (`Entries.startSleep`, `Places.last`).
-- **One tap to change:** while the baby sleeps, the sleep panel shows "Where" with the five places
-  as chips (outlines on the night panel, the current one a blush).
+- **Asked when the baby wakes (0.28.0, details after):** a sleep starts with one tap and no
+  place. On Woke up, a small sheet asks "Where did Bebê sleep?" with the five places, the one used
+  last outlined with a dot; one tap answers, "Not now" leaves it empty. A sleep ended from the
+  widget, the notification or the tile is asked about the next time the app opens (within two
+  hours). Before 0.28.0 the place was guessed at the start and changed on the sleep panel.
 - **In the sheet:** "Where" chips, opened on the last place.
 - **In lists:** "Nap · Sling".
 - **Patterns:** "Where naps happened, last 7 days", naps per place, most first, with "Naps in arms

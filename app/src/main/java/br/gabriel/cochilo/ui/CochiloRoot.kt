@@ -306,6 +306,15 @@ fun CochiloRoot(vm: MainViewModel) {
             onDismiss = { editing = null },
         )
     }
+    // Details after: the one question an entry has once it ends (docs/flows.md).
+    vm.details.collectAsState().value?.let { pending ->
+        br.gabriel.cochilo.ui.screens.DetailsSheet(
+            pending, log, baby?.name ?: "",
+            onKind = { vm.answerDetails(pending, kind = it) },
+            onAmount = { vm.answerDetails(pending, amountMl = it) },
+            onSkip = vm::skipDetails,
+        )
+    }
     if (vm.ticks.collectAsState().value) {
         br.gabriel.cochilo.ui.screens.TicksSheet(onDismiss = vm::ticksSeen)
     }
