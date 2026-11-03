@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import br.gabriel.cochilo.ui.theme.CTokens
 import br.gabriel.cochilo.ui.theme.CochiloTheme
 import br.gabriel.cochilo.ui.theme.SystemEasing
@@ -44,6 +45,23 @@ fun Modifier.growsWithContent(): Modifier =
 fun riseIn(): EnterTransition =
     if (CochiloTheme.reduceMotion) EnterTransition.None
     else fadeIn(motionSpec(emphasised = true)) + expandVertically(motionSpec(emphasised = true), expandFrom = Alignment.Bottom)
+
+/**
+ * One item of a cascade (design system: Cascade, the Log menu): it fades in and rises `space4`
+ * for `motion-emphasised`, starting `motion-stagger` after the item before it ([index] 0 first).
+ * A plain modifier, so it works inside any list; with Remove animations (or [still], for a
+ * screenshot) it's simply there.
+ */
+@Composable
+fun cascadeIn(index: Int, still: Boolean = false): Modifier {
+    if (still || CochiloTheme.reduceMotion) return Modifier
+    val rise = with(androidx.compose.ui.platform.LocalDensity.current) { CTokens.Spacing.space4.toPx() }
+    val p = androidx.compose.runtime.remember { androidx.compose.animation.core.Animatable(0f) }
+    androidx.compose.runtime.LaunchedEffect(Unit) {
+        p.animateTo(1f, tween(CTokens.Motion.motionEmphasised, delayMillis = index * CTokens.Motion.motionStagger, easing = SystemEasing))
+    }
+    return Modifier.graphicsLayer { alpha = p.value; translationY = (1f - p.value) * rise }
+}
 
 /** How it sinks back. */
 @Composable

@@ -10,6 +10,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.foundation.layout.Box
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
@@ -95,6 +98,42 @@ fun EventList(events: List<Event>, now: Long, f: Format, zone: ZoneId, onOpen: (
                 // Sleep leads: what Cochilo is for is a size up in every list.
                 prominent = e.type == br.gabriel.cochilo.data.EventType.SLEEP,
             )
+        }
+    }
+}
+
+/**
+ * A day's entries as its asleep and awake stretches, newest first (docs/flows.md, "Asleep and
+ * awake"): each stretch is a main row, and what happened during it is set in under it.
+ */
+@Composable
+fun StretchList(events: List<Event>, allSleeps: List<Event>, from: Long, to: Long, now: Long, f: Format, zone: ZoneId, onOpen: (Event) -> Unit) {
+    val stretches = br.gabriel.cochilo.domain.Stretches.of(events, allSleeps, from, to, now)
+    val placed = stretches.flatMap { s -> s.during.map { it.id } + listOfNotNull(s.sleep?.id) }.toSet()
+    val awake = stringResource(R.string.stretch_awake)
+    RowGroup {
+        var first = true
+        fun gap() = if (first) { first = false; false } else true
+        for (s in stretches) {
+            // An awake stretch with nothing in it and no known start says nothing: leave it out.
+            if (!s.asleep && s.during.isEmpty() && s.start == null) continue
+            if (gap()) Hairline()
+            if (s.asleep) {
+                val e = s.sleep!!
+                ListRow(eventLabel(e, f, zone), meta = eventMeta(e, now, f), leading = { br.gabriel.cochilo.ui.kit.KindIcon(e, zone) }, onClick = { onOpen(e) }, prominent = true)
+            } else {
+                Box(Modifier.semantics(mergeDescendants = true) { heading() }) {
+                    ListRow(awake, meta = awakeMeta(s, now, f), leading = { br.gabriel.cochilo.ui.kit.AwakeMark() })
+                }
+            }
+            for (e in s.during) {
+                Hairline()
+                ListRow(eventLabel(e, f, zone), meta = eventMeta(e, now, f), leading = { br.gabriel.cochilo.ui.kit.KindIcon(e, zone) }, onClick = { onOpen(e) }, indent = true)
+            }
+        }
+        for (e in events.filter { it.id !in placed && it.type != EventType.SLEEP }.sortedByDescending { it.start }) {
+            if (gap()) Hairline()
+            ListRow(eventLabel(e, f, zone), meta = eventMeta(e, now, f), leading = { br.gabriel.cochilo.ui.kit.KindIcon(e, zone) }, onClick = { onOpen(e) })
         }
     }
 }

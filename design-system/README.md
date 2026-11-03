@@ -120,6 +120,11 @@ one commit on top of the design system's `main` at 0.4.0 (self-update):
 
 - **0.25.0:** the Tatá note. Audit `audits/2026-11-03-v0.25.0-tata-note.md`.
 
+**[0023-Cascade-0.26.0.patch](0023-Cascade-0.26.0.patch)**, on top of 0022:
+
+- **0.26.0:** the cascade (`motion-stagger` 35ms) and the asleep-and-awake timeline. Audit
+  `audits/2026-11-03-v0.26.0-cascade.md`.
+
 All checked on a fresh checkout of the design system's `main`: `git am` applies it,
 `check_tokens.py` reports 0 errors, the tests pass, and `drift.py --cochilo` against this repo
 reports 0 differences.

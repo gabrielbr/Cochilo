@@ -6,6 +6,8 @@ import br.gabriel.cochilo.data.Event
 import br.gabriel.cochilo.data.EventType
 import br.gabriel.cochilo.data.Kinds
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import br.gabriel.cochilo.ui.theme.CTokens.Spacing
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -103,3 +105,15 @@ fun kindBadgeSize(t: EventType): androidx.compose.ui.unit.Dp = if (t.leads) Size
 
 /** Sleep is the app's subject: its rows, icon and timeline marks are a size up. */
 val EventType.leads: Boolean get() = this == EventType.SLEEP
+
+/**
+ * Awake's mark in a list: the timeline's hollow ring, in a round as wide as sleep's, so the two
+ * main states line up. Awake isn't an entry, so it has no icon and no data colour.
+ */
+@Composable
+fun AwakeMark(modifier: Modifier = Modifier) {
+    val c = CochiloTheme.colors
+    Box(modifier.size(Size.kindBadgeLead), contentAlignment = Alignment.Center) {
+        Box(Modifier.size(Spacing.space3).clip(RoundedCornerShape(Radius.radiusRound)).border(Size.hairline, c.muted, RoundedCornerShape(Radius.radiusRound)))
+    }
+}

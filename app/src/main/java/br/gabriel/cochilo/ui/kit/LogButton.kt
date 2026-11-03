@@ -35,6 +35,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.foundation.layout.offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
@@ -130,9 +131,9 @@ fun BoxScope.LogButton(
                 .clickable(remember { MutableInteractionSource() }, indication = null, onClickLabel = closeLabel) { close() }
         )
     }
-    // The menu rises from the button and sinks back into it.
+    // The menu pours out of the button item by item (cascadeIn, below) and sinks back into it at once.
     androidx.compose.animation.AnimatedVisibility(
-        open, enter = riseIn(), exit = sinkOut(),
+        open, enter = androidx.compose.animation.EnterTransition.None, exit = sinkOut(),
         modifier = Modifier.align(Alignment.BottomEnd).fillMaxWidth()
             .padding(start = Spacing.space4, end = Spacing.space4, bottom = Spacing.space4 + Size.button + Spacing.space3),
     ) {
@@ -142,10 +143,17 @@ fun BoxScope.LogButton(
             verticalArrangement = Arrangement.spacedBy(Spacing.space2),
         ) {
             // Bottom-up: items[0] sits nearest the button, under the thumb.
+            val arc = with(androidx.compose.ui.platform.LocalDensity.current) { Spacing.space3.roundToPx() }
             for (i in items.indices.reversed()) {
                 val item = items[i]
                 val showChoices = hover?.item == i
-                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.space2)) {
+                // A soft arc instead of a rigid column (deepest in the middle), and a cascade: each
+                // item rises in after the one nearer the button (design system: Cascade).
+                val bow = arcOffset(i, items.size, arc)
+                Row(
+                    Modifier.offset { androidx.compose.ui.unit.IntOffset(-bow, 0) }.then(cascadeIn(i, still = preview != null)),
+                    verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(Spacing.space2),
+                ) {
                     // The choices share what's left of the row at their own widths.
                     // A flow, so at large font sizes the choices wrap to a second line instead of losing the last.
                     if (showChoices) androidx.compose.foundation.layout.FlowRow(
@@ -263,3 +271,7 @@ private const val PRESSED_SCALE = 0.97f
 
 /** How much of on-fab tints the kind's round on the lit row (components.md, Kind icon: 18%). */
 private const val LIT_ROUND_ALPHA = 0.18f
+
+/** How far item [i] of [n] bows left of the column, in px: 0 at both ends, [depth] in the middle. */
+internal fun arcOffset(i: Int, n: Int, depth: Int): Int =
+    if (n < 3) 0 else (depth * kotlin.math.sin(Math.PI * i / (n - 1))).toInt()

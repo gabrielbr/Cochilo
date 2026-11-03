@@ -155,6 +155,41 @@ log changes and goes through `Entries`, like every other button.
   "Expected next sleep" in the legend and in what TalkBack reads ("Next sleep expected between
   15:51 and 16:11").
 
+## Asleep and awake (0.35.0)
+
+The owner's ask: the timelines should read as the two main states, sleeping and awake, with what
+happened during each set in under it. `domain/Stretches.kt` (tested in `StretchesTest`) splits the
+day into stretches: the awake time before the first sleep (from the night's end, or "awake" with
+no start when the log doesn't know), each sleep, and the awake time after each. Every other entry
+goes in the stretch where it started.
+
+- **Day, hour by hour:** newest first. A sleep is a main row as before (its bar, the bigger round,
+  drag to adjust). An awake stretch is a main row with a hollow ring on the rail, "Awake" and its
+  range and length ("09:10–11:40 · 2h 30m", or "Since 14:20 · 45m" while it runs). Entries inside a
+  stretch are set in by `space6`; the time column shows only the stretches' starts, so it reads in
+  order, and each nested entry keeps its time in its meta. It replaces the 0.28.0 "Awake 1h 30m"
+  line between sleeps.
+- **History:** with "All", the day's list is grouped the same way (the ring in the icon slot, nested
+  rows set in). Filtered to one kind, it stays a plain list: grouping one kind says nothing.
+- **TalkBack:** each awake stretch is a heading, so a stretch can be skipped to.
+
+| Flow | Taps |
+|---|---|
+| Read what happened during a nap or a waking | 0 (it's set in under it) |
+| Edit an entry | 1, as before (awake rows aren't entries and aren't buttons) |
+
+No common entry costs more.
+
+## The Log menu's cascade (0.35.0)
+
+The menu used to rise as one block. Now its rows come in one after another, nearest the button
+first, each rising a little and fading in (`motion-emphasised`, `motion-stagger` 35ms apart), and
+the column bows in a soft arc (up to `space3`, deepest in the middle), so it feels like a gesture
+of the thumb and not a grid. Closing is one sink, all together. The rows are where the finger
+expects them as soon as they start to appear, so press-and-drag still works in one move; with
+Remove animations they appear at once. `cascadeIn` in `ui/kit/Motion.kt`, `arcOffset` in
+`ui/kit/LogButton.kt` (tested in `ArcTest`).
+
 ## Notes by age (0.34.0)
 
 No flow changes. Once Tatá approves them, a note sits at the end of Patterns; "Got it" closes it
@@ -224,7 +259,7 @@ the one question it still has is asked when it ends (`domain/Details.kt`, `ui/sc
 ## Timeline order (0.28.0)
 
 The Day tab's hour-by-hour timeline lists the newest first, like History: what just happened is
-at the top, and "Awake 1h 30m" sits between a sleep and the newer one above it.
+at the top. (Since 0.35.0 the awake time is its own row; see "Asleep and awake".)
 
 ## Drag to adjust (0.27.0)
 
@@ -279,7 +314,7 @@ Every action answers with a small movement, so the hand knows it worked without 
 | Action | Motion |
 |---|---|
 | Any press (rows, buttons, chips, tabs, swatches, Log menu rows) | dips to 97% under the finger |
-| Open the Log button | the scrim fades in, the menu rises from the button, the plus turns into a cross; held, the button dips |
+| Open the Log button | the scrim fades in, the menu's rows come in one by one on a soft arc (0.35.0), the plus turns into a cross; held, the button dips |
 | Drag over the Log menu or a slide row | the lit row or option cross-fades to its fill |
 | Start a slide | the options fade in over the row, and out when it lets go |
 | Log something | the list opens for the new entry instead of jumping |

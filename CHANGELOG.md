@@ -3,6 +3,14 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.35.0 — 2026-11-03
+
+**Asleep and awake, and a softer Log menu.** The Day timeline and History now read as the day's
+two states: each sleep and each awake stretch is a main row, newest first, and a feed, diaper or
+walk sits set in under the stretch it happened in, so a night feed shows inside the night. The
+Log button's menu opens item by item, rising from the button on a soft curve instead of all at
+once; with Remove animations it simply appears. `docs/flows.md`.
+
 ## 0.34.0 — 2026-11-03
 
 **Ready for Tatá's notes by age (all off for now).** Twelve short notes from birth to two years,

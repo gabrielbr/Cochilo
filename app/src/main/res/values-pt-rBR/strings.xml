@@ -190,7 +190,7 @@
     <string name="caption_vertical">Hora a hora</string>
     <string name="ring_sleep">de sono</string>
     <string name="ring_counts">Sonecas:\u00A0%1$d · Mamadas:\u00A0%2$d · Fraldas:\u00A0%3$d</string>
-    <string name="awake_gap">Acordado %1$s</string>
+    <string name="stretch_awake">Acordado</string>
     <string name="empty_day_title">Nada neste dia</string>
     <string name="empty_day_line">Os registros aparecem aqui, hora a hora.</string>
 
