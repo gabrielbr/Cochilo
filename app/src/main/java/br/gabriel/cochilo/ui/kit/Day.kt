@@ -181,6 +181,8 @@ fun TimelineRow(
     previewSteps: Int? = null,
     /** Happened inside an asleep or awake stretch: the entry is set in under its main row. */
     indent: Boolean = false,
+    /** The entry's length, so the bar follows a drag on the timeline's scale. */
+    durationMinutes: Int? = null,
 ) {
     val c = CochiloTheme.colors
     val editLabel = androidx.compose.ui.res.stringResource(br.gabriel.cochilo.R.string.edit_entry)
@@ -216,11 +218,12 @@ fun TimelineRow(
             )
         }
     val preview = if (holding && adjust != null) adjust.preview(steps) else null
-    // While held, the bar follows the drag (4dp per 10 minutes, like the rest of the timeline).
-    val shownBar = if (holding && barHeight != null && adjust != null) (barHeight + Spacing.space1 * (adjust.deltaMinutes(steps) / 10f)).coerceAtLeast(Spacing.space2) else barHeight
+    // While held, the bar follows the drag, on the same scale as the rest of the timeline.
+    val shownBar = if (holding && barHeight != null && adjust != null && durationMinutes != null)
+        Spacing.space1 * br.gabriel.cochilo.domain.TimelineScale.units(durationMinutes + adjust.deltaMinutes(steps)) else barHeight
     val base = Modifier.fillMaxWidth()
-    // At least as tall as the bar, and as tall as its words need (sleep's bigger round and two lines).
-    val sized = base.heightIn(min = if (shownBar != null) maxOf(shownBar, Size.rowMin) else Size.rowMin).height(IntrinsicSize.Min)
+    // At least as tall as the bar (plus its 4dp above and below), and as tall as its words need.
+    val sized = base.heightIn(min = if (shownBar != null) maxOf(shownBar + Spacing.space2, Size.rowMin) else Size.rowMin).height(IntrinsicSize.Min)
     Row(
         sized.background(animatedColor(if (holding) c.selected else c.surface))
             .then(gesture)
@@ -229,10 +232,11 @@ fun TimelineRow(
         Text(time, style = Type.meta, color = c.muted, textAlign = TextAlign.End, maxLines = 1, modifier = Modifier.width(Spacing.space16 + Spacing.space2).padding(top = Spacing.space1))
         Box(Modifier.width(Spacing.space8).fillMaxHeight(), contentAlignment = Alignment.TopCenter) {
             Box(Modifier.width(Size.hairline).fillMaxHeight().background(c.line))
-            if (barHeight != null) {
-                // Sleep leads: its bar is wider than a feed's or a walk's.
+            if (shownBar != null) {
+                // Sleep leads: its bar is wider than a feed's or a walk's. Its height is its own
+                // (TimelineScale), not the row's, so a short feed stays short (0.46.0).
                 Box(
-                    Modifier.padding(vertical = Spacing.space1).width(if (prominent) Spacing.space3 else Spacing.space2).fillMaxHeight()
+                    Modifier.padding(vertical = Spacing.space1).width(if (prominent) Spacing.space3 else Spacing.space2).height(shownBar)
                         .clip(RoundedCornerShape(Radius.radiusS)).background(color)
                 )
             } else {
@@ -281,19 +285,28 @@ class TimelineAdjust(
  * it lasted. Not a button; TalkBack reads it as a heading so a stretch can be skipped to.
  */
 @Composable
-fun TimelineAwake(time: String, label: String, meta: String?) {
+fun TimelineAwake(time: String, label: String, meta: String?, barHeight: Dp? = null) {
     val c = CochiloTheme.colors
     Row(
-        Modifier.fillMaxWidth().heightIn(min = Size.rowMin).height(IntrinsicSize.Min)
+        Modifier.fillMaxWidth().heightIn(min = if (barHeight != null) maxOf(barHeight + Spacing.space2, Size.rowMin) else Size.rowMin).height(IntrinsicSize.Min)
             .semantics(mergeDescendants = true) { heading() }
     ) {
         Text(time, style = Type.meta, color = c.muted, textAlign = TextAlign.End, maxLines = 1, modifier = Modifier.width(Spacing.space16 + Spacing.space2).padding(top = Spacing.space1))
         Box(Modifier.width(Spacing.space8).fillMaxHeight(), contentAlignment = Alignment.TopCenter) {
             Box(Modifier.width(Size.hairline).fillMaxHeight().background(c.line))
-            Box(
-                Modifier.padding(top = Spacing.space2).size(Spacing.space3).clip(RoundedCornerShape(Radius.radiusRound))
-                    .background(c.surface).border(Size.hairline, c.muted, RoundedCornerShape(Radius.radiusRound))
-            )
+            if (barHeight != null) {
+                // Awake as an outline on the timeline's scale (0.46.0): no fill, so sleep still leads.
+                Box(
+                    Modifier.padding(vertical = Spacing.space1).width(Spacing.space2).height(barHeight)
+                        .clip(RoundedCornerShape(Radius.radiusS)).background(c.surface)
+                        .border(Size.hairline, c.muted, RoundedCornerShape(Radius.radiusS))
+                )
+            } else {
+                Box(
+                    Modifier.padding(top = Spacing.space2).size(Spacing.space3).clip(RoundedCornerShape(Radius.radiusRound))
+                        .background(c.surface).border(Size.hairline, c.muted, RoundedCornerShape(Radius.radiusRound))
+                )
+            }
         }
         Column(Modifier.weight(1f).padding(start = Spacing.space2, end = Spacing.space2)) {
             Text(label, style = Type.body, color = c.ink)

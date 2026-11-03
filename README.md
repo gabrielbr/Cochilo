@@ -30,9 +30,11 @@ and import yourself.
   right. [docs/nights.md](docs/nights.md).
 - **Day**: one day two ways. A 24-hour ring (midnight at the top; sleep on the outer ring, feeds,
   pumping and daylight inside, dots for diapers) with the total sleep in the middle, then every
-  entry hour by hour on a vertical rail, as the day's two states: each sleep (a bar as long as it
-  lasted) and each awake stretch (a hollow ring, with its length), newest first, and every feed,
-  diaper or walk set in under the stretch it happened in. Arrows move between days; tap an entry
+  entry hour by hour on a vertical rail, as the day's two states: each sleep (a filled bar) and
+  each awake stretch (an outlined bar), newest first, and every feed, diaper or walk set in under
+  the stretch it happened in. Since 0.46.0 every bar's height follows how long it lasted
+  (not 1:1: two hours of sleep is clearly longer than ten minutes of feeding, and a night still
+  fits the screen). Arrows move between days; tap an entry
   to edit it.
 - **Four tabs** since 0.44.0: Today, Day, Patterns and From Tatá (her notes by age, this week's
   tip, her shop). History lives at the end of Today: every day

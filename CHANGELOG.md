@@ -3,6 +3,13 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.46.0 — 2026-11-03
+
+**The timeline shows how long things lasted.** On the Day tab every bar is now as tall as its
+length suggests. It isn't one-to-one, but two hours of sleep is plainly longer than ten minutes of
+feeding, and a whole night still fits the screen. Awake stretches show as outlined bars on the
+same scale. `docs/flows.md`.
+
 ## 0.45.0 — 2026-11-03
 
 **Today is lighter, and ends with Ask Cochilo.**
