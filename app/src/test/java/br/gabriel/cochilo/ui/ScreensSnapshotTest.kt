@@ -123,7 +123,7 @@ class ScreensSnapshotTest {
                     else -> stringResource(R.string.status_weeks, weeks)
                 }
                 br.gabriel.cochilo.ui.kit.AppShell(tabs, tab, {}, header = {
-                    Header(baby.name, status) { IconButton(R.drawable.gg_ic_gear, stringResource(R.string.settings), {}) }
+                    Header(baby.name, status) { IconButton(R.drawable.gg_ic_chat, stringResource(R.string.ask_open), {}); IconButton(R.drawable.gg_ic_gear, stringResource(R.string.settings), {}) }
                 }) { width ->
                     val screen: @Composable (Int) -> Unit = { t ->
                         when (t) {
@@ -353,6 +353,8 @@ class ScreensSnapshotTest {
     }
     @Test fun ask_light() { light(); paparazzi.snapshot { AskShot(false, listOf("Why are the naps so short?")) } }
     @Test fun ask_care_ptBR_dark() { pt(true); paparazzi.snapshot { AskShot(true, listOf("Ela está com febre, o que faço?")) } }
+    /** The owner's own question (0.38.0): now answered from the log. */
+    @Test fun ask_nap_length_ptBR_light() { pt(false); paparazzi.snapshot { AskShot(false, listOf("o quão devem demorar as sonecas do Dante?")) } }
     @Test fun ask_not_sure_light() { light(); paparazzi.snapshot { AskShot(false, listOf("What colour is the sky?"), getModel = true) } }
 
     /** On-device AI (docs/assistant.md): the sheet in its states, and an answer from the model. */

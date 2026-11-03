@@ -248,13 +248,13 @@ Store downloads it); it now says when it's waiting for Wi-Fi too.
 | Get the model (family build) | Settings › On-device AI (1) › Choose the model file (1) › the file (1); since 0.37.0, Download (1) (above) |
 | Ask something beyond the list | type, Ask (1); the answer appears when the phone has written it |
 
-Nothing else changes: the 13 topics answer at once from the library, as before.
+Nothing else changes: the topics (14 since 0.38.0) answer at once from the library, as before.
 
 ## Ask Cochilo (0.29.0)
 
 | Flow | Taps |
 |---|---|
-| Open it | Patterns › Questions about sleep (1) |
+| Open it | the chat icon in the header, from any tab (1, since 0.38.0); or Patterns › Questions about sleep (1) |
 | Ask a suggested question | 1 chip |
 | Ask your own | type, then Ask (1) |
 

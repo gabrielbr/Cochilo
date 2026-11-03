@@ -416,7 +416,10 @@
     <string name="ask_what_helps">O que pode ajudar</string>
     <string name="ask_source">Fonte: %1$s</string>
     <string name="ask_no_data">Ainda não há registros suficientes para isso. Depois de alguns dias, a resposta usa os números do bebê.</string>
-    <string name="ask_not_sure">Posso ajudar com sonecas, noites, hora de dormir, janelas de sono, luz do dia, rotina e sonecas no colo, usando seus registros. Experimente uma das perguntas abaixo.</string>
+    <string name="ask_not_sure">Posso ajudar com sonecas e quanto duram, noites, hora de dormir, janelas de sono, luz do dia, rotina e sonecas no colo, usando seus registros. Experimente uma das perguntas abaixo.</string>
+    <string name="ask_unchecked">A IA no celular escreveu uma resposta que não consegui conferir com os seus registros, então aqui vai o que eu sei.</string>
+    <string name="ask_model_getting">A IA no celular ainda está baixando. Pergunte de novo quando estiver pronta, e ela responde a partir dos seus registros.</string>
+    <string name="ask_open">Pergunte ao Cochilo</string>
     <string name="ask_insight_sleep">Sono: %1$s por dia em média (o usual para a idade é %2$s–%3$s h).</string>
     <string name="ask_insight_naps">Sonecas: %1$s por dia, mediana de %2$s.</string>
     <string name="ask_insight_night">Maior trecho: %1$s em média.</string>
@@ -436,6 +439,12 @@
     <string name="ask_short_naps_info">Antes dos 5–6 meses, muitas sonecas são um único ciclo de sono, de 30 a 45 minutos. Sonecas curtas são comuns nessa idade e costumam aumentar com o tempo.</string>
     <string name="ask_short_naps_try">Uma soneca que começa dentro da janela, um quarto com pouca luz ou uma soneca no colo ou no sling podem ajudar a durar mais. Em alguns dias as sonecas ficam curtas mesmo.</string>
     <string name="ask_short_naps_source">pesquisa §2.5, §3</string>
+    <string name="ask_nap_length_q">Quanto tempo duram as sonecas?</string>
+    <string name="ask_nap_length_data">Nesta semana as sonecas duraram %1$s na mediana, de %2$s a %3$s (sonecas registradas: %4$d).</string>
+    <string name="ask_nap_length_info_young">Não existe duração certa. Antes dos 5–6 meses muitas sonecas são um só ciclo de sono, cerca de 30–45 minutos, e sonecas de 30 minutos a 2 horas são todas comuns. O sono do dia inteiro importa mais que uma soneca.</string>
+    <string name="ask_nap_length_info">Não existe duração certa. A partir de uns 6 meses as sonecas costumam juntar dois ciclos e durar 1–2 horas, com menos sonecas por dia. O sono do dia inteiro importa mais que uma soneca.</string>
+    <string name="ask_nap_length_try">Um bebê que acorda calmo de uma soneca curta pode ter descansado o bastante por agora. Um que acorda chorando às vezes volta a dormir com alguns minutos de ajuda, ou no colo ou no sling.</string>
+    <string name="ask_nap_length_source">pesquisa §2.5, §3</string>
     <string name="ask_night_wakings_q">Por que acorda à noite?</string>
     <string name="ask_night_wakings_data">Esta semana: %1$s despertares por noite em média; o maior trecho foi de %2$s.</string>
     <string name="ask_night_wakings_info">Acordar à noite é normal no primeiro ano. O maior trecho de sono costuma crescer mês a mês, no ritmo de cada bebê.</string>

@@ -3,6 +3,16 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.38.0 — 2026-11-03
+
+**Ask Cochilo knows your log, and it's one tap away.** Ask now sits at the top of every tab (the
+chat icon, beside Settings). It answers "how long should naps last?" with the baby's own naps this
+week (the typical length, the shortest and the longest) and what's usual for the age. The
+on-device AI is now given the whole log: the baby's name and age, each of the last seven days,
+today's sleeps, this week's naps, windows and bedtime. When it writes something that can't be
+checked against the log, Ask says so instead of answering as if it didn't understand.
+`docs/assistant.md`.
+
 ## 0.37.1 — 2026-11-03
 
 **The on-device AI accepts Google's current model file.** The check on the model file expected

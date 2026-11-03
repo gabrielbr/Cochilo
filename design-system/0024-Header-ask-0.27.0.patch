@@ -1,0 +1,172 @@
+From cc86ad33312eeab1cedc5fd2a621eb967ee75139 Mon Sep 17 00:00:00 2001
+From: Gabriel Lopes <ogabriel@gmail.com>
+Date: Tue, 3 Nov 2026 14:57:49 +0000
+Subject: [PATCH] 0.27.0: the header's second icon (Ask before Settings)
+
+---
+ CHANGELOG.md                            |  8 ++++++++
+ DESIGN.md                               |  2 +-
+ VERSION                                 |  2 +-
+ audits/2026-11-03-v0.27.0-header-ask.md | 18 ++++++++++++++++++
+ docs/components.md                      |  2 +-
+ generated/cochilo/CTokens.kt            |  2 +-
+ generated/pulseloop/GTokens.kt          |  2 +-
+ generated/uikit/UiTokens.java           |  2 +-
+ generated/web/cochilo.css               |  2 +-
+ generated/web/pulseloop.css             |  2 +-
+ generated/web/uikit.css                 |  2 +-
+ tokens/tokens.json                      |  2 +-
+ 12 files changed, 36 insertions(+), 10 deletions(-)
+ create mode 100644 audits/2026-11-03-v0.27.0-header-ask.md
+
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+index cb7ad85..9f2e4ee 100644
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -3,6 +3,14 @@
+ Semantic versioning (AGENTS.md "Versioning"). Each entry says what changed for each app and what
+ the app has to do.
+ 
++## 0.27.0 — 2026-11-03
++
++The header's second icon (minor: a component rule; no token values change).
++
++- components.md: the Header may hold two trailing icons when the second opens a screen used from
++  every tab. Cochilo puts Ask (`gg_ic_chat`, already in the line set) before Settings. Cochilo 0.38.0.
++- Audit `audits/2026-11-03-v0.27.0-header-ask.md`.
++
+ ## 0.26.0 — 2026-11-03
+ 
+ The cascade, and asleep and awake (minor: a Cochilo motion token and a timeline pattern).
+diff --git a/DESIGN.md b/DESIGN.md
+index f437e81..b916fcd 100644
+--- a/DESIGN.md
++++ b/DESIGN.md
+@@ -1,6 +1,6 @@
+ ---
+ name: Gabriel Design System
+-version: 0.26.0
++version: 0.27.0
+ # GENERATED from tokens/tokens.json by scripts/gen_tokens.py. Edit the tokens, not this block.
+ colors:
+   page: "#F2F2F2"
+diff --git a/VERSION b/VERSION
+index 4e8f395..1b58cc1 100644
+--- a/VERSION
++++ b/VERSION
+@@ -1 +1 @@
+-0.26.0
++0.27.0
+diff --git a/audits/2026-11-03-v0.27.0-header-ask.md b/audits/2026-11-03-v0.27.0-header-ask.md
+new file mode 100644
+index 0000000..46df6d2
+--- /dev/null
++++ b/audits/2026-11-03-v0.27.0-header-ask.md
+@@ -0,0 +1,18 @@
++# Audit: the header's second icon (0.27.0)
++
++Date: 2026-11-03 · Cochilo 0.38.0
++
++**Why.** Ask Cochilo was reachable only from a row in Patterns, which the owner called "very
++hidden". A screen the parent uses from anywhere belongs where Settings already is: the header.
++
++**Rule.** At most two trailing icons, and only when the second opens a screen used from every tab.
++Each is a 48dp target; they sit `space1` apart (the IconButton's own padding). The icons come from
++the line set (`gg_ic_chat`, `gg_ic_gear`), muted ink, never teal: teal stays the screen's one
++action. Each has its own TalkBack label ("Ask Cochilo", "Settings").
++
++**Checks.**
++- Hierarchy: the name and the status stay first.
++- Spacing: no new values.
++- Contrast: the same icon colour as the gear.
++- Targets: 48dp.
++- 200% font: the status line ellipsizes before the icons move.
+diff --git a/docs/components.md b/docs/components.md
+index 4c281c0..15e0ed9 100644
+--- a/docs/components.md
++++ b/docs/components.md
+@@ -9,7 +9,7 @@ component, the row says so.
+ | Component | Spec | uikit | Compose | Status |
+ |---|---|---|---|---|
+ | Frame | 4dp mint border; loading line (uikit). Cochilo: `frame-line`, a soft hem under the brand | `FrameDrawable`, `FrameSweep`, `Motion.loading` | `AppChrome` frame | ✅ |
+-| Header | 56dp; monogram 32 / app name over one status line / one trailing icon | `Ui.header`, `Ui.backHeader` | `AppHeader` (greeting + headline line, ring pill, gear) | ✅ |
++| Header | 56dp; monogram 32 / app name over one status line / one trailing icon, at most two when the second opens a screen used from every tab (Cochilo: Ask, then Settings; `space1` apart, 48dp each) | `Ui.header`, `Ui.backHeader` | `AppHeader` (greeting + headline line, ring pill, gear) | ✅ |
+ | Tab bar | 64dp; active = mint pill behind the icon (Cochilo: `selected` blush); badge 12sp bold coral-text on coral-soft | `Ui.tabBar` | `NavigationBar`, `NavigationRail` from 600dp | ✅ |
+ | Navigation rail | `rail` 80dp wide, from `width-medium` (600dp): the same tabs stood on their side, the same `selected` pill and words; the screen's column stays at most `content-max` (600dp), centred. From `width-expanded` (840dp) Cochilo shows Today beside the picked tab (Day when Today is picked) | `Ui.rail` | `NavigationRail` | ✅ |
+ | Screen title | uikit: display 30/36, one word on the mint highlighter. PulseLoop tabs have no title. Cochilo (0.11.0): display 600 in ink, no highlighter | `Ui.title` | — | 🟡 |
+diff --git a/generated/cochilo/CTokens.kt b/generated/cochilo/CTokens.kt
+index 9526904..78af1a8 100644
+--- a/generated/cochilo/CTokens.kt
++++ b/generated/cochilo/CTokens.kt
+@@ -1,4 +1,4 @@
+-// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.26.0 — do not edit.
++// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.27.0 — do not edit.
+ package br.gabriel.cochilo.ui.theme
+ 
+ import androidx.compose.ui.graphics.Color
+diff --git a/generated/pulseloop/GTokens.kt b/generated/pulseloop/GTokens.kt
+index 9eb5214..f2fcaa9 100644
+--- a/generated/pulseloop/GTokens.kt
++++ b/generated/pulseloop/GTokens.kt
+@@ -1,4 +1,4 @@
+-// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.26.0 — do not edit.
++// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.27.0 — do not edit.
+ package com.pulseloop.ui.theme
+ 
+ import androidx.compose.ui.graphics.Color
+diff --git a/generated/uikit/UiTokens.java b/generated/uikit/UiTokens.java
+index 06424b4..b6d181e 100644
+--- a/generated/uikit/UiTokens.java
++++ b/generated/uikit/UiTokens.java
+@@ -1,4 +1,4 @@
+-// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.26.0 — do not edit.
++// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.27.0 — do not edit.
+ package br.gabriel.ui;
+ 
+ /**
+diff --git a/generated/web/cochilo.css b/generated/web/cochilo.css
+index ab66d57..9e97b13 100644
+--- a/generated/web/cochilo.css
++++ b/generated/web/cochilo.css
+@@ -1,4 +1,4 @@
+-/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.26.0 — do not edit. */
++/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.27.0 — do not edit. */
+ /* Layer: cochilo. Themes: light, dark, night. */
+ 
+ :root {
+diff --git a/generated/web/pulseloop.css b/generated/web/pulseloop.css
+index 9806ed1..44ef3f5 100644
+--- a/generated/web/pulseloop.css
++++ b/generated/web/pulseloop.css
+@@ -1,4 +1,4 @@
+-/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.26.0 — do not edit. */
++/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.27.0 — do not edit. */
+ /* Layer: pulseloop. Themes: dark. */
+ 
+ :root {
+diff --git a/generated/web/uikit.css b/generated/web/uikit.css
+index e118542..c27b3f2 100644
+--- a/generated/web/uikit.css
++++ b/generated/web/uikit.css
+@@ -1,4 +1,4 @@
+-/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.26.0 — do not edit. */
++/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.27.0 — do not edit. */
+ /* Layer: uikit. Themes: light, dark. */
+ 
+ :root {
+diff --git a/tokens/tokens.json b/tokens/tokens.json
+index 11c71c6..86488aa 100644
+--- a/tokens/tokens.json
++++ b/tokens/tokens.json
+@@ -1,7 +1,7 @@
+ {
+   "$comment": "Source of truth for every app's design tokens. Edit here, run scripts/gen_tokens.py, commit tokens + generated/ + DESIGN.md together. Schema: docs/tokens.md.",
+   "name": "Gabriel Design System",
+-  "version": "0.26.0",
++  "version": "0.27.0",
+   "core": {
+     "$comment": "Shared by every app. Every layer must include every core token (scripts/check_tokens.py enforces it).",
+     "color": [
+-- 
+2.43.0
+
