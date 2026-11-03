@@ -32,7 +32,8 @@ and import yourself.
   lasted) and each awake stretch (a hollow ring, with its length), newest first, and every feed,
   diaper or walk set in under the stretch it happened in. Arrows move between days; tap an entry
   to edit it.
-- **Three tabs** since 0.40.0: Today, Day and Patterns. History lives at the end of Today: every day
+- **Four tabs** since 0.44.0: Today, Day, Patterns and From Tatá (her notes by age, this week's
+  tip, her shop). History lives at the end of Today: every day
   with its summary, timeline and entries, grouped the same way (asleep and awake, with what
   happened during each set in); filtered to one kind, a plain list.
 - **Icons**: every kind of entry has its line icon (a drop, a bottle, a spoon, a pump, a diaper,
@@ -79,8 +80,9 @@ and import yourself.
 - **Her fabrics**: Settings › Appearance › Fabric wraps the Today card in one of Tatá's slings
   (eleven, photographed from her shop); under the picked one, a quiet link to that sling in the shop
   ([in-app-marketing.md](docs/tata-slings/in-app-marketing.md)). [docs/tata-slings/textures.md](docs/tata-slings/textures.md).
-- **Tatá's suggestions**: rarely, a signed note from Tatá in Patterns, when the baby's own log makes
-  one of her products useful. Since 0.36.0 one is on: lots of naps in arms in the first three months
+- **From Tatá** (a tab since 0.44.0): her note for the baby's age, the next one, the earlier
+  ones one tap away, and her shop. **Tatá's suggestions** appear there too ("This week"), rarely,
+  when the baby's own log makes one of her products useful. Since 0.36.0 one is on: lots of naps in arms in the first three months
   → her sling. Never at night, while the baby sleeps, in the first week, or after "Don't show
   again"; Settings › Notifications turns them all off
   ([in-app-marketing.md](docs/tata-slings/in-app-marketing.md)).

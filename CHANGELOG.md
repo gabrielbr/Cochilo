@@ -3,6 +3,19 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.44.0 — 2026-11-03
+
+**From Tatá, a tab of its own.** Tatá's notes have their own tab in the bottom bar now, with a
+heart. You used to see them only now and then, at the end of Patterns, and since her age notes
+were still waiting for approval, they never showed at all. The tab shows:
+- her note for the baby's age, and the next one;
+- the earlier notes, one tap away;
+- this week's tip, when there is one;
+- her shop.
+
+All twelve age notes are on. Shop links still hide at night and while the baby sleeps, and
+Patterns no longer has a Tatá card. `docs/tata-slings/in-app-marketing.md` §13.
+
 ## 0.43.0 — 2026-11-03
 
 **Less on the screen.** A pass through every screen asking what earns its place

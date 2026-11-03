@@ -204,7 +204,7 @@ fun SettingsScreen(
 }
 
 /** Opens a shop link in the browser: an intent, so the app itself needs no internet. */
-private fun openShop(context: android.content.Context, url: String) {
+fun openShop(context: android.content.Context, url: String) {
     runCatching { context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) }
 }
 

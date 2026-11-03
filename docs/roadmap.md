@@ -50,9 +50,9 @@ Each is grounded in `docs/research.md` or the Tatá Slings plans (`docs/tata-sli
 ### 3.2c Tatá Slings inside the app
 
 The non-intrusive plan in [tata-slings/in-app-marketing.md](tata-slings/in-app-marketing.md):
-notes by age and log moments in Patterns (step 1, the fabric line, shipped in 0.31.0; step 4's
-first moment, naps in arms, live in 0.36.0), never on Today, at night, or on safety screens. The
-other moments and the age notes need Tatá's sign-off.
+notes by age and log moments in the From Tatá tab (since 0.44.0, all twelve age notes on; step 1,
+the fabric line, shipped in 0.31.0; step 4's first moment, naps in arms, live in 0.36.0), never on
+Today, at night, or on safety screens. The other moments need Tatá's sign-off.
 
 ### 3.3b Less is more, next ([skill](../.claude/skills/less-is-more/SKILL.md))
 - **One legend per screen**: Today's Day by day and the Day tab each carry the full colour legend;
@@ -76,6 +76,7 @@ other moments and the age notes need Tatá's sign-off.
 
 ## Shipped from this plan
 
+- **0.44.0**: From Tatá, a tab of its own, with all twelve age notes ([in-app-marketing.md](tata-slings/in-app-marketing.md) §13).
 - **0.43.0**: less is more: Today, Day and Patterns decluttered, the night first in Patterns ([flows.md](flows.md)).
 - **0.42.0**: the night as one thing: nap or night per sleep, night wakings, up for the day ([nights.md](nights.md)).
 - **0.41.1**: the design system released 0.28.0 with the generic parts of Cochilo's patches; Cochilo re-synced to it and deleted the patches ([design/core/CORE.md](../design/core/CORE.md)).

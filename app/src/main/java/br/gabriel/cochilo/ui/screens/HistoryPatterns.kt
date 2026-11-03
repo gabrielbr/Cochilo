@@ -89,8 +89,6 @@ fun ColumnScope.HistoryDays(log: List<Event>, now: Long, zone: ZoneId, onOpen: (
 @Composable
 fun PatternsScreen(
     log: List<Event>, now: Long, zone: ZoneId, ageWeeks: Int,
-    /** A note from Tatá, under the week's data, when one is due (in-app-marketing.md §3.2). */
-    tataNote: (@Composable () -> Unit)? = null,
 ) {
     val f = Format(LocalContext.current, zone, now)
     val stats = Stats(zone)
@@ -181,10 +179,6 @@ fun PatternsScreen(
             }
             Spacer(Modifier.height(Spacing.space2))
             Text(stringResource(R.string.places_meta), style = Type.meta, color = CochiloTheme.colors.muted)
-        }
-        if (tataNote != null) {
-            Spacer(Modifier.height(Spacing.space10))
-            tataNote()
         }
     }
 }
