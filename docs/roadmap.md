@@ -28,7 +28,7 @@ Each is grounded in `docs/research.md` or the Tatá Slings plans (`docs/tata-sli
 
 | Feature | Why (source) | What it is |
 |---|---|---|
-| **Notes from Tatá by age** | The brand voice; trust (monetization §6.5) | One short note per age band, signed, reviewed against AAP 2022 |
+| **Notes from Tatá by age** | The brand voice; trust (monetization §6.5) | Built in 0.34.0 with twelve drafts, off; waiting for Tatá's words ([in-app-marketing.md](tata-slings/in-app-marketing.md) §11) |
 | **Prediction, the clock part** | Two-process model (§2.1, §7.2) | Process C: a fitted circadian curve (bedtime and the first nap pulled towards the baby's own clock as it forms), and a live sleep-pressure line on the Day tab |
 
 ## 3. UX improvements
@@ -69,6 +69,7 @@ never on Today, at night, or on safety screens. Needs Tatá's catalog, notes and
 
 ## Shipped from this plan
 
+- **0.34.0**: Tatá marketing step 3: notes by age, twelve drafts, all off until Tatá approves ([in-app-marketing.md](tata-slings/in-app-marketing.md)).
 - **0.33.0**: window reminders, 30 and 15 minutes before the next sleep window ([notifications.md](notifications.md)).
 - **0.32.0**: Tatá marketing step 2: the suggestion rules, the catalog and the Tatá note, all off until Tatá approves ([in-app-marketing.md](tata-slings/in-app-marketing.md)).
 - **0.31.0**: Tatá marketing step 1: the fabric's shop line; the safety sheet links to her guide ([in-app-marketing.md](tata-slings/in-app-marketing.md)).

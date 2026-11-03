@@ -139,7 +139,7 @@ Measured in the store, never in the app: Nuvemshop orders with `utm_source=cochi
 |---|---|---|
 | 1 | Settings › Loja Tatá Slings and the fabric picker line (§3.3, §3.4) | **Shipped in 0.31.0** (§9) |
 | 2 | "Tatá note" component in the design system; `Suggestions.kt` with tests | **Shipped in 0.32.0**, every moment off until Tatá approves it (§10) |
-| 3 | Notes by age (§3.1) | Tatá's writing (the scarce resource) |
+| 3 | Notes by age (§3.1) | **Built in 0.34.0** with twelve drafts, all off until Tatá rewrites or approves them (§11) |
 | 4 | Log moments (§3.2), one at a time, each with its UTM campaign | Tatá's sign-off per moment |
 | 5 | Review at 3 months by the numbers in §6 | Store reports |
 
@@ -204,6 +204,32 @@ moment.**
 Portuguese) and, if she's happy, the moment's `approved` becomes `true` in the catalog, in a
 reviewed change that also updates `CatalogTest`. It ships with the next release.
 
+## 11. Step 3, as built (0.34.0)
+
+The notes by age, ready for Tatá's words: **none shows until she approves it.**
+
+- **Twelve bands** from birth to two years (`domain/AgeNotes.kt`, `AgeNotesTest`): 0–1, 1–2, 2–3,
+  3–4, 4–6, 6–8, 8–10, 10–12, 12–15, 15–18, 18–21 and 21–24 months, by corrected age, with no gaps.
+- **When:** the note for the baby's band, once approved, until the parent taps "Got it" (closed for
+  that band). Never while the baby sleeps or between 19:00 and 07:00.
+- **Content first:** in Patterns a due age note takes the one Tatá card slot before any product
+  suggestion (§10), so there's still at most one Tatá card on screen. Only one draft links to a
+  product (1–2 months, the sling, as §3.1's example); the 3–4 month note carries the AAP's "stop
+  swaddling when the baby starts trying to roll" with no product (safety never sells).
+- **Twelve drafts in English and Portuguese** (`age_note_*`), written from
+  [research.md](../research.md) and AAP 2022, in her voice as far as we know it: what's common at
+  this age, without promises ("will sleep", "garante" are refused by a test) or judgement. **They
+  are drafts for Tatá to rewrite**: they carry her name, so they ship only with her words or her
+  yes.
+- **The catalog** (`assets/tata/catalog.json`): a `notes` list, one per band, `approved: false`;
+  `CatalogTest` guards that. A note's link carries the campaign `note_<band>`.
+- **The card** is the same Tatá note (design system 0.25.0) with "Got it" ("Entendi") instead of
+  "Don't show again": a note isn't an offer, closing it just means read.
+
+**How Tatá's notes go in:** she sends her text for a band (or approves the draft); it replaces the
+`age_note_<band>` strings in both languages, and that band's `approved` becomes `true`, with
+`CatalogTest` updated, in one reviewed change.
+
 ## 8. Open questions for Tatá
 
 1. Which products and URLs belong in the first catalog, and their age ranges?
@@ -215,3 +241,4 @@ reviewed change that also updates `CatalogTest`. It ships with the next release.
 6. Folhagem is now "Malha NATURA" in the shop: should the app's fabric be renamed Natura?
 7. Are the four draft notes (§10) in her voice? Which may be switched on?
 8. Should the app suggest a swaddle (it would need a "startle" log), or a carrier for a bigger baby (not in the shop today)?
+9. The twelve age-note drafts (§11): rewrite, approve or drop each one; and does the 1–2 month note keep its sling link?

@@ -155,6 +155,11 @@ log changes and goes through `Entries`, like every other button.
   "Expected next sleep" in the legend and in what TalkBack reads ("Next sleep expected between
   15:51 and 16:11").
 
+## Notes by age (0.34.0)
+
+No flow changes. Once Tatá approves them, a note sits at the end of Patterns; "Got it" closes it
+for that age band in one tap.
+
 ## Window reminders (0.33.0)
 
 | Flow | Taps |

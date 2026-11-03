@@ -3,6 +3,13 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.34.0 — 2026-11-03
+
+**Ready for Tatá's notes by age (all off for now).** Twelve short notes from birth to two years,
+one for each stage, signed by Tatá, will appear in Patterns once she writes or approves them:
+what's common at that age, with no promises. Nothing changes on your screen yet.
+`docs/tata-slings/in-app-marketing.md`.
+
 ## 0.33.0 — 2026-11-03
 
 **Window reminders.** 30 and 15 minutes before the next nap or bedtime window, a notification

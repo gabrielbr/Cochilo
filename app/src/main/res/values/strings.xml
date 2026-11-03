@@ -576,4 +576,18 @@
     <string name="reminder_bed_title">Bedtime window in %1$d min</string>
     <string name="reminder_text">Expected about %1$s–%2$s. A good moment to start the routine.</string>
     <string name="reminder_start_routine">Start routine</string>
+    <!-- Notes from Tatá by age (in-app-marketing.md §3.1). DRAFTS for Tatá to rewrite or approve; none shows until approved in the catalog. -->
+    <string name="age_note_close">Got it</string>
+    <string name="age_note_m0_1">0 to 1 month · Newborns sleep in short pieces around the clock, day and night alike. Feeding often is part of it. Rest when you can.</string>
+    <string name="age_note_m1_2">1 to 2 months · Short naps and naps in arms are common now; the day\'s rhythm is still forming. If your arms get tired, a sling keeps them free.</string>
+    <string name="age_note_m2_3">2 to 3 months · Daylight in the afternoon and a calm, dim evening help the body clock that is forming now.</string>
+    <string name="age_note_m3_4">3 to 4 months · Sleep is changing how it\'s built, so some nights may have more wakings for a while. It\'s development, at the baby\'s own pace. When the baby starts trying to roll, it\'s time to stop swaddling.</string>
+    <string name="age_note_m4_6">4 to 6 months · Wake windows grow, and many babies settle into three or four naps. A short routine, the same each time, helps everyone know what comes next.</string>
+    <string name="age_note_m6_8">6 to 8 months · Play and exploring fill more of the awake time. Rolling and sitting are new skills, and practising them is part of the day.</string>
+    <string name="age_note_m8_10">8 to 10 months · Many babies move to two naps around now. Days with a longer awake time are normal while the change settles.</string>
+    <string name="age_note_m10_12">10 to 12 months · Standing and new sounds can stir the night for a few days. A familiar routine is a steady place to come back to.</string>
+    <string name="age_note_m12_15">12 to 15 months · Total sleep is usually 11 to 14 hours a day, naps included. Each child finds their own place in that range.</string>
+    <string name="age_note_m15_18">15 to 18 months · Many toddlers move to one nap, often after lunch. The change can take a few weeks of back and forth.</string>
+    <string name="age_note_m18_21">18 to 21 months · Wanting to choose arrives. Two small choices at bedtime (which pyjamas, which book) keep the routine calm.</string>
+    <string name="age_note_m21_24">21 to 24 months · One nap and a regular bedtime are common now. Daylight, movement and a calm evening still help the night.</string>
 </resources>
