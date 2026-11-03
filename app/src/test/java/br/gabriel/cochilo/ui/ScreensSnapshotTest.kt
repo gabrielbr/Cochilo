@@ -121,7 +121,7 @@ class ScreensSnapshotTest {
                     else -> stringResource(R.string.status_weeks, weeks)
                 }
                 br.gabriel.cochilo.ui.kit.AppShell(tabs, tab, {}, header = {
-                    Header(baby.name, status) { IconButton(R.drawable.gg_ic_chat, stringResource(R.string.ask_open), {}); IconButton(R.drawable.gg_ic_gear, stringResource(R.string.settings), {}) }
+                    Header(baby.name, if (tab == 0) "" else status) { IconButton(R.drawable.gg_ic_chat, stringResource(R.string.ask_open), {}); IconButton(R.drawable.gg_ic_gear, stringResource(R.string.settings), {}) }
                 }) { width ->
                     val screen: @Composable (Int) -> Unit = { t ->
                         when (t) {

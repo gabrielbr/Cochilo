@@ -140,7 +140,8 @@ fun Header(name: String, status: String, statusColor: Color = CochiloTheme.color
         Spacer(Modifier.width(Spacing.space3))
         Column(Modifier.weight(1f)) {
             Text(name, style = Type.label, color = c.ink, maxLines = 1)
-            Text(
+            // Blank on Today (0.43.0): the sleep card already says it; shown once, nearest its action.
+            if (status.isNotBlank()) Text(
                 status, style = Type.meta, color = statusColor, maxLines = 1, overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite },
             )

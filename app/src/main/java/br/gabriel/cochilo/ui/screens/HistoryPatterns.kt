@@ -88,7 +88,7 @@ fun ColumnScope.HistoryDays(log: List<Event>, now: Long, zone: ZoneId, onOpen: (
 /** Rhythm (14-day actogram) and the 7-day averages against the reference ranges. */
 @Composable
 fun PatternsScreen(
-    log: List<Event>, now: Long, zone: ZoneId, ageWeeks: Int, onAsk: () -> Unit = {},
+    log: List<Event>, now: Long, zone: ZoneId, ageWeeks: Int,
     /** A note from Tatá, under the week's data, when one is due (in-app-marketing.md §3.2). */
     tataNote: (@Composable () -> Unit)? = null,
 ) {
@@ -99,14 +99,7 @@ fun PatternsScreen(
     val avg = stats.averages(week)
     ScrollPage {
         ScreenTitle(stringResource(R.string.title_patterns), stringResource(R.string.title_patterns))
-        // Ask Cochilo (docs/assistant.md): questions answered from this log, on the phone.
-        androidx.compose.foundation.layout.Spacer(Modifier.height(Spacing.space4))
-        br.gabriel.cochilo.ui.kit.RowGroup {
-            br.gabriel.cochilo.ui.kit.ListRow(
-                stringResource(R.string.ask_entry), meta = stringResource(R.string.ask_entry_meta), onClick = onAsk,
-                trailing = { br.gabriel.cochilo.ui.kit.GIcon(R.drawable.gg_ic_chevron, null, CochiloTheme.colors.muted) },
-            )
-        }
+        // Ask Cochilo is the header's chat icon on every tab (0.38.0); no second row here (0.43.0, less is more).
         if (avg == null) {
             EmptyState(stringResource(R.string.empty_patterns_title), stringResource(R.string.empty_patterns_line))
             return@ScrollPage
@@ -142,24 +135,28 @@ fun PatternsScreen(
         Caption(stringResource(R.string.caption_week))
         val range = Reference.totalSleepRange(ageWeeks)
         fun h(x: Double) = String.format(Locale.getDefault(), "%.1f", x)
+        // The night leads (0.43.0): its numbers first, then the day; feeds and diapers share a row.
+        val bedtime = br.gabriel.cochilo.domain.Predictor(zone).bedtimeMinute(log.filter { it.type == EventType.SLEEP }, now)
         RowGroup {
+            ListRow(stringResource(R.string.night_sleep), value = f.durationMin(avg.nightSleepMin))
+            Hairline()
+            ListRow(stringResource(R.string.longest_stretch), value = f.durationMin(avg.longestStretchMin))
+            Hairline()
+            ListRow(stringResource(R.string.night_wakings), value = String.format(Locale.getDefault(), "%.1f", avg.nightWakings))
+            if (bedtime != null) {
+                Hairline()
+                ListRow(stringResource(R.string.bedtime_usual), value = f.clock(bedtime))
+            }
+            Hairline()
             ListRow(
                 stringResource(R.string.total_sleep),
                 meta = stringResource(R.string.typical_range, h(range.lowHours), h(range.highHours), range.source),
                 value = f.durationMin(avg.totalSleepMin),
             )
             Hairline()
-            ListRow(stringResource(R.string.night_sleep), value = f.durationMin(avg.nightSleepMin))
-            Hairline()
             ListRow(stringResource(R.string.naps), value = stringResource(R.string.naps_value, avg.naps, f.durationMin(avg.napSleepMin)))
             Hairline()
-            ListRow(stringResource(R.string.longest_stretch), value = f.durationMin(avg.longestStretchMin))
-            Hairline()
-            ListRow(stringResource(R.string.night_wakings), value = String.format(Locale.getDefault(), "%.1f", avg.nightWakings))
-            Hairline()
-            ListRow(stringResource(R.string.feeds), value = stringResource(R.string.per_day, avg.feeds))
-            Hairline()
-            ListRow(stringResource(R.string.diapers), value = stringResource(R.string.per_day, avg.diapers))
+            ListRow(stringResource(R.string.feeds_diapers), value = stringResource(R.string.feeds_diapers_value, avg.feeds, avg.diapers))
             Hairline()
             ListRow(stringResource(R.string.daylight), meta = stringResource(R.string.daylight_meta), value = f.durationMin(avg.daylightMin))
             val (dayMl, nightMl) = br.gabriel.cochilo.domain.Milk.pumped(log, zone, now)

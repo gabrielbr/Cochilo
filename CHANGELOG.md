@@ -3,6 +3,21 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.43.0 — 2026-11-03
+
+**Less on the screen.** A pass through every screen asking what earns its place
+(`.claude/skills/less-is-more/SKILL.md`). Today loses its "Today" title and the header's
+"Awake · 40m" (the card already says it), and the sleep card's "i". How the next nap is guessed is
+now one tap away ("How it's guessed") instead of always open. The day ring's caption is gone, and
+the "hold and drag" hint shows only until you've used it once. During a night waking, Today shows
+only the night and its two buttons: no daylight nudge. Patterns drops "Questions about sleep" (the
+chat icon at the top does the same), puts the night first (night sleep, longest stretch, night
+wakings and the usual bedtime, new), then the day, with feeds and diapers in one row. No tap was
+added anywhere. For whoever works on the app: every screen and flow is now designed and
+audited with three skills, impeccable, graphic-design-fundamentals and less-is-more, now kept in
+`.claude/skills/` (from design system 0.29.0; AGENTS.md).
+`docs/flows.md`.
+
 ## 0.42.0 — 2026-11-03
 
 **The night is one thing.** Each sleep is now a nap or the night. Start sleep is still one tap:

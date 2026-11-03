@@ -101,6 +101,16 @@ class Prefs(context: Context) {
         _passphrase.value = p
     }
 
+    private val _adjustHintSeen = MutableStateFlow(sp.getBoolean("adjust_hint_seen", false))
+    /** The drag-to-adjust hint on Day shows until the first drag (0.43.0, less is more). */
+    val adjustHintSeen: StateFlow<Boolean> = _adjustHintSeen
+
+    fun setAdjustHintSeen() {
+        if (_adjustHintSeen.value) return
+        sp.edit { putBoolean("adjust_hint_seen", true) }
+        _adjustHintSeen.value = true
+    }
+
     /** Entries already asked about after they ended (details after), newest last, at most 50. */
     var detailsAsked: List<String>
         get() = (sp.getString("details_asked", null) ?: "").split(',').filter { it.isNotEmpty() }

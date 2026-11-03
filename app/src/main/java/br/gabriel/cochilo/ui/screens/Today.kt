@@ -21,6 +21,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -45,7 +47,6 @@ import br.gabriel.cochilo.ui.kit.ChipKind
 import br.gabriel.cochilo.ui.kit.EmptyState
 import br.gabriel.cochilo.ui.kit.Hairline
 import br.gabriel.cochilo.ui.kit.HourLabels
-import br.gabriel.cochilo.ui.kit.ScreenTitle
 import br.gabriel.cochilo.ui.kit.Timeline
 import br.gabriel.cochilo.ui.theme.CTokens.Radius
 import br.gabriel.cochilo.ui.theme.CTokens.Spacing
@@ -81,8 +82,7 @@ fun TodayScreen(
     val todays = log.filter { it.overlaps(from, to, now) }
 
     ScrollPage {
-        ScreenTitle(stringResource(R.string.tab_today), stringResource(R.string.tab_today))
-        Spacer(Modifier.height(Spacing.space6))
+        // No "Today" title (0.43.0, less is more): the tab and the header already name it; the card leads.
         // Awake in the night (docs/nights.md): between two sleeps of one night, no next-nap guess.
         val openNight = if (prediction is Predictor.Result.Awake) br.gabriel.cochilo.domain.Nights.openNight(log, now) else null
         SleepPanel(prediction, now, f, log, onStartSleep, onWokeUp, onPlace, openNight, onUpForDay, onSetNight)
@@ -95,8 +95,8 @@ fun TodayScreen(
             Text(stringResource(R.string.prediction_need_data), style = Type.bodySmall, color = CochiloTheme.colors.muted)
         }
 
-        // The daylight nudge: 14:00–16:00 with no daylight yet (research §2.3), one tap to start a walk.
-        if (prediction !is Predictor.Result.Sleeping && br.gabriel.cochilo.domain.Daylight.nudge(log, zone, now)) {
+        // The daylight nudge: 14:00–16:00 with no daylight yet (research §2.3), one tap to start a walk. Never during a night waking: the night is quiet (0.43.0).
+        if (prediction !is Predictor.Result.Sleeping && openNight == null && br.gabriel.cochilo.domain.Daylight.nudge(log, zone, now)) {
             Spacer(Modifier.height(Spacing.space4))
             br.gabriel.cochilo.ui.kit.RowGroup {
                 br.gabriel.cochilo.ui.kit.ListRow(
@@ -167,10 +167,8 @@ private fun SleepPanel(
             awake != null -> stringResource(R.string.panel_awake_for)
             else -> stringResource(R.string.panel_ready)
         }
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(label, style = Type.caption, color = fgMuted, modifier = Modifier.weight(1f))
-            InfoButton(stringResource(R.string.type_sleep), stringResource(R.string.info_sleep_panel), tint = fgMuted)
-        }
+        // No "i" on the main card (0.43.0): it's read every time, explained once (less is more).
+        Text(label, style = Type.caption, color = fgMuted)
         val since = sleeping?.since ?: openNight?.end ?: awake?.since
         if (since == null) {
             // Before the first sleep: the baby, asleep in the sling, waiting with her.
@@ -246,7 +244,10 @@ private fun PredictionCard(p: Predictor.Result.Awake, now: Long, f: Format) {
         Spacer(Modifier.height(Spacing.space1))
         Text(f.time(p.at), style = Type.title, color = c.ink)
         Text(stringResource(R.string.prediction_window, f.time(p.windowStart), f.time(p.windowEnd)), style = Type.bodySmall, color = c.ink)
-        Spacer(Modifier.height(Spacing.space2))
+        // How it's guessed (predictions explain themselves): one tap away since 0.43.0, not always open.
+        var open by androidx.compose.runtime.saveable.rememberSaveable { androidx.compose.runtime.mutableStateOf(false) }
+        br.gabriel.cochilo.ui.kit.SwapAction(stringResource(if (open) R.string.prediction_why_hide else R.string.prediction_why_show), c.muted) { open = !open }
+        if (open) {
         val why = if (p.personalMinutes != null) stringResource(
             R.string.prediction_why_personal,
             f.durationMin(p.wakeMinutes), f.durationMin(p.personalMinutes), p.samples, f.durationMin(p.priorMinutes),
@@ -259,6 +260,7 @@ private fun PredictionCard(p: Predictor.Result.Awake, now: Long, f: Format) {
                 f.durationMin(e.lastNapMinutes), f.durationMin(e.usualNapMinutes), f.durationMin(kotlin.math.abs(e.shiftMinutes)),
             )
             Text(words, style = Type.meta, color = c.muted, modifier = Modifier.padding(top = Spacing.space1))
+        }
         }
         if (p.next == Predictor.Next.BEDTIME && p.at - now <= 60 * MINUTE) {
             Spacer(Modifier.height(Spacing.space2))

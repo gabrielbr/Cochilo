@@ -25,7 +25,7 @@ a short nap leaves more pressure and the next window is shorter; a long nap, lon
 - **Careful by construction.** At least 8 pairs (about two days); naps must vary (at least 10
   minutes); the slope is held between 0 and 1; it's shrunk by `n / (n + 5)` like the windows;
   the shift is capped at 20% of the usual window; under 5 minutes it isn't applied or shown.
-- **It explains itself.** The card adds "Last nap 35m, shorter than the usual 1h 18m, so 18m
+- **It explains itself.** Behind "How it's guessed" (one tap, since 0.43.0), the card adds "Last nap 35m, shorter than the usual 1h 18m, so 18m
   sooner" (or "longer…, so 10m later"), so the numbers on the card still add up.
 - **A late nap still leaves time awake.** Bedtime is never sooner than half the usual last window
   after waking (found by the synthetic year, below).

@@ -49,7 +49,7 @@ and import yourself.
   [docs/rituals.md](docs/rituals.md).
 - **What changed**: real changes in the last week, in neutral words; day / night milk.
   [docs/changes.md](docs/changes.md).
-- **Ask Cochilo** (the chat icon at the top of every tab, or Patterns › Questions about sleep): chats, one per topic, saved on the phone (since 0.40.0); questions answered from the baby's own log
+- **Ask Cochilo** (the chat icon at the top of every tab): chats, one per topic, saved on the phone (since 0.40.0); questions answered from the baby's own log
   and the app's research, on the phone, in English and Portuguese; health, medicines and the
   mother's wellbeing go to a person. Not medical advice. Optional since 0.30.0: a small AI model on
   the phone for questions beyond the list, downloaded in one tap when you want it (by the Play
@@ -93,7 +93,7 @@ and import yourself.
   wake or next nap, a timeline bar and Woke up / Start sleep; running timers get Finish (and Switch
   side). Window reminders 30 and 15 minutes before the next nap or bedtime, with Start routine.
   [docs/notifications.md](docs/notifications.md).
-- **"i" buttons**: each kind of entry (on the sleep panel and each entry's sheet) has
+- **"i" buttons**: each kind of entry's sheet has
   an "i" that explains what it's for, in English and Portuguese.
 - **Patterns**: a 14-day actogram (the day/night rhythm forming) and 7-day averages next to the
   reference range for the baby's age.
@@ -116,7 +116,7 @@ weighted median of recent bedtimes; when the next nap would land within 45 minut
 shows bedtime instead. Since 0.24.0 the last nap counts too (the two-process model's sleep
 pressure): after a short nap the next sleep comes sooner, after a long one later, by as much as this
 baby's own log shows, and the card says so ("Last nap 35m, shorter than the usual 1h 18m, so 18m
-sooner"). The card always says which numbers it used. Tested on a synthetic year
+sooner"). The card always says which numbers it used, one tap away ("How it's guessed", since 0.43.0). Tested on a synthetic year
 ([docs/prediction.md](docs/prediction.md)). Code:
 [`domain/Predictor.kt`](app/src/main/java/br/gabriel/cochilo/domain/Predictor.kt).
 
