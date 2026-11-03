@@ -107,6 +107,16 @@ fun SettingsScreen(
                 androidx.compose.material3.Text(stringResource(R.string.fabric), style = br.gabriel.cochilo.ui.theme.Type.body, color = CochiloTheme.colors.ink)
                 androidx.compose.material3.Text(stringResource(R.string.fabric_meta), style = br.gabriel.cochilo.ui.theme.Type.meta, color = CochiloTheme.colors.muted)
                 br.gabriel.cochilo.ui.kit.FabricPicker(fabric, onFabric)
+                // The picked fabric exists as a sling: one quiet line to the shop, here only,
+                // behind her own choice (docs/tata-slings/in-app-marketing.md §3.3).
+                if (fabric.texture != null) {
+                    val name = stringResource(fabric.label)
+                    br.gabriel.cochilo.ui.kit.QuietLink(
+                        stringResource(R.string.fabric_in_shop_line), stringResource(R.string.fabric_in_shop_action),
+                        stringResource(R.string.fabric_in_shop_spoken, name),
+                        onClick = { openShop(context, br.gabriel.cochilo.store.Store.fabric(name, fabric.key)) },
+                    )
+                }
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 Hairline()
@@ -169,14 +179,14 @@ fun SettingsScreen(
             // The brand's home. Opens the browser (an intent: the app itself needs no internet);
             // the UTM tags let the shop count visits from the app (docs/tata-slings/monetization.md).
             ListRow(stringResource(R.string.brand_line), meta = stringResource(R.string.brand_meta), trailing = chevron, onClick = {
-                runCatching {
-                    context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(TATA_SLINGS_URL)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
-                }
+                openShop(context, br.gabriel.cochilo.store.Store.about)
             })
             about()
         }
     }
 }
 
-/** tataslings.com.br, tagged so the shop's analytics can tell visits from the app. */
-const val TATA_SLINGS_URL = "https://tataslings.com.br/?utm_source=cochilo&utm_medium=app&utm_campaign=about"
+/** Opens a shop link in the browser: an intent, so the app itself needs no internet. */
+private fun openShop(context: android.content.Context, url: String) {
+    runCatching { context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) }
+}

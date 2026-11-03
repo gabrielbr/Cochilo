@@ -511,6 +511,29 @@ fun TabBar(tabs: List<Tab>, selected: Int, onSelect: (Int) -> Unit) {
     }
 }
 
+/**
+ * Quiet link (design system, components.md): a line of context and an action in ink, with a
+ * chevron, in a 48dp row; for the rare link out of the app (the shop), never teal and never a
+ * button, so it can't compete with the screen's one action. TalkBack reads [spoken].
+ */
+@Composable
+fun QuietLink(line: String, action: String, spoken: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
+    val c = CochiloTheme.colors
+    val src = remember { MutableInteractionSource() }
+    Row(
+        modifier.fillMaxWidth().heightIn(min = Spacing.space12)
+            .clickable(src, indication = null, role = Role.Button, onClickLabel = action, onClick = onClick)
+            .pressScale(src)
+            .semantics(mergeDescendants = true) { contentDescription = spoken },
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(line, style = Type.meta, color = c.muted, modifier = Modifier.weight(1f, fill = false))
+        Spacer(Modifier.width(Spacing.space2))
+        Text(action, style = Type.meta, color = c.ink)
+        GIcon(br.gabriel.cochilo.R.drawable.gg_ic_chevron, null, c.muted)
+    }
+}
+
 /** A coloured square that sits next to a word on a legend (never colour alone). */
 @Composable
 fun Swatch(color: Color) {

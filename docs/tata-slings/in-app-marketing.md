@@ -137,11 +137,31 @@ Measured in the store, never in the app: Nuvemshop orders with `utm_source=cochi
 
 | Step | What | Needs |
 |---|---|---|
-| 1 | Settings › Loja Tatá Slings and the fabric picker line (§3.3, §3.4) | Product URLs from Tatá; the catalog |
+| 1 | Settings › Loja Tatá Slings and the fabric picker line (§3.3, §3.4) | **Shipped in 0.31.0** (§9) |
 | 2 | "Tatá note" component in the design system; `Suggestions.kt` with tests | — |
 | 3 | Notes by age (§3.1) | Tatá's writing (the scarce resource) |
 | 4 | Log moments (§3.2), one at a time, each with its UTM campaign | Tatá's sign-off per moment |
 | 5 | Review at 3 months by the numbers in §6 | Store reports |
+
+## 9. Step 1, as shipped (0.31.0)
+
+- **The fabric line (§3.3).** Under the picked fabric in Settings › Appearance › Fabric: "This
+  fabric comes as a sling. See it in the shop ›" (pt: "Este tecido existe em sling. Ver na loja ›").
+  Not shown for Plain. A **quiet link** (design system 0.24.0): ink text and a chevron in a 48dp
+  row, never teal, never a button.
+- **No guessed product pages.** The link is the shop's own search for "sling <fabric>"
+  (`tataslings.com.br/search/?q=…`), checked on 2026-11-03 for all eleven fabrics: each lands on
+  that fabric's Tatá Fácil Sling first. A restock or a renamed product still works. (Folhagem is
+  sold today as "Malha NATURA", at the same product address, and the search finds it; see the
+  questions below.)
+- **The shop row (§3.4)** already existed: Settings › About › "Cochilo, da Tatá Slings" opens the
+  shop's home (campaign `about`). It stays as it is; the coupon and the guides wait for Tatá.
+- **Safety never sells, fixed.** The T.I.C.K.S. sheet's "Tatá's guides" used to open the shop's
+  home. It now opens her guide page, "Tatá Fácil Sling: como usar, posições e cuidados"
+  (`/tudo-sobre-o-tata-facil-sling/`): positions, the chin-off-the-chest check and her videos.
+- **Campaigns** (UTM, counted by the shop only): `about`, `fabric_<key>` (e.g. `fabric_rosa_cha`),
+  `ticks_guide`. All links live in `store/Store.kt` (tested in `StoreTest`) and open the browser
+  through an intent: no permission, nothing recorded in the app.
 
 ## 8. Open questions for Tatá
 
@@ -151,3 +171,4 @@ Measured in the store, never in the app: Nuvemshop orders with `utm_source=cochi
 4. Which of the §3.2 moments feel right to her, and which feel pushy?
 5. Should the "Sugestões da Tatá" switch start on or off? (Recommendation: on, with the line
    "Às vezes, uma dica da Tatá com um produto da loja. Desligue quando quiser.")
+6. Folhagem is now "Malha NATURA" in the shop: should the app's fabric be renamed Natura?

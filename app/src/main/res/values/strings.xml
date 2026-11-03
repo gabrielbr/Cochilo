@@ -543,4 +543,7 @@
     <string name="model_failed_other">It didn\'t work. Try again.</string>
     <string name="ask_thinking">Thinking, on this phone…</string>
     <string name="ask_generated_label">Written on this phone by a small AI model, from your log. It can make mistakes.</string>
+    <string name="fabric_in_shop_line">This fabric comes as a sling.</string>
+    <string name="fabric_in_shop_action">See it in the shop</string>
+    <string name="fabric_in_shop_spoken">See the %1$s sling in the Tatá Slings shop. Opens the browser.</string>
 </resources>

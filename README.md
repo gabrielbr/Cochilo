@@ -66,7 +66,8 @@ dressed in the Tatá Slings brand (teal, plum-grey ink, Pérola, Libre Franklin,
   movement (off with Remove animations); what was used last has a coloured outline and dot.
   [docs/flows.md](docs/flows.md).
 - **Her fabrics**: Settings › Appearance › Fabric wraps the Today card in one of Tatá's slings
-  (eleven, photographed from her shop). [docs/tata-slings/textures.md](docs/tata-slings/textures.md).
+  (eleven, photographed from her shop); under the picked one, a quiet link to that sling in the shop
+  ([in-app-marketing.md](docs/tata-slings/in-app-marketing.md)). [docs/tata-slings/textures.md](docs/tata-slings/textures.md).
 - **Slide to log**: on Today's log rows, slide instead of tapping. Feed: left = left breast, right =
   right breast. Diaper: Wet · Both · Dirty. Slide a running breastfeed to switch side. Tap still
   opens the full sheet. How many taps each entry costs, and why: [docs/flows.md](docs/flows.md).

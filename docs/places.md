@@ -24,4 +24,4 @@ The first time "sling" is picked (panel or sheet), a sheet shows the UK Sling Co
 checks once, in plain words: **T**ight, **I**n view at all times, **C**lose enough to kiss,
 **K**eep the chin off the chest, **S**upported back (legs in a frog position). It ends with "Cochilo
 doesn't watch the baby: you do" (never "the app checks your baby", AAP 2022), **Got it**, and
-**Tatá's guides** (her site). Shown once (`Prefs.ticksShown`).
+**Tatá's guides** (her guide page "como usar, posições e cuidados", not the shop; since 0.31.0). Shown once (`Prefs.ticksShown`).

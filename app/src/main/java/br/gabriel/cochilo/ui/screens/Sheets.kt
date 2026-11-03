@@ -333,7 +333,7 @@ fun TicksBody(onDismiss: () -> Unit = {}) {
         Spacer(Modifier.height(Spacing.space2))
         Button(stringResource(R.string.ticks_guide), {
             runCatching {
-                context.startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse(TATA_SLINGS_URL))
+                context.startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse(br.gabriel.cochilo.store.Store.slingGuide))
                     .addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK))
             }
         }, ButtonKind.SECONDARY, Modifier.fillMaxWidth())
