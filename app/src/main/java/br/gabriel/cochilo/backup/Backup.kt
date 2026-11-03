@@ -24,8 +24,10 @@ data class BackupFile(
          * A version-2 file in an older app is refused as "made by a newer Cochilo".
          * 3: the baby has a look (the avatar, 0.13.0). Version-1 and -2 files still read: no look
          * means the default one.
+         * 4: a sleep may say night or nap, and a night's last sleep that the baby was up for the day
+         * (docs/nights.md, 0.42.0). Older files still read: those sleeps are told apart by the clock.
          */
-        const val VERSION = 3
+        const val VERSION = 4
     }
 }
 

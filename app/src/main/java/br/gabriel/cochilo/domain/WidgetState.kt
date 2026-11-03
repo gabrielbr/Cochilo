@@ -18,11 +18,13 @@ data class WidgetState(
     val feeding: Event?,
     /** The breast used last (left or right), even if a bottle came after. */
     val lastBreast: String?,
+    /** Awake in the night (docs/nights.md): the sleep button reads Back to sleep. */
+    val nightWaking: Boolean = false,
 )
 
 private val BREASTS = setOf(Kinds.BREAST_LEFT, Kinds.BREAST_RIGHT)
 
-fun widgetState(events: List<Event>, hasBaby: Boolean): WidgetState {
+fun widgetState(events: List<Event>, hasBaby: Boolean, now: Long = System.currentTimeMillis()): WidgetState {
     val sleeping = events.filter { it.type == EventType.SLEEP && it.end == null }.maxByOrNull { it.start }
     val lastWake = events.filter { it.type == EventType.SLEEP }.mapNotNull { it.end }.maxOrNull()
     val feeding = events.filter { it.type == EventType.FEED && it.end == null && it.kind in BREASTS }.maxByOrNull { it.start }
@@ -32,5 +34,6 @@ fun widgetState(events: List<Event>, hasBaby: Boolean): WidgetState {
         since = sleeping?.start ?: lastWake,
         feeding = feeding,
         lastBreast = lastKindAmong(events, EventType.FEED, BREASTS),
+        nightWaking = sleeping == null && Nights.openNight(events, now) != null,
     )
 }

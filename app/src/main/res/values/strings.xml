@@ -22,6 +22,12 @@
     <string name="panel_asleep_nap">Napping for</string>
     <string name="panel_asleep_night">Night sleep for</string>
     <string name="panel_since">Since %1$s</string>
+    <string name="panel_awake_night">Awake in the night</string>
+    <string name="panel_night_since">Night since %1$s · sleeps: %2$d</string>
+    <string name="panel_make_nap">It\'s a nap</string>
+    <string name="panel_make_night">It\'s the night</string>
+    <string name="action_back_to_sleep">Back to sleep</string>
+    <string name="action_up_for_day">Up for the day</string>
     <string name="panel_ready">Ready when the baby is</string>
     <string name="action_start_sleep">Start sleep</string>
     <string name="action_woke_up">Woke up</string>

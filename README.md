@@ -22,6 +22,10 @@ and import yourself.
   buttons (since 0.39.0 the Log button in the corner, not a list of rows), then **day by day**
   (since 0.40.0, what the History tab was): filters by kind, and each day, today first, with its
   summary, timeline and entries grouped asleep and awake. Tap any entry to edit or delete it.
+- **Nights** (since 0.42.0): each sleep is a nap or the night. Start sleep guesses which, and
+  one tap changes it. Waking at night shows "Awake in the night" with **Back to sleep** and **Up
+  for the day**, so a night with wakings is one night: bedtime, wakings and the morning are counted
+  right. [docs/nights.md](docs/nights.md).
 - **Day**: one day two ways. A 24-hour ring (midnight at the top; sleep on the outer ring, feeds,
   pumping and daylight inside, dots for diapers) with the total sleep in the middle, then every
   entry hour by hour on a vertical rail, as the day's two states: each sleep (a bar as long as it

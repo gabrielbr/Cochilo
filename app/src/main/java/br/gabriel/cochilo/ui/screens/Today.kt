@@ -69,6 +69,10 @@ fun TodayScreen(
     onSwitch: (Event) -> Unit = {},
     /** Where the running sleep is (crib, arms, sling…). */
     onPlace: (Event, String) -> Unit = { _, _ -> },
+    /** The night is over (docs/nights.md); [Int] minutes ago (Earlier chips). */
+    onUpForDay: (Int) -> Unit = {},
+    /** Nap or the night, one tap on the sleep card. */
+    onSetNight: (Event, Boolean) -> Unit = { _, _ -> },
 ) {
     val f = Format(LocalContext.current, zone, now)
     val today = localDate(now, zone)
@@ -79,9 +83,11 @@ fun TodayScreen(
     ScrollPage {
         ScreenTitle(stringResource(R.string.tab_today), stringResource(R.string.tab_today))
         Spacer(Modifier.height(Spacing.space6))
-        SleepPanel(prediction, now, f, log, onStartSleep, onWokeUp, onPlace)
+        // Awake in the night (docs/nights.md): between two sleeps of one night, no next-nap guess.
+        val openNight = if (prediction is Predictor.Result.Awake) br.gabriel.cochilo.domain.Nights.openNight(log, now) else null
+        SleepPanel(prediction, now, f, log, onStartSleep, onWokeUp, onPlace, openNight, onUpForDay, onSetNight)
 
-        if (prediction is Predictor.Result.Awake) {
+        if (prediction is Predictor.Result.Awake && openNight == null) {
             Spacer(Modifier.height(Spacing.space4))
             PredictionCard(prediction, now, f)
         } else if (prediction is Predictor.Result.NeedData) {
@@ -140,10 +146,14 @@ fun TodayScreen(
 
 /** The sleep panel: dark while the baby sleeps, a surface card while awake. One primary action. */
 @Composable
-private fun SleepPanel(p: Predictor.Result, now: Long, f: Format, log: List<Event>, onStart: (Int) -> Unit, onWoke: (Int) -> Unit, onPlace: (Event, String) -> Unit) {
+private fun SleepPanel(
+    p: Predictor.Result, now: Long, f: Format, log: List<Event>, onStart: (Int) -> Unit, onWoke: (Int) -> Unit, onPlace: (Event, String) -> Unit,
+    openNight: Event? = null, onUpForDay: (Int) -> Unit = {}, onSetNight: (Event, Boolean) -> Unit = { _, _ -> },
+) {
     val c = CochiloTheme.colors
     val sleeping = p as? Predictor.Result.Sleeping
-    val awake = p as? Predictor.Result.Awake
+    val awake = (p as? Predictor.Result.Awake)?.takeIf { openNight == null }
+    val running = if (sleeping != null) log.firstOrNull { it.type == EventType.SLEEP && it.end == null } else null
     // Start sleep and the card cross-fades to the night panel; Woke up and it fades back to day.
     val bg = br.gabriel.cochilo.ui.kit.animatedColor(if (sleeping != null) c.panel else c.surface, emphasised = true)
     val fg = br.gabriel.cochilo.ui.kit.animatedColor(if (sleeping != null) c.onPanel else c.ink, emphasised = true)
@@ -153,6 +163,7 @@ private fun SleepPanel(p: Predictor.Result, now: Long, f: Format, log: List<Even
         val label = when {
             sleeping != null && sleeping.isNight -> stringResource(R.string.panel_asleep_night)
             sleeping != null -> stringResource(R.string.panel_asleep_nap)
+            openNight != null -> stringResource(R.string.panel_awake_night)
             awake != null -> stringResource(R.string.panel_awake_for)
             else -> stringResource(R.string.panel_ready)
         }
@@ -160,7 +171,7 @@ private fun SleepPanel(p: Predictor.Result, now: Long, f: Format, log: List<Even
             Text(label, style = Type.caption, color = fgMuted, modifier = Modifier.weight(1f))
             InfoButton(stringResource(R.string.type_sleep), stringResource(R.string.info_sleep_panel), tint = fgMuted)
         }
-        val since = sleeping?.since ?: awake?.since
+        val since = sleeping?.since ?: openNight?.end ?: awake?.since
         if (since == null) {
             // Before the first sleep: the baby, asleep in the sling, waiting with her.
             Box(Modifier.fillMaxWidth().padding(top = Spacing.space4), contentAlignment = Alignment.Center) {
@@ -172,12 +183,31 @@ private fun SleepPanel(p: Predictor.Result, now: Long, f: Format, log: List<Even
                 f.duration(now - since), style = Type.timer, color = fg,
                 modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite },
             )
-            Text(stringResource(R.string.panel_since, f.time(since)), style = Type.meta, color = fgMuted)
+            val nightLine = openNight?.let { last ->
+                val night = br.gabriel.cochilo.domain.Nights.containing(log, last, f.zone)
+                stringResource(R.string.panel_night_since, f.time(night.first().start), night.size)
+            }
+            Text(nightLine ?: stringResource(R.string.panel_since, f.time(since)), style = Type.meta, color = fgMuted)
+            // Nap or the night was guessed at Start sleep; one tap changes it (docs/nights.md).
+            if (running != null && sleeping != null) {
+                br.gabriel.cochilo.ui.kit.SwapAction(
+                    stringResource(if (sleeping.isNight) R.string.panel_make_nap else R.string.panel_make_night), fgMuted,
+                ) { onSetNight(running, !sleeping.isNight) }
+            }
         }
         // Where the baby slept is asked when she wakes (details after, 0.28.0), not here.
         Spacer(Modifier.height(Spacing.space6))
         if (sleeping != null) {
             Button(stringResource(R.string.action_woke_up), { onWoke(0) }, ButtonKind.PRIMARY, Modifier.fillMaxWidth())
+        } else if (openNight != null) {
+            // A night waking: back to sleep continues the night; up for the day ends it. From 05:00
+            // the morning leads (the one mint action), before it going back to sleep does.
+            val morning = br.gabriel.cochilo.domain.minuteOfDay(now, f.zone) >= br.gabriel.cochilo.domain.Nights.EARLY_MINUTE
+            val back: @Composable (ButtonKind) -> Unit = { k -> Button(stringResource(R.string.action_back_to_sleep), { onStart(0) }, k, Modifier.fillMaxWidth(), icon = R.drawable.gg_ic_moon) }
+            val up: @Composable (ButtonKind) -> Unit = { k -> Button(stringResource(R.string.action_up_for_day), { onUpForDay(0) }, k, Modifier.fillMaxWidth(), icon = R.drawable.gg_ic_sun) }
+            if (morning) { up(ButtonKind.PRIMARY); Spacer(Modifier.height(Spacing.space2)); back(ButtonKind.SECONDARY) }
+            else { back(ButtonKind.PRIMARY); Spacer(Modifier.height(Spacing.space2)); up(ButtonKind.SECONDARY) }
+            return@FabricFrame
         } else {
             Button(stringResource(R.string.action_start_sleep), { onStart(0) }, ButtonKind.PRIMARY, Modifier.fillMaxWidth(), icon = R.drawable.gg_ic_moon)
         }

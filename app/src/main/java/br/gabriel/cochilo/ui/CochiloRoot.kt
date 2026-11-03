@@ -278,6 +278,8 @@ fun CochiloRoot(vm: MainViewModel) {
                                             onStartSleep = { vm.startSleep(it) },
                                             onWokeUp = { vm.wakeUp(it) },
                                             onPlace = { e, k -> vm.setPlace(e, k) },
+                                            onUpForDay = { vm.upForDay(it) },
+                                            onSetNight = { e, n -> vm.setNight(e, n) },
                                             onFinish = { vm.finish(it) },
                                             onNew = { type ->
                                                 // Remember actions: the sheet opens on what was done last (the same

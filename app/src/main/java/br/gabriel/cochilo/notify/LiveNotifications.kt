@@ -82,7 +82,8 @@ object LiveNotifications {
         val palette = if (dark) CTokens.Dark else CTokens.Light
 
         val stretch = liveStretch(events, prediction, zone, now)
-        if (stretch != null) post(nm) { stretchNotification(context, stretch, prediction, f, palette, zone, now) }
+        val waking = br.gabriel.cochilo.domain.Nights.openNight(events, now)?.takeIf { stretch?.asleep == false }
+        if (stretch != null) post(nm) { stretchNotification(context, stretch, prediction, f, palette, zone, now, waking) }
         else nm.cancel(ID_STRETCH)
 
         val timers = events.filter { it.running && it.type != EventType.SLEEP }
@@ -111,11 +112,20 @@ object LiveNotifications {
 
     private fun stretchNotification(
         context: Context, s: LiveStretch, p: Predictor.Result, f: Format, c: CTokens.Palette, zone: ZoneId, now: Long,
+        /** A night waking (docs/nights.md): the night's last sleep before it. */
+        waking: Event? = null,
     ): Pair<Int, android.app.Notification> {
         val title: String
         val text: String
         val action: NotificationCompat.Action
-        if (s.asleep) {
+        var second: NotificationCompat.Action? = null
+        if (waking != null) {
+            // Awake in the night: no next-nap guess, two buttons, back to sleep first.
+            title = context.getString(R.string.panel_awake_night)
+            text = context.getString(R.string.panel_since, f.time(waking.end ?: s.since))
+            action = NotificationCompat.Action(0, context.getString(R.string.action_back_to_sleep), actionIntent(context, NotificationActions.START_SLEEP))
+            second = NotificationCompat.Action(0, context.getString(R.string.action_up_for_day), actionIntent(context, NotificationActions.UP_FOR_DAY))
+        } else if (s.asleep) {
             title = context.getString(if (s.isNight) R.string.sleep_night else R.string.sleep_nap)
             text = if (s.expectedEnd != null) context.getString(R.string.notif_asleep_expected, f.time(s.since), f.time(s.expectedEnd))
             else context.getString(R.string.panel_since, f.time(s.since))
@@ -154,6 +164,7 @@ object LiveNotifications {
             .setCustomContentView(view)
             .setCustomBigContentView(view)
             .addAction(action)
+            .apply { second?.let { addAction(it) } }
             .build()
         return ID_STRETCH to n
     }

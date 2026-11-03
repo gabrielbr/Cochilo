@@ -3,6 +3,16 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.42.0 — 2026-11-03
+
+**The night is one thing.** Each sleep is now a nap or the night. Start sleep is still one tap:
+Cochilo guesses from the baby's own bedtime and the hour, and one tap fixes it ("It's a nap" / "It's
+the night"). When the baby wakes in the night, Today says "Awake in the night", with **Back to
+sleep** and **Up for the day**. The notification has both too, and the widget offers Back to sleep.
+So an evening catnap is no longer counted as bedtime, an early first nap no longer counts as night,
+and bedtime, night wakings and the next-sleep guess follow the real night. Earlier entries keep the
+old clock rule, and Napper imports bring their real nights. `docs/nights.md`.
+
 ## 0.41.1 — 2026-11-03
 
 **No change you can see.** The Gabriel Design System released 0.28.0. It took in the general

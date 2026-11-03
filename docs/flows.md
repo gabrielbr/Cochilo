@@ -63,6 +63,18 @@ Code: `lastOf`, `lastKind`, `lastKindAmong`, `Event.rememberedFrom` in `domain/Q
 (tested in `QuickLogTest`); the Log menu in `LogMenu.kt` (Today's rows until 0.39.0); the sheet's line in `Sheets.kt`.
 This replaced the earlier "next: other breast" suggestion: the app shows what happened, she decides.
 
+## The night as one thing (0.42.0)
+
+[nights.md](nights.md). Start sleep stays one tap: Cochilo guesses nap or night.
+
+| Flow | Taps |
+|---|---|
+| Start a nap or the night | 1 (Start sleep; the guess is shown) |
+| Correct the guess | 1 ("It's a nap" / "It's the night") |
+| A night waking | Woke up (1) |
+| Back to sleep | 1 (Today, the notification, the widget) |
+| Up for the day | 1 (Today, the notification); asks where she slept, once |
+
 ## Share to Cochilo (0.41.0)
 
 From Napper (or any app), Export or Share, then pick **Cochilo** in Android's share sheet: the file

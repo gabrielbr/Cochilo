@@ -89,7 +89,11 @@ class CochiloWidget : AppWidgetProvider() {
             t.clock(R.id.clock, since?.let { now - it })
 
             // The one mint action.
-            val sleepLabel = context.getString(if (s.asleep) R.string.action_woke_up else R.string.action_start_sleep)
+            val sleepLabel = context.getString(when {
+                s.asleep -> R.string.action_woke_up
+                s.nightWaking -> R.string.action_back_to_sleep
+                else -> R.string.action_start_sleep
+            })
             t.text(R.id.sleep_label, sleepLabel)
             t.describe(R.id.sleep, sleepLabel)
             t.click(R.id.sleep) { action(context, if (s.asleep) NotificationActions.WOKE_UP else NotificationActions.START_SLEEP) }

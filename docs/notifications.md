@@ -11,6 +11,7 @@ with a timeline bar and the one button that comes next. Built 2026-11-02 (Cochil
 |---|---|---|---|---|
 | Asleep | Nap / Night sleep | Since 4:10 PM · expected wake 4:47 PM | The sleep, in the nap or night colour, from when it began to the expected wake | Woke up |
 | Awake | Awake | Since 2:30 PM · next nap 4:01 PM (or bedtime) | Awake time (muted), then the nap window (teal), with dots for what was logged meanwhile (a feed, a diaper) | Start sleep |
+| Awake in the night (0.42.0) | Awake in the night | Since 3:10 AM | the same bar | **Back to sleep** and **Up for the day** ([nights.md](nights.md)) |
 
 - The header shows the app and a **running clock** (time asleep or awake) that ticks by itself.
 - The bar is solid for the time already lived and faded for what's to come; a short tick marks now.

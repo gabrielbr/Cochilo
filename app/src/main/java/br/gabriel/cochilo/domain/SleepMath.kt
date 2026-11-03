@@ -13,7 +13,10 @@ const val MINUTE = 60_000L
 const val HOUR = 60 * MINUTE
 const val DAY = 24 * HOUR
 
-/** Night is 19:00–07:00: a sleep that starts in it is night sleep, anything else is a nap. */
+/**
+ * The clock rule, for sleeps logged before 0.42.0 (no `night` flag): one that starts 19:00–07:00 is
+ * night sleep, anything else a nap. Since 0.42.0 a sleep says which it is (docs/nights.md).
+ */
 const val NIGHT_START_HOUR = 19
 const val NIGHT_END_HOUR = 7
 
@@ -27,8 +30,8 @@ fun isNightStart(t: Long, zone: ZoneId): Boolean {
     return h >= NIGHT_START_HOUR || h < NIGHT_END_HOUR
 }
 
-fun Event.isNightSleep(zone: ZoneId) = type == EventType.SLEEP && isNightStart(start, zone)
-fun Event.isNap(zone: ZoneId) = type == EventType.SLEEP && !isNightStart(start, zone)
+fun Event.isNightSleep(zone: ZoneId) = type == EventType.SLEEP && (night ?: isNightStart(start, zone))
+fun Event.isNap(zone: ZoneId) = type == EventType.SLEEP && !(night ?: isNightStart(start, zone))
 
 /**
  * True when the entry touches [from, to): a sleep or feed by its span (a running one lasts until

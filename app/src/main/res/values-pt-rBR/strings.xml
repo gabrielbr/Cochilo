@@ -17,6 +17,12 @@
     <string name="panel_asleep_nap">Na soneca há</string>
     <string name="panel_asleep_night">Sono da noite há</string>
     <string name="panel_since">Desde %1$s</string>
+    <string name="panel_awake_night">Acordado durante a noite</string>
+    <string name="panel_night_since">Noite desde %1$s · sonos: %2$d</string>
+    <string name="panel_make_nap">É uma soneca</string>
+    <string name="panel_make_night">É a noite</string>
+    <string name="action_back_to_sleep">Voltou a dormir</string>
+    <string name="action_up_for_day">Acordou de vez</string>
     <string name="panel_ready">Pronto quando o bebê estiver</string>
     <string name="action_start_sleep">Começar sono</string>
     <string name="action_woke_up">Acordou</string>

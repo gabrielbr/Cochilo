@@ -14,7 +14,7 @@ import java.util.Locale
 /** Dates and durations the way the system's content rules say (docs/content.md "Dates"). */
 class Format(
     private val context: Context,
-    private val zone: ZoneId = ZoneId.systemDefault(),
+    val zone: ZoneId = ZoneId.systemDefault(),
     /** The app's "now", so Today and Yesterday agree with the rest of the screen. */
     private val now: Long = System.currentTimeMillis(),
 ) {

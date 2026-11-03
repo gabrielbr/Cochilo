@@ -657,3 +657,19 @@ fun Checklist(steps: List<String>, done: Set<Int>, onToggle: (Int) -> Unit) {
         }
     }
 }
+
+/**
+ * A quiet swap under a label (docs/nights.md): the guess was nap or night, and one tap changes it.
+ * Words in the meta role and the label's own colour, underlined, never teal (teal is the one action);
+ * a 48dp row so the thumb finds it, and TalkBack reads it as a button.
+ */
+@Composable
+fun SwapAction(text: String, color: Color, onClick: () -> Unit) {
+    val src = remember { MutableInteractionSource() }
+    Box(
+        Modifier.heightIn(min = Size.rowMin).clickable(src, indication = null, role = Role.Button, onClick = onClick).pressScale(src),
+        contentAlignment = Alignment.CenterStart,
+    ) {
+        Text(text, style = Type.meta.copy(textDecoration = androidx.compose.ui.text.style.TextDecoration.Underline), color = color)
+    }
+}

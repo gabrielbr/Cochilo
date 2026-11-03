@@ -10,7 +10,8 @@ most often, one tap each from the home screen, without opening the app.
 
 - **Status line:** asleep or awake, since when, and a clock that ticks by itself (a Chronometer;
   the widget is never redrawn on a timer). Tap it to open the app.
-- **Start sleep / Woke up:** the one mint action, wider than the rest.
+- **Start sleep / Woke up:** the one mint action, wider than the rest. During a night waking it reads
+  **Back to sleep** and continues the night (0.42.0, [nights.md](nights.md)).
 - **Left / Right:** start a breastfeed on that side (a running timer, as on Today).
   - The breast used last has the **Last mark**: an outline and a dot in the feed colour
     (remember actions). TalkBack says "used last".
