@@ -3,6 +3,15 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.36.0 — 2026-11-03
+
+**Tatá's first suggestion is on.** Tatá approved her note on naps in arms. In the first three
+months, after a week with five or more naps in arms, Patterns can show it once: it says how many
+there were, that contact naps are normal at this age, and that a sling keeps your hands free, with
+a link to her sling. It never shows at night, while the baby sleeps, in your first week with the
+app, or again after "Don't show again". Settings › Notifications › Tatá's suggestions turns all of
+them off. `docs/tata-slings/in-app-marketing.md` §12.
+
 ## 0.35.0 — 2026-11-03
 
 **Asleep and awake, and a softer Log menu.** The Day timeline and History now read as the day's

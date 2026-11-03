@@ -204,6 +204,13 @@ for that age band in one tap.
 
 Remembers: the leads chosen. The routine logged is the one for what's next (nap or bedtime).
 
+## The first live Tatá note (0.36.0)
+
+No new flow. Naps in arms is the first note a parent can see. It shows only in Patterns, after the
+week's data. Its link is one tap and "Don't show again" is one tap and final. Settings ›
+Notifications now shows the "Tatá's suggestions" switch (one tap turns them all off). Nothing
+changes on Today, on the Log button or at night.
+
 ## Tatá's notes (0.32.0)
 
 No flow changes: a note (when Tatá approves one) sits at the end of Patterns, never on Today or

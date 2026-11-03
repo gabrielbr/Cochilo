@@ -413,6 +413,20 @@ class ScreensSnapshotTest {
         pt(true); paparazzi.snapshot { TataNoteShot(true, br.gabriel.cochilo.domain.Suggestions.Suggestion(br.gabriel.cochilo.domain.Suggestions.Moment.ROUTINE_STEADY, "tata_naninha", 5)) }
     }
 
+    /** Settings › Notifications once a Tatá moment is live (0.36.0): her switch shows, last. */
+    @Test fun tata_switch_ptBR_light() {
+        pt(false)
+        paparazzi.snapshot {
+            CochiloTheme(false) { br.gabriel.cochilo.ui.kit.Frame { Column(Modifier.padding(CTokens.Spacing.space6)) {
+                br.gabriel.cochilo.ui.kit.RowGroup {
+                    br.gabriel.cochilo.ui.kit.SwitchRow(stringResource(R.string.celebrations), stringResource(R.string.celebrations_meta), true, {})
+                    Hairline()
+                    br.gabriel.cochilo.ui.kit.SwitchRow(stringResource(R.string.tata_suggestions), stringResource(R.string.tata_suggestions_meta), true, {})
+                }
+            } } }
+        }
+    }
+
     /** Settings › Notifications with the window reminders (30 and 15 min before the next window). */
     @Test fun reminders_settings_ptBR_light() {
         pt(false)

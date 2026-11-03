@@ -17,9 +17,12 @@ class CatalogTest {
         }
     }
 
-    /** Nothing is shown until Tatá signs a moment off; flipping one is a reviewed change here. */
-    @Test fun nothing_is_approved_yet() {
-        assertEquals(emptySet<Moment>(), catalog.approved)
+    /**
+     * A moment shows only once Tatá signs it off; flipping one is a reviewed change here. Step 4
+     * (in-app-marketing.md §12) turns them on one at a time: naps in arms first (0.36.0).
+     */
+    @Test fun only_the_moments_tata_signed_off_are_approved() {
+        assertEquals(setOf(Moment.ARMS_NAPS), catalog.approved)
     }
 
     @Test fun every_age_band_has_a_note_entry_none_approved_most_without_a_product() {
