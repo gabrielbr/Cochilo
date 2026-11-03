@@ -36,7 +36,7 @@ Each is grounded in `docs/research.md` or the Tatá Slings plans (`docs/tata-sli
 ### 3.1 Onboarding: shipped in 0.13.0 ([onboarding.md](onboarding.md))
 
 ### 3.2 Logging, faster still
-- **Drag to adjust** a sleep's start or end on the Day tab's timeline, instead of opening the sheet.
+- **Drag to adjust the start** too (0.27.0 moves the end; a late start is covered by the Earlier chips).
 - **Wear OS tile**: Start sleep / Woke up and the breasts from the wrist, for when both hands hold
   the baby.
 
@@ -56,6 +56,7 @@ Each is grounded in `docs/research.md` or the Tatá Slings plans (`docs/tata-sli
 
 ## Shipped from this plan
 
+- **0.27.0**: drag to adjust a sleep's end on the Day tab ([flows.md](flows.md)).
 - **0.26.0**: seamless fabric tiles ([textures.md](tata-slings/textures.md)).
 - **0.25.0**: tablets and foldables, a rail and two panes ([tablet.md](tablet.md)).
 - **0.24.0**: the last nap's length in the prediction (phase 2, sleep pressure) and a synthetic year of tests ([prediction.md](prediction.md)).

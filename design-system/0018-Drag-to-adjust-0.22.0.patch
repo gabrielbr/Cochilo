@@ -1,0 +1,190 @@
+From a9e9cc0b73182e50889b008650159f6bcd6b0005 Mon Sep 17 00:00:00 2001
+From: Gabriel Lopes <ogabriel@gmail.com>
+Date: Tue, 3 Nov 2026 00:40:29 +0000
+Subject: [PATCH] Design system 0.22.0: drag to adjust on the vertical timeline
+
+---
+ CHANGELOG.md                                |  8 +++++
+ DESIGN.md                                   |  2 +-
+ VERSION                                     |  2 +-
+ audits/2026-11-03-v0.22.0-drag-to-adjust.md | 37 +++++++++++++++++++++
+ docs/components.md                          |  1 +
+ generated/cochilo/CTokens.kt                |  2 +-
+ generated/pulseloop/GTokens.kt              |  2 +-
+ generated/uikit/UiTokens.java               |  2 +-
+ generated/web/cochilo.css                   |  2 +-
+ generated/web/pulseloop.css                 |  2 +-
+ generated/web/uikit.css                     |  2 +-
+ tokens/tokens.json                          |  2 +-
+ 12 files changed, 55 insertions(+), 9 deletions(-)
+ create mode 100644 audits/2026-11-03-v0.22.0-drag-to-adjust.md
+
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+index 069abdc..a57924e 100644
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -3,6 +3,14 @@
+ Semantic versioning (AGENTS.md "Versioning"). Each entry says what changed for each app and what
+ the app has to do.
+ 
++## 0.22.0 — 2026-11-03
++
++Drag to adjust (minor: a component behaviour; no token values change).
++
++- components.md: the vertical timeline's drag to adjust (hold, drag in 5-minute steps, `selected`
++  while held, Undo, TalkBack actions). Cochilo 0.27.0.
++- Audit `audits/2026-11-03-v0.22.0-drag-to-adjust.md`.
++
+ ## 0.21.1 — 2026-11-03
+ 
+ Seamless fabrics (patch: assets only; no token values change).
+diff --git a/DESIGN.md b/DESIGN.md
+index 244b56a..5e9d144 100644
+--- a/DESIGN.md
++++ b/DESIGN.md
+@@ -1,6 +1,6 @@
+ ---
+ name: Gabriel Design System
+-version: 0.21.1
++version: 0.22.0
+ # GENERATED from tokens/tokens.json by scripts/gen_tokens.py. Edit the tokens, not this block.
+ colors:
+   page: "#F2F2F2"
+diff --git a/VERSION b/VERSION
+index a67ceba..2157409 100644
+--- a/VERSION
++++ b/VERSION
+@@ -1 +1 @@
+-0.21.1
++0.22.0
+diff --git a/audits/2026-11-03-v0.22.0-drag-to-adjust.md b/audits/2026-11-03-v0.22.0-drag-to-adjust.md
+new file mode 100644
+index 0000000..e9ee903
+--- /dev/null
++++ b/audits/2026-11-03-v0.22.0-drag-to-adjust.md
+@@ -0,0 +1,37 @@
++# Audit: drag to adjust (0.22.0)
++
++Date: 2026-11-03 · PR: Cochilo 0.27.0 · Auditor: Claude (graphic-design-fundamentals + impeccable)
++
++## Scope
++
++A behaviour on Cochilo's vertical timeline row; uses existing roles (`selected`, `on-selected`)
++and motion (`animatedColor`). No tokens.
++
++## graphic-design-fundamentals (§13 checklist)
++
++| # | Question | Result |
++|---|---|---|
++| 1 | Brief | Pass: fix a late "woke up" in one move |
++| 2 | Concept | Pass: the bar is the sleep; stretch it |
++| 3 | Hierarchy | Pass: the held row lifts by colour, the new end reads first |
++| 4 | Contrast | Pass: on-selected on selected passes in all themes (already listed) |
++| 5 | Alignment and grid | Pass: the row keeps its rail and columns |
++| 6 | Spacing | Pass |
++| 7 | Typography | Pass: meta role, live |
++| 8 | Colour | Pass: blush for "held", never teal (teal stays the one action) |
++| 9 | Consistency | Pass: same Undo as every other quick change |
++| 10 | Simplicity | Pass: the end only; the start has the Earlier chips |
++| 11 | Real-size test | Pass: Cochilo's `day_dragging_a_sleep_light` |
++| 12 | Accessibility and ergonomics | Pass: custom actions for TalkBack; haptic per step |
++| 13 | Production | Pass: pure rules unit-tested in Cochilo (`AdjustTest`) |
++
++## impeccable (audit)
++
++| # | Dimension | Score | Key finding |
++|---|---|---|---|
++| 1 | Accessibility | 4 | Actions instead of a gesture for TalkBack |
++| 2 | Performance | 4 | — |
++| 3 | Appearance & theming | 4 | Roles only |
++| 4 | Platform conformance | 4 | Long-press then drag, as Android lists do |
++| 5 | Adaptivity | 4 | — |
++| | **Total** | **20/20** | |
+diff --git a/docs/components.md b/docs/components.md
+index 523eac2..7101def 100644
+--- a/docs/components.md
++++ b/docs/components.md
+@@ -34,6 +34,7 @@ component, the row says so.
+ | Check for updates | About row: version, a secondary button, one result line; release builds only — [self-update.md](self-update.md) | `Ui.checkForUpdates` | `CheckForUpdatesButton` | 🟡 |
+ | Sleep panel | Cochilo: `panel` block, state word over the `timer` role, one PRIMARY (Start sleep / Woke up) | — | Cochilo `SleepPanel` | 🟡 |
+ | Timeline / actogram | Cochilo: 24h bar, `timeline` 24dp high, `event-*` blocks on `line`, hour labels muted, spoken summary | — | Cochilo `Timeline`, `Actogram` | 🟡 |
++| Vertical timeline: drag to adjust | Cochilo: press and hold a finished sleep, drag down (later) or up (sooner) in 5-minute steps, 12dp a step; the held row turns `selected`, its bar follows, its meta says the new end live in `on-selected`; a haptic tick per step; let go saves, with Undo; TalkBack gets two actions (5 minutes later / sooner) | — | Cochilo `TimelineRow(adjust)` | ✅ |
+ | Slide row | Cochilo: a row that also slides; past the touch slop it becomes its options side by side, the one under the finger in `ink` with a haptic tick; letting go logs, back to start cancels; the last-used option says LAST; tap still opens the sheet; each option is a TalkBack action | — | Cochilo `SlideRow` | 🟡 |
+ | Kind icon | Cochilo: an entry kind's 22dp line icon in its `event-*` colour, on a `kind-badge` (36dp) round of `event-*-soft` (sleep: `kind-badge-lead`, 44dp, with its name in the label role, because sleep leads); always beside the kind's name; on a highlighted row the round is `on-fab` at 18% and the line `on-fab` | — | Cochilo `KindIcon` | 🟡 |
+ | Last mark | Cochilo: the option used last time: an `outline` (2dp) in its kind's `event-*` colour and a `space-2` dot of that colour before its name; on a lit option the dot is `on-fab`. Spoken as "last" by TalkBack, never written. Also before the "last time" line of a row or sheet | — | Cochilo `LastDot`, `SlideOption.last` | 🟡 |
+diff --git a/generated/cochilo/CTokens.kt b/generated/cochilo/CTokens.kt
+index 3ec38d3..f3d7f97 100644
+--- a/generated/cochilo/CTokens.kt
++++ b/generated/cochilo/CTokens.kt
+@@ -1,4 +1,4 @@
+-// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.21.1 — do not edit.
++// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.22.0 — do not edit.
+ package br.gabriel.cochilo.ui.theme
+ 
+ import androidx.compose.ui.graphics.Color
+diff --git a/generated/pulseloop/GTokens.kt b/generated/pulseloop/GTokens.kt
+index 5213d33..524ba80 100644
+--- a/generated/pulseloop/GTokens.kt
++++ b/generated/pulseloop/GTokens.kt
+@@ -1,4 +1,4 @@
+-// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.21.1 — do not edit.
++// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.22.0 — do not edit.
+ package com.pulseloop.ui.theme
+ 
+ import androidx.compose.ui.graphics.Color
+diff --git a/generated/uikit/UiTokens.java b/generated/uikit/UiTokens.java
+index a2bf315..6cd3822 100644
+--- a/generated/uikit/UiTokens.java
++++ b/generated/uikit/UiTokens.java
+@@ -1,4 +1,4 @@
+-// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.21.1 — do not edit.
++// GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.22.0 — do not edit.
+ package br.gabriel.ui;
+ 
+ /**
+diff --git a/generated/web/cochilo.css b/generated/web/cochilo.css
+index 5cdd71e..75c3d2d 100644
+--- a/generated/web/cochilo.css
++++ b/generated/web/cochilo.css
+@@ -1,4 +1,4 @@
+-/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.21.1 — do not edit. */
++/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.22.0 — do not edit. */
+ /* Layer: cochilo. Themes: light, dark, night. */
+ 
+ :root {
+diff --git a/generated/web/pulseloop.css b/generated/web/pulseloop.css
+index d543d4c..e7d7ddc 100644
+--- a/generated/web/pulseloop.css
++++ b/generated/web/pulseloop.css
+@@ -1,4 +1,4 @@
+-/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.21.1 — do not edit. */
++/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.22.0 — do not edit. */
+ /* Layer: pulseloop. Themes: dark. */
+ 
+ :root {
+diff --git a/generated/web/uikit.css b/generated/web/uikit.css
+index d975289..23a264c 100644
+--- a/generated/web/uikit.css
++++ b/generated/web/uikit.css
+@@ -1,4 +1,4 @@
+-/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.21.1 — do not edit. */
++/* GENERATED by Gabriel-Design-System scripts/gen_tokens.py from tokens/tokens.json v0.22.0 — do not edit. */
+ /* Layer: uikit. Themes: light, dark. */
+ 
+ :root {
+diff --git a/tokens/tokens.json b/tokens/tokens.json
+index 714690b..422760e 100644
+--- a/tokens/tokens.json
++++ b/tokens/tokens.json
+@@ -1,7 +1,7 @@
+ {
+   "$comment": "Source of truth for every app's design tokens. Edit here, run scripts/gen_tokens.py, commit tokens + generated/ + DESIGN.md together. Schema: docs/tokens.md.",
+   "name": "Gabriel Design System",
+-  "version": "0.21.1",
++  "version": "0.22.0",
+   "core": {
+     "$comment": "Shared by every app. Every layer must include every core token (scripts/check_tokens.py enforces it).",
+     "color": [
+-- 
+2.43.0
+

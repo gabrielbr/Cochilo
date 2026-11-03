@@ -210,6 +210,7 @@ fun CochiloRoot(vm: MainViewModel) {
                                         1 -> DayScreen(
                                             log, now, zone, onOpen = { editing = Editing(it, false) },
                                             expected = (prediction as? Predictor.Result.Awake)?.let { it.windowStart to it.windowEnd },
+                                            onAdjust = vm::adjustEnd,
                                         )
                                         2 -> HistoryScreen(log, now, zone) { editing = Editing(it, false) }
                                         else -> PatternsScreen(log, now, zone, weeks)

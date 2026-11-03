@@ -154,6 +154,21 @@ log changes and goes through `Entries`, like every other button.
   "Expected next sleep" in the legend and in what TalkBack reads ("Next sleep expected between
   15:51 and 16:11").
 
+## Drag to adjust (0.27.0)
+
+| Flow | Before | Now |
+|---|---|---|
+| "She woke 15 minutes later than I tapped" | open the sleep, the end time, pick, OK, Save (5 taps) | hold the sleep on Day's timeline, drag down three steps, let go (one move) |
+| Undo it | open and edit again | Undo on the snackbar (1 tap) |
+
+- Only a finished sleep moves, by its end, in 5-minute steps (12dp each). It never ends in the
+  future, never runs into the next sleep, and never gets shorter than 5 minutes (`domain/Adjust.kt`).
+- While held, the row turns blush, the bar grows or shrinks with the drag, and the line under the
+  name says the new end ("Woke up 6:55 AM · +15m"), with a light tick at each step.
+- A tap still opens the sheet, so nothing is lost for those who don't drag. A line above the
+  timeline says how ("Hold a sleep and drag to change when it ended").
+- TalkBack: two actions on each finished sleep, "Ended 5 minutes later" and "Ended 5 minutes sooner".
+
 ## Tablets and foldables (0.25.0)
 
 Phones: no change. Expanded (840dp and up): Today stays on screen beside the picked tab, so Start
