@@ -63,6 +63,8 @@ object LiveNotifications {
 
     /** Reads the log and brings every live notification up to date (posts, updates or clears). */
     suspend fun refresh(context: Context) {
+        // Window reminders have their own setting and channel; they follow the log the same way.
+        SleepReminders.refresh(context)
         val app = context.applicationContext as CochiloApp
         val nm = NotificationManagerCompat.from(context)
         val baby = app.db.baby().get()
@@ -93,7 +95,9 @@ object LiveNotifications {
     }
 
     fun clearAll(context: Context) {
-        NotificationManagerCompat.from(context).cancelAll()
+        val nm = NotificationManagerCompat.from(context)
+        // Everything live; a window reminder (its own setting) stays until it times out.
+        nm.activeNotifications.map { it.id }.filter { it != SleepReminders.ID }.forEach { nm.cancel(it) }
         cancelTick(context)
     }
 

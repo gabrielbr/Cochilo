@@ -23,7 +23,7 @@ class CochiloApp : Application() {
         // The live notification and the widget follow the log: any entry saved, edited or deleted (in the app,
         // from an import, or from the notification's own buttons) updates it.
         scope.launch {
-            combine(db.events().observeAll(), db.baby().observe(), prefs.liveNotification) { _, _, _ -> }
+            combine(db.events().observeAll(), db.baby().observe(), prefs.liveNotification, prefs.reminders, prefs.reminderLeads) { _, _, _, _, _ -> }
                 .debounce(300)
                 .collect {
                     LiveNotifications.refresh(this@CochiloApp)

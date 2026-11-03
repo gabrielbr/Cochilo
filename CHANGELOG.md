@@ -3,6 +3,14 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.33.0 — 2026-11-03
+
+**Window reminders.** 30 and 15 minutes before the next nap or bedtime window, a notification
+says it's coming ("Nap window in 30 min · expected about 3:51–4:11 PM"), with one button, Start
+routine. It never comes while the baby sleeps, late, twice for the same window, or between 21:00
+and 06:00, and it goes away when the window closes. Settings › Notifications › Window reminders
+turns it off or picks 30 or 15 minutes only. `docs/notifications.md`.
+
 ## 0.32.0 — 2026-11-03
 
 **Ready for notes from Tatá (all off for now).** The groundwork for Tatá's suggestions: rare,

@@ -122,6 +122,35 @@ class Prefs(context: Context) {
         }.toMap()
         set(v) = sp.edit { putString("suggestions_shown", v.entries.joinToString(";") { "${it.key}=${it.value}" }) }
 
+    // Window reminders (docs/notifications.md).
+    private val _reminders = MutableStateFlow(sp.getBoolean("reminders", true))
+    val reminders: StateFlow<Boolean> = _reminders
+
+    fun setReminders(on: Boolean) {
+        sp.edit { putBoolean("reminders", on) }
+        _reminders.value = on
+    }
+
+    private val _leads = MutableStateFlow(
+        sp.getString("reminder_leads", null)?.split(',')?.mapNotNull { it.toIntOrNull() }?.toSet() ?: br.gabriel.cochilo.domain.Reminders.LEADS.toSet()
+    )
+    /** Minutes before the window: 30 and 15 by default. */
+    val reminderLeads: StateFlow<Set<Int>> = _leads
+
+    fun setReminderLeads(leads: Set<Int>) {
+        sp.edit { putString("reminder_leads", leads.joinToString(",")) }
+        _leads.value = leads
+    }
+
+    /** Reminders already sent, so a window gets each lead once ("lead@windowStart;…"). */
+    var remindersSent: List<br.gabriel.cochilo.domain.Reminders.Sent>
+        get() = (sp.getString("reminders_sent", null) ?: "").split(';').mapNotNull { part ->
+            val (l, w) = part.split('@').takeIf { it.size == 2 } ?: return@mapNotNull null
+            val lead = l.toIntOrNull() ?: return@mapNotNull null
+            w.toLongOrNull()?.let { br.gabriel.cochilo.domain.Reminders.Sent(lead, it) }
+        }
+        set(v) = sp.edit { putString("reminders_sent", v.joinToString(";") { "${it.lead}@${it.windowStart}" }) }
+
     /** Whether the safe-babywearing check (T.I.C.K.S.) has been shown once. */
     var ticksShown: Boolean
         get() = sp.getBoolean("ticks_shown", false)

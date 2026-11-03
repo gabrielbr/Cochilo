@@ -163,6 +163,13 @@ fun CochiloRoot(vm: MainViewModel) {
                             passphraseSet = vm.backupPassphrase.collectAsState().value != null,
                             modelStatus = br.gabriel.cochilo.ui.screens.modelStatus(vm.modelState.collectAsState().value),
                             onModel = { vm.refreshModel(); showingModel = true },
+                            reminders = vm.reminders.collectAsState().value,
+                            onReminders = { on ->
+                                vm.setReminders(on)
+                                if (on && !br.gabriel.cochilo.notify.LiveNotifications.canPost(context)) requestNotifications()
+                            },
+                            reminderLeads = vm.reminderLeads.collectAsState().value,
+                            onReminderLeads = vm::setReminderLeads,
                             tataSuggestions = if (vm.catalog.approved.isEmpty()) null else vm.tataSuggestions.collectAsState().value,
                             onTataSuggestions = vm::setTataSuggestions,
                             onPassphrase = { editingPassphrase = true },

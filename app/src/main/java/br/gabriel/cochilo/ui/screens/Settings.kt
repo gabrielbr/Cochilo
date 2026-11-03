@@ -61,6 +61,11 @@ fun SettingsScreen(
     /** The one switch for Tatá's suggestions; null hides it (no moment approved yet). */
     tataSuggestions: Boolean? = null,
     onTataSuggestions: (Boolean) -> Unit = {},
+    /** Window reminders (docs/notifications.md). */
+    reminders: Boolean = true,
+    onReminders: (Boolean) -> Unit = {},
+    reminderLeads: Set<Int> = br.gabriel.cochilo.domain.Reminders.LEADS.toSet(),
+    onReminderLeads: (Set<Int>) -> Unit = {},
 ) {
     val context = LocalContext.current
     val f = Format(context, zone)
@@ -138,6 +143,8 @@ fun SettingsScreen(
                 liveNotification, onLiveNotification,
             )
             Hairline()
+            ReminderRows(reminders, onReminders, reminderLeads, onReminderLeads)
+            Hairline()
             br.gabriel.cochilo.ui.kit.SwitchRow(
                 stringResource(R.string.celebrations), stringResource(R.string.celebrations_meta),
                 celebrations, onCelebrations,
@@ -199,4 +206,20 @@ fun SettingsScreen(
 /** Opens a shop link in the browser: an intent, so the app itself needs no internet. */
 private fun openShop(context: android.content.Context, url: String) {
     runCatching { context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) }
+}
+
+/** Settings › Notifications › Window reminders: the switch, and when (both leads or one), one tap each. */
+@Composable
+internal fun ReminderRows(reminders: Boolean, onReminders: (Boolean) -> Unit, leads: Set<Int>, onLeads: (Set<Int>) -> Unit) {
+    val context = LocalContext.current
+    br.gabriel.cochilo.ui.kit.SwitchRow(stringResource(R.string.reminders), stringResource(R.string.reminders_meta), reminders, onReminders)
+    if (reminders) {
+        val both = br.gabriel.cochilo.domain.Reminders.LEADS.toSet()
+        val options = listOf(both, setOf(30), setOf(15))
+        Column(Modifier.padding(start = Spacing.space4, end = Spacing.space4, bottom = Spacing.space3)) {
+            FilterChips(options, leads, { o ->
+                when (o) { both -> context.getString(R.string.reminders_both); setOf(30) -> context.getString(R.string.reminders_30); else -> context.getString(R.string.reminders_15) }
+            }, onSelect = onLeads)
+        }
+    }
 }
