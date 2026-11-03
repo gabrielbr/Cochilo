@@ -441,7 +441,10 @@
     <string name="ask_what_helps">What can help</string>
     <string name="ask_source">Source: %1$s</string>
     <string name="ask_no_data">There isn\'t enough logged yet for this. After a few days of logging, the answer will use the baby\'s own numbers.</string>
-    <string name="ask_not_sure">I can help with naps, nights, bedtime, wake windows, daylight, routines and contact naps, using your log. Try one of the questions below.</string>
+    <string name="ask_not_sure">I can help with naps and how long they last, nights, bedtime, wake windows, daylight, routines and contact naps, using your log. Try one of the questions below.</string>
+    <string name="ask_unchecked">The on-device AI wrote an answer I couldn\'t check against your log, so here is what I know instead.</string>
+    <string name="ask_model_getting">The on-device AI is still downloading. Ask again once it\'s ready, and it can answer from your log.</string>
+    <string name="ask_open">Ask Cochilo</string>
     <string name="ask_insight_sleep">Sleep: %1$s a day on average (usual for this age %2$s–%3$s h).</string>
     <string name="ask_insight_naps">Naps: %1$s a day, %2$s at the median.</string>
     <string name="ask_insight_night">Longest stretch: %1$s on average.</string>
@@ -461,6 +464,12 @@
     <string name="ask_short_naps_info">Before 5–6 months many naps are a single sleep cycle, about 30–45 minutes. Short naps are common at this age and usually lengthen with age.</string>
     <string name="ask_short_naps_try">A nap that starts inside the wake window, a dim room, or a contact nap in arms or in the sling can help it run longer. Some days naps simply stay short.</string>
     <string name="ask_short_naps_source">research §2.5, §3</string>
+    <string name="ask_nap_length_q">How long do naps last?</string>
+    <string name="ask_nap_length_data">This week naps lasted %1$s at the median, from %2$s to %3$s (naps logged: %4$d).</string>
+    <string name="ask_nap_length_info_young">There\'s no right length. Before 5–6 months many naps are one sleep cycle, about 30–45 minutes, and naps from 30 minutes to 2 hours are all common. The whole day\'s sleep matters more than any one nap.</string>
+    <string name="ask_nap_length_info">There\'s no right length. From about 6 months naps often join two sleep cycles and last 1–2 hours, with fewer naps a day. The whole day\'s sleep matters more than any one nap.</string>
+    <string name="ask_nap_length_try">A baby who wakes calm from a short nap may have had enough for now. One who wakes upset can sometimes go back to sleep with a few minutes of help, or in arms or the sling.</string>
+    <string name="ask_nap_length_source">research §2.5, §3</string>
     <string name="ask_night_wakings_q">Why the night wakings?</string>
     <string name="ask_night_wakings_data">This week: %1$s wakings a night on average; the longest stretch was %2$s.</string>
     <string name="ask_night_wakings_info">Waking at night is normal in the first year. The longest stretch usually grows month by month, at each baby\'s own pace.</string>

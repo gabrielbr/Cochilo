@@ -150,9 +150,16 @@ fun CochiloRoot(vm: MainViewModel) {
                         val ready = model is br.gabriel.cochilo.ai.ModelState.Ready
                         // When the list can't answer and the model isn't here yet: one tap to get it (0.37.0).
                         val canGet = model is br.gabriel.cochilo.ai.ModelState.Absent || model is br.gabriel.cochilo.ai.ModelState.Failed
+                        // Everything the model may draw on about this baby (0.38.0): the log, day by day.
+                        val pt = stringResource(R.string.locale_tag).startsWith("pt")
+                        val digest = remember(log, now, weeks, facts, pt) {
+                            br.gabriel.cochilo.domain.assistant.Digest.lines(log, baby?.name, weeks, now, zone, facts, pt)
+                        }
                         br.gabriel.cochilo.ui.screens.AskScreen(
                             facts, f, generate = if (ready) vm::generate else null,
                             onGetModel = if (canGet) ({ showingModel = true }) else null,
+                            digest = digest,
+                            modelGetting = model is br.gabriel.cochilo.ai.ModelState.Getting,
                         )
                     }
                 } else if (settings) {
@@ -210,6 +217,8 @@ fun CochiloRoot(vm: MainViewModel) {
                         tabs, tab, { tab = it }, showTabs = babyState is BabyState.Ready,
                         header = {
                             Header(headerName, status) {
+                                // Ask Cochilo from every tab, one tap (0.38.0): it used to be a row deep in Patterns.
+                                if (babyState is BabyState.Ready) IconButton(R.drawable.gg_ic_chat, stringResource(R.string.ask_open), { asking = true })
                                 IconButton(R.drawable.gg_ic_gear, stringResource(R.string.settings), { settings = true })
                             }
                         },

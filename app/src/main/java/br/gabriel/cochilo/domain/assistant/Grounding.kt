@@ -17,13 +17,13 @@ object Grounding {
     /** Rules the model is given, in the app's language. */
     fun rules(portuguese: Boolean): String = if (portuguese) {
         """Você é o Cochilo, um diário de sono de bebê. Responda à pergunta dos pais em até 4 frases curtas, em português do Brasil.
-Use SOMENTE os fatos e os textos abaixo. Não invente números, horários ou estudos.
+Use SOMENTE os fatos e os textos abaixo, e chame o bebê pelo nome. Use os números exatamente como aparecem nos fatos; não invente números, horários ou estudos.
 Nunca dê orientação médica, nunca fale de remédios ou doses, nunca diagnostique.
 Nunca julgue nem culpe os pais ou o bebê. Descreva, sugira com calma, sem promessas.
 Se os fatos e textos não respondem à pergunta, diga apenas: "Não sei responder isso com os seus registros." """
     } else {
         """You are Cochilo, a baby sleep diary. Answer the parent's question in at most 4 short sentences, in English.
-Use ONLY the facts and texts below. Do not invent numbers, times or studies.
+Use ONLY the facts and texts below, and call the baby by name. Use numbers exactly as the facts write them; do not invent numbers, times or studies.
 Never give medical advice, never mention medicines or doses, never diagnose.
 Never judge or blame the parents or the baby. Describe, suggest gently, make no promises.
 If the facts and texts don't answer the question, say only: "I can't answer that from your log." """
@@ -33,7 +33,7 @@ If the facts and texts don't answer the question, say only: "I can't answer that
     fun prompt(question: String, facts: List<String>, passages: List<String>, portuguese: Boolean): String = buildString {
         appendLine(rules(portuguese))
         appendLine()
-        appendLine(if (portuguese) "Fatos dos registros desta semana:" else "Facts from this week's log:")
+        appendLine(if (portuguese) "Fatos dos registros do bebê:" else "Facts from the baby's log:")
         facts.forEach { appendLine("- $it") }
         appendLine()
         appendLine(if (portuguese) "Textos revisados:" else "Reviewed texts:")
@@ -69,9 +69,14 @@ If the facts and texts don't answer the question, say only: "I can't answer that
         if (r.length > MAX_REPLY_CHARS) return Verdict.TOO_LONG
         if (judging.containsMatchIn(r)) return Verdict.JUDGES
         if (medical.containsMatchIn(r)) return Verdict.MEDICAL
-        val known = number.findAll(prompt).map { it.value.replace(',', '.') }.toSet()
-        if (number.findAll(r).any { it.value.replace(',', '.') !in known }) return Verdict.INVENTED_NUMBER
+        val known = number.findAll(prompt).map { norm(it.value) }.toSet()
+        if (number.findAll(r).any { norm(it.value) !in known }) return Verdict.INVENTED_NUMBER
         return Verdict.OK
+    }
+
+    /** "05" is "5", "1,5" is "1.5", "19:40" stays a time: so a fact's number counts however it's written. */
+    private fun norm(n: String): String = n.replace(',', '.').split('.', ':').joinToString(if (':' in n) ":" else ".") { part ->
+        part.trimStart('0').ifEmpty { "0" }
     }
 
     /** The model's text, trimmed of a repeated "Answer:" and surrounding quotes. */

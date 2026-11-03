@@ -40,6 +40,19 @@ class AssistantTest {
         assertEquals(Reply.SeeSomeone(Care.MOTHER), Assistant.ask("I feel so overwhelmed", facts))
     }
 
+    /** The owner's own question (0.38.0), and its neighbours that must keep their topics. */
+    @Test fun how_long_naps_last_is_its_own_topic() {
+        assertEquals(Topic.NAP_LENGTH, topic("o quão devem demorar as sonecas do Dante?"))
+        assertEquals(Topic.NAP_LENGTH, topic("Quanto tempo duram as sonecas dele?"))
+        assertEquals(Topic.NAP_LENGTH, topic("how long should naps last?"))
+        assertEquals(Topic.WAKE_WINDOWS, topic("quanto tempo acordado entre sonecas?"))
+        assertEquals(Topic.WAKE_WINDOWS, topic("how long awake between naps"))
+        assertEquals(Topic.SHORT_NAPS, topic("Por que as sonecas são tão curtas?"))
+        assertEquals(Topic.NEXT_SLEEP, topic("quando é a próxima soneca?"))
+        assertEquals(35, facts.napShortestMin)
+        assertEquals(80, facts.napLongestMin)
+    }
+
     @Test fun falling_asleep_is_not_a_fall() {
         assertEquals(Topic.FEED_TO_SLEEP, topic("Ela sempre dorme mamando, caiu no sono no peito"))
         assertEquals(Topic.CONTACT_NAPS, topic("he only sleeps in arms, fell asleep on me again"))

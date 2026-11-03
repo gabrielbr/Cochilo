@@ -53,7 +53,11 @@ import br.gabriel.cochilo.ui.theme.Type
  * One question and its reply, kept only while the screen is open (nothing is stored). [generated]:
  * the on-device model's checked answer (phase 2); [thinking] while it writes.
  */
-data class AskExchange(val question: String, val reply: Assistant.Reply, val generated: String? = null, val thinking: Boolean = false)
+data class AskExchange(
+    val question: String, val reply: Assistant.Reply, val generated: String? = null, val thinking: Boolean = false,
+    /** The model answered, but its reply didn't pass the checks (Grounding), so the library's is shown, and says so. */
+    val unchecked: Boolean = false,
+)
 
 /**
  * Ask Cochilo (docs/assistant.md): this week's numbers first, then questions answered from the
@@ -68,6 +72,10 @@ fun AskScreen(
     generate: (suspend (String) -> String?)? = null,
     /** The model isn't on the phone yet: under a "not sure" reply, one row opens its sheet. */
     onGetModel: (() -> Unit)? = null,
+    /** What the model is told about this baby (Digest): the log, day by day, with the age references. */
+    digest: List<String> = emptyList(),
+    /** The model is on its way: a "not sure" reply says to ask again once it's here. */
+    modelGetting: Boolean = false,
 ) {
     val context = LocalContext.current
     val exchanges = remember { mutableStateListOf(*initial.toTypedArray()) }
@@ -83,10 +91,10 @@ fun AskScreen(
         val i = exchanges.size
         exchanges += AskExchange(q.trim(), reply, thinking = true)
         scope.launch {
-            val prompt = groundedPrompt(context, q, facts, f)
+            val prompt = groundedPrompt(context, q, facts, f, digest)
             val out = generate(prompt)?.let(br.gabriel.cochilo.domain.assistant.Grounding::clean)
             val ok = out != null && br.gabriel.cochilo.domain.assistant.Grounding.check(out, prompt) == br.gabriel.cochilo.domain.assistant.Grounding.Verdict.OK
-            if (i < exchanges.size) exchanges[i] = exchanges[i].copy(thinking = false, generated = if (ok) out else null)
+            if (i < exchanges.size) exchanges[i] = exchanges[i].copy(thinking = false, generated = if (ok) out else null, unchecked = !ok)
         }
     }
     fun askTopic(t: Topic) {
@@ -110,7 +118,17 @@ fun AskScreen(
             when {
                 x.thinking -> ThinkingCard()
                 x.generated != null -> GeneratedCard(x.generated)
-                else -> ReplyCard(x.reply, facts, f, onTopic = ::askTopic)
+                else -> {
+                    if (x.unchecked) {
+                        Text(stringResource(R.string.ask_unchecked), style = Type.meta, color = CochiloTheme.colors.muted)
+                        Spacer(Modifier.height(Spacing.space2))
+                    }
+                    ReplyCard(x.reply, facts, f, onTopic = ::askTopic)
+                    if (modelGetting && x.reply is Assistant.Reply.NotSure && x === exchanges.last()) {
+                        Spacer(Modifier.height(Spacing.space2))
+                        Text(stringResource(R.string.ask_model_getting), style = Type.meta, color = CochiloTheme.colors.muted)
+                    }
+                }
             }
             if (onGetModel != null && x.reply is Assistant.Reply.NotSure && x.generated == null && !x.thinking && x === exchanges.last()) {
                 Spacer(Modifier.height(Spacing.space2))
@@ -142,11 +160,13 @@ private const val MAX_QUESTION = 200
 private const val PASSAGES = 4
 
 /** The model's prompt: this week's facts and the most relevant reviewed answers (docs/assistant.md). */
-fun groundedPrompt(context: Context, question: String, facts: Assistant.Facts, f: Format): String {
+fun groundedPrompt(context: Context, question: String, facts: Assistant.Facts, f: Format, digest: List<String> = emptyList()): String {
     val topics = (Assistant.suggestions(facts) + Topic.SAFE_SLEEP).distinct().take(PASSAGES)
     val passages = topics.flatMap { t -> answer(context, t, facts, f).let { listOfNotNull(it.info, it.tryIt) } }
     val portuguese = context.getString(R.string.locale_tag).startsWith("pt")
-    return br.gabriel.cochilo.domain.assistant.Grounding.prompt(question, insights(context, facts, f), passages, portuguese)
+    // The whole log digest when there is one (0.38.0); this week's four lines otherwise.
+    val lines = digest.ifEmpty { insights(context, facts, f) }
+    return br.gabriel.cochilo.domain.assistant.Grounding.prompt(question, lines, passages, portuguese)
 }
 
 @Composable
@@ -256,6 +276,12 @@ fun answer(context: Context, t: Topic, facts: Assistant.Facts, f: Format): Answe
             },
             s(R.string.ask_short_naps_info), s(R.string.ask_short_naps_try), s(R.string.ask_short_naps_source),
         )
+        Topic.NAP_LENGTH -> AnswerParts(
+            if (facts.napMedianMin == null || facts.napShortestMin == null || facts.napLongestMin == null) noData
+            else s(R.string.ask_nap_length_data, f.durationMin(facts.napMedianMin), f.durationMin(facts.napShortestMin), f.durationMin(facts.napLongestMin), facts.naps),
+            s(if (facts.ageWeeks < 26) R.string.ask_nap_length_info_young else R.string.ask_nap_length_info),
+            s(R.string.ask_nap_length_try), s(R.string.ask_nap_length_source),
+        )
         Topic.NIGHT_WAKINGS -> AnswerParts(
             avg?.let { s(R.string.ask_night_wakings_data, String.format(f.locale, "%.1f", it.nightWakings), f.durationMin(it.longestStretchMin)) } ?: noData,
             s(R.string.ask_night_wakings_info), s(R.string.ask_night_wakings_try), s(R.string.ask_night_wakings_source),
@@ -313,6 +339,7 @@ fun insights(context: Context, facts: Assistant.Facts, f: Format): List<String> 
 fun questionRes(t: Topic): Int = when (t) {
     Topic.NEXT_SLEEP -> R.string.ask_next_sleep_q
     Topic.SHORT_NAPS -> R.string.ask_short_naps_q
+    Topic.NAP_LENGTH -> R.string.ask_nap_length_q
     Topic.NIGHT_WAKINGS -> R.string.ask_night_wakings_q
     Topic.EARLY_WAKING -> R.string.ask_early_waking_q
     Topic.BEDTIME -> R.string.ask_bedtime_q

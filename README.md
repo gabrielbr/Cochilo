@@ -42,11 +42,12 @@ dressed in the Tatá Slings brand (teal, plum-grey ink, Pérola, Libre Franklin,
   [docs/rituals.md](docs/rituals.md).
 - **What changed**: real changes in the last week, in neutral words; day / night milk.
   [docs/changes.md](docs/changes.md).
-- **Ask Cochilo** (Patterns › Questions about sleep): questions answered from the baby's own log
+- **Ask Cochilo** (the chat icon at the top of every tab, or Patterns › Questions about sleep): questions answered from the baby's own log
   and the app's research, on the phone, in English and Portuguese; health, medicines and the
   mother's wellbeing go to a person. Not medical advice. Optional since 0.30.0: a small AI model on
   the phone for questions beyond the list, downloaded in one tap when you want it (by the Play
-  Store, or since 0.37.0 by the family build itself, on Wi-Fi, in the background), grounded in the log and checked before it's shown. [docs/assistant.md](docs/assistant.md).
+  Store, or since 0.37.0 by the family build itself, on Wi-Fi, in the background), given the whole log (each day, today's sleeps, this
+  week, the age references) and checked before it's shown. [docs/assistant.md](docs/assistant.md).
 - **Details after**: start a sleep (or a feed, pumping, daylight) in one tap; where she slept, which
   side or how much is asked once it ends, with the last answer marked. [docs/flows.md](docs/flows.md).
 - **Where the baby slept**: crib, arms, sling, pram, car, asked on waking; naps by place in Patterns;

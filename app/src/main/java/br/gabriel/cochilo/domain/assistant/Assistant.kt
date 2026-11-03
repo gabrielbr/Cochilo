@@ -30,7 +30,7 @@ object Assistant {
 
     /** What a parent can ask about. Each has a reviewed answer (strings `ask_<topic>_*`). */
     enum class Topic {
-        NEXT_SLEEP, SHORT_NAPS, NIGHT_WAKINGS, EARLY_WAKING, BEDTIME, WAKE_WINDOWS,
+        NEXT_SLEEP, SHORT_NAPS, NAP_LENGTH, NIGHT_WAKINGS, EARLY_WAKING, BEDTIME, WAKE_WINDOWS,
         ENOUGH_SLEEP, CONTACT_NAPS, DAYLIGHT, ROUTINE, FOUR_MONTHS, FEED_TO_SLEEP, SAFE_SLEEP,
     }
 
@@ -53,6 +53,8 @@ object Assistant {
         val prior: AgePrior,
         val naps: Int,
         val napMedianMin: Int?,
+        val napShortestMin: Int?,
+        val napLongestMin: Int?,
         val shortNapPercent: Int?,
         val contactNaps: Int,
         val windowMedianMin: Int?,
@@ -86,6 +88,8 @@ object Assistant {
             prior = Reference.priorFor(ageWeeks),
             naps = naps.size,
             napMedianMin = napMins.takeIf { it.isNotEmpty() }?.let { it[it.size / 2] },
+            napShortestMin = napMins.firstOrNull(),
+            napLongestMin = napMins.lastOrNull(),
             shortNapPercent = napMins.takeIf { it.size >= 3 }?.let { m -> m.count { it < SHORT_NAP_MIN } * 100 / m.size },
             contactNaps = naps.count { it.kind == Kinds.ARMS || it.kind == Kinds.SLING },
             windowMedianMin = windows.takeIf { it.size >= 3 }?.let { it[it.size / 2].toInt() },
@@ -150,6 +154,8 @@ object Assistant {
         Topic.EARLY_WAKING to listOf("cedo", "early", "5h", "5 h", "5am", "5 am", "madrugada", "5 da manha", "dawn", "4h", "4am"),
         Topic.NIGHT_WAKINGS to listOf("noite", "night", "acorda muito", "acordando", "wakes up", "waking", "despert", "madrugada"),
         Topic.SHORT_NAPS to listOf("curta", "curtas", "short", "30 min", "40 min", "acorda logo", "wakes after", "pouco tempo"),
+        // Counts only next to a nap word (see [napWords]): "how long should naps last", "quanto tempo duram as sonecas".
+        Topic.NAP_LENGTH to listOf("dura", "duram", "duracao", "demor", "how long", "quanto tempo", "length", "last", "lasts", "comprid", "longa", "longas", "tempo de soneca"),
         Topic.CONTACT_NAPS to listOf("colo", "arms", "held", "sling", "carreg", "carry", "contact", "contato", "so dorme no", "only sleeps"),
         Topic.FEED_TO_SLEEP to listOf("mamando", "mamar para dormir", "peito para dormir", "feed to sleep", "nurse to sleep", "nursing to sleep", "dorme mamando", "falls asleep feeding"),
         Topic.BEDTIME to listOf("hora de dormir", "horario de dormir", "bedtime", "que horas", "what time", "dormir a noite", "colocar para dormir", "put down"),
@@ -177,6 +183,9 @@ object Assistant {
 
     private const val SHORT_KEY = 4
 
+    /** NAP_LENGTH needs one of these too, so "how long awake" stays a wake-window question. */
+    private val napWords = listOf("soneca", "sonecas", "cochilo", "cochilos", "nap", "naps", "napping")
+
     /** What [question] is about, safety first. */
     fun ask(question: String, facts: Facts): Reply {
         val q = " " + normalize(question) + " "
@@ -184,7 +193,11 @@ object Assistant {
         for (c in listOf(Care.MOTHER, Care.MEDICINE, Care.BABY_HEALTH)) {
             if (care.getValue(c).any { matches(q, it) }) return Reply.SeeSomeone(c)
         }
-        val scored = topics.entries.map { (t, keys) -> t to keys.count { k -> matches(q, k) } }
+        val napWord = napWords.any { matches(q, it) }
+        val scored = topics.entries.map { (t, keys) ->
+            val hits = keys.count { k -> matches(q, k) }
+            t to if (t == Topic.NAP_LENGTH && !napWord) 0 else hits
+        }
         val best = scored.filter { it.second > 0 }.maxWithOrNull(compareBy<Pair<Topic, Int>> { it.second }.thenBy { -topics.keys.indexOf(it.first) })
             ?: return Reply.NotSure(suggestions(facts))
         return Reply.About(best.first)

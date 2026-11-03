@@ -41,7 +41,7 @@ Settings. It isn't on Today: Today is for logging with a baby in arms.
 Nothing is stored: the conversation lives only while the screen is open, and it never leaves the
 phone (no permission added; the play build still has no INTERNET).
 
-**What it understands (13 topics):** the next sleep, short naps, night wakings, early mornings,
+**What it understands (14 topics):** the next sleep, short naps, how long naps last (0.38.0), night wakings, early mornings,
 bedtime, wake windows, "is it enough sleep", contact naps, daylight, routines, the 4-month change,
 falling asleep feeding, and safe sleep. Questions are matched in English and Portuguese,
 accent- and case-blind. A key word must start a word, and short keys must match a whole word, so
@@ -86,7 +86,7 @@ git and never inside the APK.
 | Licence | Gemma Terms of Use, named in the sheet | The same; `GEMMA-NOTICE.txt` sits beside the file on the pre-release |
 
 **What the model may answer:** only questions the library doesn't know ("not sure"). Health,
-medicine and the mother still get the fixed replies, and the model never sees them. The 13 topics
+medicine and the mother still get the fixed replies, and the model never sees them. The 14 topics
 keep their reviewed answers.
 
 **How it stays grounded** (`domain/assistant/Grounding.kt`, tested in `GroundingTest`):
@@ -112,6 +112,42 @@ and version.
 **Size:** the runtime's native libraries add about 46 MB to the family APK (ARM 64- and 32-bit;
 x86 left out). Play splits by ABI, so a Play install adds about half that.
 
+## 0.38.0: it knows the log, and it's one tap away
+
+The owner asked "o quão devem demorar as sonecas do Dante?" and got "I can help with…", which
+was useless. Three causes, three fixes:
+
+1. **The library didn't know the topic.** New topic `NAP_LENGTH`: words for "how long / last /
+   duram / demorar / quanto tempo", counted only next to a nap word ("soneca", "nap"), so "how
+   long awake" stays a wake-window question. Its answer gives her numbers: the median, shortest
+   and longest nap this week, and how many naps were logged. Then what's usual for the age ("no
+   right length; 30–45 min single cycles before 5–6 months, 30 min to 2 h all common"; from 6
+   months, 1–2 h). It never names a target. Tested in `AssistantTest`.
+2. **The model was told almost nothing.** It got four summary lines. Now `domain/assistant/Digest.kt`
+   (tested in `DigestTest`) gives it the whole picture as plain lines:
+   - the baby's name and age;
+   - each of the last 7 days (sleep, naps, night, longest stretch, wakings, feeds, diapers,
+     daylight);
+   - today's sleeps with times, lengths and places;
+   - this week's naps (median, shortest, longest, share under 45 min, contact naps), wake
+     windows, bedtime, early mornings and routines;
+   - the next-sleep guess and the age references (total sleep, wake windows, naps a day, nap
+     length).
+
+   Durations are written in minutes and as hours, so "65 min" and "1h 05m" both count.
+3. **Good answers were thrown away in silence.** The number check now reads a number however
+   it's written ("05" is "5", "9,7" is "9.7"). Most usual answers already passed, because their
+   numbers are now in the facts. When a reply still fails, Ask says so ("The on-device AI wrote
+   an answer I couldn't check against your log, so here is what I know instead") instead of
+   pretending it had nothing. While the model is still downloading, a "not sure" reply says to
+   ask again once it's ready.
+
+   A known limit: a small number (3, 5, 7) is often somewhere in the facts, so the check can't
+   catch every invented small number. The rules still forbid it, and replies are labelled.
+
+**The entry point.** Ask is now in the header of every tab: the chat icon before Settings, one
+tap from anywhere (design system 0.27.0). The row in Patterns stays.
+
 ## iPhone
 
 The engine (`domain/assistant/`) has no Android imports on purpose. For an iPhone release it
@@ -125,6 +161,7 @@ iOS runtime runs the same model files for phase 2.
 - `ui/screens/Ask.kt`: the screen, the answer builder (`answer`, `insights`, testable).
 - Strings `ask_*` in `values/strings.xml` and `values-pt-rBR/strings.xml`: the reviewed library.
 - `domain/assistant/Grounding.kt`: the model's prompt and the reply check.
+- `domain/assistant/Digest.kt`: what the model is told about this baby.
 - `ai/LocalModel.kt` (the runtime), `ai/ModelState.kt` (states and the `ModelSource` interface),
   `ai/ModelFile.kt` (file checks and copy); `src/play/.../ai/ModelSources.kt` (Play asset pack) and
   `src/github/.../ai/ModelSources.kt` (the download, and file import); `ai/ModelDownload.kt` (where
@@ -132,7 +169,7 @@ iOS runtime runs the same model files for phase 2.
   (publishes the model once).
 - `assistant_model/` (the asset pack module); the Release workflow's "Assistant model" step.
 - Tests: `AssistantTest` (safety, both languages, word-boundary matching, facts, suggestions,
-  never-judge), `GroundingTest`, `ModelFileTest`, `ModelDownloadTest`. Screenshots: `ask_light`, `ask_care_ptBR_dark`,
+  never-judge, nap length), `GroundingTest`, `DigestTest`, `ModelFileTest`, `ModelDownloadTest`. Screenshots: `ask_light`, `ask_care_ptBR_dark`,
   `ask_not_sure_light`, `ask_generated_light`, `model_sheet_play_light`,
   `model_sheet_app_download_light`, `model_sheet_app_downloading_light`,
   `model_sheet_waiting_wifi_ptBR_light`, `model_sheet_ready_ptBR_dark`.

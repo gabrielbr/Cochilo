@@ -23,6 +23,12 @@ class GroundingTest {
         assertEquals(Verdict.OK, Grounding.check("This week the baby napped 4.0 times a day, 1h 05m at the median. Contact naps are normal.", prompt))
     }
 
+    @Test fun a_number_counts_however_it_is_written() {
+        // "1h 05m" in the facts: "5 minutes" and "1 hour" are the same numbers.
+        assertEquals(Verdict.OK, Grounding.check("Naps last about 1 hour and 5 minutes.", prompt))
+        assertEquals(Verdict.OK, Grounding.check("Dorme 9,7 a 15,9 horas.", prompt))
+    }
+
     @Test fun invented_numbers_are_refused() {
         assertEquals(Verdict.INVENTED_NUMBER, Grounding.check("Most babies sleep 18 hours at this age.", prompt))
     }
