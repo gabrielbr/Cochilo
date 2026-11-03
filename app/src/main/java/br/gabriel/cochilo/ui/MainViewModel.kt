@@ -300,6 +300,36 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         return str(R.string.imported, result.added, result.updated)
     }
 
+    // Ask Cochilo, phase 2 (docs/assistant.md): the optional on-device model.
+    private val modelSource = br.gabriel.cochilo.ai.ModelSources.create(ctx)
+    val modelKind: br.gabriel.cochilo.ai.ModelSource.Kind = modelSource.kind
+    val modelState: StateFlow<br.gabriel.cochilo.ai.ModelState> = modelSource.state
+    private var model: br.gabriel.cochilo.ai.LocalModel? = null
+    private var modelFile: java.io.File? = null
+
+    fun refreshModel() = modelSource.refresh()
+    fun downloadModel() = modelSource.download()
+    fun importModel(uri: Uri) = viewModelScope.launch { modelSource.import(uri) }
+    fun removeModel() {
+        model?.close(); model = null; modelFile = null
+        modelSource.remove()
+    }
+
+    /** The model's answer to a grounded [prompt], or null when there's no model or it failed. */
+    suspend fun generate(prompt: String): String? = withContext(Dispatchers.Default) {
+        val ready = modelState.value as? br.gabriel.cochilo.ai.ModelState.Ready ?: return@withContext null
+        runCatching {
+            val m = model?.takeIf { modelFile == ready.file }
+                ?: br.gabriel.cochilo.ai.MediaPipeModel(ctx, ready.file).also { model?.close(); model = it; modelFile = ready.file }
+            m.generate(prompt)
+        }.getOrNull()
+    }
+
+    override fun onCleared() {
+        model?.close()
+        super.onCleared()
+    }
+
     /** A sealed backup waiting for its passphrase; [wrong] after a passphrase that didn't open it. */
     data class SealedImport(val text: String, val wrong: Boolean)
 

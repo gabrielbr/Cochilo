@@ -514,4 +514,33 @@
     <string name="ask_safe_sleep_q">How to sleep safely?</string>
     <string name="ask_safe_sleep_info">On the back, on a firm, flat surface, in the baby\'s own space in your room, with nothing else in the crib: no pillows, bumpers or loose blankets. Not on a sofa or armchair.</string>
     <string name="ask_safe_sleep_source">AAP 2022</string>
+    <!-- Ask Cochilo, phase 2: the optional on-device model (docs/assistant.md). -->
+    <string name="close">Close</string>
+    <string name="caption_ask">Ask Cochilo</string>
+    <string name="model_row">On-device AI (optional)</string>
+    <string name="model_status_absent">Off: answers come from the reviewed list</string>
+    <string name="model_status_getting">Getting the model…</string>
+    <string name="model_status_ready">On, on this phone · %1$d MB</string>
+    <string name="model_status_unavailable">Not in this build</string>
+    <string name="model_status_failed">Didn\'t finish. Tap to try again.</string>
+    <string name="model_title">On-device AI</string>
+    <string name="model_line">Lets Ask Cochilo answer questions beyond its list, with a small AI model that runs on this phone, from your log. Nothing is sent anywhere. It can make mistakes, and it\'s never medical advice.</string>
+    <string name="model_cost">About 550 MB of space. It uses some battery while it answers.</string>
+    <string name="model_download">Download (about 550 MB)</string>
+    <string name="model_downloading">Downloading through the Play Store…</string>
+    <string name="model_downloading_pct">Downloading through the Play Store… %1$d%%</string>
+    <string name="model_copying">Copying the model…</string>
+    <string name="model_copying_pct">Copying the model… %1$d%%</string>
+    <string name="model_import_how">Choose a Gemma .task model file saved on this phone (the guide in the app\'s docs says where to get it).</string>
+    <string name="model_import">Choose the model file</string>
+    <string name="model_ready">Ready on this phone · %1$d MB</string>
+    <string name="model_remove">Remove the model</string>
+    <string name="model_unavailable">This build doesn\'t include the model. Answers come from the reviewed list.</string>
+    <string name="model_failed_not_model">That file isn\'t a model (.task).</string>
+    <string name="model_failed_too_small">That file is too small to be the model.</string>
+    <string name="model_failed_no_space">There isn\'t enough space on the phone.</string>
+    <string name="model_failed_download">The download didn\'t finish. Try again on Wi-Fi.</string>
+    <string name="model_failed_other">It didn\'t work. Try again.</string>
+    <string name="ask_thinking">Thinking, on this phone…</string>
+    <string name="ask_generated_label">Written on this phone by a small AI model, from your log. It can make mistakes.</string>
 </resources>

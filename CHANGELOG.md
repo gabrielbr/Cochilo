@@ -3,6 +3,15 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.30.0 — 2026-11-03
+
+**On-device AI for Ask Cochilo (optional).** Settings › Ask Cochilo › On-device AI: get a small AI
+model (about 550 MB) that runs on the phone and answers questions beyond Ask Cochilo's list, from
+your log. On Google Play the Play Store downloads it; in the family build you choose the model file.
+Its answers use only your week's numbers and the reviewed answers, are checked before they're
+shown (no invented numbers, no medicine, no judging), and are always labelled as written by the
+model. Nothing is sent anywhere, and health questions still go to a person. `docs/assistant.md`.
+
 ## 0.29.0 — 2026-11-03
 
 **Ask Cochilo.** Patterns › Questions about sleep: this week in four plain lines, then questions

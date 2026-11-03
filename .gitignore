@@ -156,3 +156,6 @@ local.properties
 *.iml
 captures/
 .kotlin/
+
+# Ask Cochilo model files (docs/assistant.md): never committed
+assistant_model/src/main/assets/*.task

@@ -55,6 +55,9 @@ fun SettingsScreen(
     /** Settings › Data › Protect backups (docs/backup.md). */
     passphraseSet: Boolean = false,
     onPassphrase: () -> Unit = {},
+    /** Settings › Ask Cochilo › On-device AI (docs/assistant.md); null hides the row. */
+    modelStatus: String? = null,
+    onModel: () -> Unit = {},
 ) {
     val context = LocalContext.current
     val f = Format(context, zone)
@@ -126,6 +129,13 @@ fun SettingsScreen(
                 stringResource(R.string.celebrations), stringResource(R.string.celebrations_meta),
                 celebrations, onCelebrations,
             )
+        }
+
+        if (modelStatus != null) {
+            Caption(stringResource(R.string.caption_ask))
+            RowGroup {
+                ListRow(stringResource(R.string.model_row), meta = modelStatus, onClick = onModel, trailing = chevron)
+            }
         }
 
         Caption(stringResource(R.string.caption_data))

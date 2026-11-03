@@ -90,6 +90,8 @@ fun CochiloRoot(vm: MainViewModel) {
     var editingRitual by remember { mutableStateOf(false) }
     var editingPassphrase by remember { mutableStateOf(false) }
     var asking by rememberSaveable { mutableStateOf(false) }
+    var showingModel by remember { mutableStateOf(false) }
+    val pickModel = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { it?.let(vm::importModel) }
     val snackbar = remember { SnackbarHostState() }
 
     val exportJson = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { it?.let(vm::exportJson) }
@@ -144,7 +146,8 @@ fun CochiloRoot(vm: MainViewModel) {
                         header = { BackHeader(stringResource(R.string.ask_title), stringResource(R.string.back)) { asking = false } },
                     ) {
                         val facts = remember(log, now, weeks) { br.gabriel.cochilo.domain.assistant.Assistant.facts(log, weeks, now, zone, prediction) }
-                        br.gabriel.cochilo.ui.screens.AskScreen(facts, f)
+                        val ready = vm.modelState.collectAsState().value is br.gabriel.cochilo.ai.ModelState.Ready
+                        br.gabriel.cochilo.ui.screens.AskScreen(facts, f, generate = if (ready) vm::generate else null)
                     }
                 } else if (settings) {
                     br.gabriel.cochilo.ui.kit.AppShell(
@@ -158,6 +161,8 @@ fun CochiloRoot(vm: MainViewModel) {
                             onEditRitual = { editingRitual = true },
                             onExportReport = { exportReport.launch("cochilo-report-${LocalDate.now(zone)}.pdf") },
                             passphraseSet = vm.backupPassphrase.collectAsState().value != null,
+                            modelStatus = br.gabriel.cochilo.ui.screens.modelStatus(vm.modelState.collectAsState().value),
+                            onModel = { vm.refreshModel(); showingModel = true },
                             onPassphrase = { editingPassphrase = true },
                             celebrations = vm.celebrations.collectAsState().value,
                             onCelebrations = vm::setCelebrations,
@@ -327,6 +332,16 @@ fun CochiloRoot(vm: MainViewModel) {
     }
     if (vm.ticks.collectAsState().value) {
         br.gabriel.cochilo.ui.screens.TicksSheet(onDismiss = vm::ticksSeen)
+    }
+    if (showingModel) {
+        br.gabriel.cochilo.ui.screens.ModelSheet(
+            vm.modelState.collectAsState().value, vm.modelKind,
+            onDownload = vm::downloadModel,
+            // Model files come as .task (zip) or a generic type, depending on the file picker.
+            onImport = { pickModel.launch(arrayOf("application/octet-stream", "application/zip", "*/*")) },
+            onRemove = vm::removeModel,
+            onDismiss = { showingModel = false },
+        )
     }
     if (editingPassphrase) {
         br.gabriel.cochilo.ui.screens.PassphraseSheet(vm.backupPassphrase.collectAsState().value, onSave = vm::setBackupPassphrase, onDismiss = { editingPassphrase = false })
