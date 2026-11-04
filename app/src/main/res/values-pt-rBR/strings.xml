@@ -578,10 +578,12 @@
     <string name="model_ready">Pronta neste celular · %1$d MB</string>
     <string name="model_remove">Remover o modelo</string>
     <string name="model_unavailable">Esta versão não inclui o modelo. As respostas vêm da lista revisada.</string>
-    <string name="model_failed_not_model">Esse arquivo não é um modelo (.task).</string>
+    <string name="model_failed_not_model">Esse arquivo não é um modelo (.litertlm).</string>
     <string name="model_failed_too_small">Esse arquivo é pequeno demais para ser o modelo.</string>
     <string name="model_failed_no_space">Não há espaço suficiente no celular.</string>
     <string name="model_failed_download">O download não terminou. Tente de novo no Wi-Fi.</string>
+    <string name="model_failed_outdated">Este celular tem o modelo antigo. O novo substitui e responde do mesmo jeito.</string>
+    <string name="model_status_outdated">Há um modelo mais novo. Toque para baixar.</string>
     <string name="model_failed_other">Não deu certo. Tente de novo.</string>
     <string name="model_terms">Gemma, o modelo aberto do Google, sob os Termos de Uso do Gemma (ai.google.dev/gemma/terms).</string>
     <string name="model_wifi_line">Baixa pelo Wi-Fi e continua mesmo se você fechar o app.</string>

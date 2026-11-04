@@ -11,4 +11,6 @@
     <string name="finish_side">Terminar %1$s</string>
     <string name="no_phone">Abra o Cochilo no celular, por perto.</string>
     <string name="no_baby">Adicione o bebê no celular primeiro.</string>
+    <string name="last_spoken">%1$s, usado por último</string>
+    <string name="finish">Terminar</string>
 </resources>

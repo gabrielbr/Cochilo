@@ -28,7 +28,7 @@ fun modelStatus(state: ModelState): String = when (state) {
     is ModelState.Getting -> stringResource(R.string.model_status_getting)
     is ModelState.Ready -> stringResource(R.string.model_status_ready, megabytes(state.bytes))
     ModelState.Unavailable -> stringResource(R.string.model_status_unavailable)
-    is ModelState.Failed -> stringResource(R.string.model_status_failed)
+    is ModelState.Failed -> stringResource(if (state.reason == ModelState.Reason.OUTDATED) R.string.model_status_outdated else R.string.model_status_failed)
 }
 
 private fun megabytes(bytes: Long) = (bytes / (1024 * 1024)).toInt()
@@ -132,6 +132,7 @@ private fun failedRes(r: ModelState.Reason): Int = when (r) {
     ModelState.Reason.NOT_PUBLISHED -> R.string.model_failed_not_published
     ModelState.Reason.CHECK -> R.string.model_failed_check
     ModelState.Reason.OTHER -> R.string.model_failed_other
+    ModelState.Reason.OUTDATED -> R.string.model_failed_outdated
 }
 
 /** "550 MB", "3.5 GB": the model's size in the phone's own units (0.55.0). */

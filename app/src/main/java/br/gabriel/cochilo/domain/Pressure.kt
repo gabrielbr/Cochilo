@@ -64,6 +64,14 @@ object Pressure {
         val window = windows.sorted().let { if (it.isEmpty()) null else it[it.size / 2] }
             ?: Reference.priorFor(ageWeeks).wakeForSlot(1, false).toDouble()
         val nap = DayPlan(zone).napMinutes(events.filter { it.type == EventType.SLEEP }, 1, ageWeeks).toDouble()
-        return curve(events, from, from + DAY, now, window, nap)
+        // The line starts at this morning's wake (0.56.0): before it is the night, whose wakings
+        // made the midnight level look arbitrary. No morning wake yet: nothing to draw.
+        val wake = morningWake(events, from, now, zone) ?: return emptyList()
+        return curve(events, wake, from + DAY, now, window, nap)
     }
+
+    /** When the night ended today: the end of today's last night sleep, if it has ended. */
+    fun morningWake(events: List<Event>, from: Long, now: Long, zone: java.time.ZoneId): Long? =
+        events.filter { it.type == EventType.SLEEP && it.isNightSleep(zone) && it.end != null && it.end in from..now }
+            .maxOfOrNull { it.end!! }
 }

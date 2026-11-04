@@ -44,9 +44,10 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
         run: |
-          OUT=assistant_model/src/main/assets/model.task
-          if gh release download assistant-model-v1 -p "gemma3-1b-it-int4.task*" -D model_dl 2>/dev/null; then
-            (cd model_dl && sha256sum -c gemma3-1b-it-int4.task.sha256) && mv model_dl/gemma3-1b-it-int4.task "$OUT"
+          # Since 0.56.0 the pack carries the LiteRT-LM file, the only model the app runs.
+          OUT=assistant_model/src/main/assets/model.litertlm
+          if gh release download assistant-model-v1 -p "gemma3-1b-it-int4.litertlm*" -D model_dl 2>/dev/null; then
+            (cd model_dl && sha256sum -c gemma3-1b-it-int4.litertlm.sha256) && mv model_dl/gemma3-1b-it-int4.litertlm "$OUT"
           elif [ -n "$MODEL_URL" ]; then
             AUTH=(); if [ -n "$HF_TOKEN" ]; then AUTH=(-H "Authorization: Bearer $HF_TOKEN"); fi
             curl -fL --retry 3 "${AUTH[@]}" -o "$OUT" "$MODEL_URL"

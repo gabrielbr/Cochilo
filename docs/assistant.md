@@ -73,8 +73,10 @@ build**. Optional and off until the parent gets the model; phase 1 is always the
   0.16.1, Google's newer runtime) runs `.litertlm` files. `LocalModels.open` picks it when the file
   starts with "LITERTLM". It has no tokenizer call, so prompts are measured at one token per three
   characters (`ModelFile.approxTokens`), which over-counts and trims a little early.
-- **MediaPipe LLM Inference** (`com.google.mediapipe:tasks-genai`) still runs the `.task` file, so
-  phones that got the model before 0.55.0 keep it, and the Play asset pack still carries `.task`.
+- **MediaPipe** ran the older `.task` file until 0.56.0, when it was removed: one runtime, and the
+  family APK went from 78 MB to 31 MB. A phone that still has the `.task` sees "A newer model is
+  ready" and one tap downloads the `.litertlm`, which replaces it. The Play asset pack carries
+  `model.litertlm` since 0.56.0.
 
 Neither has permissions of its own. Kotlin went from 2.0.21 to 2.2.21 (KSP 2.2.21-2.0.5, Room
 2.7.2) for LiteRT-LM, whose newer releases need Kotlin 2.4.
@@ -85,7 +87,6 @@ Neither has permissions of its own. Kotlin went from 2.0.21 to 2.2.21 (KSP 2.2.2
 |---|---|---|
 | 7 GB of memory or more (an 8 GB phone) | Gemma 3n E2B, `.litertlm`, in two parts | about 3.5 GB |
 | Any | Gemma 3 1B, `.litertlm` | about 600 MB |
-| Any | Gemma 3 1B, `.task` (the one published before 0.55.0) | about 550 MB |
 
 GitHub takes at most 2 GB per file, so Gemma 3n is published in two parts (`.part1`, `.part2`)
 with the whole file's `.sha256`. The app downloads them one after the other through the download
@@ -93,21 +94,22 @@ manager, joins them, and checks the whole. The sheet and Ask's row say the size 
 phone would get: on an 8 GB phone the sheet reads which one is published when it opens, one
 request with no data in it, never at start.
 
-**Publishing:** the **Publish assistant model** workflow now also takes the 1B `.litertlm` and,
-with its "gemma3n" box ticked, Gemma 3n (which needs the HF token's account to accept Gemma's terms
-on its page too). Until it runs, phones keep downloading the `.task`.
+**Publishing:** the **Publish assistant model** workflow takes the 1B `.litertlm` and, with its
+"gemma3n" box ticked, Gemma 3n (which needs the HF token's account to accept Gemma's terms on its
+page too). Both were published on 2026-11-04: `gemma3-1b-it-int4.litertlm` (584,417,280 bytes) and
+Gemma 3n in two parts (1,992,294,400 + 1,663,533,056 bytes), each with its `.sha256`.
 
-**Still to measure on real phones:** speed and battery of LiteRT-LM against MediaPipe on a 4 GB
-phone, and Gemma 3n on an 8 GB one.
+**On real phones:** the plan and what passes are in [testing-on-device.md](testing-on-device.md).
 
-**Model:** a small Gemma as a `.task` file (Gemma 3 1B, 4-bit, about 550 MB). The model is never in
+**Model:** a small Gemma as a `.litertlm` file since 0.56.0 (Gemma 3 1B, 4-bit, about 600 MB; or
+Gemma 3n on an 8 GB phone; a `.task` before). The model is never in
 git and never inside the APK.
 
 | | **play** | **github** (family) |
 |---|---|---|
 | How the model arrives | An on-demand **Play asset pack** (`:assistant_model`): the Play Store downloads it; the app only asks for it | Since 0.37.0 the **app downloads it** with one tap (Settings › On-device AI › Download, or from Ask under a reply it couldn't give), through Android's download manager: Wi-Fi only unless she taps "Download now on mobile data", in the background, with the system's progress notification, resuming after a dropped connection. "Choose a file instead" still copies a file already on the phone |
-| Where it comes from | The Release workflow takes it from the `assistant-model-v1` pre-release (checked against its `.sha256`), or from the `ASSISTANT_MODEL_URL` secret; without either the pack ships empty and the app says "Not in this build" | This repository's `assistant-model-v1` **pre-release** (`gemma3-1b-it-int4.task` and its `.sha256`), put there once by the **Publish assistant model** workflow from Hugging Face (`litert-community/Gemma3-1B-IT`, which is gated: the workflow needs an `HF_TOKEN` from an account that accepted Gemma's terms). A pre-release, so self-update never offers it. Until it's published, Download says "The model isn't ready to download yet" |
-| Checks | The pack's file must exist | A download must not be text (an error page), be at least 50 MB, and match the published SHA-256 (`ai/ModelDownload.kt`, `ModelDownloadTest`); a chosen file must not be text, be at least 50 MB and fit in free space (`ai/ModelFile.kt`). Google's current Gemma `.task` isn't a zip, so the container isn't checked (0.37.1); the runtime refuses what it can't load |
+| Where it comes from | The Release workflow takes it from the `assistant-model-v1` pre-release (checked against its `.sha256`), or from the `ASSISTANT_MODEL_URL` secret; without either the pack ships empty and the app says "Not in this build" | This repository's `assistant-model-v1` **pre-release** (`gemma3-1b-it-int4.litertlm` and its `.sha256`; Gemma 3n in two parts; the older `.task` stays for phones not yet updated), put there once by the **Publish assistant model** workflow from Hugging Face (`litert-community/Gemma3-1B-IT`, which is gated: the workflow needs an `HF_TOKEN` from an account that accepted Gemma's terms). A pre-release, so self-update never offers it. Until it's published, Download says "The model isn't ready to download yet" |
+| Checks | The pack's file must exist | A download must not be text (an error page), be at least 50 MB, and match the published SHA-256 (`ai/ModelDownload.kt`, `ModelDownloadTest`); a chosen file must start with "LITERTLM" (an older `.task` is said to be outdated, 0.56.0), be at least 50 MB and fit in free space (`ai/ModelFile.kt`) |
 | Remove | Remove the model (the pack is removed) | Remove the model, or Stop the download (the file is deleted) |
 | Licence | Gemma Terms of Use, named in the sheet | The same; `GEMMA-NOTICE.txt` sits beside the file on the pre-release |
 

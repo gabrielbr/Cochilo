@@ -170,9 +170,8 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
 
     // Ask Cochilo, phase 2: the on-device model runtime (docs/assistant.md). No permissions.
-    implementation("com.google.mediapipe:tasks-genai:0.10.35")
     // LiteRT-LM (0.55.0, docs/assistant.md): Google's newer runtime, for .litertlm files. 0.16.1 is
-    // the last built with this project's Kotlin 2.2.21; MediaPipe stays for .task files.
+    // the last built with this project's Kotlin 2.2.21. The only runtime since 0.56.0.
     implementation("com.google.ai.edge.litertlm:litertlm-android:0.16.1")
     // The play build gets the model as a Play asset pack.
     "playImplementation"("com.google.android.play:asset-delivery:2.3.0")

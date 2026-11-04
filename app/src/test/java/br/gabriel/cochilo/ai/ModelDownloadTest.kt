@@ -23,9 +23,9 @@ class ModelDownloadTest {
     }
 
     @Test fun verify_checks_the_header_the_size_and_the_hash() {
-        val f = File.createTempFile("model", ".task")
+        val f = File.createTempFile("model", ".litertlm")
         try {
-            f.writeBytes(byteArrayOf('P'.code.toByte(), 'K'.code.toByte()) + ByteArray(10))
+            f.writeBytes("LITERTLM".toByteArray() + ByteArray(10))
             assertEquals(ModelState.Reason.TOO_SMALL, ModelDownload.verify(f, ModelDownload.sha256(f)))
             f.writeBytes("<html>Not Found</html>".toByteArray())
             assertEquals(ModelState.Reason.NOT_A_MODEL, ModelDownload.verify(f, ModelDownload.sha256(f)))
@@ -33,11 +33,11 @@ class ModelDownloadTest {
         } finally { f.delete() }
     }
 
-    /** 0.55.0: Gemma 3n first on a phone with 8 GB, then the 1B for LiteRT-LM, then the old .task. */
+    /** Gemma 3n first on a phone with 8 GB, then the 1B for LiteRT-LM (0.56.0: no more .task). */
     @Test fun the_model_follows_the_phones_memory() {
         val gb = 1024L * 1024 * 1024
         assertEquals(ModelDownload.Choice.entries.toList(), ModelDownload.choices(8 * gb - 600 * 1024 * 1024))
-        assertEquals(listOf(ModelDownload.Choice.GEMMA_1B, ModelDownload.Choice.GEMMA_1B_TASK), ModelDownload.choices(4 * gb))
+        assertEquals(listOf(ModelDownload.Choice.GEMMA_1B), ModelDownload.choices(4 * gb))
         // Gemma 3n is over GitHub's 2 GB per file, so it comes in two parts.
         assertEquals(2, ModelDownload.Choice.GEMMA_3N.parts.size)
         assertEquals("https://github.com/gabrielbr/Cochilo/releases/download/assistant-model-v1/gemma-3n-E2B-it-int4.litertlm.sha256",

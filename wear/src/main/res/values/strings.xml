@@ -11,4 +11,6 @@
     <string name="finish_side">Finish %1$s</string>
     <string name="no_phone">Open Cochilo on the phone, nearby.</string>
     <string name="no_baby">Add the baby on the phone first.</string>
+    <string name="last_spoken">%1$s, used last</string>
+    <string name="finish">Finish</string>
 </resources>

@@ -106,4 +106,13 @@ class ClockTest {
         assertTrue(c.zipWithNext().filter { (a, _) -> a.at >= at(0, 9) }.all { (a, b) -> b.percent >= a.percent })
         assertTrue(Pressure.curve(emptyList(), 0, 1, 1, 120.0, 60.0).isEmpty())
     }
+
+    /** 0.56.0: today's line starts at the morning wake, empty, and is absent before it. */
+    @Test fun todays_pressure_starts_at_the_morning_wake() {
+        val night = Event(type = EventType.SLEEP, start = at(-1, 19), end = at(0, 6, 30), night = true)
+        val c = Pressure.today(listOf(night), 20, at(0, 9), zone)
+        assertEquals(at(0, 6, 30), c.first().at)
+        assertTrue("starts low: ${c.first().percent}%", c.first().percent < 20)
+        assertTrue(Pressure.today(listOf(night.copy(end = null)), 20, at(0, 5), zone).isEmpty())
+    }
 }

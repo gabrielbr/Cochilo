@@ -68,6 +68,12 @@ Code: `lastOf`, `lastKind`, `lastKindAmong`, `Event.rememberedFrom` in `domain/Q
 (tested in `QuickLogTest`); the Log menu in `LogMenu.kt` (Today's rows until 0.39.0); the sheet's line in `Sheets.kt`.
 This replaced the earlier "next: other breast" suggestion: the app shows what happened, she decides.
 
+## Every audit green (0.56.0)
+
+- **The watch tile:** the same taps; the Last mark is drawn; the running side reads "Finish".
+- **The older AI model:** Settings › On-device AI ("A newer model is ready") › Download: 2 taps,
+  once, the same as a first download. Nothing else changes.
+
 ## The baby's clock and sleep pressure (0.54.0)
 
 [prediction.md](prediction.md). No tap added. The pressure line sits on the Day tab, today, under
@@ -470,7 +476,7 @@ behind a sign-in and Google's terms, and then to the file picker. Now the app do
 | Stop | Stop the download (1), or cancel it from the notification |
 
 It's Android's download manager: it keeps going with the app closed, shows its progress in the
-notification and resumes after a dropped connection. When it arrives it's checked (a `.task`, the
+notification and resumes after a dropped connection. When it arrives it's checked (a `.litertlm` since 0.56.0, the
 right size, the published SHA-256) before Ask uses it. "Choose a file instead" stays, one tap
 further, for a phone with the file already on it. The play build was already one tap (the Play
 Store downloads it); it now says when it's waiting for Wi-Fi too.

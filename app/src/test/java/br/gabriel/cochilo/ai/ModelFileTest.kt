@@ -11,13 +11,14 @@ import java.io.File
 class ModelFileTest {
     private val zip = byteArrayOf('P'.code.toByte(), 'K'.code.toByte())
 
-    @Test fun only_a_task_file_of_a_real_size_is_taken() {
-        assertNull(ModelFile.check(zip, 600L * 1024 * 1024))
-        // Google's current Gemma .task isn't a zip: a binary header is fine.
-        assertNull(ModelFile.check(byteArrayOf(0x1C, 0x00, 0x00, 0x00, 'T'.code.toByte()), 600L * 1024 * 1024))
+    @Test fun only_a_litertlm_file_of_a_real_size_is_taken() {
+        assertNull(ModelFile.check("LITERTLM\u0001".toByteArray(), 600L * 1024 * 1024))
+        // 0.56.0: an older .task (a zip, or Google's binary header) is outdated, not taken.
+        assertEquals(ModelState.Reason.OUTDATED, ModelFile.check(zip, 600L * 1024 * 1024))
+        assertEquals(ModelState.Reason.OUTDATED, ModelFile.check(byteArrayOf(0x1C, 0x00, 0x00, 0x00, 'T'.code.toByte()), 600L * 1024 * 1024))
         assertEquals(ModelState.Reason.NOT_A_MODEL, ModelFile.check("{}".toByteArray(), 600L * 1024 * 1024))
         assertEquals(ModelState.Reason.NOT_A_MODEL, ModelFile.check("  <!DOCTYPE html>".toByteArray(), 600L * 1024 * 1024))
-        assertEquals(ModelState.Reason.TOO_SMALL, ModelFile.check(zip, 1024))
+        assertEquals(ModelState.Reason.TOO_SMALL, ModelFile.check("LITERTLM".toByteArray(), 1024))
         assertFalse(ModelFile.looksLikeTask(ByteArray(0)))
     }
 
@@ -34,7 +35,7 @@ class ModelFileTest {
         dir.deleteRecursively()
     }
 
-    /** 0.55.0: a .litertlm file goes to LiteRT-LM, by its first bytes; anything else to MediaPipe. */
+    /** A .litertlm file is told by its first bytes (0.55.0). */
     @Test fun the_runtime_is_picked_by_the_files_first_bytes() {
         assertTrue(ModelFile.isLiteRtLm("LITERTLM\u0001\u0000".toByteArray()))
         assertFalse(ModelFile.isLiteRtLm(zip))
