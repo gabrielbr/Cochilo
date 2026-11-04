@@ -82,12 +82,12 @@ fun SettingsScreen(
                 Hairline()
                 // The avatar: how the baby looks (the look picker in a sheet).
                 ListRow(
-                    stringResource(R.string.look_title, baby.name), meta = stringResource(R.string.look_row_meta),
+                    stringResource(R.string.look_title, baby.name),
                     leading = { br.gabriel.cochilo.ui.kit.BabyAvatar(br.gabriel.cochilo.domain.BabyLook.decode(baby.look), size = br.gabriel.cochilo.ui.theme.CTokens.Size.kindBadgeLead) },
                     onClick = onEditLook, trailing = chevron,
                 )
                 Hairline()
-                ListRow(stringResource(R.string.ritual_title), meta = stringResource(R.string.ritual_row_meta), onClick = onEditRitual, trailing = chevron)
+                ListRow(stringResource(R.string.ritual_title), onClick = onEditRitual, trailing = chevron)
             }
             Hairline()
             ListRow(stringResource(R.string.birth_date), value = baby?.let { f.day(localDate(it.birthDate, zone)) } ?: stringResource(R.string.not_set), onClick = onEditBaby, trailing = chevron)
@@ -130,7 +130,7 @@ fun SettingsScreen(
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 Hairline()
-                ListRow(stringResource(R.string.language), meta = stringResource(R.string.language_meta), trailing = chevron, onClick = {
+                ListRow(stringResource(R.string.language), trailing = chevron, onClick = {
                     context.startActivity(
                         Intent(Settings.ACTION_APP_LOCALE_SETTINGS, Uri.fromParts("package", context.packageName, null))
                     )
@@ -171,11 +171,11 @@ fun SettingsScreen(
 
         Caption(stringResource(R.string.caption_data))
         RowGroup {
-            ListRow(stringResource(R.string.export_json), meta = stringResource(R.string.export_json_meta), onClick = onExportJson, trailing = chevron)
+            ListRow(stringResource(R.string.export_json), onClick = onExportJson, trailing = chevron)
             Hairline()
-            ListRow(stringResource(R.string.export_csv), meta = stringResource(R.string.export_csv_meta), onClick = onExportCsv, trailing = chevron)
+            ListRow(stringResource(R.string.export_csv), onClick = onExportCsv, trailing = chevron)
             Hairline()
-            ListRow(stringResource(R.string.export_report), meta = stringResource(R.string.export_report_meta), onClick = onExportReport, trailing = chevron)
+            ListRow(stringResource(R.string.export_report), onClick = onExportReport, trailing = chevron)
             Hairline()
             ListRow(
                 stringResource(R.string.passphrase_row),

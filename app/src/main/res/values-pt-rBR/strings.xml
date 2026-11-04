@@ -153,12 +153,9 @@
     <string name="theme_light">Claro</string>
     <string name="theme_dark">Escuro</string>
     <string name="language">Idioma</string>
-    <string name="language_meta">English ou Português, nos ajustes de apps do celular</string>
     <string name="caption_data">Seus dados</string>
     <string name="export_json">Exportar backup</string>
-    <string name="export_json_meta">Tudo, em JSON, para importar depois ou em outro celular</string>
     <string name="export_csv">Exportar planilha</string>
-    <string name="export_csv_meta">CSV para Planilhas ou Excel (só exporta)</string>
     <string name="import_json">Importar backup</string>
     <string name="import_json_meta">Adiciona o que é novo e mantém a edição mais recente. Nunca apaga.</string>
     <string name="caption_about">Sobre</string>
@@ -311,7 +308,6 @@
     <string name="gender_boy">Menino</string>
     <string name="gender_unsaid">Prefiro não dizer</string>
     <string name="avatar_of">Desenho de %1$s</string>
-    <string name="look_row_meta">Tom de pele, cabelo, menina ou menino</string>
     <!-- Comemorações (docs/celebrations.md): calorosas, curtas, nunca uma promessa. %1$s é o nome do bebê. -->
     <string name="cheer_full_nap">Uma soneca inteira. Muito bem, vocês dois.</string>
     <string name="cheer_on_time">Na hora certinha para %1$s.</string>
@@ -386,7 +382,6 @@
     <string name="pumped_split">Dia %1$d ml · noite %2$d ml</string>
     <!-- O montador de rituais (docs/rituals.md). -->
     <string name="ritual_title">Passos da rotina</string>
-    <string name="ritual_row_meta">Escreva uma vez; marque durante a rotina</string>
     <string name="ritual_line">Os mesmos passos, na mesma ordem, toda vez. Marque conforme for fazendo.</string>
     <string name="ritual_steps">Passos</string>
     <string name="ritual_new_step">Novo passo</string>
@@ -406,7 +401,6 @@
     </string-array>
     <!-- O relatório para imprimir (docs/report.md). -->
     <string name="export_report">Relatório para o médico (PDF)</string>
-    <string name="export_report_meta">Uma página: a semana, o que mudou, duas semanas de sono</string>
     <string name="report_title">%1$s · relatório de sono</string>
     <string name="report_period">%1$s a %2$s</string>
     <string name="report_rhythm">Sono, últimos %1$d dias</string>

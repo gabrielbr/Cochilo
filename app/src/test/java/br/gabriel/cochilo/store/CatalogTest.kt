@@ -22,7 +22,7 @@ class CatalogTest {
      * (in-app-marketing.md §12) turns them on one at a time: naps in arms first (0.36.0).
      */
     @Test fun only_the_moments_tata_signed_off_are_approved() {
-        assertEquals(setOf(Moment.ARMS_NAPS), catalog.approved)
+        assertEquals(Moment.entries.toSet(), catalog.approved)
     }
 
     /** All twelve notes approved for the From Tatá tab (the owner, 0.44.0); one carries a product. */

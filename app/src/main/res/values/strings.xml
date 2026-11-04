@@ -165,12 +165,9 @@
     <string name="theme_light">Light</string>
     <string name="theme_dark">Dark</string>
     <string name="language">Language</string>
-    <string name="language_meta">English or Português, from the phone\'s app settings</string>
     <string name="caption_data">Your data</string>
     <string name="export_json">Export backup</string>
-    <string name="export_json_meta">Everything, as JSON, to import later or on another phone</string>
     <string name="export_csv">Export spreadsheet</string>
-    <string name="export_csv_meta">CSV for Sheets or Excel (export only)</string>
     <string name="import_json">Import backup</string>
     <string name="import_json_meta">Adds what\'s new and keeps the newest edit. Never deletes.</string>
     <string name="caption_about">About</string>
@@ -336,7 +333,6 @@
     <string name="gender_boy">Boy</string>
     <string name="gender_unsaid">Rather not say</string>
     <string name="avatar_of">Drawing of %1$s</string>
-    <string name="look_row_meta">Skin tone, hair, girl or boy</string>
     <!-- Celebrations (docs/celebrations.md): warm, short, never a promise. %1$s is the baby's name. -->
     <string name="cheer_full_nap">A full nap. Well done, both of you.</string>
     <string name="cheer_on_time">Right on time for %1$s.</string>
@@ -411,7 +407,6 @@
     <string name="pumped_split">Day %1$d ml · night %2$d ml</string>
     <!-- The ritual builder (docs/rituals.md). -->
     <string name="ritual_title">Routine steps</string>
-    <string name="ritual_row_meta">Write them once; tick them in the routine</string>
     <string name="ritual_line">The same steps, in the same order, every time. Tick them as you go.</string>
     <string name="ritual_steps">Steps</string>
     <string name="ritual_new_step">New step</string>
@@ -431,7 +426,6 @@
     </string-array>
     <!-- The printable report (docs/report.md). -->
     <string name="export_report">Report for the doctor (PDF)</string>
-    <string name="export_report_meta">One page: the week, what changed, two weeks of sleep</string>
     <string name="report_title">%1$s · sleep report</string>
     <string name="report_period">%1$s to %2$s</string>
     <string name="report_rhythm">Sleep, last %1$d days</string>

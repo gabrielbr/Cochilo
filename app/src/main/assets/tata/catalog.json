@@ -12,19 +12,19 @@
       "moment": "ROUTINE_STEADY",
       "product": "tata_naninha",
       "path": "acessorios/tata-naninha/",
-      "approved": false
+      "approved": true
     },
     {
       "moment": "LITTLE_DAYLIGHT",
       "product": "tata_facil_sling",
       "path": "tata-facil-sling/",
-      "approved": false
+      "approved": true
     },
     {
       "moment": "SIX_MONTHS",
       "product": "tata_to",
       "path": "acessorios/tata-to-brinquedos-exploracao-conexao-olhar-terapia-ocupacional/",
-      "approved": false
+      "approved": true
     }
   ],
   "notes": [

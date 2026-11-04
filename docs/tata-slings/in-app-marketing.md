@@ -257,6 +257,22 @@ the words as drafted. It is the first Tatá card a parent can actually see.
 - **Turning on the next:** set that moment's `approved` to `true` in `assets/tata/catalog.json`,
   add it to `CatalogTest.only_the_moments_tata_signed_off_are_approved`, and note the date here.
 
+### The other three moments (0.51.0)
+
+**Tatá approved the routine, daylight and six-month moments** (through the owner, 2026-11-04), with
+the words as drafted. All four moments are now on (`catalog.json`, `CatalogTest`). Every rule in §2
+still holds, and the one-note-a-week cap keeps them one at a time for the parent: at most one new
+note a week, never the same product twice in a row, "Don't show again" final.
+
+| Moment | Campaign |
+|---|---|
+| `ROUTINE_STEADY` (the Naninha) | `suggestion_routine_steady` |
+| `LITTLE_DAYLIGHT` (the sling, for a walk) | `suggestion_little_daylight` |
+| `SIX_MONTHS` (TatáT.O. toys) | `suggestion_six_months` |
+
+The shop reads each campaign from 0.51.0's release date; that starts each moment's three months
+in §6.
+
 ## 13. From Tatá, a tab of its own (0.44.0)
 
 The owner: "The card with Tatá's tips and content, I can't find. This should be a top level menu
@@ -291,12 +307,12 @@ waiting for approval, so none ever showed, and the one live moment fires only un
 1. Which products and URLs belong in the first catalog, and their age ranges?
 2. Is there an app-user coupon, and what is it?
 3. Will she write the notes by age (about 12 short notes for 0–24 months)?
-4. Which of the §3.2 moments feel right to her, and which feel pushy? (Naps in arms: approved,
-   2026-11-03.)
+4. Which of the §3.2 moments feel right to her, and which feel pushy? (All four approved: naps in arms
+   2026-11-03, the other three 2026-11-04.)
 5. Should the "Sugestões da Tatá" switch start on or off? (Recommendation: on, with the line
    "Às vezes, uma dica da Tatá com um produto da loja. Desligue quando quiser.")
 6. Folhagem is now "Malha NATURA" in the shop: should the app's fabric be renamed Natura?
-7. Are the four draft notes (§10) in her voice? Which may be switched on? (Naps in arms is on,
-   as drafted; the routine, daylight and six-month notes are still waiting.)
+7. Are the four draft notes (§10) in her voice? Which may be switched on? (All four are on, as
+   drafted, since 0.51.0.)
 8. Should the app suggest a swaddle (it would need a "startle" log), or a carrier for a bigger baby (not in the shop today)?
 9. The twelve age-note drafts (§11): rewrite, approve or drop each one; and does the 1–2 month note keep its sling link?
