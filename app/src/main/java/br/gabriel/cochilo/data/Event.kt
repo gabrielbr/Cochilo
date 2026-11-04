@@ -72,6 +72,11 @@ data class Event(
     val night: Boolean? = null,
     /** On a night's last sleep: the baby was up for the day when it ended (the night is over). */
     val upForDay: Boolean? = null,
+    /**
+     * Who logged it, for two phones that sync (0.52.0, docs/sync.md): the parent's initial. Null
+     * when unknown or before partner sync; "" for an entry from the partner's phone without one.
+     */
+    val loggedBy: String? = null,
 ) {
     val running: Boolean get() = type.hasDuration && end == null
     fun durationMs(now: Long): Long = ((end ?: now) - start).coerceAtLeast(0)

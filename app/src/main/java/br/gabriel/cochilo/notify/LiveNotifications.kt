@@ -40,7 +40,7 @@ import java.time.ZoneId
  */
 object LiveNotifications {
     const val CHANNEL = "live"
-    private const val ID_STRETCH = 1
+    const val ID_STRETCH = 1
     private const val TIMER_BASE = 100
     /** How often the bar moves while something is live. The header's chronometer ticks by itself. */
     private const val TICK_MS = 5 * 60_000L
@@ -70,6 +70,8 @@ object LiveNotifications {
         val baby = app.db.baby().get()
         if (!app.prefs.liveNotification.value || baby == null || !canPost(context)) {
             clearAll(context)
+            // Keeping in sync with Cochilo closed needs a notification of its own then (0.52.0).
+            if (br.gabriel.cochilo.sync.SyncBackground.running) post(nm) { ID_STRETCH to keepNotification(context, app.sync.state.value.partner) }
             return
         }
         createChannel(context)
@@ -84,6 +86,7 @@ object LiveNotifications {
         val stretch = liveStretch(events, prediction, zone, now)
         val waking = br.gabriel.cochilo.domain.Nights.openNight(events, now)?.takeIf { stretch?.asleep == false }
         if (stretch != null) post(nm) { stretchNotification(context, stretch, prediction, f, palette, zone, now, waking) }
+        else if (br.gabriel.cochilo.sync.SyncBackground.running) post(nm) { ID_STRETCH to keepNotification(context, app.sync.state.value.partner) }
         else nm.cancel(ID_STRETCH)
 
         val timers = events.filter { it.running && it.type != EventType.SLEEP }
@@ -93,6 +96,17 @@ object LiveNotifications {
         nm.activeNotifications.map { it.id }.filter { it >= TIMER_BASE && it !in keep }.forEach { nm.cancel(it) }
 
         if (stretch != null || timers.isNotEmpty()) scheduleTick(context) else cancelTick(context)
+    }
+
+    /**
+     * The notification the background sync wears when there's no live stretch to show (0.52.0):
+     * "In sync with Pixel da Ana", quiet, on the same channel and id.
+     */
+    fun keepNotification(context: Context, partner: String?): android.app.Notification {
+        val dark = (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+        return base(context, if (dark) CTokens.Dark else CTokens.Light)
+            .setContentTitle(context.getString(R.string.sync_keep_title, partner ?: ""))
+            .build()
     }
 
     fun clearAll(context: Context) {

@@ -1,4 +1,4 @@
-# Partner sync (0.47.0)
+# Partner sync (0.47.0; closed and who logged it, 0.52.0)
 
 Two parents, two phones, one log. The phones talk to each other directly on the home Wi-Fi. There
 is no server, no account, and nothing on the internet. Only in the **github** (family) build: the
@@ -18,8 +18,19 @@ network ([distribution.md](distribution.md)).
    something arrived.
 
 Settings › Sync shows who it's paired with and when they last synced, or "Not found on this
-Wi-Fi. Open Cochilo on …". It also has **Sync now** and **Unpair**. After Unpair, both phones keep
-the log they have.
+Wi-Fi. Open Cochilo on …". It also has **Sync now**, **Your initial on entries**, **Keep in sync
+when closed** and **Unpair**. After Unpair, both phones keep the log they have.
+
+**Keep in sync when closed** (0.52.0, off until turned on): the phones stay in step with Cochilo
+closed, as long as both are on the Wi-Fi. It rides on the notification Cochilo already shows
+(asleep or awake), so there's no second notification. It's a foreground service: Android keeps it
+running, and it costs a little battery. Its notification is "In sync with Pixel da Ana" when the
+live notification is off. After the phone restarts, opening Cochilo once starts it again.
+
+**Who logged it** (0.52.0, optional): set one letter in **Your initial on entries**. On the other
+phone, what you log says "by G" at the end of its line. What you log yourself never shows a
+letter, and with no initial nothing shows. An entry keeps who first logged it, even after the
+other parent edits it. Entries from before the initial was set stay unmarked.
 
 | Flow | Taps |
 |---|---|
@@ -27,6 +38,8 @@ the log they have.
 | A change goes to the other phone | 0 |
 | Catch up | 0 (open Cochilo) |
 | Sync now | Settings › Sync now (2) |
+| Keep in sync when closed (once) | Settings › the switch (2) |
+| Your initial (once, optional) | Settings › Your initial on entries (2), a letter, Save (1) |
 
 ## What syncs
 
@@ -35,6 +48,8 @@ Everything in the log, both ways:
 - **Deletions too.** Since 0.47.0 a phone remembers what was deleted and when (the `deletions`
   table, Room 4 → 5). An entry deleted on one phone is deleted on the other, unless it was edited
   after the deletion (Undo, or the other parent editing it). So Undo still works across phones.
+- **Who logged each entry** (0.52.0), when the parents set their initials. The sync message
+  carries the sender's initial; the format stays version 1, so a phone on 0.47 still syncs.
 - **The baby's profile** goes only to a phone that has none. Each phone keeps its own name
   spelling, look and fabric.
 
@@ -66,10 +81,11 @@ Those belong to each phone.
 
 ## Limits, said plainly
 
-- Both phones need Cochilo open (in the foreground) for a change to go across. Opening the app
-  catches up, so the two logs meet many times a day. A background service would keep the phones
-  in step with the app closed, but it would cost battery and a permanent notification. That's in
-  the roadmap, not built.
+- Without "Keep in sync when closed", both phones need Cochilo open for a change to go across.
+  Opening the app catches up, so the two logs meet many times a day. With it on, the phones keep
+  answering each other closed, at the cost of a little battery.
+- After the phone restarts, the background sync waits until Cochilo is opened once (a start at
+  boot would need another permission).
 - Same Wi-Fi only. A guest network that isolates devices, or a phone on mobile data, can't see
   the other phone; the row says "Not found on this Wi-Fi".
 - One partner phone per phone. Pairing again replaces the partner.
@@ -84,4 +100,7 @@ Those belong to each phone.
 | Finding phones and sockets | `app/src/github/.../sync/SyncLinks.kt` (NSD); the play build's is a stub | — |
 | State, pairing, auto-sync | `sync/PartnerSync.kt` | — |
 | Deletions table | `data/CochiloDb.kt` (`DELETIONS`) | `DeletionsMigrationTest` |
+| Who logged it (`events.loggedBy`, Room 5 → 6) | `data/CochiloDb.kt` (`LOGGED_BY`), `SyncMerge`, `PartnerSync.snapshot` | `DeletionsMigrationTest`, `SyncMergeTest` |
+| With Cochilo closed | `app/src/github/.../sync/SyncBackground.kt` (`SyncService`); the play build's is a stub | — |
+| Your initial, the switch | `ui/screens/Sync.kt` (`InitialSheet`) | `sync_settings_light`, `initial_sheet_light`, `entries_logged_by_partner_light` |
 | Settings › Sync, the pairing sheet | `ui/screens/Sync.kt` | `sync_settings_light`, `pair_*` |

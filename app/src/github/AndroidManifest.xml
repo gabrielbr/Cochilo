@@ -8,12 +8,25 @@
       socket for partner sync, on the home Wi-Fi only, sealed (docs/sync.md). The baby's data never
       leaves the home.
       REQUEST_INSTALL_PACKAGES lets Android show "Do you want to update this app?".
-      The play build has neither; app/build.gradle.kts checks both lists on every build.
+      FOREGROUND_SERVICE (and its special-use type, Android 14+) lets partner sync keep answering
+      with Cochilo closed, when the parent turns that on (0.52.0, docs/sync.md). It wears the live
+      notification; it never reaches the internet.
+      The play build has none of these; app/build.gradle.kts checks both lists on every build.
     -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
 
     <application>
+        <service
+            android:name=".sync.SyncService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Two parents' phones keep one baby log in step over the home Wi-Fi, peer to peer, while the app is closed. Opt-in." />
+        </service>
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.updates"

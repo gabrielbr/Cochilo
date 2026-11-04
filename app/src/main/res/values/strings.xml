@@ -668,6 +668,13 @@
     <string name="sync_unreachable">Not found on this Wi-Fi. Open Cochilo on %1$s.</string>
     <string name="sync_syncing">Syncing…</string>
     <string name="sync_now">Sync now</string>
+    <string name="sync_initial">Your initial on entries</string>
+    <string name="sync_initial_label">One letter</string>
+    <string name="sync_initial_meta">Shown on what you log, on the other phone. Leave it empty to show nothing.</string>
+    <string name="sync_background">Keep in sync when closed</string>
+    <string name="sync_background_meta">Uses the notification Cochilo already shows. A little more battery.</string>
+    <string name="sync_by">by %1$s</string>
+    <string name="sync_keep_title">In sync with %1$s</string>
     <string name="sync_unpair">Unpair</string>
     <string name="sync_unpair_meta">Both phones keep what they have</string>
     <string name="pair_title">Pair a phone</string>

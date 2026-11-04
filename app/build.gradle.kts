@@ -114,7 +114,11 @@ val modelExtraction = setOf(
 )
 val allowedPermissions = mapOf(
     "play" to setOf(notifications) + modelExtraction,
-    "github" to setOf(notifications, "android.permission.INTERNET", "android.permission.REQUEST_INSTALL_PACKAGES"),
+    // FOREGROUND_SERVICE*: partner sync with the app closed, opt-in (0.52.0, docs/sync.md).
+    "github" to setOf(
+        notifications, "android.permission.INTERNET", "android.permission.REQUEST_INSTALL_PACKAGES",
+        "android.permission.FOREGROUND_SERVICE", "android.permission.FOREGROUND_SERVICE_SPECIAL_USE",
+    ),
 )
 androidComponents {
     onVariants { variant ->

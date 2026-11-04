@@ -54,10 +54,8 @@ moments since 0.51.0. Next: the swaddle and a bigger baby's carrier, when the sh
 only with Tatá.
 
 ### 3.3 Two parents
-- **Partner sync, next** (the sync shipped in 0.47.0, [sync.md](../sync.md)): keep syncing with
-  the app closed (a background service, weighing battery and a notification); a partner sync in the
-  play build would need the owner to allow INTERNET there.
-- **Who logged it**: an optional initial on entries when two phones sync.
+- **Partner sync in the play build** would need the owner to allow INTERNET there.
+- **Background sync after a restart** without opening Cochilo would need `RECEIVE_BOOT_COMPLETED`.
 
 ### 3.4 Reading the data
 
@@ -68,6 +66,7 @@ only with Tatá.
 | **On-device checks with TalkBack** | Paparazzi checks pixels, not the reading order |
 
 ## Shipped from this plan
+- **0.52.0**: who logged it; partner sync with the app closed.
 - **0.51.0**: Tatá's other three moments; one legend per screen; Settings' second lines; a quieter
   notification at night.
 
@@ -117,7 +116,6 @@ only with Tatá.
 
 | Release | What |
 |---|---|
-| 0.52.0 | Who logged it; partner sync with the app closed |
 | 0.53.0 | Drag to adjust the start; the Wear OS tile |
 | 0.54.0 | The prediction's clock part |
 | 0.55.0 | Ask Cochilo on LiteRT-LM, after the Kotlin upgrade |

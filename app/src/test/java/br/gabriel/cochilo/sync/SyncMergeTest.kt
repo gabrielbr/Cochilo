@@ -28,7 +28,8 @@ class SyncMergeTest {
         val cb = SyncMerge.changes(b, a)
         assertEquals(1, ca.added); assertEquals(1, ca.updated)
         assertEquals(1, cb.added); assertEquals(0, cb.updated)
-        assertEquals(apply(a, ca).events, apply(b, cb).events)
+        // The same log; only who logged it reads from each phone's side ("" = the partner's).
+        assertEquals(apply(a, ca).events.map { it.copy(loggedBy = null) }, apply(b, cb).events.map { it.copy(loggedBy = null) })
     }
 
     @Test fun a_deletion_on_one_phone_deletes_on_the_other() {
@@ -57,5 +58,22 @@ class SyncMergeTest {
         val baby = Baby(name = "Dante", birthDate = 0)
         assertEquals(baby, SyncMerge.changes(SyncData(events = emptyList()), SyncData(baby = baby, events = emptyList())).baby)
         assertNull(SyncMerge.changes(SyncData(baby = baby.copy(name = "D"), events = emptyList()), SyncData(baby = baby, events = emptyList())).baby)
+    }
+
+    /** Who logged it (0.52.0): an entry keeps its author; one without gets the partner's initial or "". */
+    @Test fun an_entry_from_the_partner_carries_who_logged_it_and_never_becomes_mine() {
+        val a = SyncData(events = emptyList())
+        val b = SyncData(events = listOf(e("b1", 10), e("b2", 10).copy(loggedBy = "A")), who = "G")
+        val ca = SyncMerge.changes(a, b)
+        assertEquals(mapOf("b1" to "G", "b2" to "A"), ca.upsert.associate { it.id to it.loggedBy })
+        // A partner on an older Cochilo sends no initial: the entry is still marked as theirs.
+        val old = SyncMerge.changes(a, SyncData(events = listOf(e("b3", 10))))
+        assertEquals("", old.upsert.single().loggedBy)
+    }
+
+    @Test fun an_edit_without_an_author_keeps_the_one_this_phone_knows() {
+        val a = SyncData(events = listOf(e("x", 10).copy(loggedBy = "A")))
+        val b = SyncData(events = listOf(e("x", 20)), who = "G")
+        assertEquals("A", SyncMerge.changes(a, b).upsert.single().loggedBy)
     }
 }

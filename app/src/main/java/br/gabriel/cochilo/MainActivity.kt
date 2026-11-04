@@ -48,7 +48,13 @@ class MainActivity : ComponentActivity() {
             CochiloTheme(dark, night) {
                 // The fabric she picked wraps the Today card (Settings › Fabric).
                 val fabric by vm.fabric.collectAsState()
-                androidx.compose.runtime.CompositionLocalProvider(br.gabriel.cochilo.ui.kit.LocalFabric provides br.gabriel.cochilo.ui.kit.Fabric.of(fabric)) { CochiloRoot(vm) }
+                val sync by vm.syncState.collectAsState()
+                // Who logged it (0.52.0): only while paired; "" stands for "no initial of my own".
+                val me = if (sync.partner != null) sync.initial ?: "" else null
+                androidx.compose.runtime.CompositionLocalProvider(
+                    br.gabriel.cochilo.ui.kit.LocalFabric provides br.gabriel.cochilo.ui.kit.Fabric.of(fabric),
+                    br.gabriel.cochilo.ui.screens.LocalSyncMe provides me,
+                ) { CochiloRoot(vm) }
             }
         }
     }
@@ -56,7 +62,10 @@ class MainActivity : ComponentActivity() {
     // Partner sync answers while Cochilo is on screen, and catches up when it comes back (docs/sync.md).
     override fun onStart() {
         super.onStart()
-        (application as CochiloApp).sync.start()
+        (application as CochiloApp).sync.start(visible = true)
+        // Keep in sync when closed (0.52.0): started from here, while Cochilo is on screen, as
+        // Android requires of a foreground service.
+        br.gabriel.cochilo.sync.SyncBackground.update(this)
     }
 
     override fun onStop() {

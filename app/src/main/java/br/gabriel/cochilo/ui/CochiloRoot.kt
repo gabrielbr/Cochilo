@@ -87,6 +87,7 @@ fun CochiloRoot(vm: MainViewModel) {
     var settings by rememberSaveable { mutableStateOf(false) }
     var editing by remember { mutableStateOf<Editing?>(null) }
     var pairingOpen by remember { mutableStateOf(false) }
+    var editingInitial by remember { mutableStateOf(false) }
     var editingBaby by remember { mutableStateOf(false) }
     var editingLook by remember { mutableStateOf(false) }
     var editingRitual by remember { mutableStateOf(false) }
@@ -236,6 +237,8 @@ fun CochiloRoot(vm: MainViewModel) {
                                     onPair = { pairingOpen = true; vm.startPairing() },
                                     onSyncNow = { vm.syncNow() },
                                     onUnpair = vm::unpair,
+                                    onInitial = { editingInitial = true },
+                                    onInBackground = { on -> vm.setSyncInBackground(on) },
                                 )
                             }) else null,
                             passphraseSet = vm.backupPassphrase.collectAsState().value != null,
@@ -437,6 +440,13 @@ fun CochiloRoot(vm: MainViewModel) {
             onSave = { vm.save(it); editing = null },
             onDelete = { vm.delete(it); editing = null },
             onDismiss = { editing = null },
+        )
+    }
+    if (editingInitial) {
+        br.gabriel.cochilo.ui.screens.InitialSheet(
+            vm.syncState.collectAsState().value.initial,
+            onSave = { vm.setSyncInitial(it); editingInitial = false },
+            onDismiss = { editingInitial = false },
         )
     }
     if (pairingOpen) {
