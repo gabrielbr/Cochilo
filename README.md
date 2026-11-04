@@ -24,6 +24,10 @@ and import yourself.
   what to try, one tap to the full answer. The card is wrapped in her fabric, with a wider band
   since 0.45.0. Past days are on the Day tab (its arrows), with the kind filter. Tap any entry to
   edit or delete it.
+- **Partner sync** (since 0.47.0, family build): pair the two parents' phones once (Settings ›
+  Sync, compare six digits). While Cochilo is open on both on the home Wi-Fi, every change, a
+  deletion included, goes across in seconds, directly between the phones, sealed. There's no
+  server and no account ([docs/sync.md](docs/sync.md)).
 - **Nights** (since 0.42.0): each sleep is a nap or the night. Start sleep guesses which, and
   one tap changes it. Waking at night shows "Awake in the night" with **Back to sleep** and **Up
   for the day**, so a night with wakings is one night: bedtime, wakings and the morning are counted

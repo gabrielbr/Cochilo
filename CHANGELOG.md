@@ -3,6 +3,19 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.47.0 — 2026-11-04
+
+**Two phones, one log.** Both parents can now log on their own phones and see the same day.
+- **Pair once:** in Settings › Sync › Pair a phone, on both phones. Tap the other phone's name,
+  check that both show the same six digits, and tap Same number on both.
+- **After that:** while Cochilo is open on both phones on the home Wi-Fi, every change goes
+  across in seconds, deletions included. Opening the app catches up.
+- **Private:** no server, no account. The phones talk directly, and what they send is sealed
+  with a key only they have.
+
+It's in the family build only: the Play build has no network permission, by design.
+`docs/sync.md`.
+
 ## 0.46.0 — 2026-11-03
 
 **The timeline shows how long things lasted.** On the Day tab every bar is now as tall as its

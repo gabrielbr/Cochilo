@@ -63,6 +63,18 @@ Code: `lastOf`, `lastKind`, `lastKindAmong`, `Event.rememberedFrom` in `domain/Q
 (tested in `QuickLogTest`); the Log menu in `LogMenu.kt` (Today's rows until 0.39.0); the sheet's line in `Sheets.kt`.
 This replaced the earlier "next: other breast" suggestion: the app shows what happened, she decides.
 
+## Partner sync (0.47.0)
+
+[sync.md](sync.md). Pairing takes a few taps, once. After it, a change on one phone goes to the
+other with no tap at all.
+
+| Flow | Taps |
+|---|---|
+| Pair (once) | Settings › Pair a phone, on both; tap the other phone; Same number, on both |
+| A change reaches the other phone | 0 (both apps open, same Wi-Fi) |
+| Catch up | 0 (open Cochilo) |
+| Sync now | 2 (Settings › Sync now) |
+
 ## The timeline shows how long things lasted (0.46.0)
 
 The owner said: "Right now each block is not proportional to its amount of time. It doesn't need

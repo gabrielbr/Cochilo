@@ -62,8 +62,9 @@ Today, at night, or on safety screens. The other moments need Tatá's sign-off.
 - **The notification at night**: try the title and the two buttons only, no body line.
 
 ### 3.3 Two parents
-- **Second phone**: today through export/import. Next: a local Wi-Fi sync between the two phones
-  (no server, no account; the data still never leaves the home).
+- **Partner sync, next** (the sync shipped in 0.47.0, [sync.md](../sync.md)): keep syncing with
+  the app closed (a background service, weighing battery and a notification); a partner sync in the
+  play build would need the owner to allow INTERNET there.
 - **Who logged it**: an optional initial on entries when two phones sync.
 
 ### 3.4 Reading the data
@@ -76,6 +77,7 @@ Today, at night, or on safety screens. The other moments need Tatá's sign-off.
 
 ## Shipped from this plan
 
+- **0.47.0**: partner sync on the home Wi-Fi, with deletions ([sync.md](sync.md)).
 - **0.46.0**: the Day timeline's bars follow how long each entry lasted ([flows.md](flows.md)).
 - **0.45.0**: Today without Day by day; the kind filter on the Day tab; the Ask Cochilo glimpse; a wider fabric band ([flows.md](flows.md)).
 - **0.44.0**: From Tatá, a tab of its own, with all twelve age notes ([in-app-marketing.md](tata-slings/in-app-marketing.md) §13).

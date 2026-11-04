@@ -7,10 +7,13 @@ Cochilo ships as two builds from the same code (`productFlavors` in `app/build.g
 | Where it comes from | GitHub releases: `cochilo-<version>.apk` | Google Play: `cochilo-play-<version>.aab` |
 | How it updates | Itself, the design system's [self-update](https://github.com/gabrielbr/Gabriel-Deisgn-System/blob/main/docs/self-update.md) | Google Play (Play forbids apps on it from updating themselves) |
 | Permissions | `POST_NOTIFICATIONS`, `INTERNET`, `REQUEST_INSTALL_PACKAGES`, nothing else | `POST_NOTIFICATIONS` (the live notification), and since 0.30.0 Play Asset Delivery's for Ask Cochilo's model: `FOREGROUND_SERVICE`, `FOREGROUND_SERVICE_DATA_SYNC`, `WAKE_LOCK`, `RECEIVE_BOOT_COMPLETED`, `ACCESS_NETWORK_STATE`. Never `INTERNET` |
+| On the home Wi-Fi | Since 0.47.0, partner sync with the one paired phone, sealed ([sync.md](sync.md)); the same INTERNET permission, no new one | Nothing (no socket without INTERNET), so no partner sync |
 | What goes over the internet | One unauthenticated request to GitHub's public releases API, and the new APK; since 0.37.0, when the parent taps Download, Ask Cochilo's model and its `.sha256` from this repository's `assistant-model-v1` pre-release (nothing about the person or the baby is sent) | Nothing from the app; the Play Store itself downloads updates and, when asked, Ask Cochilo's model pack |
 | Code | `app/src/github` | `app/src/play` (no-ops) |
 
-In both, **the baby's data never leaves the phone**: no account, no analytics, no cloud backup.
+In both, **the baby's data never leaves the home**: no account, no analytics, no cloud backup.
+It goes only where the parent sends it: an export, or (github build, 0.47.0) the one partner phone
+paired on the home Wi-Fi, sealed end to end ([sync.md](sync.md)).
 The permission lists are enforced on every build by `check<Variant>Permissions` (run by
 `assemble*` and `test*`); a library that adds a permission fails the build.
 

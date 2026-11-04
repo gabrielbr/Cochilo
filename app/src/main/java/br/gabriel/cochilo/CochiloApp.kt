@@ -15,6 +15,10 @@ import kotlinx.coroutines.launch
 class CochiloApp : Application() {
     val db: CochiloDb by lazy { CochiloDb.create(this) }
     val prefs: Prefs by lazy { Prefs(this) }
+    /** Partner sync on the home Wi-Fi (0.47.0, docs/sync.md); the play build has no link. */
+    val sync: br.gabriel.cochilo.sync.PartnerSync by lazy {
+        br.gabriel.cochilo.sync.PartnerSync(this, db, br.gabriel.cochilo.sync.SyncLinks.create(this))
+    }
     /** Ask Cochilo's saved chats (0.40.0): on the phone only, not in backups. */
     val chats: br.gabriel.cochilo.data.ChatStore by lazy { br.gabriel.cochilo.data.ChatStore(java.io.File(filesDir, "chats.json")) }
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)

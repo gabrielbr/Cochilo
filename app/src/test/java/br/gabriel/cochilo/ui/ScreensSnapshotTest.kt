@@ -382,6 +382,27 @@ class ScreensSnapshotTest {
             br.gabriel.cochilo.ui.screens.ModelBody(state, kind, {}, {}, {}, {})
         } } }
     }
+    // Partner sync (0.47.0, docs/sync.md): Settings' section and the pairing steps.
+    @Composable
+    private fun SyncShot(dark: Boolean, content: @Composable () -> Unit) {
+        CochiloTheme(dark) { br.gabriel.cochilo.ui.kit.Frame { androidx.compose.foundation.layout.Column(Modifier.padding(br.gabriel.cochilo.ui.theme.CTokens.Spacing.space6)) { content() } } }
+    }
+    private val phones = listOf(br.gabriel.cochilo.sync.Peer("Pixel da Ana", "", 0, "a"), br.gabriel.cochilo.sync.Peer("Galaxy A54", "", 0, "b"))
+    @Test fun sync_settings_light() {
+        light()
+        paparazzi.snapshot { SyncShot(false) {
+            val f = Format(androidx.compose.ui.platform.LocalContext.current, zone, now)
+            br.gabriel.cochilo.ui.screens.SyncSection(br.gabriel.cochilo.sync.PartnerSync.State(null, null), f, {}, {}, {})
+            br.gabriel.cochilo.ui.screens.SyncSection(br.gabriel.cochilo.sync.PartnerSync.State("Pixel da Ana", now - 4 * 60_000), f, {}, {}, {})
+            br.gabriel.cochilo.ui.screens.SyncSection(br.gabriel.cochilo.sync.PartnerSync.State("Pixel da Ana", now - 3 * 3_600_000, unreachable = true), f, {}, {}, {})
+        } }
+    }
+    @Test fun pair_looking_light() { light(); paparazzi.snapshot { SyncShot(false) { br.gabriel.cochilo.ui.screens.PairBody(br.gabriel.cochilo.sync.PartnerSync.Pairing.Looking(phones), {}, {}, {}, {}) } } }
+    @Test fun pair_compare_ptBR_dark() { pt(true); paparazzi.snapshot { SyncShot(true) { br.gabriel.cochilo.ui.screens.PairBody(br.gabriel.cochilo.sync.PartnerSync.Pairing.Compare("482913", "Pixel da Ana"), {}, {}, {}, {}) } } }
+    @Test fun pair_compare_light() { light(); paparazzi.snapshot { SyncShot(false) { br.gabriel.cochilo.ui.screens.PairBody(br.gabriel.cochilo.sync.PartnerSync.Pairing.Compare("482913", "Pixel da Ana"), {}, {}, {}, {}) } } }
+    @Test fun pair_waiting_light() { light(); paparazzi.snapshot { SyncShot(false) { br.gabriel.cochilo.ui.screens.PairBody(br.gabriel.cochilo.sync.PartnerSync.Pairing.Compare("482913", "Pixel da Ana", waitingForPartner = true), {}, {}, {}, {}) } } }
+    @Test fun pair_done_light() { light(); paparazzi.snapshot { SyncShot(false) { br.gabriel.cochilo.ui.screens.PairBody(br.gabriel.cochilo.sync.PartnerSync.Pairing.Done("Pixel da Ana"), {}, {}, {}, {}) } } }
+
     @Test fun model_sheet_play_light() { light(); paparazzi.snapshot { ModelShot(false, br.gabriel.cochilo.ai.ModelState.Absent, br.gabriel.cochilo.ai.ModelSource.Kind.PLAY_DOWNLOAD) } }
     @Test fun model_sheet_app_downloading_light() { light(); paparazzi.snapshot { ModelShot(false, br.gabriel.cochilo.ai.ModelState.Getting(0.42f), br.gabriel.cochilo.ai.ModelSource.Kind.APP_DOWNLOAD) } }
     @Test fun model_sheet_app_download_light() { light(); paparazzi.snapshot { ModelShot(false, br.gabriel.cochilo.ai.ModelState.Absent, br.gabriel.cochilo.ai.ModelSource.Kind.APP_DOWNLOAD) } }

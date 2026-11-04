@@ -45,6 +45,18 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         .map { if (it == null) BabyState.Missing else BabyState.Ready(it) }
         .stateIn(viewModelScope, SharingStarted.Eagerly, BabyState.Loading)
 
+    // Partner sync (0.47.0, docs/sync.md).
+    val syncAvailable: Boolean get() = ctx.sync.available
+    val syncState = ctx.sync.state
+    val pairing = ctx.sync.pairing
+    fun startPairing() = ctx.sync.startPairing()
+    fun pickPhone(p: br.gabriel.cochilo.sync.Peer) = ctx.sync.pick(p)
+    fun answerPairing(same: Boolean) = ctx.sync.answer(same)
+    fun cancelPairing() = ctx.sync.cancelPairing()
+    fun pairingSeen() = ctx.sync.pairingSeen()
+    fun syncNow() = viewModelScope.launch { ctx.sync.syncNow() }
+    fun unpair() = ctx.sync.unpair()
+
     val theme: StateFlow<ThemeMode> = ctx.prefs.theme
     val liveNotification: StateFlow<Boolean> = ctx.prefs.liveNotification
 
@@ -77,6 +89,16 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     init {
         ctx.prefs.firstSeen // starts the first-week clock for Tatá's suggestions
+        // What the partner's phone sent: one quiet line, only when something changed here.
+        viewModelScope.launch {
+            ctx.sync.synced.collect { s ->
+                refreshNow()
+                val n = s.added + s.updated
+                _messages.send(UiMessage(
+                    if (s.removed > 0) str(R.string.sync_got_removed, s.partner, n, s.removed) else str(R.string.sync_got, s.partner, n)
+                ))
+            }
+        }
         // Details after: something ended from the widget, the notification or the tile? Ask now.
         viewModelScope.launch {
             br.gabriel.cochilo.domain.Details.pending(events.all(), System.currentTimeMillis(), ctx.prefs.detailsAsked.toSet())

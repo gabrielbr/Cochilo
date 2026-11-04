@@ -53,6 +53,17 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    // Partner sync answers while Cochilo is on screen, and catches up when it comes back (docs/sync.md).
+    override fun onStart() {
+        super.onStart()
+        (application as CochiloApp).sync.start()
+    }
+
+    override fun onStop() {
+        (application as CochiloApp).sync.stop()
+        super.onStop()
+    }
+
     override fun onNewIntent(intent: android.content.Intent) {
         super.onNewIntent(intent)
         setIntent(intent)

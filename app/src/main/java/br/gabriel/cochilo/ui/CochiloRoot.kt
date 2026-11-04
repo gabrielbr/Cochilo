@@ -86,6 +86,7 @@ fun CochiloRoot(vm: MainViewModel) {
     var tab by rememberSaveable { mutableStateOf(0) }
     var settings by rememberSaveable { mutableStateOf(false) }
     var editing by remember { mutableStateOf<Editing?>(null) }
+    var pairingOpen by remember { mutableStateOf(false) }
     var editingBaby by remember { mutableStateOf(false) }
     var editingLook by remember { mutableStateOf(false) }
     var editingRitual by remember { mutableStateOf(false) }
@@ -228,6 +229,15 @@ fun CochiloRoot(vm: MainViewModel) {
                             onEditLook = { editingLook = true },
                             onEditRitual = { editingRitual = true },
                             onExportReport = { exportReport.launch("cochilo-report-${LocalDate.now(zone)}.pdf") },
+                            // Partner sync (0.47.0): only the family build can, so only it shows the section.
+                            sync = if (vm.syncAvailable) ({
+                                br.gabriel.cochilo.ui.screens.SyncSection(
+                                    vm.syncState.collectAsState().value, f,
+                                    onPair = { pairingOpen = true; vm.startPairing() },
+                                    onSyncNow = { vm.syncNow() },
+                                    onUnpair = vm::unpair,
+                                )
+                            }) else null,
                             passphraseSet = vm.backupPassphrase.collectAsState().value != null,
                             modelStatus = br.gabriel.cochilo.ui.screens.modelStatus(vm.modelState.collectAsState().value),
                             onModel = { vm.refreshModel(); showingModel = true },
@@ -423,6 +433,15 @@ fun CochiloRoot(vm: MainViewModel) {
             onSave = { vm.save(it); editing = null },
             onDelete = { vm.delete(it); editing = null },
             onDismiss = { editing = null },
+        )
+    }
+    if (pairingOpen) {
+        br.gabriel.cochilo.ui.screens.PairSheet(
+            vm.pairing.collectAsState().value,
+            onPick = vm::pickPhone,
+            onAnswer = vm::answerPairing,
+            onRetry = vm::startPairing,
+            onClose = { vm.cancelPairing(); vm.pairingSeen(); pairingOpen = false },
         )
     }
     // Details after: the one question an entry has once it ends (docs/flows.md).

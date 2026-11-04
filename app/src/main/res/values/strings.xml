@@ -166,6 +166,7 @@
     <string name="safe_sleep_meta">On the back for every sleep, firm flat surface, nothing soft in the cot (AAP 2022). Cochilo doesn\'t monitor safety.</string>
     <string name="privacy">Privacy</string>
     <string name="privacy_meta">The log stays on this phone unless you export it.</string>
+    <string name="privacy_meta_sync">The log stays on this phone and the phone you paired, on your Wi-Fi. No server, no account.</string>
     <string name="version">Version</string>
 
     <!-- Snackbars -->
@@ -652,4 +653,27 @@
     <string name="age_note_m15_18">15 to 18 months · Many toddlers move to one nap, often after lunch. The change can take a few weeks of back and forth.</string>
     <string name="age_note_m18_21">18 to 21 months · Wanting to choose arrives. Two small choices at bedtime (which pyjamas, which book) keep the routine calm.</string>
     <string name="age_note_m21_24">21 to 24 months · One nap and a regular bedtime are common now. Daylight, movement and a calm evening still help the night.</string>
+    <string name="caption_sync">Sync</string>
+    <string name="sync_pair">Pair a phone</string>
+    <string name="sync_pair_meta">The other parent\'s phone, on the same Wi-Fi, with Cochilo open</string>
+    <string name="sync_with">Paired with %1$s</string>
+    <string name="sync_last">Last sync: %1$s</string>
+    <string name="sync_never">Not synced yet</string>
+    <string name="sync_unreachable">Not found on this Wi-Fi. Open Cochilo on %1$s.</string>
+    <string name="sync_syncing">Syncing…</string>
+    <string name="sync_now">Sync now</string>
+    <string name="sync_unpair">Unpair</string>
+    <string name="sync_unpair_meta">Both phones keep what they have</string>
+    <string name="pair_title">Pair a phone</string>
+    <string name="pair_looking">Looking on this Wi-Fi. On the other phone, open Settings › Pair a phone too.</string>
+    <string name="pair_pick_meta">Tap to pair</string>
+    <string name="pair_compare">Does %1$s show the same number?</string>
+    <string name="pair_same">Same number</string>
+    <string name="pair_different">Not the same</string>
+    <string name="pair_waiting">Waiting for %1$s…</string>
+    <string name="pair_done">Paired with %1$s. While Cochilo is open on both phones, each change goes across in seconds.</string>
+    <string name="pair_failed">Didn\'t pair. Try again with both phones on the same Wi-Fi.</string>
+    <string name="pair_try_again">Try again</string>
+    <string name="sync_got">From %1$s: %2$d new or changed</string>
+    <string name="sync_got_removed">From %1$s: %2$d new or changed, %3$d deleted</string>
 </resources>
