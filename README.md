@@ -98,8 +98,9 @@ Every screen and the main flows are on the [design canvas](docs/design-canvas.md
   ([in-app-marketing.md](docs/tata-slings/in-app-marketing.md)). [docs/tata-slings/textures.md](docs/tata-slings/textures.md).
 - **From Tatá** (a tab since 0.44.0): her note for the baby's age, the next one, the earlier
   ones one tap away, and her shop. **Tatá's suggestions** appear there too ("This week"), rarely,
-  when the baby's own log makes one of her products useful. Since 0.36.0 one is on: lots of naps in arms in the first three months
-  → her sling. Never at night, while the baby sleeps, in the first week, or after "Don't show
+  when the baby's own log makes one of her products useful. Since 0.51.0 all four are on: lots of naps in arms in the first three months
+  → her sling; a steady bedtime routine → the Naninha; little daylight → a walk in the sling;
+  around six months → her TatáT.O. toys. Never at night, while the baby sleeps, in the first week, or after "Don't show
   again"; Settings › Notifications turns them all off
   ([in-app-marketing.md](docs/tata-slings/in-app-marketing.md)).
 - **The Log button** (the round + in the corner of every tab): press, drag to a kind and its

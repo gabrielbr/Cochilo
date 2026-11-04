@@ -128,7 +128,7 @@ fun DayScreen(
             Text(stringResource(R.string.plan_expected, planLine(planned, f)), style = Type.bodySmall, color = CochiloTheme.colors.muted)
         }
         Spacer(Modifier.height(Spacing.space3))
-        EventLegend(expected = expected != null && day == today)
+        EventLegend(events, zone, expected = expected != null && day == today)
 
         Caption(stringResource(R.string.caption_vertical))
         if (events.isEmpty()) {

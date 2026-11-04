@@ -76,7 +76,7 @@ fun PatternsScreen(
         }
         Actogram(rows, log, now, zone, summaries)
         Spacer(Modifier.height(Spacing.space3))
-        EventLegend()
+        EventLegend(log.filter { it.overlaps(rows.first().second, rows.last().third, now) }, zone)
         Spacer(Modifier.height(Spacing.space2))
         Text(stringResource(R.string.rhythm_meta), style = Type.meta, color = CochiloTheme.colors.muted)
 
