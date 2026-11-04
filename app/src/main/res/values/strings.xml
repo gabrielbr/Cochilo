@@ -44,6 +44,12 @@
     <!-- Prediction -->
     <string name="next_nap">Next nap</string>
     <string name="next_bedtime">Bedtime</string>
+    <string name="expected_nap">Expected nap</string>
+    <string name="expected_bedtime">Expected bedtime</string>
+    <string name="expected_time">~%1$s</string>
+    <string name="expected_meta">Between %1$s and %2$s · about %3$s</string>
+    <string name="expected_meta_bed">Between %1$s and %2$s</string>
+    <string name="expected_past">Past its window</string>
     <string name="plan_then">Then: %1$s</string>
     <string name="plan_expected">Expected today: %1$s</string>
     <string name="plan_bed">bed %1$s</string>

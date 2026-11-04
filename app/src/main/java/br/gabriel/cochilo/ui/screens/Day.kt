@@ -154,7 +154,11 @@ fun DayScreen(
             return@ScrollPage
         }
         if (showAdjustHint) Text(stringResource(R.string.adjust_hint), style = Type.meta, color = CochiloTheme.colors.muted, modifier = Modifier.padding(bottom = Spacing.space2))
-        VerticalTimeline(events, now, f, zone, onOpen, onAdjust = { e, end -> onAdjust(e, end) }, allSleeps = log, previewDrag = previewDrag)
+        VerticalTimeline(
+            events, now, f, zone, onOpen, onAdjust = { e, end -> onAdjust(e, end) }, allSleeps = log, previewDrag = previewDrag,
+            // The next expected sleep, today only, on top (0.50.0): the plan's first, like Today's card.
+            expected = plan?.sleeps?.firstOrNull()?.takeIf { day == today },
+        )
     }
 }
 
@@ -165,6 +169,8 @@ internal fun VerticalTimeline(
     /** Every sleep, so a drag stops at the next one even across midnight. */
     allSleeps: List<Event> = events,
     previewDrag: Pair<Int, Int>? = null,
+    /** The next expected sleep (DayPlan), drawn dashed above what's happening now (0.50.0). */
+    expected: br.gabriel.cochilo.domain.DayPlan.Sleep? = null,
 ) {
     val c = CochiloTheme.colors
     val sleepsSorted = allSleeps.filter { it.type == EventType.SLEEP }.sortedBy { it.start }
@@ -233,6 +239,21 @@ internal fun VerticalTimeline(
         Modifier.fillMaxWidth().clip(RoundedCornerShape(Radius.radiusM)).background(c.surface)
             .padding(vertical = Spacing.space3)
     ) {
+        if (expected != null) {
+            val bed = expected.next == br.gabriel.cochilo.domain.Predictor.Next.BEDTIME
+            val minutes = ((expected.end - expected.at) / br.gabriel.cochilo.domain.MINUTE).toInt()
+            val window = if (bed) stringResource(R.string.expected_meta_bed, f.time(expected.windowStart), f.time(expected.windowEnd))
+            else stringResource(R.string.expected_meta, f.time(expected.windowStart), f.time(expected.windowEnd), f.durationMin(minutes))
+            br.gabriel.cochilo.ui.kit.TimelineExpected(
+                time = stringResource(R.string.expected_time, f.time(expected.at)),
+                color = if (bed) c.eventNight else c.eventNap,
+                // Bedtime's bar is short: the night's length isn't the point here.
+                barHeight = if (bed) Spacing.space6 else bar(minutes * br.gabriel.cochilo.domain.MINUTE),
+                label = stringResource(if (bed) R.string.expected_bedtime else R.string.expected_nap),
+                // Past its window with nothing logged: said plainly, never in red.
+                meta = if (now > expected.windowEnd) stringResource(R.string.expected_past) + " · " + window else window,
+            )
+        }
         for (s in stretches) {
             if (s.asleep) Sleep(s.sleep!!, s.during)
             else br.gabriel.cochilo.ui.kit.TimelineStretch(

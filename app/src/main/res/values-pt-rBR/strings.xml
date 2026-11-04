@@ -38,6 +38,12 @@
 
     <string name="next_nap">Próxima soneca</string>
     <string name="next_bedtime">Hora de dormir</string>
+    <string name="expected_nap">Soneca prevista</string>
+    <string name="expected_bedtime">Hora de dormir prevista</string>
+    <string name="expected_time">~%1$s</string>
+    <string name="expected_meta">Entre %1$s e %2$s · cerca de %3$s</string>
+    <string name="expected_meta_bed">Entre %1$s e %2$s</string>
+    <string name="expected_past">Passou da janela</string>
     <string name="plan_then">Depois: %1$s</string>
     <string name="plan_expected">Previsto hoje: %1$s</string>
     <string name="plan_bed">noite %1$s</string>
