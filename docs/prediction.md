@@ -32,6 +32,32 @@ a short nap leaves more pressure and the next window is shorter; a long nap, lon
 
 `Predictor(napEffect = false)` turns phase 2 off; it exists only so the tests can compare.
 
+## The rest of the day (0.49.0)
+
+The card used to say only the next sleep. Now Cochilo projects every sleep left today
+(`domain/DayPlan.kt`, tested in `DayPlanTest`), the way the day would go:
+1. Predict the next sleep (the card's own guess, unchanged).
+2. Suppose a nap of the baby's usual length for that place in the day happens then. The usual
+   length is the median of the last 14 days' naps in the same slot, else of all naps, else 45
+   minutes before about 6 months and 75 after.
+3. Predict again from its end. The slot moves on, so the windows lengthen as the day does.
+4. Stop at bedtime: when the predictor says so, or once the age's usual number of naps is done
+   (`Predictor.predict(maxNaps)`), or at midnight.
+
+**Ranges widen.** Each step adds half of its own range to the next, up to 45 minutes each side,
+so the afternoon's guess says it's less sure than the next nap's. Every logged sleep or wake
+replaces the projection with what happened and recomputes the rest: a short nap pulls the rest
+of the day earlier.
+
+**Where it shows:**
+- **Today's card:** "Then: 13:50 · 16:05 · bed 18:45" under the window. "How it's guessed" adds
+  how the later ones come about, and says when they come from the age alone.
+- **The Day ring, today:** each projected sleep as a dashed outline on the sleep ring, never
+  filled, so it never reads as data. Bedtime is in the night colour until midnight. Under the
+  counts: "Expected today: …", which TalkBack reads with the ring.
+
+**Not shown** at night: asleep for the night, or awake in the night.
+
 ## Tested on a synthetic year
 
 `PredictorYearTest` makes a baby from 8 weeks to about a year: windows that grow with age (74

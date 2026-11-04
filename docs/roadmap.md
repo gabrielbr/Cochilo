@@ -77,6 +77,8 @@ Today, at night, or on safety screens. The other moments need Tatá's sign-off.
 
 ## Shipped from this plan
 
+- **0.49.0**: the rest of the day projected, on Today and the Day ring ([prediction.md](prediction.md)).
+- **0.48.0**: the Day timeline on two tracks ([flows.md](flows.md)).
 - **0.47.0**: partner sync on the home Wi-Fi, with deletions ([sync.md](sync.md)).
 - **0.46.0**: the Day timeline's bars follow how long each entry lasted ([flows.md](flows.md)).
 - **0.45.0**: Today without Day by day; the kind filter on the Day tab; the Ask Cochilo glimpse; a wider fabric band ([flows.md](flows.md)).

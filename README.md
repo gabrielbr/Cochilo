@@ -24,6 +24,10 @@ and import yourself.
   what to try, one tap to the full answer. The card is wrapped in her fabric, with a wider band
   since 0.45.0. Past days are on the Day tab (its arrows), with the kind filter. Tap any entry to
   edit or delete it.
+- **The rest of the day** (since 0.49.0): besides the next sleep, Cochilo projects every nap
+  left today and bedtime. Today's card says "Then: 13:50 · 16:05 · bed 18:45", and the Day ring
+  shows them as dashed outlines. The later ones have wider ranges, and each log entry
+  recomputes them ([docs/prediction.md](docs/prediction.md)).
 - **Partner sync** (since 0.47.0, family build): pair the two parents' phones once (Settings ›
   Sync, compare six digits). While Cochilo is open on both on the home Wi-Fi, every change, a
   deletion included, goes across in seconds, directly between the phones, sealed. There's no
@@ -34,9 +38,10 @@ and import yourself.
   right. [docs/nights.md](docs/nights.md).
 - **Day**: one day two ways. A 24-hour ring (midnight at the top; sleep on the outer ring, feeds,
   pumping and daylight inside, dots for diapers) with the total sleep in the middle, then every
-  entry hour by hour on a vertical rail, as the day's two states: each sleep (a filled bar) and
-  each awake stretch (an outlined bar), newest first, and every feed, diaper or walk set in under
-  the stretch it happened in. Since 0.46.0 every bar's height follows how long it lasted
+  entry hour by hour on two tracks, like the ring: the main track holds the day's two states, each
+  sleep (a filled bar) and each awake stretch (an outlined bar), newest first. The secondary track,
+  beside each bar, holds every feed, diaper or walk that happened during it: an outline in its
+  colour, a plain icon and smaller words (since 0.48.0). Since 0.46.0 every bar's height follows how long it lasted
   (not 1:1: two hours of sleep is clearly longer than ten minutes of feeding, and a night still
   fits the screen). Arrows move between days; tap an entry
   to edit it.

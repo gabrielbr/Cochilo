@@ -63,6 +63,31 @@ Code: `lastOf`, `lastKind`, `lastKindAmong`, `Event.rememberedFrom` in `domain/Q
 (tested in `QuickLogTest`); the Log menu in `LogMenu.kt` (Today's rows until 0.39.0); the sheet's line in `Sheets.kt`.
 This replaced the earlier "next: other breast" suggestion: the app shows what happened, she decides.
 
+## The rest of the day (0.49.0)
+
+[prediction.md](prediction.md). The whole projected day, with no tap: "Then: …" on Today's card,
+and dashed outlines plus "Expected today: …" on the Day ring. "How it's guessed" explains it, one
+tap away as before.
+
+## The timeline on two tracks (0.48.0)
+
+The owner said: "I want 2 tracks, similar to what we have on the circular timeline. One main track
+for the sleep, nap, woken status. Other with less importance, maybe just outlined elements (with
+their colors) with the other actions such as breastfeeding. The secondary should also have
+smaller fonts. Right now they already are smaller, but not much, so it does not look purposeful."
+
+| | Main track | Secondary track |
+|---|---|---|
+| What | Sleep, nap, awake: the stretches | Feeds, pumps, diapers, daylight, routines, medicine, notes |
+| Mark | Filled bar in the sleep's colour; outlined bar for awake | Outline in the entry's colour: a bar for a timed entry, a ring for an instant |
+| Icon | The round badge for a sleep (none for awake) | The plain line icon, `muted` |
+| Words | Label role (16 bold) / body, then meta | bodySmall (14), then meta (13) |
+| Where | The main lane on the rail | Beside the stretch's bar, in their own lane |
+
+Each stretch is now one block, so its bar runs alongside the feeds that happened during it.
+Before, the feeds sat in rows under the bar, after an empty gap. No taps change: tap a row to edit
+it, hold a sleep's title and drag to move its end.
+
 ## Partner sync (0.47.0)
 
 [sync.md](sync.md). Pairing takes a few taps, once. After it, a change on one phone goes to the

@@ -294,6 +294,8 @@ fun CochiloRoot(vm: MainViewModel) {
                             BabyState.Missing -> br.gabriel.cochilo.ui.screens.Onboarding(zone, onDone = { vm.saveBaby(it) })
                             is BabyState.Ready -> {
                                 val reduce = CochiloTheme.reduceMotion
+                                // The rest of today, projected (0.49.0): on Today's card and the Day ring.
+                                val plan = remember(log, now, weeks) { br.gabriel.cochilo.domain.DayPlan(zone).of(log, weeks, now) }
                                 val screen: @Composable (Int) -> Unit = { t ->
                                     when (t) {
                                         0 -> TodayScreen(
@@ -303,6 +305,7 @@ fun CochiloRoot(vm: MainViewModel) {
                                             onPlace = { e, k -> vm.setPlace(e, k) },
                                             onUpForDay = { vm.upForDay(it) },
                                             onSetNight = { e, n -> vm.setNight(e, n) },
+                                            plan = plan,
                                             glimpse = run {
                                                 val facts = remember(log, now, weeks) { br.gabriel.cochilo.domain.assistant.Assistant.facts(log, weeks, now, zone, prediction) }
                                                 br.gabriel.cochilo.ui.screens.glimpse(facts, br.gabriel.cochilo.domain.localDate(now, zone).toEpochDay()).let { g ->
@@ -322,6 +325,7 @@ fun CochiloRoot(vm: MainViewModel) {
                                         1 -> DayScreen(
                                             log, now, zone, onOpen = { editing = Editing(it, false) },
                                             expected = (prediction as? Predictor.Result.Awake)?.let { it.windowStart to it.windowEnd },
+                                            plan = plan,
                                             onAdjust = vm::adjustEnd,
                                             showAdjustHint = !vm.adjustHintSeen.collectAsState().value,
                                         )

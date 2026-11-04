@@ -44,6 +44,12 @@
     <!-- Prediction -->
     <string name="next_nap">Next nap</string>
     <string name="next_bedtime">Bedtime</string>
+    <string name="plan_then">Then: %1$s</string>
+    <string name="plan_expected">Expected today: %1$s</string>
+    <string name="plan_bed">bed %1$s</string>
+    <string name="plan_why">Later sleeps repeat the same guess: the usual window for that time of day, then the usual nap (%1$s). The further ahead, the wider the range.</string>
+    <string name="plan_why_age">Later sleeps repeat the same guess from the baby\'s age (naps of %1$s) until a few days are logged. The further ahead, the wider the range.</string>
+    <string name="plan_spoken">Expected later today: %1$s.</string>
     <string name="prediction_window">Between %1$s and %2$s</string>
     <string name="prediction_why_show">How it\'s guessed</string>
     <string name="prediction_why_hide">Hide how it\'s guessed</string>
