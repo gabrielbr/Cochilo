@@ -3,6 +3,12 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.51.1 — 2026-11-04
+
+**No change in the app.** A fourth design skill from the Gabriel Design System 0.31.0,
+ux-user-flows, now plans every new or changed screen and flow first: what happens, in what order,
+and every state on the way. The audit gains a section for it (AGENTS.md, `.claude/skills/`).
+
 ## 0.51.0 — 2026-11-04
 
 **More from Tatá, less to read.**
