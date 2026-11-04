@@ -56,6 +56,15 @@ of the day earlier.
   filled, so it never reads as data. Bedtime is in the night colour until midnight. Under the
   counts: "Expected today: …", which TalkBack reads with the ring.
 
+- **The Day timeline, today** (0.50.0): the next expected sleep as one block on the main track,
+  above what's happening now. It's a dashed outline in the nap colour (the night's for bedtime),
+  sized by its expected length; bedtime gets a short bar. "~11:50" marks the time. It says
+  "Expected nap" (or "Expected bedtime") in muted, regular weight, then the window and "about
+  45m". It has no badge and no pencil, and it can't be tapped: it isn't data. Once its window
+  passes with nothing logged, it says "Past its window", never in red. While a nap runs, it
+  shows the sleep after that nap. It shows only with the "All" filter. Only the next sleep is
+  drawn: the rest are a line away, on Today's card and under the ring.
+
 **Not shown** at night: asleep for the night, or awake in the night.
 
 ## Tested on a synthetic year

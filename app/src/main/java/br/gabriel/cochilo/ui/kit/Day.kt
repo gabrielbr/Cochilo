@@ -29,6 +29,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size as GSize
 import androidx.compose.ui.graphics.Color
@@ -136,7 +137,7 @@ fun DayRing(
             // Where the next sleep is expected: a faint band of the nap colour, under the real sleeps.
             if (expected != null) arc(c.eventNap.copy(alpha = EXPECTED_ALPHA), expected.first, expected.second, rOuter, outerW)
             // The projection, dashed along the sleep ring's two edges and closed at both ends.
-            val dash = androidx.compose.ui.graphics.PathEffect.dashPathEffect(floatArrayOf(dot, dot))
+            val dash = expectedDash(dot)
             for (s in planned) {
                 val col = if (s.next == br.gabriel.cochilo.domain.Predictor.Next.BEDTIME) c.eventNight else c.eventNap
                 val a0 = angle(s.at)
@@ -299,6 +300,53 @@ fun TimelineStretch(
             }
             during()
             Spacer(Modifier.height(Spacing.space2))
+        }
+    }
+}
+
+/**
+ * The dash of anything expected, not logged (0.49.0 ring, 0.50.0 timeline): [on] drawn, [on] off.
+ * Callers pass `space1` in pixels, so the ring and the timeline dash the same way.
+ */
+fun expectedDash(on: Float) = androidx.compose.ui.graphics.PathEffect.dashPathEffect(floatArrayOf(on, on))
+
+/**
+ * The next expected sleep on the timeline's main track (0.50.0, docs/prediction.md): today only,
+ * above what's happening now. It's drawn like the ring's projection: a dashed outline in the nap
+ * colour (the night's for bedtime), never filled, so it never reads as data. It has no badge and
+ * no pencil; its words are muted and regular weight. Not a target: TalkBack reads it as one
+ * heading.
+ */
+@Composable
+fun TimelineExpected(time: String, color: Color, barHeight: Dp, label: String, meta: String) {
+    val c = CochiloTheme.colors
+    val density = LocalDensity.current
+    val on = with(density) { Spacing.space1.toPx() }
+    val stroke = with(density) { (Size.hairline * 2).toPx() }
+    val radius = with(density) { Radius.radiusS.toPx() }
+    Row(
+        Modifier.fillMaxWidth()
+            .heightIn(min = maxOf(barHeight + Spacing.space2, Size.rowMin))
+            .height(IntrinsicSize.Min)
+            .semantics(mergeDescendants = true) { heading() }
+    ) {
+        Text(time, style = Type.meta, color = c.muted, textAlign = TextAlign.End, maxLines = 1, modifier = Modifier.width(Spacing.space16 + Spacing.space2).padding(top = Spacing.space2))
+        Box(Modifier.width(Spacing.space8).fillMaxHeight(), contentAlignment = Alignment.TopCenter) {
+            Box(Modifier.width(Size.hairline).fillMaxHeight().background(c.line))
+            Box(
+                Modifier.padding(vertical = Spacing.space1).width(Spacing.space3).height(barHeight)
+                    .background(c.surface)
+                    .drawBehind {
+                        drawRoundRect(
+                            color, cornerRadius = androidx.compose.ui.geometry.CornerRadius(radius, radius),
+                            style = Stroke(stroke, pathEffect = expectedDash(on)),
+                        )
+                    }
+            )
+        }
+        Column(Modifier.weight(1f).padding(start = Spacing.space2, end = Spacing.space2, bottom = Spacing.space2)) {
+            Text(label, style = Type.body, color = c.muted)
+            Text(meta, style = Type.meta, color = c.muted)
         }
     }
 }

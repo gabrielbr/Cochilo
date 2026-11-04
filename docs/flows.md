@@ -63,6 +63,11 @@ Code: `lastOf`, `lastKind`, `lastKindAmong`, `Event.rememberedFrom` in `domain/Q
 (tested in `QuickLogTest`); the Log menu in `LogMenu.kt` (Today's rows until 0.39.0); the sheet's line in `Sheets.kt`.
 This replaced the earlier "next: other breast" suggestion: the app shows what happened, she decides.
 
+## The next sleep on the timeline (0.50.0)
+
+[prediction.md](prediction.md). A dashed "Expected nap" block tops today's hour by hour. It adds
+no tap and nothing to tap.
+
 ## The rest of the day (0.49.0)
 
 [prediction.md](prediction.md). The whole projected day, with no tap: "Then: …" on Today's card,

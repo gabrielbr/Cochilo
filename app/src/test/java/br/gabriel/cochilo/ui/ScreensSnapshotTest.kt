@@ -512,6 +512,26 @@ class ScreensSnapshotTest {
         }
         paparazzi.snapshot { Chrome(false, 2, synthetic) }
     }
+    // The expected block on the timeline (0.50.0): the next sleep, dashed, above what's happening now.
+    @Composable
+    private fun ExpectedShot(dark: Boolean, log: List<Event>, expected: (br.gabriel.cochilo.domain.DayPlan.Plan?) -> br.gabriel.cochilo.domain.DayPlan.Sleep? = { it?.sleeps?.firstOrNull() }) {
+        CochiloTheme(dark) { br.gabriel.cochilo.ui.kit.Frame { br.gabriel.cochilo.ui.screens.ScrollPage {
+            val f = Format(androidx.compose.ui.platform.LocalContext.current, zone, now)
+            val today = br.gabriel.cochilo.domain.localDate(now, zone)
+            val from = br.gabriel.cochilo.domain.startOfDay(today, zone)
+            val to = br.gabriel.cochilo.domain.startOfDay(today.plusDays(1), zone)
+            val plan = br.gabriel.cochilo.domain.DayPlan(zone).of(log, ageWeeks(baby.birthDate, null, now), now)
+            br.gabriel.cochilo.ui.screens.VerticalTimeline(log.filter { it.overlaps(from, to, now) }.sortedBy { it.start }, now, f, zone, {}, allSleeps = log, expected = expected(plan))
+        } } }
+    }
+    @Test fun day_expected_block_light() { light(); paparazzi.snapshot { ExpectedShot(false, log) } }
+    @Test fun day_expected_block_ptBR_dark() { pt(true); paparazzi.snapshot { ExpectedShot(true, log) } }
+    @Test fun day_expected_past_light() {
+        light()
+        paparazzi.snapshot { ExpectedShot(false, log) { p -> p?.sleeps?.firstOrNull()?.let { it.copy(at = now - 30 * 60_000, windowStart = now - 40 * 60_000, windowEnd = now - 20 * 60_000, end = now + 15 * 60_000) } } }
+    }
+    @Test fun day_expected_while_napping_light() { light(); paparazzi.snapshot { ExpectedShot(false, sleepingLog) } }
+
     @Test fun day_today_expected_light() {
         light()
         paparazzi.snapshot {

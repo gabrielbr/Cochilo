@@ -26,7 +26,8 @@ and import yourself.
   edit or delete it.
 - **The rest of the day** (since 0.49.0): besides the next sleep, Cochilo projects every nap
   left today and bedtime. Today's card says "Then: 13:50 · 16:05 · bed 18:45", and the Day ring
-  shows them as dashed outlines. The later ones have wider ranges, and each log entry
+  shows them as dashed outlines. Since 0.50.0 the Day timeline also shows the next one,
+  dashed, above what's happening now. The later ones have wider ranges, and each log entry
   recomputes them ([docs/prediction.md](docs/prediction.md)).
 - **Partner sync** (since 0.47.0, family build): pair the two parents' phones once (Settings ›
   Sync, compare six digits). While Cochilo is open on both on the home Wi-Fi, every change, a

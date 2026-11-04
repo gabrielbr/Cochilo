@@ -3,6 +3,16 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.50.0 — 2026-11-04
+
+**The next sleep on the timeline.** At the top of the Day tab's hour by hour, today, the next
+expected sleep now sits above what's happening.
+- It's a dashed outline marked "~11:50" with the window and about how long, like the ring's
+  projection. It isn't something logged, so it can't be tapped.
+- When its window has passed, it says so, quietly. While a nap runs, it shows the sleep after it.
+
+`docs/prediction.md`.
+
 ## 0.49.0 — 2026-11-04
 
 **The rest of the day, at a glance.** Cochilo now projects every nap left today and bedtime, not
