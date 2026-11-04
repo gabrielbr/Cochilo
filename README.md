@@ -92,6 +92,9 @@ Every screen and the main flows are on the [design canvas](docs/design-canvas.md
   sentence-case captions and pill buttons ([docs/design-review.md](docs/design-review.md)).
 - **Home-screen widget**: Start sleep / Woke up and Left / Right, one tap each, with a running
   clock. [docs/widget.md](docs/widget.md).
+- **On the watch** (since 0.53.0): a Wear OS tile with Start sleep / Woke up and the two breasts,
+  one tap each, for when both hands hold the baby. It talks to the phone only when connected
+  directly, never through the cloud. [docs/wear.md](docs/wear.md).
 - **Sleep first, and motion**: sleep is a size up in every list; every action answers with a small
   movement (off with Remove animations); what was used last has a coloured outline and dot.
   [docs/flows.md](docs/flows.md).

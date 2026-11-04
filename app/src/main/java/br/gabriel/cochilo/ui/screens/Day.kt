@@ -65,6 +65,10 @@ fun DayScreen(
     plan: br.gabriel.cochilo.domain.DayPlan.Plan? = null,
     /** Drag to adjust: a finished sleep's new end (docs/flows.md). */
     onAdjust: (Event, Long) -> Unit = { _, _ -> },
+    /** Drag to adjust: a sleep's new start (0.53.0). */
+    onAdjustStart: (Event, Long) -> Unit = { _, _ -> },
+    /** For screenshots: one sleep's start shown mid-drag (its index, steps). */
+    previewStartDrag: Pair<Int, Int>? = null,
     /** For screenshots: one sleep shown mid-drag (its index among the day's sleeps, steps). */
     previewDrag: Pair<Int, Int>? = null,
     /** The drag hint shows until the first drag (0.43.0). */
@@ -156,6 +160,7 @@ fun DayScreen(
         if (showAdjustHint) Text(stringResource(R.string.adjust_hint), style = Type.meta, color = CochiloTheme.colors.muted, modifier = Modifier.padding(bottom = Spacing.space2))
         VerticalTimeline(
             events, now, f, zone, onOpen, onAdjust = { e, end -> onAdjust(e, end) }, allSleeps = log, previewDrag = previewDrag,
+            onAdjustStart = { e, start -> onAdjustStart(e, start) }, previewStartDrag = previewStartDrag,
             // The next expected sleep, today only, on top (0.50.0): the plan's first, like Today's card.
             expected = plan?.sleeps?.firstOrNull()?.takeIf { day == today },
         )
@@ -169,6 +174,8 @@ internal fun VerticalTimeline(
     /** Every sleep, so a drag stops at the next one even across midnight. */
     allSleeps: List<Event> = events,
     previewDrag: Pair<Int, Int>? = null,
+    onAdjustStart: ((Event, Long) -> Unit)? = null,
+    previewStartDrag: Pair<Int, Int>? = null,
     /** The next expected sleep (DayPlan), drawn dashed above what's happening now (0.50.0). */
     expected: br.gabriel.cochilo.domain.DayPlan.Sleep? = null,
 ) {
@@ -177,6 +184,9 @@ internal fun VerticalTimeline(
     val later = stringResource(R.string.adjust_later)
     val earlier = stringResource(R.string.adjust_earlier)
     val previewWords = stringResource(R.string.adjust_preview)
+    val startWords = stringResource(R.string.adjust_start_preview)
+    val startLater = stringResource(R.string.adjust_start_later)
+    val startEarlier = stringResource(R.string.adjust_start_earlier)
     // The day's bounds: the day of the newest entry (the screen passes one day's entries).
     val day = br.gabriel.cochilo.domain.localDate(events.maxOfOrNull { it.start } ?: now, zone)
     val from = br.gabriel.cochilo.domain.startOfDay(day, zone)
@@ -231,6 +241,23 @@ internal fun VerticalTimeline(
                 )
             } else null,
             previewSteps = if (previewDrag?.first == sleepIndex) previewDrag.second else null,
+            adjustStart = if (onAdjustStart != null && br.gabriel.cochilo.domain.Adjust.canAdjustStart(e)) {
+                val prev = sleepsSorted.lastOrNull { it.start < e.start && it.id != e.id }?.end
+                fun start(steps: Int) = br.gabriel.cochilo.domain.Adjust.newStart(e, steps, now, prev)
+                br.gabriel.cochilo.ui.kit.TimelineAdjust(
+                    preview = { steps ->
+                        val at = start(steps) ?: e.start
+                        val d = ((at - e.start) / br.gabriel.cochilo.domain.MINUTE).toInt()
+                        val sign = if (d > 0) "+" else if (d < 0) "−" else ""
+                        startWords.format(f.time(at), sign + f.durationMin(kotlin.math.abs(d)))
+                    },
+                    deltaMinutes = { steps -> start(steps)?.let { ((it - e.start) / br.gabriel.cochilo.domain.MINUTE).toInt() } ?: 0 },
+                    onCommit = { steps -> start(steps)?.let { onAdjustStart(e, it) } },
+                    laterLabel = startLater, earlierLabel = startEarlier,
+                    previewTime = { steps -> f.time(start(steps) ?: e.start) },
+                )
+            } else null,
+            previewStartSteps = if (previewStartDrag?.first == sleepIndex) previewStartDrag.second else null,
         ) { during.forEach { Secondary(it) } }
         sleepIndex++
     }

@@ -6,8 +6,9 @@ import kotlin.math.roundToInt
 
 /**
  * Drag to adjust (docs/flows.md): on the Day tab's timeline, press and hold a finished sleep, then
- * drag down to make it end later or up to make it end sooner, in 5-minute steps. Pure rules here;
- * the gesture is in `ui/kit/Day.kt`.
+ * drag down to make it end later or up to make it end sooner, in 5-minute steps. Since 0.53.0 its
+ * start time (on the left) drags the same way, for a sleep that began earlier or later than logged.
+ * Pure rules here; the gesture is in `ui/kit/Day.kt`.
  */
 object Adjust {
     const val STEP_MINUTES = 5
@@ -33,5 +34,21 @@ object Adjust {
         val wanted = end + steps * STEP_MINUTES * MINUTE
         val clamped = wanted.coerceIn(earliest, maxOf(earliest, latest))
         return clamped.takeIf { it != end }
+    }
+
+    /** Any sleep's start can be dragged, a running one too (0.53.0). */
+    fun canAdjustStart(e: Event): Boolean = e.type == EventType.SLEEP
+
+    /**
+     * The new start after moving [e]'s start by [steps] steps (0.53.0): never into the sleep before
+     * it (its end, [prevEnd]), never later than its end (or [now], while it runs) minus
+     * [MIN_SLEEP_MINUTES]. Null when nothing changes.
+     */
+    fun newStart(e: Event, steps: Int, now: Long, prevEnd: Long?): Long? {
+        if (steps == 0) return null
+        val latest = (e.end ?: now) - MIN_SLEEP_MINUTES * MINUTE
+        val earliest = minOf(prevEnd ?: Long.MIN_VALUE, latest)
+        val wanted = e.start + steps * STEP_MINUTES * MINUTE
+        return wanted.coerceIn(earliest, latest).takeIf { it != e.start }
     }
 }

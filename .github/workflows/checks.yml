@@ -25,3 +25,4 @@ jobs:
           :app:lintGithubDebug :app:lintPlayDebug
           :app:assembleGithubDebug :app:assemblePlayDebug
           :app:checkGithubReleasePermissions :app:checkPlayReleasePermissions
+          :wear:assembleDebug :wear:verifyPaparazziDebug :wear:lintDebug

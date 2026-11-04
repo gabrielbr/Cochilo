@@ -3,6 +3,16 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.53.0 — 2026-11-04
+
+**From the wrist, and the start too.**
+- **A watch tile.** Cochilo on Wear OS: one tile with Start sleep / Woke up and the two breasts,
+  one tap each, for when both hands hold the baby. The breast used last has a dot. The log stays
+  on the phone; the watch talks to it only when it's connected directly, never through the
+  cloud. Install `cochilo-wear-0.53.0.apk` on the watch (docs/wear.md).
+- **Drag when a sleep began.** On the Day tab, hold a sleep's time on the left and drag, the same
+  way the end moves: 5 minutes a step, with Undo.
+
 ## 0.52.0 — 2026-11-04
 
 **Two parents, more in step.**

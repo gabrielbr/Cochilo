@@ -216,6 +216,10 @@ fun TimelineStretch(
     durationMinutes: Int? = null,
     /** For screenshots: show the stretch as if dragged this many steps. */
     previewSteps: Int? = null,
+    /** A sleep: press, hold and drag its start time to move its start (0.53.0). */
+    adjustStart: TimelineAdjust? = null,
+    /** For screenshots: the start as if dragged this many steps. */
+    previewStartSteps: Int? = null,
     during: @Composable ColumnScope.() -> Unit = {},
 ) {
     val c = CochiloTheme.colors
@@ -251,16 +255,61 @@ fun TimelineStretch(
                 androidx.compose.ui.semantics.CustomAccessibilityAction(adjust.earlierLabel) { adjust.onCommit(-1); true },
             )
         }
-    val preview = if (holding && adjust != null) adjust.preview(steps) else null
-    // While held, the bar follows the drag, on the same scale as the rest of the timeline.
-    val shownBar = if (holding && barHeight != null && adjust != null && durationMinutes != null)
-        Spacing.space1 * br.gabriel.cochilo.domain.TimelineScale.units(durationMinutes + adjust.deltaMinutes(steps)) else barHeight
+    // The start (0.53.0): the same press, hold and drag, on the time on the left.
+    var startPx by remember { androidx.compose.runtime.mutableFloatStateOf(0f) }
+    var holdingStart by remember { androidx.compose.runtime.mutableStateOf(previewStartSteps != null) }
+    val startSteps = previewStartSteps ?: br.gabriel.cochilo.domain.Adjust.steps(startPx, stepPx)
+    val startGesture = if (adjustStart == null) Modifier else Modifier
+        .pointerInput(adjustStart) {
+            detectDragGesturesAfterLongPress(
+                onDragStart = { holdingStart = true; startPx = 0f; haptic.performHapticFeedback(androidx.compose.ui.hapticfeedback.HapticFeedbackType.LongPress) },
+                onDragEnd = {
+                    val s = br.gabriel.cochilo.domain.Adjust.steps(startPx, stepPx)
+                    holdingStart = false; startPx = 0f
+                    if (s != 0) adjustStart.onCommit(s)
+                },
+                onDragCancel = { holdingStart = false; startPx = 0f },
+                onDrag = { change, amount ->
+                    change.consume()
+                    val before = br.gabriel.cochilo.domain.Adjust.steps(startPx, stepPx)
+                    startPx += amount.y
+                    if (br.gabriel.cochilo.domain.Adjust.steps(startPx, stepPx) != before) haptic.performHapticFeedback(androidx.compose.ui.hapticfeedback.HapticFeedbackType.TextHandleMove)
+                },
+            )
+        }
+        .semantics {
+            customActions = listOf(
+                androidx.compose.ui.semantics.CustomAccessibilityAction(adjustStart.laterLabel) { adjustStart.onCommit(1); true },
+                androidx.compose.ui.semantics.CustomAccessibilityAction(adjustStart.earlierLabel) { adjustStart.onCommit(-1); true },
+            )
+        }
+    val preview = when {
+        holding && adjust != null -> adjust.preview(steps)
+        holdingStart && adjustStart != null -> adjustStart.preview(startSteps)
+        else -> null
+    }
+    // While held, the bar follows the drag, on the same scale as the rest of the timeline. A later
+    // start shortens it, as a sooner end does.
+    val delta = when {
+        holding && adjust != null -> adjust.deltaMinutes(steps)
+        holdingStart && adjustStart != null -> -adjustStart.deltaMinutes(startSteps)
+        else -> null
+    }
+    val shownBar = if (delta != null && barHeight != null && durationMinutes != null)
+        Spacing.space1 * br.gabriel.cochilo.domain.TimelineScale.units(durationMinutes + delta) else barHeight
     Row(
         Modifier.fillMaxWidth()
             .heightIn(min = if (shownBar != null) maxOf(shownBar + Spacing.space2, Size.rowMin) else Size.rowMin)
             .height(IntrinsicSize.Min)
     ) {
-        Text(time, style = Type.meta, color = c.muted, textAlign = TextAlign.End, maxLines = 1, modifier = Modifier.width(Spacing.space16 + Spacing.space2).padding(top = Spacing.space2))
+        // The start time; on a sleep it takes the drag that moves the start (0.53.0).
+        Text(
+            if (holdingStart) adjustStart?.previewTime?.invoke(startSteps) ?: time else time, style = Type.meta, color = if (holdingStart) c.onSelected else c.muted, textAlign = TextAlign.End, maxLines = 1,
+            modifier = Modifier.width(Spacing.space16 + Spacing.space2)
+                .background(animatedColor(if (holdingStart) c.selected else Color.Transparent), RoundedCornerShape(Radius.radiusS))
+                .then(startGesture)
+                .padding(top = Spacing.space2, end = Spacing.space1),
+        )
         // The main lane: the rail, and this stretch's bar from its top.
         Box(Modifier.width(Spacing.space8).fillMaxHeight(), contentAlignment = Alignment.TopCenter) {
             Box(Modifier.width(Size.hairline).fillMaxHeight().background(c.line))
@@ -277,7 +326,7 @@ fun TimelineStretch(
         Column(Modifier.weight(1f).padding(start = Spacing.space2, end = Spacing.space2)) {
             // The title: the whole block's one big line. It takes the tap (edit) and the drag.
             val title = Modifier.fillMaxWidth()
-                .background(animatedColor(if (holding) c.selected else c.surface), RoundedCornerShape(Radius.radiusS))
+                .background(animatedColor(if (holding || holdingStart) c.selected else c.surface), RoundedCornerShape(Radius.radiusS))
                 .then(gesture)
                 .then(if (onClick != null) Modifier.clickable(src, indication = null, role = Role.Button, onClickLabel = editLabel, onClick = onClick).pressScale(src) else Modifier.semantics(mergeDescendants = true) { heading() })
             Row(title.padding(bottom = Spacing.space2), verticalAlignment = Alignment.Top) {
@@ -405,6 +454,8 @@ class TimelineAdjust(
     val onCommit: (Int) -> Unit,
     val laterLabel: String,
     val earlierLabel: String,
+    /** For the start (0.53.0): the time on the left while held, live. */
+    val previewTime: ((Int) -> String)? = null,
 )
 
 /** How strongly the expected window shows on the ring: a hint, never data. */

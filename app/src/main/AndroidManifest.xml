@@ -84,5 +84,16 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_info" />
         </receiver>
+        <!-- The watch tile (0.53.0, docs/wear.md): messages from Cochilo's own watch app. Google's
+             wearable services require it exported; it reads only Cochilo's /cochilo paths, and
+             the phone answers only a watch connected directly. -->
+        <service
+            android:name=".wear.WearListener"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
+                <data android:scheme="wear" android:host="*" android:pathPrefix="/cochilo" />
+            </intent-filter>
+        </service>
     </application>
 </manifest>

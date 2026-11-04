@@ -31,6 +31,8 @@ A "tap" is a touch on a target; a "slide" is one touch that moves sideways and l
 | Start sleep / Woke up from the notification shade | — | **1 tap** | The quick-settings tile |
 | Start sleep / Woke up from the home screen | open app + 1 tap | **1 tap** | The widget's mint button ([widget.md](widget.md)) |
 | Breastfeed a side / switch / finish, from the home screen | open app + 1 move | **1 tap** | The widget's Left / Right; the running side reads Finish |
+| Start sleep / Woke up, a breast, from the wrist (0.53.0) | the notification on the watch | **1 tap** | The watch tile ([wear.md](wear.md)) |
+| Fix when a sleep began (0.53.0) | Tap it, change the time, Save (3+) | **1 drag** | Hold its time on the Day timeline and drag |
 | Start a daylight walk when nudged | open the Daylight row | **1 tap** | "Go outside" on the nudge row ([night-light.md](night-light.md)) |
 | A routine with its steps ticked | — | tap Routine, a tap per step, Save | The checklist in the sheet ([rituals.md](rituals.md)); sliding still logs without it |
 | Pick a fabric for the Today card | — | 2 taps | Settings (gear), then a swatch: applied at once, no Save |
@@ -59,11 +61,21 @@ costs the fewest taps. Audit of every entry type (2026-11-02):
 | Sleep place | asked on Woke up, the last place outlined with a dot (0.28.0) | — | the last place (crib, arms, sling…) | ✅ |
 | Feed kind, bottle ml, pump ml, daylight kind | asked when the timer ends if missing, the last answer marked or filled in (0.28.0) | — | the last one | ✅ |
 | Widget | the breast used last has the Last mark | — | — | — |
+| Watch tile (0.53.0) | the breast used last has a dot | — | — | — |
 | Fabric (a setting) | the Today card wears it | — | the picker opens with it ringed | — |
 
 Code: `lastOf`, `lastKind`, `lastKindAmong`, `Event.rememberedFrom` in `domain/QuickLog.kt`
 (tested in `QuickLogTest`); the Log menu in `LogMenu.kt` (Today's rows until 0.39.0); the sheet's line in `Sheets.kt`.
 This replaced the earlier "next: other breast" suggestion: the app shows what happened, she decides.
+
+## The watch tile, and dragging the start (0.53.0)
+
+- **The tile** ([wear.md](wear.md)): Start sleep / Woke up (or Back to sleep) and the two breasts,
+  one tap each. It adds no tap anywhere else.
+- **Drag the start:** on the Day tab's timeline, hold a sleep's start time (on the left) and drag
+  up for earlier, down for later, in 5-minute steps, like the end. The time and the bar follow
+  the finger, and Undo comes after. It stops at the sleep before and 5 minutes before the end.
+  TalkBack offers "Began 5 minutes earlier / later".
 
 ## The next sleep on the timeline (0.50.0)
 

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Cochilo</string>
+    <string name="asleep_since">Dormindo desde %1$s</string>
+    <string name="awake_since">Acordado desde %1$s</string>
+    <string name="start_sleep">Começar sono</string>
+    <string name="woke_up">Acordou</string>
+    <string name="back_to_sleep">Voltou a dormir</string>
+    <string name="left">Esquerdo</string>
+    <string name="right">Direito</string>
+    <string name="finish_side">Terminar %1$s</string>
+    <string name="no_phone">Abra o Cochilo no celular, por perto.</string>
+    <string name="no_baby">Adicione o bebê no celular primeiro.</string>
+</resources>

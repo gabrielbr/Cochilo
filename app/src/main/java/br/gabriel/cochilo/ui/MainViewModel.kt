@@ -314,6 +314,16 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         })
     }
 
+    /** Drag to adjust the start (0.53.0), with Undo. */
+    fun adjustStart(e: Event, start: Long) = viewModelScope.launch {
+        ctx.prefs.setAdjustHintSeen()
+        events.upsert(e.copy(start = start, updatedAt = System.currentTimeMillis()))
+        refreshNow()
+        _messages.send(UiMessage(str(R.string.adjusted_start, Format(ctx, zone).time(start)), str(R.string.undo)) {
+            viewModelScope.launch { events.upsert(e.copy(updatedAt = System.currentTimeMillis())); refreshNow() }
+        })
+    }
+
     fun delete(e: Event) = viewModelScope.launch {
         events.delete(e)
         refreshNow()

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Cochilo</string>
+    <string name="asleep_since">Asleep since %1$s</string>
+    <string name="awake_since">Awake since %1$s</string>
+    <string name="start_sleep">Start sleep</string>
+    <string name="woke_up">Woke up</string>
+    <string name="back_to_sleep">Back to sleep</string>
+    <string name="left">Left</string>
+    <string name="right">Right</string>
+    <string name="finish_side">Finish %1$s</string>
+    <string name="no_phone">Open Cochilo on the phone, nearby.</string>
+    <string name="no_baby">Add the baby on the phone first.</string>
+</resources>
