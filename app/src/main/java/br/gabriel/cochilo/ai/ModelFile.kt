@@ -19,6 +19,18 @@ object ModelFile {
         return first != '<' && first != '{' && first != '['
     }
 
+    /** A `.litertlm` file starts with these bytes (0.55.0); anything else goes to MediaPipe. */
+    val LITERTLM_MAGIC = "LITERTLM".toByteArray()
+
+    fun isLiteRtLm(head: ByteArray): Boolean = head.size >= LITERTLM_MAGIC.size && LITERTLM_MAGIC.indices.all { head[it] == LITERTLM_MAGIC[it] }
+
+    /**
+     * A conservative token count for a runtime without a tokenizer call (LiteRT-LM, 0.55.0): about
+     * one token per three characters, which over-counts English and Portuguese prose, so a prompt
+     * is trimmed early rather than overflowing.
+     */
+    fun approxTokens(text: String): Int = (text.length + 2) / 3
+
     fun check(head: ByteArray, bytes: Long): ModelState.Reason? = when {
         !looksLikeTask(head) -> ModelState.Reason.NOT_A_MODEL
         bytes < MIN_BYTES -> ModelState.Reason.TOO_SMALL

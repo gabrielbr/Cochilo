@@ -204,6 +204,7 @@ fun CochiloRoot(vm: MainViewModel) {
                                 generate = if (ready && !paused) vm::generate else null,
                                 onResumeModel = if (ready && paused) vm::resumeModel else null,
                                 onGetModel = if (canGet) ({ showingModel = true }) else null,
+                                modelMb = vm.modelMb.collectAsState().value,
                                 digest = digest,
                                 modelGetting = model is br.gabriel.cochilo.ai.ModelState.Getting,
                                 onChange = { list -> vm.saveChat(id, list.mapNotNull { it.toItem() }) },
@@ -481,6 +482,7 @@ fun CochiloRoot(vm: MainViewModel) {
             onRemove = vm::removeModel,
             onDismiss = { showingModel = false },
             onMobileData = vm::modelOnMobileData,
+            sizeMb = vm.modelMb.collectAsState().value,
         )
     }
     if (editingPassphrase) {

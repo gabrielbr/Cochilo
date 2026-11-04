@@ -3,6 +3,15 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.55.0 — 2026-11-04
+
+**Ask Cochilo, on Google's newer engine.**
+- The on-device AI runs on LiteRT-LM, Google's newer engine, for the model files published from
+  now on. A phone that already has the model keeps it and keeps working.
+- **A bigger model for a bigger phone.** On a phone with 8 GB of memory, the download is Gemma 3n
+  (about 3.5 GB) once it's published. The sheet says the size before you download.
+- Under the hood: Kotlin 2.2 and Room 2.7.
+
 ## 0.54.0 — 2026-11-04
 
 **The baby's clock.**

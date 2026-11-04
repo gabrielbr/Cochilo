@@ -26,6 +26,10 @@ import java.net.URL
  * otherwise, and resumes after a dropped connection. What arrives is checked against the
  * published SHA-256 before it's used. A file the parent already has can still be chosen instead.
  * The request carries nothing about the person or the baby.
+ *
+ * Which model (0.55.0): Gemma 3n on a phone with the memory for it, if it's published; else the 1B
+ * for LiteRT-LM; else the older 1B `.task`. Gemma 3n is over GitHub's 2 GB per file, so it comes in
+ * parts, downloaded one after the other and joined before the check.
  */
 object ModelSources {
     fun create(context: Context): ModelSource = DownloadSource(context.applicationContext)
@@ -34,6 +38,10 @@ object ModelSources {
 private const val PREFS = "assistant_model"
 private const val KEY_ID = "download_id"
 private const val KEY_SHA = "sha256"
+/** Which model is on its way (ModelDownload.Choice), and which of its parts (0.55.0). */
+private const val KEY_CHOICE = "choice"
+private const val KEY_PART = "part"
+private const val KEY_METERED = "metered"
 
 private class DownloadSource(private val context: Context) : ModelSource {
     /** A chosen file is copied here. */
@@ -42,6 +50,14 @@ private class DownloadSource(private val context: Context) : ModelSource {
     private val downloadedDir get() = File(context.getExternalFilesDir(null), "models")
     private val downloaded get() = File(downloadedDir, "assistant.task")
     private val partial get() = File(downloadedDir, "assistant.task.download")
+    private fun partFile(i: Int) = File(downloadedDir, "assistant.task.download.$i")
+    private val totalMemory: Long = runCatching {
+        android.app.ActivityManager.MemoryInfo().also { context.getSystemService(android.app.ActivityManager::class.java).getMemoryInfo(it) }.totalMem
+    }.getOrDefault(0L)
+    private val _approxMb = MutableStateFlow(ModelDownload.APPROX_MB)
+    override val approxMb: StateFlow<Int> = _approxMb
+    /** The model chosen for this phone, once its checksum was read. */
+    private var chosen: Pair<ModelDownload.Choice, String>? = null
     private val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
     private val dm = context.getSystemService(DownloadManager::class.java)
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
@@ -50,11 +66,12 @@ private class DownloadSource(private val context: Context) : ModelSource {
     override val kind = ModelSource.Kind.APP_DOWNLOAD
     override val state: StateFlow<ModelState> = _state
 
-    init { refresh() }
+    init { look() }
 
     private fun present(): File? = listOf(imported, downloaded).firstOrNull { it.exists() }
 
-    override fun refresh() {
+    /** What's on the phone, without the network. */
+    private fun look() {
         if (_state.value is ModelState.Getting) return
         val f = present()
         when {
@@ -62,6 +79,15 @@ private class DownloadSource(private val context: Context) : ModelSource {
             prefs.getLong(KEY_ID, -1L) >= 0 -> watch()
             else -> _state.value = ModelState.Absent
         }
+    }
+
+    /**
+     * The sheet opened. On a phone that could take Gemma 3n, read which model is published, so
+     * the size it promises is the one it downloads (one request, no data in it). Never at start.
+     */
+    override fun refresh() {
+        look()
+        if (_state.value == ModelState.Absent && totalMemory >= ModelDownload.BIG_PHONE_BYTES && chosen == null) scope.launch { choose() }
     }
 
     override fun download() {
@@ -74,36 +100,54 @@ private class DownloadSource(private val context: Context) : ModelSource {
         start(wifiOnly = false)
     }
 
+    /** The best model for this phone that's published, and its checksum (0.55.0). */
+    private fun choose(): Pair<ModelDownload.Choice, String>? {
+        chosen?.let { return it }
+        for (c in ModelDownload.choices(totalMemory)) {
+            val sha = fetchSum(c) ?: continue
+            return (c to sha).also { chosen = it; _approxMb.value = c.approxMb }
+        }
+        return null
+    }
+
     private fun start(wifiOnly: Boolean) {
         _state.value = ModelState.Getting(null)
         scope.launch {
-            val sha = prefs.getString(KEY_SHA, null) ?: fetchSum()
-            if (sha == null) { _state.value = ModelState.Failed(lastFailure); return@launch }
+            val (choice, sha) = choose() ?: run { _state.value = ModelState.Failed(lastFailure); return@launch }
             downloadedDir.mkdirs()
-            if (downloadedDir.usableSpace < ModelDownload.APPROX_MB * 1024L * 1024 + ModelFile.MIN_BYTES) {
+            // The parts and the joined file are both on disk for a moment.
+            val need = choice.approxMb * 1024L * 1024 * (if (choice.parts.size > 1) 2 else 1) + ModelFile.MIN_BYTES
+            if (downloadedDir.usableSpace < need) {
                 _state.value = ModelState.Failed(ModelState.Reason.NO_SPACE); return@launch
             }
             partial.delete()
-            val request = DownloadManager.Request(Uri.parse(ModelDownload.modelUrl(BuildConfig.GITHUB_REPO)))
-                .setTitle(context.getString(R.string.model_notification_title))
-                .setDescription(context.getString(R.string.model_notification_line))
-                .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
-                .setDestinationUri(Uri.fromFile(partial))
-                .setAllowedOverMetered(!wifiOnly)
-                .setAllowedOverRoaming(false)
-                .addRequestHeader("User-Agent", "Cochilo/${BuildConfig.VERSION_NAME}")
-            val id = runCatching { dm.enqueue(request) }.getOrNull()
-            if (id == null) { _state.value = ModelState.Failed(ModelState.Reason.DOWNLOAD); return@launch }
-            prefs.edit().putLong(KEY_ID, id).putString(KEY_SHA, sha).apply()
-            watch()
+            choice.parts.indices.forEach { partFile(it).delete() }
+            prefs.edit().putString(KEY_CHOICE, choice.name).putString(KEY_SHA, sha).putBoolean(KEY_METERED, !wifiOnly).apply()
+            enqueue(choice, 0, wifiOnly)
         }
+    }
+
+    /** Downloads part [part] of [choice]; [watch] starts the next one when it ends. */
+    private fun enqueue(choice: ModelDownload.Choice, part: Int, wifiOnly: Boolean) {
+        val request = DownloadManager.Request(Uri.parse(ModelDownload.url(BuildConfig.GITHUB_REPO, choice.parts[part])))
+            .setTitle(context.getString(R.string.model_notification_title))
+            .setDescription(context.getString(R.string.model_notification_line, android.text.format.Formatter.formatShortFileSize(context, choice.approxMb * 1_000_000L)))
+            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
+            .setDestinationUri(Uri.fromFile(if (choice.parts.size == 1) partial else partFile(part)))
+            .setAllowedOverMetered(!wifiOnly)
+            .setAllowedOverRoaming(false)
+            .addRequestHeader("User-Agent", "Cochilo/${BuildConfig.VERSION_NAME}")
+        val id = runCatching { dm.enqueue(request) }.getOrNull()
+        if (id == null) { _state.value = ModelState.Failed(ModelState.Reason.DOWNLOAD); return }
+        prefs.edit().putLong(KEY_ID, id).putInt(KEY_PART, part).apply()
+        watch()
     }
 
     private var lastFailure = ModelState.Reason.DOWNLOAD
 
     /** The published checksum, or null (and why) when it can't be read. */
-    private fun fetchSum(): String? = runCatching {
-        val conn = (URL(ModelDownload.sumUrl(BuildConfig.GITHUB_REPO)).openConnection() as HttpURLConnection).apply {
+    private fun fetchSum(choice: ModelDownload.Choice): String? = runCatching {
+        val conn = (URL(ModelDownload.sumUrl(BuildConfig.GITHUB_REPO, choice)).openConnection() as HttpURLConnection).apply {
             connectTimeout = 15_000; readTimeout = 15_000; instanceFollowRedirects = true
             setRequestProperty("User-Agent", "Cochilo/${BuildConfig.VERSION_NAME}")
         }
@@ -132,11 +176,21 @@ private class DownloadSource(private val context: Context) : ModelSource {
                 }
                 if (row == null) { forget(); _state.value = ModelState.Absent; return@launch } // cancelled from the notification
                 val (status, reason, sizes) = row
-                val progress = sizes.second.takeIf { it > 0 }?.let { (sizes.first.toFloat() / it).coerceIn(0f, 1f) }
+                // With parts, progress runs across all of them.
+                val choice = currentChoice()
+                val part = prefs.getInt(KEY_PART, 0)
+                val n = choice.parts.size
+                val progress = sizes.second.takeIf { it > 0 }?.let { ((part + sizes.first.toFloat() / it) / n).coerceIn(0f, 1f) }
                 when (status) {
-                    DownloadManager.STATUS_SUCCESSFUL -> { finish(); return@launch }
+                    DownloadManager.STATUS_SUCCESSFUL -> {
+                        if (part + 1 < n) {
+                            prefs.edit().remove(KEY_ID).apply()
+                            enqueue(choice, part + 1, wifiOnly = !prefs.getBoolean(KEY_METERED, false))
+                        } else finish()
+                        return@launch
+                    }
                     DownloadManager.STATUS_FAILED -> {
-                        forget(); partial.delete()
+                        forget(); partial.delete(); ModelDownload.Choice.entries.maxOf { it.parts.size }.let { n -> (0 until n).forEach { partFile(it).delete() } }
                         _state.value = ModelState.Failed(if (reason == DownloadManager.ERROR_INSUFFICIENT_SPACE) ModelState.Reason.NO_SPACE else ModelState.Reason.DOWNLOAD)
                         return@launch
                     }
@@ -148,9 +202,21 @@ private class DownloadSource(private val context: Context) : ModelSource {
         }
     }
 
+    private fun currentChoice(): ModelDownload.Choice =
+        prefs.getString(KEY_CHOICE, null)?.let { n -> ModelDownload.Choice.entries.firstOrNull { it.name == n } } ?: ModelDownload.Choice.GEMMA_1B_TASK
+
     private fun finish() {
         val sha = prefs.getString(KEY_SHA, null)
+        val choice = currentChoice()
         forget()
+        // Parts are joined into one file before the check.
+        if (choice.parts.size > 1) {
+            val joined = runCatching {
+                partial.outputStream().use { out -> choice.parts.indices.forEach { i -> partFile(i).inputStream().use { it.copyTo(out, 1 shl 20) } } }
+            }.isSuccess
+            choice.parts.indices.forEach { partFile(it).delete() }
+            if (!joined) { partial.delete(); _state.value = ModelState.Failed(ModelState.Reason.NO_SPACE); return }
+        }
         val problem = if (sha == null || !partial.exists()) ModelState.Reason.DOWNLOAD else ModelDownload.verify(partial, sha)
         if (problem != null) {
             partial.delete()
@@ -163,7 +229,7 @@ private class DownloadSource(private val context: Context) : ModelSource {
         _state.value = if (partial.renameTo(downloaded)) ModelState.Ready(downloaded, downloaded.length()) else ModelState.Failed(ModelState.Reason.OTHER)
     }
 
-    private fun forget() = prefs.edit().remove(KEY_ID).apply()
+    private fun forget() = prefs.edit().remove(KEY_ID).remove(KEY_PART).apply()
 
     private fun cancelDownload() {
         val id = prefs.getLong(KEY_ID, -1L)
@@ -171,6 +237,7 @@ private class DownloadSource(private val context: Context) : ModelSource {
         forget()
         watching?.cancel()
         partial.delete()
+        ModelDownload.Choice.entries.maxOf { it.parts.size }.let { n -> (0 until n).forEach { partFile(it).delete() } }
     }
 
     override suspend fun import(uri: Uri) = withContext(Dispatchers.IO) {

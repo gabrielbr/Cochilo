@@ -460,6 +460,8 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     private val modelSource = br.gabriel.cochilo.ai.ModelSources.create(ctx)
     val modelKind: br.gabriel.cochilo.ai.ModelSource.Kind = modelSource.kind
     val modelState: StateFlow<br.gabriel.cochilo.ai.ModelState> = modelSource.state
+    /** About how big the model this phone would get is (0.55.0): Gemma 3n on a big phone, else 1B. */
+    val modelMb: StateFlow<Int> = modelSource.approxMb
     private var model: br.gabriel.cochilo.ai.LocalModel? = null
     private var modelFile: java.io.File? = null
 
@@ -506,8 +508,8 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         try {
             runCatching {
                 val m = model?.takeIf { modelFile == ready.file }
-                    ?: br.gabriel.cochilo.ai.MediaPipeModel(ctx, ready.file).also { model?.close(); model = it; modelFile = ready.file }
-                val budget = br.gabriel.cochilo.ai.MediaPipeModel.MAX_TOKENS - br.gabriel.cochilo.ai.MediaPipeModel.REPLY_TOKENS
+                    ?: br.gabriel.cochilo.ai.LocalModels.open(ctx, ready.file).also { model?.close(); model = it; modelFile = ready.file }
+                val budget = br.gabriel.cochilo.ai.LocalModel.MAX_TOKENS - br.gabriel.cochilo.ai.LocalModel.REPLY_TOKENS
                 val prompt = br.gabriel.cochilo.domain.assistant.Grounding.fit(ask.question, ask.facts, ask.passages, ask.portuguese) { m.tokens(it) <= budget }
                     ?: return@runCatching null
                 br.gabriel.cochilo.ui.screens.ModelAnswer(prompt, m.generate(prompt))

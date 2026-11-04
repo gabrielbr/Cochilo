@@ -50,7 +50,6 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    kotlinOptions { jvmTarget = "17" }
     lint { checkReleaseBuilds = false }
 }
 
@@ -80,3 +79,5 @@ dependencies {
     debugImplementation("androidx.wear.tiles:tiles-renderer:1.4.1")
     debugImplementation("com.google.guava:guava:33.3.1-android")
 }
+
+kotlin { compilerOptions { jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17) } }

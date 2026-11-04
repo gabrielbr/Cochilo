@@ -33,4 +33,19 @@ class ModelFileTest {
         assertFalse(File(target.parentFile, "assistant.task.part").exists())
         dir.deleteRecursively()
     }
+
+    /** 0.55.0: a .litertlm file goes to LiteRT-LM, by its first bytes; anything else to MediaPipe. */
+    @Test fun the_runtime_is_picked_by_the_files_first_bytes() {
+        assertTrue(ModelFile.isLiteRtLm("LITERTLM\u0001\u0000".toByteArray()))
+        assertFalse(ModelFile.isLiteRtLm(zip))
+        assertFalse(ModelFile.isLiteRtLm("LITE".toByteArray()))
+        assertNull(ModelFile.check("LITERTLM".toByteArray(), 600L * 1024 * 1024))
+    }
+
+    @Test fun the_token_estimate_never_counts_low() {
+        // Gemma's tokenizer gives about one token per four characters of prose; three is safe.
+        val text = "How long should the last nap of the day be at four months?"
+        assertTrue(ModelFile.approxTokens(text) >= text.length / 4)
+        assertEquals(0, ModelFile.approxTokens(""))
+    }
 }

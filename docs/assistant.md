@@ -68,11 +68,37 @@ questions under it. It never guesses outside its library.
 Decided 2026-11-03 by the owner: **Play delivery for the play build, file import for the family
 build**. Optional and off until the parent gets the model; phase 1 is always there.
 
-**Runtime:** MediaPipe LLM Inference (`com.google.mediapipe:tasks-genai`), the same `.task` model
-files on Android and iOS, with no permissions of its own. It sits behind `ai/LocalModel.kt`, so it
-can be swapped for [LiteRT-LM](https://ai.google.dev/edge/litert-lm/overview) (Google's newer
-runtime) in one class. LiteRT-LM's Android library is built with Kotlin 2.2+, which this project's
-Kotlin 2.0 can't read yet; that swap follows a Kotlin upgrade (roadmap).
+**Runtime** (since 0.55.0, behind `ai/LocalModel.kt`):
+- **[LiteRT-LM](https://ai.google.dev/edge/litert-lm/overview)** (`com.google.ai.edge.litertlm:litertlm-android`
+  0.16.1, Google's newer runtime) runs `.litertlm` files. `LocalModels.open` picks it when the file
+  starts with "LITERTLM". It has no tokenizer call, so prompts are measured at one token per three
+  characters (`ModelFile.approxTokens`), which over-counts and trims a little early.
+- **MediaPipe LLM Inference** (`com.google.mediapipe:tasks-genai`) still runs the `.task` file, so
+  phones that got the model before 0.55.0 keep it, and the Play asset pack still carries `.task`.
+
+Neither has permissions of its own. Kotlin went from 2.0.21 to 2.2.21 (KSP 2.2.21-2.0.5, Room
+2.7.2) for LiteRT-LM, whose newer releases need Kotlin 2.4.
+
+**Which model** (0.55.0, `ModelDownload.Choice`), first published wins:
+
+| Phone | Model | Size |
+|---|---|---|
+| 7 GB of memory or more (an 8 GB phone) | Gemma 3n E2B, `.litertlm`, in two parts | about 3.5 GB |
+| Any | Gemma 3 1B, `.litertlm` | about 600 MB |
+| Any | Gemma 3 1B, `.task` (the one published before 0.55.0) | about 550 MB |
+
+GitHub takes at most 2 GB per file, so Gemma 3n is published in two parts (`.part1`, `.part2`)
+with the whole file's `.sha256`. The app downloads them one after the other through the download
+manager, joins them, and checks the whole. The sheet and Ask's row say the size of the model this
+phone would get: on an 8 GB phone the sheet reads which one is published when it opens, one
+request with no data in it, never at start.
+
+**Publishing:** the **Publish assistant model** workflow now also takes the 1B `.litertlm` and,
+with its "gemma3n" box ticked, Gemma 3n (which needs the HF token's account to accept Gemma's terms
+on its page too). Until it runs, phones keep downloading the `.task`.
+
+**Still to measure on real phones:** speed and battery of LiteRT-LM against MediaPipe on a 4 GB
+phone, and Gemma 3n on an 8 GB one.
 
 **Model:** a small Gemma as a `.task` file (Gemma 3 1B, 4-bit, about 550 MB). The model is never in
 git and never inside the APK.

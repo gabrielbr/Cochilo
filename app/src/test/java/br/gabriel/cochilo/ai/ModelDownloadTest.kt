@@ -32,4 +32,15 @@ class ModelDownloadTest {
             assertFalse(ModelDownload.sha256(f) == "0".repeat(64))
         } finally { f.delete() }
     }
+
+    /** 0.55.0: Gemma 3n first on a phone with 8 GB, then the 1B for LiteRT-LM, then the old .task. */
+    @Test fun the_model_follows_the_phones_memory() {
+        val gb = 1024L * 1024 * 1024
+        assertEquals(ModelDownload.Choice.entries.toList(), ModelDownload.choices(8 * gb - 600 * 1024 * 1024))
+        assertEquals(listOf(ModelDownload.Choice.GEMMA_1B, ModelDownload.Choice.GEMMA_1B_TASK), ModelDownload.choices(4 * gb))
+        // Gemma 3n is over GitHub's 2 GB per file, so it comes in two parts.
+        assertEquals(2, ModelDownload.Choice.GEMMA_3N.parts.size)
+        assertEquals("https://github.com/gabrielbr/Cochilo/releases/download/assistant-model-v1/gemma-3n-E2B-it-int4.litertlm.sha256",
+            ModelDownload.sumUrl("gabrielbr/Cochilo", ModelDownload.Choice.GEMMA_3N))
+    }
 }

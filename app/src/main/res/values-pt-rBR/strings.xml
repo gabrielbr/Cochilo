@@ -569,8 +569,8 @@
     <string name="model_status_failed">Não terminou. Toque para tentar de novo.</string>
     <string name="model_title">IA no celular</string>
     <string name="model_line">Deixa o Pergunte ao Cochilo responder perguntas além da lista, com um pequeno modelo de IA que roda neste celular, a partir dos seus registros. Nada é enviado. Pode errar, e nunca é orientação médica.</string>
-    <string name="model_cost">Cerca de 550 MB de espaço. Gasta um pouco de bateria enquanto responde.</string>
-    <string name="model_download">Baixar (cerca de 550 MB)</string>
+    <string name="model_cost">Cerca de %1$s de espaço. Gasta um pouco de bateria enquanto responde.</string>
+    <string name="model_download">Baixar (cerca de %1$s)</string>
     <string name="model_downloading">Baixando pela Play Store…</string>
     <string name="model_downloading_pct">Baixando pela Play Store… %1$d%%</string>
     <string name="model_copying">Copiando o modelo…</string>
@@ -584,7 +584,7 @@
     <string name="model_failed_no_space">Não há espaço suficiente no celular.</string>
     <string name="model_failed_download">O download não terminou. Tente de novo no Wi-Fi.</string>
     <string name="model_failed_other">Não deu certo. Tente de novo.</string>
-    <string name="model_terms">Gemma 3 1B, o modelo aberto do Google, sob os Termos de Uso do Gemma (ai.google.dev/gemma/terms).</string>
+    <string name="model_terms">Gemma, o modelo aberto do Google, sob os Termos de Uso do Gemma (ai.google.dev/gemma/terms).</string>
     <string name="model_wifi_line">Baixa pelo Wi-Fi e continua mesmo se você fechar o app.</string>
     <string name="model_app_downloading">Baixando…</string>
     <string name="model_app_downloading_pct">Baixando… %1$d%%</string>
@@ -595,9 +595,9 @@
     <string name="model_failed_not_published">O modelo ainda não está pronto para baixar. Você pode escolher um arquivo.</string>
     <string name="model_failed_check">O download chegou com defeito. Tente de novo.</string>
     <string name="model_notification_title">Cochilo: IA no celular</string>
-    <string name="model_notification_line">O modelo do Pergunte ao Cochilo, cerca de 550 MB</string>
+    <string name="model_notification_line">O modelo do Pergunte ao Cochilo, cerca de %1$s</string>
     <string name="ask_get_model">Responder perguntas assim no celular</string>
-    <string name="ask_get_model_meta">Baixar a IA no celular · cerca de 550 MB</string>
+    <string name="ask_get_model_meta">Baixar a IA no celular · cerca de %1$s</string>
     <string name="ask_thinking">Pensando, neste celular…</string>
     <string name="ask_generated_label">Escrito neste celular por um pequeno modelo de IA, a partir dos seus registros. Pode errar.</string>
     <string name="fabric_in_shop_line">Este tecido existe em sling.</string>
