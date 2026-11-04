@@ -28,7 +28,7 @@ Each is grounded in `docs/research.md` or the Tatá Slings plans (`docs/tata-sli
 
 | Feature | Why (source) | What it is |
 |---|---|---|
-| **Prediction, the clock part** | Two-process model (§2.1, §7.2) | Process C: a fitted circadian curve (bedtime and the first nap pulled towards the baby's own clock as it forms), and a live sleep-pressure line on the Day tab |
+| **Prediction, phase 3 (learned)** | research §7.2 | A small model on time of day, last nap, daylight, routine and feeds, once there are months of log |
 
 ## 3. UX improvements
 
@@ -64,6 +64,7 @@ only with Tatá.
 | **On-device checks with TalkBack** | Paparazzi checks pixels, not the reading order |
 
 ## Shipped from this plan
+- **0.54.0**: the prediction's clock (process C) and the sleep-pressure line.
 - **0.53.0**: drag a sleep's start; the Wear OS tile.
 - **0.52.0**: who logged it; partner sync with the app closed.
 - **0.51.0**: Tatá's other three moments; one legend per screen; Settings' second lines; a quieter
@@ -115,7 +116,6 @@ only with Tatá.
 
 | Release | What |
 |---|---|
-| 0.54.0 | The prediction's clock part |
 | 0.55.0 | Ask Cochilo on LiteRT-LM, after the Kotlin upgrade |
 
 Each of these lands like the rest: design system first, docs with the change, screenshots looked

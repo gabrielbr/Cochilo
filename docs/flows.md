@@ -68,6 +68,11 @@ Code: `lastOf`, `lastKind`, `lastKindAmong`, `Event.rememberedFrom` in `domain/Q
 (tested in `QuickLogTest`); the Log menu in `LogMenu.kt` (Today's rows until 0.39.0); the sheet's line in `Sheets.kt`.
 This replaced the earlier "next: other breast" suggestion: the app shows what happened, she decides.
 
+## The baby's clock and sleep pressure (0.54.0)
+
+[prediction.md](prediction.md). No tap added. The pressure line sits on the Day tab, today, under
+the legend; its "i" is one tap.
+
 ## The watch tile, and dragging the start (0.53.0)
 
 - **The tile** ([wear.md](wear.md)): Start sleep / Woke up (or Back to sleep) and the two breasts,

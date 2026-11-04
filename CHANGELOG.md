@@ -3,6 +3,17 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.54.0 — 2026-11-04
+
+**The baby's clock.**
+- **The first nap and bedtime follow the baby's clock.** As the day/night rhythm forms (about 6
+  to 16 weeks), the first nap and bedtime lean towards the times your baby keeps. It's only as
+  much as those times are steady, and only if they're steadier than the time awake before them.
+  "How it's guessed" says so: "The first nap usually starts near 9:00, as the baby's clock
+  forms, so 15m later."
+- **Sleep pressure, on the Day tab.** Today's line builds while the baby is awake and drains
+  while asleep. 100% is about when sleep usually comes. It's a model, and it says so.
+
 ## 0.53.0 — 2026-11-04
 
 **From the wrist, and the start too.**

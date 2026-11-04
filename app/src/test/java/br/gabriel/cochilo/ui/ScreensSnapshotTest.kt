@@ -573,6 +573,20 @@ class ScreensSnapshotTest {
             }
         }
     }
+    /** Sleep pressure (0.54.0): today's line under the ring, on a tall screen to show it. */
+    @Test fun day_pressure_light() {
+        tall()
+        paparazzi.snapshot {
+            CochiloTheme(false) {
+                br.gabriel.cochilo.ui.kit.Frame {
+                    val w = ageWeeks(baby.birthDate, null, now)
+                    val p = Predictor(zone).predict(log, w, now) as Predictor.Result.Awake
+                    DayScreen(log, now, zone, onOpen = {}, expected = p.windowStart to p.windowEnd, plan = br.gabriel.cochilo.domain.DayPlan(zone).of(log, w, now),
+                        pressure = br.gabriel.cochilo.domain.Pressure.today(log, w, now, zone))
+                }
+            }
+        }
+    }
     @Test fun settings_light() { light(); paparazzi.snapshot { Chrome(false, 0, settings = true) } }
     @Test fun today_fabric_balao_light() { light(); paparazzi.snapshot { Fabric(br.gabriel.cochilo.ui.kit.Fabric.BALAO) { Chrome(false, 0) } } }
     @Test fun today_sleeping_fabric_tropical_dark() { dark(); paparazzi.snapshot { Fabric(br.gabriel.cochilo.ui.kit.Fabric.TROPICAL) { Chrome(true, 0, sleepingLog) } } }

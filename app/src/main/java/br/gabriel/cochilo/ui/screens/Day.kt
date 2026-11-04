@@ -65,6 +65,8 @@ fun DayScreen(
     plan: br.gabriel.cochilo.domain.DayPlan.Plan? = null,
     /** Drag to adjust: a finished sleep's new end (docs/flows.md). */
     onAdjust: (Event, Long) -> Unit = { _, _ -> },
+    /** Sleep pressure today, the model's line (0.54.0); empty to show none. */
+    pressure: List<br.gabriel.cochilo.domain.Pressure.Point> = emptyList(),
     /** Drag to adjust: a sleep's new start (0.53.0). */
     onAdjustStart: (Event, Long) -> Unit = { _, _ -> },
     /** For screenshots: one sleep's start shown mid-drag (its index, steps). */
@@ -133,6 +135,30 @@ fun DayScreen(
         }
         Spacer(Modifier.height(Spacing.space3))
         EventLegend(events, zone, expected = expected != null && day == today)
+
+        // Sleep pressure, today only (0.54.0, docs/prediction.md): the model's line, said to be one.
+        if (day == today && pressure.size >= 2) {
+            val nowP = pressure.last().percent
+            val rising = br.gabriel.cochilo.domain.Pressure.rising(events, now)
+            val line = stringResource(if (rising) R.string.pressure_now_rising else R.string.pressure_now_falling, nowP)
+            val meta = stringResource(R.string.pressure_meta, 100)
+            Caption(stringResource(R.string.caption_pressure))
+            Box(Modifier.fillMaxWidth().clip(RoundedCornerShape(Radius.radiusM)).background(CochiloTheme.colors.surface).padding(Spacing.space4)) {
+                Column {
+                    br.gabriel.cochilo.ui.kit.PressureLine(pressure, from, to, "$line. $meta")
+                    Spacer(Modifier.height(Spacing.space1))
+                    br.gabriel.cochilo.ui.kit.HourLabels()
+                    Spacer(Modifier.height(Spacing.space2))
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Column(Modifier.weight(1f)) {
+                            Text(line, style = Type.bodySmall, color = CochiloTheme.colors.ink)
+                            Text(meta, style = Type.meta, color = CochiloTheme.colors.muted)
+                        }
+                        InfoButton(stringResource(R.string.caption_pressure), stringResource(R.string.info_pressure))
+                    }
+                }
+            }
+        }
 
         Caption(stringResource(R.string.caption_vertical))
         if (events.isEmpty()) {

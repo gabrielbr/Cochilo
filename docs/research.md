@@ -150,7 +150,8 @@ Sources for these tables (Napper, Hatch, Kyte, etc.) themselves say there's no e
 - Bedtime: weighted median of recent bedtimes, constrained by last-WW length and target night duration.
 
 **Phase 2: two-process model (more principled)**
-- *Shipped in 0.24.0 (process S only)*: the last nap's length moves the next window, learned per baby; see [prediction.md](prediction.md). Process C (the fitted clock) is still to come.
+- *Shipped in 0.24.0 (process S only)*: the last nap's length moves the next window, learned per baby; see [prediction.md](prediction.md).
+- *Shipped in 0.54.0 (process C)*: the first nap and bedtime lean towards the times this baby keeps, by a strength from age, regularity and whether the clock (not the window) leads; and a live sleep-pressure line on the Day tab. Not fitted by least squares: the time constants come from the baby's usual window and nap, which is simpler to explain ([prediction.md](prediction.md)).
 - `S(t)`: during wake `S = 1 − (1 − S₀)·e^(−t/τw)`; during sleep `S = S₀·e^(−t/τs)`.
 - `C(t)`: sinusoid (or skewed curve) with amplitude increasing with age (≈0 before 6 weeks, growing through 4–6 months), phase fitted to our data.
 - Sleep is likely when `S(t) > H⁺(t) = H₀ + a·C(t)`; waking when `S < H⁻(t)`.

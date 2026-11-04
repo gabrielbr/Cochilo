@@ -140,7 +140,9 @@ weighted median of recent bedtimes; when the next nap would land within 45 minut
 shows bedtime instead. Since 0.24.0 the last nap counts too (the two-process model's sleep
 pressure): after a short nap the next sleep comes sooner, after a long one later, by as much as this
 baby's own log shows, and the card says so ("Last nap 35m, shorter than the usual 1h 18m, so 18m
-sooner"). The card always says which numbers it used, one tap away ("How it's guessed", since 0.43.0). Tested on a synthetic year
+sooner"). Since 0.54.0 the baby's clock counts as well (process C): as the day/night rhythm
+forms (6 to 16 weeks), the first nap and bedtime lean towards the times this baby keeps, and the
+Day tab draws today's sleep pressure as a line, a model said to be one. The card always says which numbers it used, one tap away ("How it's guessed", since 0.43.0). Tested on a synthetic year
 ([docs/prediction.md](docs/prediction.md)). Code:
 [`domain/Predictor.kt`](app/src/main/java/br/gabriel/cochilo/domain/Predictor.kt).
 

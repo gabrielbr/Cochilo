@@ -85,6 +85,36 @@ fun Timeline(events: List<Event>, from: Long, to: Long, now: Long?, zone: ZoneId
     }
 }
 
+/**
+ * Sleep pressure today (0.54.0, docs/prediction.md): a line from midnight to now, on the same
+ * 24-hour axis as the timeline, with a hairline at 100% (about when the baby usually falls
+ * asleep). The line is `ink`, the guide `line`: it's a model, so no data colour. [summary] is what
+ * TalkBack reads.
+ */
+@Composable
+fun PressureLine(points: List<br.gabriel.cochilo.domain.Pressure.Point>, from: Long, to: Long, summary: String) {
+    val c = CochiloTheme.colors
+    val density = LocalDensity.current
+    val stroke = with(density) { (Size.hairline * 2).toPx() }
+    val hair = with(density) { Size.hairline.toPx() }
+    val dot = with(density) { Spacing.space1.toPx() }
+    Canvas(Modifier.fillMaxWidth().height(Spacing.space16).semantics { contentDescription = summary }) {
+        val w = size.width
+        val h = size.height
+        val span = (to - from).toFloat()
+        // 0% at the bottom, 125% at the top, so the 100% guide sits a fifth down.
+        fun y(p: Int) = h - (p.coerceIn(0, 125) / 125f) * h
+        fun x(t: Long) = ((t - from).coerceIn(0, to - from) / span) * w
+        drawRect(c.line, Offset(0f, y(100) - hair / 2), GSize(w, hair))
+        if (points.size >= 2) {
+            val path = androidx.compose.ui.graphics.Path()
+            points.forEachIndexed { i, p -> if (i == 0) path.moveTo(x(p.at), y(p.percent)) else path.lineTo(x(p.at), y(p.percent)) }
+            drawPath(path, c.ink, style = androidx.compose.ui.graphics.drawscope.Stroke(width = stroke))
+        }
+        points.lastOrNull()?.let { drawCircle(c.ink, dot, Offset(x(it.at), y(it.percent))) }
+    }
+}
+
 /** 00 · 06 · 12 · 18 · 24 under a timeline. */
 @Composable
 fun HourLabels() {

@@ -86,8 +86,50 @@ who has the effect, that it does no harm to one who hasn't, and that every predi
 between 20 minutes and 6 hours after waking. `PredictorTest` keeps the hand-made cases, and five
 more cover the nap effect's own rules.
 
-## Next: the clock (process C)
+## Phase 3: the clock (process C, 0.54.0)
 
-A circadian curve fitted to the baby's own bedtimes and morning wakes as the rhythm forms
-(months 2 to 4), so the first nap and bedtime lean towards it, and a live sleep-pressure line on
-the Day tab. In the roadmap.
+The two-process model's other half (research §2.1, §2.2, §7.2): some sleeps come at a time of day,
+not only after a stretch awake, once the baby's rhythm forms (about 6 to 18 weeks). `domain/Clock.kt`,
+tested in `ClockTest`.
+
+- **What it reads:** over 14 days, the first nap after each night and each bedtime, as times of
+  day (recency-weighted medians), and the window before each (from the morning wake, from the last
+  nap).
+- **How strong:** the product of three things:
+  - how far the rhythm has formed at this age: 0 before 6 weeks, rising to 1 at 16;
+  - whether the time of day is steadier than the time awake before it: a first nap at 9:00
+    whatever the wake, rather than two hours after it. A baby whose naps only follow waking gets
+    no clock at all;
+  - how steady the time is: a spread of 45 minutes or more counts for nothing.
+
+  It's capped at 70%: the window always keeps a say.
+- **What it moves:** the first nap after the night leans towards its usual time by that strength,
+  at most 25% of the usual window, and never sooner than 20 minutes after waking. Bedtime leans
+  towards the usual bedtime the same way, at most 30 minutes, inside the same ±30 minutes. Under 5
+  minutes it isn't applied or shown.
+- **It explains itself.** "How it's guessed" adds "The first nap usually starts near 9:00, as
+  the baby's clock forms, so 15m later" (or bedtime's line).
+
+On two synthetic half-years (`ClockTest`), from 16 weeks:
+
+| Baby | First-nap error, clock on | Clock off |
+|---|---|---|
+| First nap at 9:00 ± 10 min whatever the wake (wakes ± 40 min) | 22 min | 34 min |
+| First nap two hours after waking | 11.9 min | 11.9 min |
+
+The synthetic year (`PredictorYearTest`) still passes with the clock on.
+
+`Predictor(clock = false)` turns it off; it exists only so the tests can compare.
+
+## Sleep pressure on the Day tab (0.54.0)
+
+Today's Day tab draws **Sleep pressure, today** under the legend: a line from midnight to now
+(`domain/Pressure.kt`, `ui/kit/Charts.kt` `PressureLine`), process S of the model:
+- awake, `S = 1 − (1 − S₀)·e^(−t/τw)`; asleep, `S = S₀·e^(−t/τs)`;
+- τw so that pressure goes from empty to the line in one usual window (this baby's median daytime
+  window, else the age's); τs so that a usual nap drains it to a quarter;
+- shown as a share of the line: **100% is about when sleep usually comes**. Under it: "Now 75%,
+  rising". Its "i" says it's a model, not a measurement. TalkBack reads the same words.
+
+The line is ink and the guide a hairline: it's a model, so it uses no data colour. It shows today
+only, and only once a sleep is logged.
