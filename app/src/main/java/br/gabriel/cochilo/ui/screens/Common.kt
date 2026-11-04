@@ -139,20 +139,25 @@ fun StretchList(events: List<Event>, allSleeps: List<Event>, from: Long, to: Lon
     }
 }
 
+/**
+ * The colour key, only for the kinds [events] has (less is more, 0.51.0): a day with no pump
+ * doesn't explain pump's colour. With nothing logged it shows nothing.
+ */
 @Composable
-fun EventLegend(expected: Boolean = false) {
+fun EventLegend(events: List<Event>, zone: ZoneId, expected: Boolean = false) {
     val c = CochiloTheme.colors
-    Legend(
-        listOfNotNull(
-            LegendItem(stringResource(R.string.sleep_night), c.eventNight),
-            LegendItem(stringResource(R.string.sleep_nap), c.eventNap),
-            LegendItem(stringResource(R.string.type_feed), c.eventFeed),
-            LegendItem(stringResource(R.string.type_pump), c.eventPump),
-            LegendItem(stringResource(R.string.type_diaper), c.eventDiaper),
-            LegendItem(stringResource(R.string.type_daylight), c.eventDaylight),
-            if (expected) LegendItem(stringResource(R.string.ring_expected), c.eventNap.copy(alpha = 0.35f)) else null,
-        )
+    val sleeps = events.filter { it.type == EventType.SLEEP }
+    val types = events.map { it.type }.toSet()
+    val items = listOfNotNull(
+        if (sleeps.any { it.isNightSleep(zone) }) LegendItem(stringResource(R.string.sleep_night), c.eventNight) else null,
+        if (sleeps.any { !it.isNightSleep(zone) }) LegendItem(stringResource(R.string.sleep_nap), c.eventNap) else null,
+        if (EventType.FEED in types) LegendItem(stringResource(R.string.type_feed), c.eventFeed) else null,
+        if (EventType.PUMP in types) LegendItem(stringResource(R.string.type_pump), c.eventPump) else null,
+        if (EventType.DIAPER in types) LegendItem(stringResource(R.string.type_diaper), c.eventDiaper) else null,
+        if (EventType.DAYLIGHT in types) LegendItem(stringResource(R.string.type_daylight), c.eventDaylight) else null,
+        if (expected) LegendItem(stringResource(R.string.ring_expected), c.eventNap.copy(alpha = 0.35f)) else null,
     )
+    if (items.isNotEmpty()) Legend(items)
 }
 
 /** What TalkBack reads for a day's timeline. */

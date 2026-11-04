@@ -3,11 +3,25 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
-## 0.50.2 — 2026-11-04
+## 0.51.1 — 2026-11-04
 
 **No change in the app.** A fourth design skill from the Gabriel Design System 0.31.0,
 ux-user-flows, now plans every new or changed screen and flow first: what happens, in what order,
 and every state on the way. The audit gains a section for it (AGENTS.md, `.claude/skills/`).
+
+## 0.51.0 — 2026-11-04
+
+**More from Tatá, less to read.**
+- **Tatá's other three notes are on.** She approved them: a steady bedtime routine (the Naninha),
+  little daylight (a walk in the sling), and around six months (the TatáT.O. toys). They show in
+  the From Tatá tab under the same rules: at most one a week, never at night or while the baby
+  sleeps, and "Don't show again" is final.
+- **One legend, only what's there.** The colour key on the Day tab and in Patterns lists only the
+  kinds that day or those two weeks have.
+- **Settings, shorter.** Rows that explain themselves lost their second line. Due date, the
+  imports, safe sleep, privacy and the shop keep theirs.
+- **A quieter notification at night.** From 19:00 to 07:00 it shows the title, the running time
+  and the buttons, without the line and the bar.
 
 ## 0.50.1 — 2026-11-04
 

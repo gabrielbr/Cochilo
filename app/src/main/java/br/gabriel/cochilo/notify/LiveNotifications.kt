@@ -151,14 +151,22 @@ object LiveNotifications {
         val dm = context.resources.displayMetrics
         val barW = (dm.widthPixels - BAR_INSET_DP * dm.density).toInt()
         val barH = context.resources.getDimensionPixelSize(R.dimen.notif_bar_height)
+        // At night (19:00–07:00) it's quieter: the title, the running time and the buttons, no line
+        // and no bar to read in the dark (less is more, 0.51.0; docs/notifications.md).
+        val quiet = br.gabriel.cochilo.domain.isNightStart(now, zone)
         val view = RemoteViews(context.packageName, R.layout.notif_live).apply {
             setTextViewText(R.id.title, title)
-            setTextViewText(R.id.text, text)
-            setImageViewBitmap(R.id.bar, TimelineBar.draw(s, c, zone, now, barW, barH))
+            if (quiet) {
+                setViewVisibility(R.id.text, android.view.View.GONE)
+                setViewVisibility(R.id.bar, android.view.View.GONE)
+            } else {
+                setTextViewText(R.id.text, text)
+                setImageViewBitmap(R.id.bar, TimelineBar.draw(s, c, zone, now, barW, barH))
+            }
         }
         val n = base(context, c)
             .setContentTitle(title)
-            .setContentText(text)
+            .apply { if (!quiet) setContentText(text) }
             .setWhen(s.since).setUsesChronometer(true).setShowWhen(true)
             .setStyle(NotificationCompat.DecoratedCustomViewStyle())
             .setCustomContentView(view)

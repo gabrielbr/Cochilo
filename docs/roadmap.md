@@ -28,7 +28,6 @@ Each is grounded in `docs/research.md` or the Tatá Slings plans (`docs/tata-sli
 
 | Feature | Why (source) | What it is |
 |---|---|---|
-| **Notes from Tatá by age** | The brand voice; trust (monetization §6.5) | Built in 0.34.0 with twelve drafts, off; waiting for Tatá's words ([in-app-marketing.md](tata-slings/in-app-marketing.md) §11) |
 | **Prediction, the clock part** | Two-process model (§2.1, §7.2) | Process C: a fitted circadian curve (bedtime and the first nap pulled towards the baby's own clock as it forms), and a live sleep-pressure line on the Day tab |
 
 ## 3. UX improvements
@@ -50,16 +49,9 @@ Each is grounded in `docs/research.md` or the Tatá Slings plans (`docs/tata-sli
 ### 3.2c Tatá Slings inside the app
 
 The non-intrusive plan in [tata-slings/in-app-marketing.md](tata-slings/in-app-marketing.md):
-notes by age and log moments in the From Tatá tab (since 0.44.0, all twelve age notes on; step 1,
-the fabric line, shipped in 0.31.0; step 4's first moment, naps in arms, live in 0.36.0), never on
-Today, at night, or on safety screens. The other moments need Tatá's sign-off.
-
-### 3.3b Less is more, next ([skill](../.claude/skills/less-is-more/SKILL.md))
-- **One legend per screen**: the Day tab and Patterns each carry the full colour legend; try only
-  the kinds that day has. (Today's Day by day, the third, went in 0.45.0.)
-- **Settings' second lines**: most rows explain themselves; keep a meta line only where a row is
-  misread (Due date).
-- **The notification at night**: try the title and the two buttons only, no body line.
+notes by age and log moments in the From Tatá tab: all twelve age notes since 0.44.0, all four
+moments since 0.51.0. Next: the swaddle and a bigger baby's carrier, when the shop has one, and
+only with Tatá.
 
 ### 3.3 Two parents
 - **Partner sync, next** (the sync shipped in 0.47.0, [sync.md](../sync.md)): keep syncing with
@@ -76,6 +68,8 @@ Today, at night, or on safety screens. The other moments need Tatá's sign-off.
 | **On-device checks with TalkBack** | Paparazzi checks pixels, not the reading order |
 
 ## Shipped from this plan
+- **0.51.0**: Tatá's other three moments; one legend per screen; Settings' second lines; a quieter
+  notification at night.
 
 - **0.50.0**: the next expected sleep on the Day timeline ([prediction.md](prediction.md)).
 - **0.49.0**: the rest of the day projected, on Today and the Day ring ([prediction.md](prediction.md)).
@@ -121,10 +115,12 @@ Today, at night, or on safety screens. The other moments need Tatá's sign-off.
 
 ## 5. Priorities
 
-| When | What | Why first |
-|---|---|---|
-| **Later** | Notes from Tatá (waiting for her writing) | Needs Tatá's writing and the monetization plan's order of work |
-| **Exploring** | Wi-Fi sync between two phones; Wear OS; the prediction's clock part | Bigger builds; worth a design spike first |
+| Release | What |
+|---|---|
+| 0.52.0 | Who logged it; partner sync with the app closed |
+| 0.53.0 | Drag to adjust the start; the Wear OS tile |
+| 0.54.0 | The prediction's clock part |
+| 0.55.0 | Ask Cochilo on LiteRT-LM, after the Kotlin upgrade |
 
 Each of these lands like the rest: design system first, docs with the change, screenshots looked
 at, a PR, merged and released with a note in English and Portuguese.
