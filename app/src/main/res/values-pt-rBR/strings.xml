@@ -62,8 +62,7 @@
     <string name="caption_pressure">Pressão do sono, hoje</string>
     <string name="pressure_now_rising">Agora %1$d%%, subindo</string>
     <string name="pressure_now_falling">Agora %1$d%%, descendo</string>
-    <string name="pressure_meta">%1$d%% é mais ou menos quando o sono costuma vir.</string>
-    <string name="info_pressure">Um modelo, não uma medida. A pressão sobe enquanto o bebê está acordado e cai enquanto dorme, no ritmo da janela e da soneca de costume deste bebê. É nela que as previsões se apoiam.</string>
+    <string name="pressure_meta">Um modelo: %1$d%% é mais ou menos quando o sono costuma vir.</string>
     <string name="prediction_nap_shorter">Última soneca de %1$s, mais curta que o usual (%2$s), então %3$s antes.</string>
     <string name="prediction_nap_longer">Última soneca de %1$s, mais longa que o usual (%2$s), então %3$s depois.</string>
     <string name="prediction_need_data">As previsões começam depois do primeiro sono registrado.</string>
@@ -660,7 +659,7 @@
     <string name="sync_initial_label">Uma letra</string>
     <string name="sync_initial_meta">Aparece no que você registra, no outro celular. Deixe vazio para não mostrar.</string>
     <string name="sync_background">Sincronizar com o app fechado</string>
-    <string name="sync_background_meta">Usa a notificação que o Cochilo já mostra. Um pouco mais de bateria.</string>
+    <string name="sync_background_meta">Mantém a notificação do Cochilo. Um pouco mais de bateria.</string>
     <string name="sync_by">por %1$s</string>
     <string name="sync_keep_title">Em sincronia com %1$s</string>
     <string name="sync_unpair">Desfazer o pareamento</string>

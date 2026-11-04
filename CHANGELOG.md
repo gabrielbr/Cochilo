@@ -3,6 +3,15 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.55.1 — 2026-11-04
+
+**Checked again, properly.** The design reviews of 0.51.0–0.55.0 were redone with the four
+design skills loaded (docs/audits/0.55.1-reaudit.md), and what they found is fixed:
+- Holding a sleep's start time on the Day tab is easier: the whole row's height takes the drag.
+- Sleep pressure has no "i" of its own (the line says it's a model), its 100% guide is easier to
+  see, and it hides at night.
+- The "Keep in sync when closed" line now says it keeps Cochilo's notification on.
+
 ## 0.55.0 — 2026-11-04
 
 **Ask Cochilo, on Google's newer engine.**

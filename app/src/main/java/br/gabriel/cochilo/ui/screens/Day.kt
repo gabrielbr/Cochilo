@@ -137,7 +137,8 @@ fun DayScreen(
         EventLegend(events, zone, expected = expected != null && day == today)
 
         // Sleep pressure, today only (0.54.0, docs/prediction.md): the model's line, said to be one.
-        if (day == today && pressure.size >= 2) {
+        // Not at night (19:00–07:00): night is quieter, nothing extra to read (0.55.1 audit).
+        if (day == today && pressure.size >= 2 && !br.gabriel.cochilo.domain.isNightStart(now, zone)) {
             val nowP = pressure.last().percent
             val rising = br.gabriel.cochilo.domain.Pressure.rising(events, now)
             val line = stringResource(if (rising) R.string.pressure_now_rising else R.string.pressure_now_falling, nowP)
@@ -149,13 +150,9 @@ fun DayScreen(
                     Spacer(Modifier.height(Spacing.space1))
                     br.gabriel.cochilo.ui.kit.HourLabels()
                     Spacer(Modifier.height(Spacing.space2))
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Column(Modifier.weight(1f)) {
-                            Text(line, style = Type.bodySmall, color = CochiloTheme.colors.ink)
-                            Text(meta, style = Type.meta, color = CochiloTheme.colors.muted)
-                        }
-                        InfoButton(stringResource(R.string.caption_pressure), stringResource(R.string.info_pressure))
-                    }
+                    // One "i" per screen (the ring's): the model is said in the line instead (0.55.1 audit).
+                    Text(line, style = Type.bodySmall, color = CochiloTheme.colors.ink)
+                    Text(meta, style = Type.meta, color = CochiloTheme.colors.muted)
                 }
             }
         }

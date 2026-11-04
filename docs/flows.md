@@ -71,7 +71,7 @@ This replaced the earlier "next: other breast" suggestion: the app shows what ha
 ## The baby's clock and sleep pressure (0.54.0)
 
 [prediction.md](prediction.md). No tap added. The pressure line sits on the Day tab, today, under
-the legend; its "i" is one tap.
+the legend, from 07:00 to 19:00 (0.55.1).
 
 ## The watch tile, and dragging the start (0.53.0)
 

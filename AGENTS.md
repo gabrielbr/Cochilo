@@ -40,8 +40,12 @@ then [docs/research.md](docs/research.md) for the science the features rest on.
   Where a skill's general advice and the design system or this file differ (target sizes, the one
   teal action, fewest taps), the stricter rule here wins.
 
-  Use them while you work, not only at the end. If a session can't load a skill, read its
-  `SKILL.md` and references and apply them by hand, and say so in the audit. The results go in
+  Use them while you work, not only at the end. Load each one (the Skill tool, or read its
+  `SKILL.md` and the references it names, such as impeccable's `audit.native.md` and
+  `android.md`) before writing its section. The audit says truthfully which way each was used:
+  never write that a skill was applied from its references without having read them (0.55.1,
+  docs/audits/0.55.1-reaudit.md). If a session can't load a skill, read its `SKILL.md` and
+  references and apply them by hand, and say so in the audit. The results go in
   `docs/audits/<version>-<topic>.md`: one section per skill, and what was cut. Fix any P0 or P1
   finding, and anything the checklist fails, before merging.
 - **Keep the design canvas current.** Every screen and the main flows live on a claude.ai Design

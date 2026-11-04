@@ -22,10 +22,10 @@ Wi-Fi. Open Cochilo on …". It also has **Sync now**, **Your initial on entries
 when closed** and **Unpair**. After Unpair, both phones keep the log they have.
 
 **Keep in sync when closed** (0.52.0, off until turned on): the phones stay in step with Cochilo
-closed, as long as both are on the Wi-Fi. It rides on the notification Cochilo already shows
-(asleep or awake), so there's no second notification. It's a foreground service: Android keeps it
-running, and it costs a little battery. Its notification is "In sync with Pixel da Ana" when the
-live notification is off. After the phone restarts, opening Cochilo once starts it again.
+closed, as long as both are on the Wi-Fi. It keeps Cochilo's notification on: the one that
+already shows asleep or awake, so there's no second one, or "In sync with Pixel da Ana" when the
+live notification is off. It's a foreground service: Android keeps it running, and it costs a
+little battery. After the phone restarts, opening Cochilo once starts it again.
 
 **Who logged it** (0.52.0, optional): set one letter in **Your initial on entries**. On the other
 phone, what you log says "by G" at the end of its line. What you log yourself never shows a

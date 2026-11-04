@@ -305,7 +305,8 @@ fun TimelineStretch(
         // The start time; on a sleep it takes the drag that moves the start (0.53.0).
         Text(
             if (holdingStart) adjustStart?.previewTime?.invoke(startSteps) ?: time else time, style = Type.meta, color = if (holdingStart) c.onSelected else c.muted, textAlign = TextAlign.End, maxLines = 1,
-            modifier = Modifier.width(Spacing.space16 + Spacing.space2)
+            // As tall as the row (56dp): the drag handle is a full touch target (0.55.1 audit).
+            modifier = Modifier.width(Spacing.space16 + Spacing.space2).heightIn(min = Size.rowMin)
                 .background(animatedColor(if (holdingStart) c.selected else Color.Transparent), RoundedCornerShape(Radius.radiusS))
                 .then(startGesture)
                 .padding(top = Spacing.space2, end = Spacing.space1),
