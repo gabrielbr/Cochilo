@@ -435,9 +435,11 @@ class ScreensSnapshotTest {
 
     @Test fun model_sheet_play_light() { light(); paparazzi.snapshot { ModelShot(false, br.gabriel.cochilo.ai.ModelState.Absent, br.gabriel.cochilo.ai.ModelSource.Kind.PLAY_DOWNLOAD) } }
     @Test fun model_sheet_app_downloading_light() { light(); paparazzi.snapshot { ModelShot(false, br.gabriel.cochilo.ai.ModelState.Getting(0.42f), br.gabriel.cochilo.ai.ModelSource.Kind.APP_DOWNLOAD) } }
+    /** 0.56.0: a phone with the older model is offered the new one. */
+    @Test fun model_sheet_outdated_light() { light(); paparazzi.snapshot { ModelShot(false, br.gabriel.cochilo.ai.ModelState.Failed(br.gabriel.cochilo.ai.ModelState.Reason.OUTDATED), br.gabriel.cochilo.ai.ModelSource.Kind.APP_DOWNLOAD) } }
     @Test fun model_sheet_app_download_light() { light(); paparazzi.snapshot { ModelShot(false, br.gabriel.cochilo.ai.ModelState.Absent, br.gabriel.cochilo.ai.ModelSource.Kind.APP_DOWNLOAD) } }
     @Test fun model_sheet_waiting_wifi_ptBR_light() { pt(false); paparazzi.snapshot { ModelShot(false, br.gabriel.cochilo.ai.ModelState.Getting(0.12f, waitingForWifi = true), br.gabriel.cochilo.ai.ModelSource.Kind.APP_DOWNLOAD) } }
-    @Test fun model_sheet_ready_ptBR_dark() { pt(true); paparazzi.snapshot { ModelShot(true, br.gabriel.cochilo.ai.ModelState.Ready(java.io.File("model.task"), 555L * 1024 * 1024), br.gabriel.cochilo.ai.ModelSource.Kind.PLAY_DOWNLOAD) } }
+    @Test fun model_sheet_ready_ptBR_dark() { pt(true); paparazzi.snapshot { ModelShot(true, br.gabriel.cochilo.ai.ModelState.Ready(java.io.File("model.litertlm"), 555L * 1024 * 1024), br.gabriel.cochilo.ai.ModelSource.Kind.PLAY_DOWNLOAD) } }
     @Test fun ask_generated_light() {
         light()
         paparazzi.snapshot {

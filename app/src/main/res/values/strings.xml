@@ -603,10 +603,12 @@
     <string name="model_ready">Ready on this phone · %1$d MB</string>
     <string name="model_remove">Remove the model</string>
     <string name="model_unavailable">This build doesn\'t include the model. Answers come from the reviewed list.</string>
-    <string name="model_failed_not_model">That file isn\'t a model (.task).</string>
+    <string name="model_failed_not_model">That file isn\'t a model (.litertlm).</string>
     <string name="model_failed_too_small">That file is too small to be the model.</string>
     <string name="model_failed_no_space">There isn\'t enough space on the phone.</string>
     <string name="model_failed_download">The download didn\'t finish. Try again on Wi-Fi.</string>
+    <string name="model_failed_outdated">This phone has the older model. The new one replaces it and answers the same way.</string>
+    <string name="model_status_outdated">A newer model is ready. Tap to get it.</string>
     <string name="model_failed_other">It didn\'t work. Try again.</string>
     <string name="model_terms">Gemma, Google\'s open model, under the Gemma Terms of Use (ai.google.dev/gemma/terms).</string>
     <string name="model_wifi_line">It downloads on Wi-Fi and keeps going if you close the app.</string>

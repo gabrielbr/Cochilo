@@ -25,8 +25,6 @@ object ModelDownload {
         GEMMA_3N("gemma-3n-E2B-it-int4.litertlm", listOf("gemma-3n-E2B-it-int4.litertlm.part1", "gemma-3n-E2B-it-int4.litertlm.part2"), 3500),
         /** Gemma 3 1B for LiteRT-LM (584,417,280 bytes). */
         GEMMA_1B("gemma3-1b-it-int4.litertlm", listOf("gemma3-1b-it-int4.litertlm"), APPROX_MB),
-        /** The 1B `.task` for MediaPipe, published before 0.55.0. */
-        GEMMA_1B_TASK(FILE, listOf(FILE), APPROX_MB),
     }
 
     /** Gemma 3n wants about 3 GB free while it runs: only on a phone with this much memory or more. */
@@ -34,7 +32,7 @@ object ModelDownload {
 
     /** The models to try, in order, for a phone with [totalMemoryBytes]. */
     fun choices(totalMemoryBytes: Long): List<Choice> =
-        if (totalMemoryBytes >= BIG_PHONE_BYTES) Choice.entries.toList() else listOf(Choice.GEMMA_1B, Choice.GEMMA_1B_TASK)
+        if (totalMemoryBytes >= BIG_PHONE_BYTES) Choice.entries.toList() else listOf(Choice.GEMMA_1B)
 
     fun url(repo: String, name: String) = "https://github.com/$repo/releases/download/$TAG/$name"
     fun sumUrl(repo: String, c: Choice) = url(repo, c.file) + ".sha256"

@@ -20,7 +20,8 @@ sealed interface ModelState {
     data class Failed(val reason: Reason) : ModelState
 
     /** [NOT_PUBLISHED]: the model isn't on Cochilo's releases yet. [CHECK]: it arrived, but its checksum didn't match. */
-    enum class Reason { NOT_A_MODEL, TOO_SMALL, NO_SPACE, DOWNLOAD, NOT_PUBLISHED, CHECK, OTHER }
+    /** [OUTDATED] (0.56.0): the phone has the older `.task` model, which the app no longer runs. */
+    enum class Reason { NOT_A_MODEL, TOO_SMALL, NO_SPACE, DOWNLOAD, NOT_PUBLISHED, CHECK, OTHER, OUTDATED }
 }
 
 /**

@@ -28,7 +28,7 @@ import java.net.URL
  * The request carries nothing about the person or the baby.
  *
  * Which model (0.55.0): Gemma 3n on a phone with the memory for it, if it's published; else the 1B
- * for LiteRT-LM; else the older 1B `.task`. Gemma 3n is over GitHub's 2 GB per file, so it comes in
+ * for LiteRT-LM (0.56.0: the older `.task` is no longer offered). Gemma 3n is over GitHub's 2 GB per file, so it comes in
  * parts, downloaded one after the other and joined before the check.
  */
 object ModelSources {
@@ -68,7 +68,13 @@ private class DownloadSource(private val context: Context) : ModelSource {
 
     init { look() }
 
-    private fun present(): File? = listOf(imported, downloaded).firstOrNull { it.exists() }
+    private fun isLiteRt(f: File) = runCatching { f.inputStream().use { s -> ByteArray(ModelFile.LITERTLM_MAGIC.size).also { s.read(it) } } }
+        .getOrNull()?.let(ModelFile::isLiteRtLm) == true
+
+    private fun present(): File? = listOf(imported, downloaded).firstOrNull { it.exists() && isLiteRt(it) }
+
+    /** A `.task` from before 0.56.0, which the app no longer runs. */
+    private fun outdated(): Boolean = listOf(imported, downloaded).any { it.exists() && !isLiteRt(it) }
 
     /** What's on the phone, without the network. */
     private fun look() {
@@ -77,6 +83,7 @@ private class DownloadSource(private val context: Context) : ModelSource {
         when {
             f != null -> _state.value = ModelState.Ready(f, f.length())
             prefs.getLong(KEY_ID, -1L) >= 0 -> watch()
+            outdated() -> _state.value = ModelState.Failed(ModelState.Reason.OUTDATED)
             else -> _state.value = ModelState.Absent
         }
     }
@@ -87,7 +94,7 @@ private class DownloadSource(private val context: Context) : ModelSource {
      */
     override fun refresh() {
         look()
-        if (_state.value == ModelState.Absent && totalMemory >= ModelDownload.BIG_PHONE_BYTES && chosen == null) scope.launch { choose() }
+        if ((_state.value == ModelState.Absent || _state.value == ModelState.Failed(ModelState.Reason.OUTDATED)) && totalMemory >= ModelDownload.BIG_PHONE_BYTES && chosen == null) scope.launch { choose() }
     }
 
     override fun download() {
@@ -122,6 +129,8 @@ private class DownloadSource(private val context: Context) : ModelSource {
             }
             partial.delete()
             choice.parts.indices.forEach { partFile(it).delete() }
+            // The old model goes now: it can't run, and its space is needed.
+            listOf(imported, downloaded).filter { it.exists() && !isLiteRt(it) }.forEach { it.delete() }
             prefs.edit().putString(KEY_CHOICE, choice.name).putString(KEY_SHA, sha).putBoolean(KEY_METERED, !wifiOnly).apply()
             enqueue(choice, 0, wifiOnly)
         }
@@ -203,7 +212,7 @@ private class DownloadSource(private val context: Context) : ModelSource {
     }
 
     private fun currentChoice(): ModelDownload.Choice =
-        prefs.getString(KEY_CHOICE, null)?.let { n -> ModelDownload.Choice.entries.firstOrNull { it.name == n } } ?: ModelDownload.Choice.GEMMA_1B_TASK
+        prefs.getString(KEY_CHOICE, null)?.let { n -> ModelDownload.Choice.entries.firstOrNull { it.name == n } } ?: ModelDownload.Choice.GEMMA_1B
 
     private fun finish() {
         val sha = prefs.getString(KEY_SHA, null)

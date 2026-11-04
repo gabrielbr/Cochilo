@@ -19,7 +19,7 @@ object ModelFile {
         return first != '<' && first != '{' && first != '['
     }
 
-    /** A `.litertlm` file starts with these bytes (0.55.0); anything else goes to MediaPipe. */
+    /** A `.litertlm` file starts with these bytes (0.55.0); since 0.56.0 the only model the app runs. */
     val LITERTLM_MAGIC = "LITERTLM".toByteArray()
 
     fun isLiteRtLm(head: ByteArray): Boolean = head.size >= LITERTLM_MAGIC.size && LITERTLM_MAGIC.indices.all { head[it] == LITERTLM_MAGIC[it] }
@@ -32,7 +32,9 @@ object ModelFile {
     fun approxTokens(text: String): Int = (text.length + 2) / 3
 
     fun check(head: ByteArray, bytes: Long): ModelState.Reason? = when {
+        // Only LiteRT-LM files since 0.56.0; an older `.task` is said to be outdated.
         !looksLikeTask(head) -> ModelState.Reason.NOT_A_MODEL
+        !isLiteRtLm(head) -> ModelState.Reason.OUTDATED
         bytes < MIN_BYTES -> ModelState.Reason.TOO_SMALL
         else -> null
     }

@@ -36,4 +36,13 @@ class TileSnapshotTest {
     @Test fun tile_asleep() = snap(WearWire.State(true, true, since, null, CochiloTile.RIGHT, false))
     @Test fun tile_feeding() = snap(WearWire.State(true, false, since, CochiloTile.LEFT, CochiloTile.LEFT, false))
     @Test fun tile_no_phone() = snap(null)
+    /** Portuguese, the longer words (0.56.0). */
+    @Test fun tile_feeding_ptBR() {
+        paparazzi.unsafeUpdateConfig(DeviceConfig.WEAR_OS_SMALL_ROUND.copy(locale = "pt-rBR"))
+        snap(WearWire.State(true, false, since, CochiloTile.RIGHT, CochiloTile.RIGHT, false))
+    }
+    @Test fun tile_awake_ptBR() {
+        paparazzi.unsafeUpdateConfig(DeviceConfig.WEAR_OS_SMALL_ROUND.copy(locale = "pt-rBR"))
+        snap(WearWire.State(true, false, since, null, CochiloTile.RIGHT, true))
+    }
 }

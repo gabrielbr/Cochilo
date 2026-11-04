@@ -18,7 +18,7 @@ object ModelSources {
 }
 
 private const val PACK = "assistant_model"
-private const val MODEL = "model.task"
+private const val MODEL = "model.litertlm"
 
 private class PlayAssetSource(context: Context) : ModelSource {
     private val manager: AssetPackManager = AssetPackManagerFactory.getInstance(context)

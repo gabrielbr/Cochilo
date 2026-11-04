@@ -3,6 +3,18 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.56.0 — 2026-11-04
+
+**Every design review green.**
+- **The watch tile, finished.** The breast used last has the same mark as on the phone: an
+  outline and a dot in the feed colour. While feeding, that side reads "Finish". Everything fits
+  in Portuguese too: the status line wraps, and "Voltou a dormir" fits on one line.
+- **One AI engine.** Ask Cochilo runs only on LiteRT-LM now; the family app is 31 MB instead of
+  78 MB. The new model files are published. A phone that still has the older one sees "A newer
+  model is ready" and gets it with one tap. On an 8 GB phone, the download is Gemma 3n.
+- **Sleep pressure starts at the morning wake**, so night wakings no longer make the line look odd.
+- A plan for what only real phones can test (docs/testing-on-device.md).
+
 ## 0.55.1 — 2026-11-04
 
 **Checked again, properly.** The design reviews of 0.51.0–0.55.0 were redone with the four

@@ -10,8 +10,10 @@ breasts, one tap each from the wrist.
    app on the phone. The phone needs Cochilo 0.53.0 or later, from the same releases.
 2. **Add the tile.** On the watch, swipe to the tiles, then add **Cochilo** at the end.
 3. **Tap.** The tile shows "Awake since 14:20" (or "Asleep since…") with one big button, and the
-   two breasts below it. The one used last has a dot; while a breastfeed runs, its side reads
-   "Finish Left". A tap goes to the phone, which logs it, and the tile answers at once.
+   two breasts below it. The one used last has the Last mark, as on the phone: an outline and a
+   dot in the feed colour (0.56.0). While a breastfeed runs, its side is filled and reads
+   "Finish"; TalkBack says "Finish Left". A tap goes to the phone, which logs it, and the tile
+   answers at once.
 
 | Flow | Taps (on the watch) |
 |---|---|
@@ -38,6 +40,8 @@ is quicker to reach, and it stays put.
 
 ## Limits, said plainly
 
+- The tile uses the watch's own font: a tile can't load Libre Franklin. It's recorded as the one
+  product exception to the brand's family (design/product/cochilo/components.md, Watch tile).
 - The time doesn't tick on the tile: it says "since 14:20", redrawn each minute and after every
   change.
 - No phone nearby: the tile says "Open Cochilo on the phone, nearby." and sends nothing.
