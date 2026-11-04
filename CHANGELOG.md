@@ -3,6 +3,20 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.49.0 — 2026-11-04
+
+**The rest of the day, at a glance.** Cochilo now projects every nap left today and bedtime, not
+only the next sleep.
+- **Today's card:** "Then: 13:50 · 16:05 · bed 18:45".
+- **The Day ring:** each one is a dashed outline. They're dashed because they're expected, not
+  logged.
+- **How it works:** each nap comes from the baby's usual window for that time of day and usual
+  nap length. The later ones carry wider ranges, and everything you log recomputes them. "How
+  it's guessed" explains it.
+- **At night:** nothing is shown.
+
+Released together with 0.48.0 below. `docs/prediction.md`.
+
 ## 0.48.0 — 2026-11-04
 
 **The Day timeline has two tracks, like the ring.**

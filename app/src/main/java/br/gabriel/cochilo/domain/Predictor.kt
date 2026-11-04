@@ -79,7 +79,11 @@ class Predictor(
         return out
     }
 
-    fun predict(events: List<Event>, ageWeeks: Int, now: Long): Result {
+    /**
+     * The next sleep. [maxNaps], used by the day plan (DayPlan, 0.49.0): once that many naps are
+     * done today, the next sleep is bedtime, whatever the clock says.
+     */
+    fun predict(events: List<Event>, ageWeeks: Int, now: Long, maxNaps: Int? = null): Result {
         val sleeps = events.filter { it.type == EventType.SLEEP }.sortedBy { it.start }
         val running = sleeps.lastOrNull { it.end == null }
         if (running != null) return Result.Sleeping(running.start, running.isNightSleep(zone))
@@ -103,7 +107,7 @@ class Predictor(
         if (bedtimeMinute != null && !last.isNightSleep(zone)) {
             val bedtimeAt = nextOccurrence(bedtimeMinute, awakeSince)
             // If the next nap would land within 45 minutes of bedtime, the next sleep is bedtime.
-            if (at >= bedtimeAt - 45 * MINUTE) {
+            if (at >= bedtimeAt - 45 * MINUTE || (maxNaps != null && slot >= maxNaps)) {
                 val lastWindow = blended(all.filter { it.beforeBed }, prior.wakeForSlot(slot, true), now)
                 val byWindow = awakeSince + (lastWindow.minutes * MINUTE).roundToLong() + shift
                 // Near the usual bedtime, but never sooner than half the usual last window after

@@ -24,6 +24,10 @@ and import yourself.
   what to try, one tap to the full answer. The card is wrapped in her fabric, with a wider band
   since 0.45.0. Past days are on the Day tab (its arrows), with the kind filter. Tap any entry to
   edit or delete it.
+- **The rest of the day** (since 0.49.0): besides the next sleep, Cochilo projects every nap
+  left today and bedtime. Today's card says "Then: 13:50 · 16:05 · bed 18:45", and the Day ring
+  shows them as dashed outlines. The later ones have wider ranges, and each log entry
+  recomputes them ([docs/prediction.md](docs/prediction.md)).
 - **Partner sync** (since 0.47.0, family build): pair the two parents' phones once (Settings ›
   Sync, compare six digits). While Cochilo is open on both on the home Wi-Fi, every change, a
   deletion included, goes across in seconds, directly between the phones, sealed. There's no

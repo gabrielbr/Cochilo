@@ -38,6 +38,12 @@
 
     <string name="next_nap">Próxima soneca</string>
     <string name="next_bedtime">Hora de dormir</string>
+    <string name="plan_then">Depois: %1$s</string>
+    <string name="plan_expected">Previsto hoje: %1$s</string>
+    <string name="plan_bed">noite %1$s</string>
+    <string name="plan_why">As próximas repetem o mesmo cálculo: a janela de costume para a hora do dia, depois a soneca de costume (%1$s). Quanto mais longe, maior a margem.</string>
+    <string name="plan_why_age">As próximas repetem o mesmo cálculo pela idade do bebê (sonecas de %1$s) até haver alguns dias registrados. Quanto mais longe, maior a margem.</string>
+    <string name="plan_spoken">Previsto para mais tarde hoje: %1$s.</string>
     <string name="prediction_window">Entre %1$s e %2$s</string>
     <string name="prediction_why_show">Como é calculado</string>
     <string name="prediction_why_hide">Esconder o cálculo</string>

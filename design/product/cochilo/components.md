@@ -40,7 +40,7 @@ component, the row says so.
 | Recorder panel / player | panel colours, timer 56/64, −15 s, scrubber | `Ui.recorderPanel`, `Ui.player` | — | 🟡 |
 | Empty state | title 22/28, one line, ≤ 1 primary | `Ui.emptyState` | — | 🟡 |
 | Skeleton | grey bars instead of "Loading…" text | `Ui.skeletonRow` | — | 🟡 |
-| Ring / gauge | swept fill 900ms, dithered track, spoken summary. Cochilo day ring: today's expected next-sleep window as the nap colour at 35% under the real sleeps, named in the legend and spoken | — | `VitalRingGauge`, `ActivityRings` | 🟡 |
+| Ring / gauge | swept fill 900ms, dithered track, spoken summary. Cochilo day ring: today's expected next-sleep window as the nap colour at 35% under the real sleeps, named in the legend and spoken. Since 0.49.0, the rest of today's projected sleeps (DayPlan) as dashed outlines on the sleep ring: both edges dashed (`space1` on, `space1` off, 2× hairline), closed by a tick at each end, never filled. Naps are in the nap colour; bedtime is in the night colour until midnight. They are listed under the counts ("Expected today: …") and spoken | — | `VitalRingGauge`, `ActivityRings` | 🟡 |
 | Charts | one message per chart, zone colours, spoken summary | — | `Charts`, `ZoneLineChart` | 🟡 |
 | Update sheet | "Update available · {version}", release notes, Update · {size} (primary) / Later; "Downloading… n%" with the frame's line, Later becomes Cancel — [self-update.md](self-update.md) | `Ui.updateSheet` | `UpdateDialog` | 🟡 |
 | Check for updates | About row: version, a secondary button, one result line; release builds only — [self-update.md](self-update.md) | `Ui.checkForUpdates` | `CheckForUpdatesButton` | 🟡 |

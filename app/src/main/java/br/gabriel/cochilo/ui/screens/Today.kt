@@ -74,6 +74,8 @@ fun TodayScreen(
     onUpForDay: (Int) -> Unit = {},
     /** Nap or the night, one tap on the sleep card. */
     onSetNight: (Event, Boolean) -> Unit = { _, _ -> },
+    /** The rest of today, projected (DayPlan, 0.49.0): the card's "Then:" line. */
+    plan: br.gabriel.cochilo.domain.DayPlan.Plan? = null,
     /** The glimpse from Ask Cochilo at the end (0.45.0); by day only, never in a night waking. */
     glimpse: (@Composable () -> Unit)? = null,
 ) {
@@ -91,7 +93,7 @@ fun TodayScreen(
 
         if (prediction is Predictor.Result.Awake && openNight == null) {
             Spacer(Modifier.height(Spacing.space4))
-            PredictionCard(prediction, now, f)
+            PredictionCard(prediction, now, f, plan)
         } else if (prediction is Predictor.Result.NeedData) {
             Spacer(Modifier.height(Spacing.space4))
             Text(stringResource(R.string.prediction_need_data), style = Type.bodySmall, color = CochiloTheme.colors.muted)
@@ -230,8 +232,15 @@ private fun SleepPanel(
     }
 }
 
+/** A day plan's sleeps as one line: "13:50 · 16:05 · bed 18:45" (0.49.0). */
 @Composable
-private fun PredictionCard(p: Predictor.Result.Awake, now: Long, f: Format) {
+fun planLine(sleeps: List<br.gabriel.cochilo.domain.DayPlan.Sleep>, f: Format): String {
+    val bed = stringResource(R.string.plan_bed, "%s")
+    return sleeps.joinToString(" · ") { s -> if (s.next == Predictor.Next.BEDTIME) bed.format(f.time(s.at)) else f.time(s.at) }
+}
+
+@Composable
+private fun PredictionCard(p: Predictor.Result.Awake, now: Long, f: Format, plan: br.gabriel.cochilo.domain.DayPlan.Plan? = null) {
     val c = CochiloTheme.colors
     Column(
         Modifier.fillMaxWidth().clip(RoundedCornerShape(Radius.radiusM)).background(c.surface).padding(Spacing.space4)
@@ -249,6 +258,12 @@ private fun PredictionCard(p: Predictor.Result.Awake, now: Long, f: Format) {
         Spacer(Modifier.height(Spacing.space1))
         Text(f.time(p.at), style = Type.title, color = c.ink)
         Text(stringResource(R.string.prediction_window, f.time(p.windowStart), f.time(p.windowEnd)), style = Type.bodySmall, color = c.ink)
+        // The rest of the day (0.49.0): one line, the sleeps after this one, never a promise ("Then").
+        val later = plan?.sleeps?.drop(1).orEmpty()
+        if (later.isNotEmpty()) {
+            Spacer(Modifier.height(Spacing.space1))
+            Text(stringResource(R.string.plan_then, planLine(later, f)), style = Type.bodySmall, color = c.muted)
+        }
         // How it's guessed (predictions explain themselves): one tap away since 0.43.0, not always open.
         var open by androidx.compose.runtime.saveable.rememberSaveable { androidx.compose.runtime.mutableStateOf(false) }
         br.gabriel.cochilo.ui.kit.SwapAction(stringResource(if (open) R.string.prediction_why_hide else R.string.prediction_why_show), c.muted) { open = !open }
@@ -258,6 +273,10 @@ private fun PredictionCard(p: Predictor.Result.Awake, now: Long, f: Format) {
             f.durationMin(p.wakeMinutes), f.durationMin(p.personalMinutes), p.samples, f.durationMin(p.priorMinutes),
         ) else stringResource(R.string.prediction_why_prior, f.durationMin(p.wakeMinutes))
         Text(why, style = Type.meta, color = c.muted)
+        if (later.isNotEmpty() && plan != null) Text(
+            stringResource(if (plan.fromAge) R.string.plan_why_age else R.string.plan_why, f.durationMin(plan.napMinutes)),
+            style = Type.meta, color = c.muted, modifier = Modifier.padding(top = Spacing.space1),
+        )
         // Phase 2 says what the last nap did, with its numbers (predictions explain themselves).
         p.napEffect?.let { e ->
             val words = stringResource(

@@ -102,6 +102,12 @@ fun DayRing(
     events: List<Event>, from: Long, to: Long, now: Long?, zone: ZoneId, summary: String,
     /** Today's expected next-sleep window, drawn faint on the sleep ring (docs/flows.md). */
     expected: Pair<Long, Long>? = null,
+    /**
+     * The rest of today, projected (DayPlan, 0.49.0): each expected sleep as a dashed outline on
+     * the sleep ring, never a fill, so it never reads as data. Naps in the nap colour, bedtime in
+     * the night's until midnight.
+     */
+    planned: List<br.gabriel.cochilo.domain.DayPlan.Sleep> = emptyList(),
     middle: @Composable () -> Unit,
 ) {
     val c = CochiloTheme.colors
@@ -129,6 +135,18 @@ fun DayRing(
             drawCircle(c.line, rInner, style = Stroke(innerW))
             // Where the next sleep is expected: a faint band of the nap colour, under the real sleeps.
             if (expected != null) arc(c.eventNap.copy(alpha = EXPECTED_ALPHA), expected.first, expected.second, rOuter, outerW)
+            // The projection, dashed along the sleep ring's two edges and closed at both ends.
+            val dash = androidx.compose.ui.graphics.PathEffect.dashPathEffect(floatArrayOf(dot, dot))
+            for (s in planned) {
+                val col = if (s.next == br.gabriel.cochilo.domain.Predictor.Next.BEDTIME) c.eventNight else c.eventNap
+                val a0 = angle(s.at)
+                val sweep = maxOf(angle(s.end) - a0, 1.5f)
+                for (r in listOf(rOuter - outerW / 2, rOuter + outerW / 2)) {
+                    drawArc(col, a0, sweep, useCenter = false, topLeft = Offset(center.x - r, center.y - r), size = GSize(r * 2, r * 2), style = Stroke(hair * 2, pathEffect = dash))
+                }
+                tick(a0, rOuter - outerW / 2, rOuter + outerW / 2, col, hair * 2)
+                tick(a0 + sweep, rOuter - outerW / 2, rOuter + outerW / 2, col, hair * 2)
+            }
             for (e in events) {
                 if (!e.type.hasDuration) continue
                 val end = e.end ?: now ?: continue

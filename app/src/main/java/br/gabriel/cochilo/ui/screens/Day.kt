@@ -61,6 +61,8 @@ fun DayScreen(
     log: List<Event>, now: Long, zone: ZoneId, onOpen: (Event) -> Unit, initialDay: LocalDate? = null,
     /** The next sleep's expected window (from the prediction), shown on today's ring. */
     expected: Pair<Long, Long>? = null,
+    /** The rest of today, projected (DayPlan, 0.49.0): dashed on the ring, and one line under it. */
+    plan: br.gabriel.cochilo.domain.DayPlan.Plan? = null,
     /** Drag to adjust: a finished sleep's new end (docs/flows.md). */
     onAdjust: (Event, Long) -> Unit = { _, _ -> },
     /** For screenshots: one sleep shown mid-drag (its index among the day's sleeps, steps). */
@@ -104,9 +106,11 @@ fun DayScreen(
             contentAlignment = Alignment.Center,
         ) {
             val window = expected?.takeIf { day == today }
+            val planned = plan?.sleeps?.takeIf { day == today }.orEmpty()
             val spoken = daySummary(f, day, events, from, to, now, zone) +
-                (window?.let { " " + stringResource(R.string.ring_expected_spoken, f.time(it.first), f.time(it.second)) } ?: "")
-            DayRing(events, from, to, dayNow, zone, spoken, expected = window) {
+                (window?.let { " " + stringResource(R.string.ring_expected_spoken, f.time(it.first), f.time(it.second)) } ?: "") +
+                (if (planned.size > 1) " " + stringResource(R.string.plan_spoken, planLine(planned.drop(1), f)) else "")
+            DayRing(events, from, to, dayNow, zone, spoken, expected = window, planned = planned) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(f.duration(sleepMs), style = Type.title, color = CochiloTheme.colors.ink)
                     Text(stringResource(R.string.ring_sleep), style = Type.meta, color = CochiloTheme.colors.muted)
@@ -118,6 +122,11 @@ fun DayScreen(
         }
         Spacer(Modifier.height(Spacing.space3))
         Text(stringResource(R.string.ring_counts, naps, feeds, diapers), style = Type.bodySmall, color = CochiloTheme.colors.ink)
+        // Today: what's still expected, in the order the ring shows it (0.49.0).
+        val planned = plan?.sleeps?.takeIf { day == today }.orEmpty()
+        if (planned.isNotEmpty()) {
+            Text(stringResource(R.string.plan_expected, planLine(planned, f)), style = Type.bodySmall, color = CochiloTheme.colors.muted)
+        }
         Spacer(Modifier.height(Spacing.space3))
         EventLegend(expected = expected != null && day == today)
 

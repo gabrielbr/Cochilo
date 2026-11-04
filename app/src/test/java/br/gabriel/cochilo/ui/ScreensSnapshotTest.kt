@@ -130,7 +130,7 @@ class ScreensSnapshotTest {
                         when (t) {
                             0 -> {
                                 val facts = br.gabriel.cochilo.domain.assistant.Assistant.facts(log, weeks, now, zone, p)
-                                TodayScreen(log, p, now, zone, {}, {}, {}, {}, {}, glimpse = br.gabriel.cochilo.ui.screens.glimpse(facts, br.gabriel.cochilo.domain.localDate(now, zone).toEpochDay()).let { g ->
+                                TodayScreen(log, p, now, zone, {}, {}, {}, {}, {}, plan = br.gabriel.cochilo.domain.DayPlan(zone).of(log, weeks, now), glimpse = br.gabriel.cochilo.ui.screens.glimpse(facts, br.gabriel.cochilo.domain.localDate(now, zone).toEpochDay()).let { g ->
                                     { br.gabriel.cochilo.ui.screens.AskGlimpse(g, facts, f) {} }
                                 })
                             }
@@ -518,7 +518,7 @@ class ScreensSnapshotTest {
             CochiloTheme(false) {
                 br.gabriel.cochilo.ui.kit.Frame {
                     val p = Predictor(zone).predict(log, ageWeeks(baby.birthDate, null, now), now) as Predictor.Result.Awake
-                    DayScreen(log, now, zone, onOpen = {}, expected = p.windowStart to p.windowEnd)
+                    DayScreen(log, now, zone, onOpen = {}, expected = p.windowStart to p.windowEnd, plan = br.gabriel.cochilo.domain.DayPlan(zone).of(log, ageWeeks(baby.birthDate, null, now), now))
                 }
             }
         }
