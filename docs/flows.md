@@ -1,5 +1,7 @@
 # Logging flows: how many taps each entry costs
 
+The flows below are also drawn, screen by screen with the taps, on the [design canvas](design-canvas.md).
+
 Audited 2026-11-02. The rule: the entries a tired parent logs many times a day must cost one move.
 Details (amounts, notes, past times) stay one tap away in the sheet, never in the way.
 

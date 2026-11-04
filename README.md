@@ -15,6 +15,8 @@ and import yourself.
 |---|---|---|---|
 | ![Today](app/src/test/snapshots/images/br.gabriel.cochilo.ui_ScreensSnapshotTest_today_light.png) | ![Sleeping](app/src/test/snapshots/images/br.gabriel.cochilo.ui_ScreensSnapshotTest_today_sleeping_dark.png) | ![Patterns](app/src/test/snapshots/images/br.gabriel.cochilo.ui_ScreensSnapshotTest_patterns_light.png) | ![Hoje](app/src/test/snapshots/images/br.gabriel.cochilo.ui_ScreensSnapshotTest_today_ptBR_light.png) |
 
+Every screen and the main flows are on the [design canvas](docs/design-canvas.md), for comments.
+
 ## What it does
 
 - **Today**: awake/asleep timer with one action (Start sleep / Woke up), the next nap or bedtime
