@@ -40,6 +40,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.heading
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
 import androidx.compose.runtime.getValue
@@ -168,21 +169,35 @@ private fun androidx.compose.foundation.layout.BoxScope.HourLabel(text: String, 
 }
 
 /**
- * A row of the vertical timeline: the time, the rail with this entry's mark, then the entry.
- * A lasting entry (sleep, a feed) is a bar as tall as [barHeight]; an instant is a dot.
+ * The timeline's two tracks (0.48.0, docs/flows.md), like the day ring's two rings.
+ *
+ * - **Main track:** one block per stretch of the day, a sleep or an awake stretch. Its bar sits
+ *   in the main lane, as tall as its length suggests (TimelineScale): filled in the sleep's colour,
+ *   or outlined for awake. Its title sits beside the bar (badge, label role, meta).
+ * - **Secondary track:** what happened during the stretch, set in beside the same bar
+ *   ([TimelineEntry]).
+ *
+ * The bar runs alongside everything that happened during it. A finished sleep's title takes a
+ * press, hold and drag to move its end ([adjust]).
  */
 @Composable
-fun TimelineRow(
-    time: String, color: Color, barHeight: Dp?, label: String, meta: String?, onClick: () -> Unit,
-    icon: (@Composable () -> Unit)? = null, prominent: Boolean = false,
+fun TimelineStretch(
+    time: String,
+    /** The bar's colour; null for awake, which is an outline in `muted`. */
+    color: Color?,
+    barHeight: Dp?,
+    label: String,
+    meta: String?,
+    /** The sleep's round; none for awake, whose outlined bar already says what it is. */
+    icon: (@Composable () -> Unit)?,
+    onClick: (() -> Unit)? = null,
     /** A finished sleep: press, hold and drag to move its end (docs/flows.md). */
     adjust: TimelineAdjust? = null,
-    /** For screenshots: show the row as if dragged this many steps. */
-    previewSteps: Int? = null,
-    /** Happened inside an asleep or awake stretch: the entry is set in under its main row. */
-    indent: Boolean = false,
     /** The entry's length, so the bar follows a drag on the timeline's scale. */
     durationMinutes: Int? = null,
+    /** For screenshots: show the stretch as if dragged this many steps. */
+    previewSteps: Int? = null,
+    during: @Composable ColumnScope.() -> Unit = {},
 ) {
     val c = CochiloTheme.colors
     val editLabel = androidx.compose.ui.res.stringResource(br.gabriel.cochilo.R.string.edit_entry)
@@ -221,45 +236,92 @@ fun TimelineRow(
     // While held, the bar follows the drag, on the same scale as the rest of the timeline.
     val shownBar = if (holding && barHeight != null && adjust != null && durationMinutes != null)
         Spacing.space1 * br.gabriel.cochilo.domain.TimelineScale.units(durationMinutes + adjust.deltaMinutes(steps)) else barHeight
-    val base = Modifier.fillMaxWidth()
-    // At least as tall as the bar (plus its 4dp above and below), and as tall as its words need.
-    val sized = base.heightIn(min = if (shownBar != null) maxOf(shownBar + Spacing.space2, Size.rowMin) else Size.rowMin).height(IntrinsicSize.Min)
     Row(
-        sized.background(animatedColor(if (holding) c.selected else c.surface))
-            .then(gesture)
-            .clickable(src, indication = null, role = Role.Button, onClickLabel = editLabel, onClick = onClick).pressScale(src)
+        Modifier.fillMaxWidth()
+            .heightIn(min = if (shownBar != null) maxOf(shownBar + Spacing.space2, Size.rowMin) else Size.rowMin)
+            .height(IntrinsicSize.Min)
     ) {
-        Text(time, style = Type.meta, color = c.muted, textAlign = TextAlign.End, maxLines = 1, modifier = Modifier.width(Spacing.space16 + Spacing.space2).padding(top = Spacing.space1))
+        Text(time, style = Type.meta, color = c.muted, textAlign = TextAlign.End, maxLines = 1, modifier = Modifier.width(Spacing.space16 + Spacing.space2).padding(top = Spacing.space2))
+        // The main lane: the rail, and this stretch's bar from its top.
         Box(Modifier.width(Spacing.space8).fillMaxHeight(), contentAlignment = Alignment.TopCenter) {
             Box(Modifier.width(Size.hairline).fillMaxHeight().background(c.line))
-            if (shownBar != null) {
-                // Sleep leads: its bar is wider than a feed's or a walk's. Its height is its own
-                // (TimelineScale), not the row's, so a short feed stays short (0.46.0).
-                Box(
-                    Modifier.padding(vertical = Spacing.space1).width(if (prominent) Spacing.space3 else Spacing.space2).height(shownBar)
-                        .clip(RoundedCornerShape(Radius.radiusS)).background(color)
-                )
-            } else {
-                Box(Modifier.padding(top = Spacing.space2).size(Spacing.space3).clip(RoundedCornerShape(Radius.radiusRound)).background(color))
-            }
-        }
-        Column(Modifier.weight(1f).padding(start = if (indent) Spacing.space2 + Spacing.space6 else Spacing.space2, end = Spacing.space2)) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                if (icon != null) {
-                    icon()
-                    Spacer(Modifier.width(Spacing.space2))
-                }
-                Text(label, style = if (prominent) Type.label else Type.body, color = c.ink)
-            }
+            val bar = Modifier.padding(vertical = Spacing.space1).width(Spacing.space3)
             when {
-                // While dragging: the new end, live, in ink.
-                preview != null -> Text(preview, style = Type.meta, color = c.onSelected, modifier = Modifier.semantics { liveRegion = androidx.compose.ui.semantics.LiveRegionMode.Polite })
-                meta != null -> Text(meta, style = Type.meta, color = c.muted)
+                shownBar != null && color != null ->
+                    Box(bar.height(shownBar).clip(RoundedCornerShape(Radius.radiusS)).background(color))
+                shownBar != null ->
+                    Box(bar.height(shownBar).clip(RoundedCornerShape(Radius.radiusS)).background(c.surface).border(Size.hairline, c.muted, RoundedCornerShape(Radius.radiusS)))
+                else ->
+                    Box(Modifier.padding(top = Spacing.space2).size(Spacing.space3).clip(RoundedCornerShape(Radius.radiusRound)).background(c.surface).border(Size.hairline, c.muted, RoundedCornerShape(Radius.radiusRound)))
             }
-            Spacer(Modifier.height(Spacing.space3))
         }
-        // Tap to edit or delete (0.45.0): the pencil says so; the whole row is the target.
-        GIcon(br.gabriel.cochilo.R.drawable.gg_ic_note, null, c.muted, Modifier.padding(top = Spacing.space1, end = Spacing.space3))
+        Column(Modifier.weight(1f).padding(start = Spacing.space2, end = Spacing.space2)) {
+            // The title: the whole block's one big line. It takes the tap (edit) and the drag.
+            val title = Modifier.fillMaxWidth()
+                .background(animatedColor(if (holding) c.selected else c.surface), RoundedCornerShape(Radius.radiusS))
+                .then(gesture)
+                .then(if (onClick != null) Modifier.clickable(src, indication = null, role = Role.Button, onClickLabel = editLabel, onClick = onClick).pressScale(src) else Modifier.semantics(mergeDescendants = true) { heading() })
+            Row(title.padding(bottom = Spacing.space2), verticalAlignment = Alignment.Top) {
+                Column(Modifier.weight(1f)) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        if (icon != null) {
+                            icon()
+                            Spacer(Modifier.width(Spacing.space2))
+                        }
+                        Text(label, style = if (color != null) Type.label else Type.body, color = c.ink)
+                    }
+                    when {
+                        // While dragging: the new end, live, in ink.
+                        preview != null -> Text(preview, style = Type.meta, color = c.onSelected, modifier = Modifier.semantics { liveRegion = androidx.compose.ui.semantics.LiveRegionMode.Polite })
+                        meta != null -> Text(meta, style = Type.meta, color = c.muted)
+                    }
+                }
+                // Tap to edit (0.45.0): the pencil says so; the title is the target.
+                if (onClick != null) GIcon(br.gabriel.cochilo.R.drawable.gg_ic_note, null, c.muted, Modifier.padding(top = Spacing.space2))
+            }
+            during()
+            Spacer(Modifier.height(Spacing.space2))
+        }
+    }
+}
+
+/**
+ * The secondary track (0.48.0): a feed, a walk, a diaper, set in beside its stretch's bar. Less
+ * weight on purpose:
+ * - its mark is an outline in its own colour (a bar as long as it lasted, or a ring for an
+ *   instant), never filled;
+ * - its icon is the plain line icon in `muted`, not a round badge;
+ * - its words are a size down (bodySmall, then meta).
+ * The whole row is the edit target; a pencil says so.
+ */
+@Composable
+fun TimelineEntry(
+    color: Color, barHeight: Dp?, label: String, meta: String?,
+    @androidx.annotation.DrawableRes icon: Int, onClick: () -> Unit,
+) {
+    val c = CochiloTheme.colors
+    val editLabel = androidx.compose.ui.res.stringResource(br.gabriel.cochilo.R.string.edit_entry)
+    val src = remember { MutableInteractionSource() }
+    Row(
+        Modifier.fillMaxWidth()
+            .heightIn(min = if (barHeight != null) maxOf(barHeight + Spacing.space2, Size.rowMin) else Size.rowMin)
+            .clickable(src, indication = null, role = Role.Button, onClickLabel = editLabel, onClick = onClick).pressScale(src),
+        verticalAlignment = Alignment.Top,
+    ) {
+        // The secondary lane: an outline in the entry's colour.
+        Box(Modifier.width(Spacing.space6).padding(top = Spacing.space1), contentAlignment = Alignment.TopCenter) {
+            if (barHeight != null) {
+                Box(Modifier.width(Spacing.space2).height(barHeight).clip(RoundedCornerShape(Radius.radiusS)).border(Size.outline, color, RoundedCornerShape(Radius.radiusS)))
+            } else {
+                Box(Modifier.padding(top = Spacing.space1).size(Spacing.space3).clip(RoundedCornerShape(Radius.radiusRound)).border(Size.outline, color, RoundedCornerShape(Radius.radiusRound)))
+            }
+        }
+        GIcon(icon, null, c.muted, Modifier.padding(end = Spacing.space2))
+        Column(Modifier.weight(1f)) {
+            Text(label, style = Type.bodySmall, color = c.ink)
+            if (meta != null) Text(meta, style = Type.meta, color = c.muted)
+        }
+        GIcon(br.gabriel.cochilo.R.drawable.gg_ic_note, null, c.muted)
     }
 }
 
@@ -278,43 +340,6 @@ class TimelineAdjust(
     val laterLabel: String,
     val earlierLabel: String,
 )
-
-/**
- * An awake stretch, the other main state beside sleep (docs/flows.md, "Asleep and awake"): the time
- * it began, a hollow mark on the rail (awake isn't an entry, so it has no data colour), and how long
- * it lasted. Not a button; TalkBack reads it as a heading so a stretch can be skipped to.
- */
-@Composable
-fun TimelineAwake(time: String, label: String, meta: String?, barHeight: Dp? = null) {
-    val c = CochiloTheme.colors
-    Row(
-        Modifier.fillMaxWidth().heightIn(min = if (barHeight != null) maxOf(barHeight + Spacing.space2, Size.rowMin) else Size.rowMin).height(IntrinsicSize.Min)
-            .semantics(mergeDescendants = true) { heading() }
-    ) {
-        Text(time, style = Type.meta, color = c.muted, textAlign = TextAlign.End, maxLines = 1, modifier = Modifier.width(Spacing.space16 + Spacing.space2).padding(top = Spacing.space1))
-        Box(Modifier.width(Spacing.space8).fillMaxHeight(), contentAlignment = Alignment.TopCenter) {
-            Box(Modifier.width(Size.hairline).fillMaxHeight().background(c.line))
-            if (barHeight != null) {
-                // Awake as an outline on the timeline's scale (0.46.0): no fill, so sleep still leads.
-                Box(
-                    Modifier.padding(vertical = Spacing.space1).width(Spacing.space2).height(barHeight)
-                        .clip(RoundedCornerShape(Radius.radiusS)).background(c.surface)
-                        .border(Size.hairline, c.muted, RoundedCornerShape(Radius.radiusS))
-                )
-            } else {
-                Box(
-                    Modifier.padding(top = Spacing.space2).size(Spacing.space3).clip(RoundedCornerShape(Radius.radiusRound))
-                        .background(c.surface).border(Size.hairline, c.muted, RoundedCornerShape(Radius.radiusRound))
-                )
-            }
-        }
-        Column(Modifier.weight(1f).padding(start = Spacing.space2, end = Spacing.space2)) {
-            Text(label, style = Type.body, color = c.ink)
-            if (meta != null) Text(meta, style = Type.meta, color = c.muted)
-            Spacer(Modifier.height(Spacing.space3))
-        }
-    }
-}
 
 /** How strongly the expected window shows on the ring: a hint, never data. */
 private const val EXPECTED_ALPHA = 0.35f

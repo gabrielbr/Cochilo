@@ -3,6 +3,16 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.48.0 — 2026-11-04
+
+**The Day timeline has two tracks, like the ring.**
+- **The main track** holds sleep, naps and awake as bars.
+- **Beside each bar**, the second track holds the feeds, diapers and walks that happened during
+  it, as outlines in their colours, with smaller words.
+- A long night now runs alongside its night feeds, instead of feeds hanging below it.
+
+`docs/flows.md`.
+
 ## 0.47.0 — 2026-11-04
 
 **Two phones, one log.** Both parents can now log on their own phones and see the same day.

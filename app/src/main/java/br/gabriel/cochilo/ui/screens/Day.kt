@@ -44,8 +44,6 @@ import br.gabriel.cochilo.ui.kit.FilterChips
 import br.gabriel.cochilo.ui.kit.IconButton
 import br.gabriel.cochilo.ui.kit.InfoButton
 import br.gabriel.cochilo.ui.kit.ScreenTitle
-import br.gabriel.cochilo.ui.kit.TimelineAwake
-import br.gabriel.cochilo.ui.kit.TimelineRow
 import br.gabriel.cochilo.ui.kit.eventColor
 import br.gabriel.cochilo.ui.theme.CTokens.Radius
 import br.gabriel.cochilo.ui.theme.CTokens.Spacing
@@ -174,22 +172,34 @@ internal fun VerticalTimeline(
     val leftovers = events.filter { it.id !in placed }.sortedByDescending { it.start }
     var sleepIndex = 0
 
+    fun bar(ms: Long) = Spacing.space1 * br.gabriel.cochilo.domain.TimelineScale.units((ms / br.gabriel.cochilo.domain.MINUTE).toInt())
+
+    // The secondary track (0.48.0): an outline in the entry's colour, a plain icon, smaller words.
     @Composable
-    fun Entry(e: Event, indent: Boolean) {
-        // A block's height follows its length (TimelineScale, 0.46.0): two hours of sleep is
-        // plainly longer than ten minutes of feeding.
-        val bar = if (e.type.hasDuration) Spacing.space1 * br.gabriel.cochilo.domain.TimelineScale.units((e.durationMs(now) / br.gabriel.cochilo.domain.MINUTE).toInt()) else null
-        TimelineRow(
-            // The time column reads only the stretches' starts, so it runs in order; an entry inside one says its time in its meta.
-            time = if (indent) "" else f.time(e.start),
+    fun Secondary(e: Event) {
+        br.gabriel.cochilo.ui.kit.TimelineEntry(
             color = c.eventColor(e, zone),
-            barHeight = bar,
-            durationMinutes = if (e.type.hasDuration) (e.durationMs(now) / br.gabriel.cochilo.domain.MINUTE).toInt() else null,
+            barHeight = if (e.type.hasDuration) bar(e.durationMs(now)) else null,
             label = eventLabel(e, f, zone),
             meta = eventMeta(e, now, f),
+            icon = br.gabriel.cochilo.ui.kit.entryIcon(e),
             onClick = { onOpen(e) },
+        )
+    }
+
+    // The main track: one block per sleep or awake stretch, its bar as tall as its length suggests
+    // (TimelineScale), with what happened during it beside the same bar.
+    @Composable
+    fun Sleep(e: Event, during: List<Event>) {
+        br.gabriel.cochilo.ui.kit.TimelineStretch(
+            time = f.time(e.start),
+            color = c.eventColor(e, zone),
+            barHeight = bar(e.durationMs(now)),
+            label = eventLabel(e, f, zone),
+            meta = eventMeta(e, now, f),
             icon = { br.gabriel.cochilo.ui.kit.KindIcon(e, zone) },
-            prominent = e.type == EventType.SLEEP,
+            onClick = { onOpen(e) },
+            durationMinutes = (e.durationMs(now) / br.gabriel.cochilo.domain.MINUTE).toInt(),
             adjust = if (onAdjust != null && br.gabriel.cochilo.domain.Adjust.canAdjust(e)) {
                 val next = sleepsSorted.firstOrNull { it.start > e.start && it.id != e.id }?.start
                 fun end(steps: Int) = br.gabriel.cochilo.domain.Adjust.newEnd(e, steps, now, next)
@@ -205,10 +215,9 @@ internal fun VerticalTimeline(
                     laterLabel = later, earlierLabel = earlier,
                 )
             } else null,
-            previewSteps = if (e.type == EventType.SLEEP && previewDrag?.first == sleepIndex) previewDrag.second else null,
-            indent = indent,
-        )
-        if (e.type == EventType.SLEEP) sleepIndex++
+            previewSteps = if (previewDrag?.first == sleepIndex) previewDrag.second else null,
+        ) { during.forEach { Secondary(it) } }
+        sleepIndex++
     }
 
     Column(
@@ -216,15 +225,18 @@ internal fun VerticalTimeline(
             .padding(vertical = Spacing.space3)
     ) {
         for (s in stretches) {
-            if (s.asleep) Entry(s.sleep!!, indent = false)
-            else TimelineAwake(
-                s.start?.let { f.time(it) } ?: "", stringResource(R.string.stretch_awake), awakeMeta(s, now, f),
+            if (s.asleep) Sleep(s.sleep!!, s.during)
+            else br.gabriel.cochilo.ui.kit.TimelineStretch(
+                time = s.start?.let { f.time(it) } ?: "",
+                color = null,
                 // Awake on the same scale, as an outline: the gaps between sleeps read too.
-                barHeight = s.start?.let { st -> Spacing.space1 * br.gabriel.cochilo.domain.TimelineScale.units(((s.end ?: now) - st).div(br.gabriel.cochilo.domain.MINUTE).toInt()) },
-            )
-            for (e in s.during) Entry(e, indent = true)
+                barHeight = s.start?.let { st -> bar((s.end ?: now) - st) },
+                label = stringResource(R.string.stretch_awake),
+                meta = awakeMeta(s, now, f),
+                icon = null,
+            ) { s.during.forEach { Secondary(it) } }
         }
-        for (e in leftovers) Entry(e, indent = false)
+        for (e in leftovers) Secondary(e)
     }
 }
 
