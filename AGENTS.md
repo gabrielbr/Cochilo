@@ -37,6 +37,11 @@ then [docs/research.md](docs/research.md) for the science the features rest on.
   `SKILL.md` and references and apply them by hand, and say so in the audit. The results go in
   `docs/audits/<version>-<topic>.md`: one section per skill, and what was cut. Fix any P0 or P1
   finding, and anything the checklist fails, before merging.
+- **Keep the design canvas current.** Every screen and the main flows live on a claude.ai Design
+  artifact the owner annotates ([docs/design-canvas.md](docs/design-canvas.md)). Every change that
+  adds or changes a screen or a flow updates it in the same PR. Upload the new screenshots, update
+  `design/canvas/build_canvas.py` (screens, flows and their taps) and publish. Read the owner's
+  comments on the screens you touch first, and answer them.
 - **Keep the plan.** Ideas, the owner's suggestions and research-backed features go into
   [docs/roadmap.md](docs/roadmap.md); when one ships, move it out of the plan and into the docs.
 - **Never guess a repo or project.** Work in Cochilo. If a request seems to point at another repo

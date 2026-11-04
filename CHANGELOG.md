@@ -3,6 +3,11 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.50.1 — 2026-11-04
+
+**No change in the app.** Every screen and the main flows are now on a design canvas the owner can
+annotate. A new rule keeps it current with every screen or flow change (`docs/design-canvas.md`).
+
 ## 0.50.0 — 2026-11-04
 
 **The next sleep on the timeline.** At the top of the Day tab's hour by hour, today, the next
