@@ -73,7 +73,8 @@ Every screen and the main flows are on the [design canvas](docs/design-canvas.md
   mother's wellbeing go to a person. Not medical advice. Optional since 0.30.0: a small AI model on
   the phone for questions beyond the list, downloaded in one tap when you want it (by the Play
   Store, or since 0.37.0 by the family build itself, on Wi-Fi, in the background), given the whole log (each day, today's sleeps, this
-  week, the age references) and checked before it's shown. [docs/assistant.md](docs/assistant.md).
+  week, the age references) and checked before it's shown. Since 0.55.0 it runs on Google's
+  LiteRT-LM, and an 8 GB phone can get the larger Gemma 3n. [docs/assistant.md](docs/assistant.md).
 - **Details after**: start a sleep (or a feed, pumping, daylight) in one tap; where she slept, which
   side or how much is asked once it ends, with the last answer marked. [docs/flows.md](docs/flows.md).
 - **Where the baby slept**: crib, arms, sling, pram, car, asked on waking; naps by place in Patterns;

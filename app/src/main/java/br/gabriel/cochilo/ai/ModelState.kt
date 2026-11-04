@@ -35,6 +35,8 @@ interface ModelSource {
 
     val kind: Kind
     val state: StateFlow<ModelState>
+    /** About how many MB the model this phone would get takes (0.55.0). */
+    val approxMb: StateFlow<Int> get() = kotlinx.coroutines.flow.MutableStateFlow(ModelDownload.APPROX_MB)
 
     /** Looks again at what's on the phone. */
     fun refresh()

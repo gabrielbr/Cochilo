@@ -594,8 +594,8 @@
     <string name="model_status_failed">Didn\'t finish. Tap to try again.</string>
     <string name="model_title">On-device AI</string>
     <string name="model_line">Lets Ask Cochilo answer questions beyond its list, with a small AI model that runs on this phone, from your log. Nothing is sent anywhere. It can make mistakes, and it\'s never medical advice.</string>
-    <string name="model_cost">About 550 MB of space. It uses some battery while it answers.</string>
-    <string name="model_download">Download (about 550 MB)</string>
+    <string name="model_cost">About %1$s of space. It uses some battery while it answers.</string>
+    <string name="model_download">Download (about %1$s)</string>
     <string name="model_downloading">Downloading through the Play Store…</string>
     <string name="model_downloading_pct">Downloading through the Play Store… %1$d%%</string>
     <string name="model_copying">Copying the model…</string>
@@ -609,7 +609,7 @@
     <string name="model_failed_no_space">There isn\'t enough space on the phone.</string>
     <string name="model_failed_download">The download didn\'t finish. Try again on Wi-Fi.</string>
     <string name="model_failed_other">It didn\'t work. Try again.</string>
-    <string name="model_terms">Gemma 3 1B, Google\'s open model, under the Gemma Terms of Use (ai.google.dev/gemma/terms).</string>
+    <string name="model_terms">Gemma, Google\'s open model, under the Gemma Terms of Use (ai.google.dev/gemma/terms).</string>
     <string name="model_wifi_line">It downloads on Wi-Fi and keeps going if you close the app.</string>
     <string name="model_app_downloading">Downloading…</string>
     <string name="model_app_downloading_pct">Downloading… %1$d%%</string>
@@ -620,9 +620,9 @@
     <string name="model_failed_not_published">The model isn\'t ready to download yet. You can choose a file instead.</string>
     <string name="model_failed_check">The download arrived damaged. Try again.</string>
     <string name="model_notification_title">Cochilo: on-device AI</string>
-    <string name="model_notification_line">The model for Ask Cochilo, about 550 MB</string>
+    <string name="model_notification_line">The model for Ask Cochilo, about %1$s</string>
     <string name="ask_get_model">Answer questions like this on the phone</string>
-    <string name="ask_get_model_meta">Get the on-device AI · about 550 MB</string>
+    <string name="ask_get_model_meta">Get the on-device AI · about %1$s</string>
     <string name="ask_thinking">Thinking, on this phone…</string>
     <string name="ask_generated_label">Written on this phone by a small AI model, from your log. It can make mistakes.</string>
     <string name="fabric_in_shop_line">This fabric comes as a sling.</string>

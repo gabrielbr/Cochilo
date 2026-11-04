@@ -100,6 +100,8 @@ fun AskScreen(
     generate: (suspend (ModelAsk) -> ModelAnswer?)? = null,
     /** The model isn't on the phone yet: under a "not sure" reply, one row opens its sheet. */
     onGetModel: (() -> Unit)? = null,
+    /** About how big this phone's model is (0.55.0), for the "Get the on-device AI" row. */
+    modelMb: Int = br.gabriel.cochilo.ai.ModelDownload.APPROX_MB,
     /** What the model is told about this baby (Digest): the log, day by day, with the age references. */
     digest: List<String> = emptyList(),
     /** The model is on its way: a "not sure" reply says to ask again once it's here. */
@@ -181,7 +183,7 @@ fun AskScreen(
                 Spacer(Modifier.height(Spacing.space2))
                 br.gabriel.cochilo.ui.kit.RowGroup {
                     br.gabriel.cochilo.ui.kit.ListRow(
-                        stringResource(R.string.ask_get_model), meta = stringResource(R.string.ask_get_model_meta), onClick = onGetModel,
+                        stringResource(R.string.ask_get_model), meta = stringResource(R.string.ask_get_model_meta, modelSize(modelMb)), onClick = onGetModel,
                         trailing = { br.gabriel.cochilo.ui.kit.GIcon(R.drawable.gg_ic_chevron, null, CochiloTheme.colors.muted) },
                     )
                 }

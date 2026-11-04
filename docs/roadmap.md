@@ -41,8 +41,9 @@ Each is grounded in `docs/research.md` or the Tatá Slings plans (`docs/tata-sli
 
 - Set the `ASSISTANT_MODEL_URL` secret so the Play pack carries the model (a Gemma file the store
   may redistribute under Gemma's terms).
-- Upgrade Kotlin, then swap MediaPipe for LiteRT-LM in `ai/LocalModel.kt`; measure speed and
-  battery on a 4 GB phone; consider Gemma 3n for phones that can take it.
+- Run the Publish assistant model workflow (1B `.litertlm`, and Gemma 3n with its box ticked), then
+  measure speed and battery on a 4 GB phone and Gemma 3n on an 8 GB one. Once every phone has a
+  `.litertlm`, drop MediaPipe (and move the Play pack to `.litertlm`).
 
 ### 3.2c Tatá Slings inside the app
 
@@ -64,6 +65,7 @@ only with Tatá.
 | **On-device checks with TalkBack** | Paparazzi checks pixels, not the reading order |
 
 ## Shipped from this plan
+- **0.55.0**: Kotlin 2.2; Ask Cochilo on LiteRT-LM; Gemma 3n for 8 GB phones.
 - **0.54.0**: the prediction's clock (process C) and the sleep-pressure line.
 - **0.53.0**: drag a sleep's start; the Wear OS tile.
 - **0.52.0**: who logged it; partner sync with the app closed.
@@ -116,7 +118,6 @@ only with Tatá.
 
 | Release | What |
 |---|---|
-| 0.55.0 | Ask Cochilo on LiteRT-LM, after the Kotlin upgrade |
 
 Each of these lands like the rest: design system first, docs with the change, screenshots looked
 at, a PR, merged and released with a note in English and Portuguese.

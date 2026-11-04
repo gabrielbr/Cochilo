@@ -78,9 +78,6 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = "17"
-    }
 
     testOptions {
         unitTests.isReturnDefaultValues = true
@@ -156,7 +153,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.9.0")
     implementation("androidx.core:core-ktx:1.15.0")
 
-    val roomVersion = "2.6.1"
+    val roomVersion = "2.7.2"
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
     ksp("androidx.room:room-compiler:$roomVersion")
@@ -174,9 +171,15 @@ dependencies {
 
     // Ask Cochilo, phase 2: the on-device model runtime (docs/assistant.md). No permissions.
     implementation("com.google.mediapipe:tasks-genai:0.10.35")
+    // LiteRT-LM (0.55.0, docs/assistant.md): Google's newer runtime, for .litertlm files. 0.16.1 is
+    // the last built with this project's Kotlin 2.2.21; MediaPipe stays for .task files.
+    implementation("com.google.ai.edge.litertlm:litertlm-android:0.16.1")
     // The play build gets the model as a Play asset pack.
     "playImplementation"("com.google.android.play:asset-delivery:2.3.0")
 
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.jetbrains.kotlin:kotlin-test:2.0.21")
 }
+
+// Kotlin 2.2 (0.55.0): the compiler options DSL replaces kotlinOptions.
+kotlin { compilerOptions { jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17) } }

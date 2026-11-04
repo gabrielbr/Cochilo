@@ -44,22 +44,26 @@ private fun megabytes(bytes: Long) = (bytes / (1024 * 1024)).toInt()
 fun ModelSheet(
     state: ModelState, kind: ModelSource.Kind, onDownload: () -> Unit, onImport: () -> Unit, onRemove: () -> Unit, onDismiss: () -> Unit,
     onMobileData: () -> Unit = {},
+    /** About how big this phone's model is (0.55.0). */
+    sizeMb: Int = br.gabriel.cochilo.ai.ModelDownload.APPROX_MB,
 ) {
-    Sheet(onDismiss) { ModelBody(state, kind, onDownload, onImport, onRemove, onDismiss, onMobileData) }
+    Sheet(onDismiss) { ModelBody(state, kind, onDownload, onImport, onRemove, onDismiss, onMobileData, sizeMb) }
 }
 
 @Composable
 fun ModelBody(
     state: ModelState, kind: ModelSource.Kind, onDownload: () -> Unit, onImport: () -> Unit, onRemove: () -> Unit, onClose: () -> Unit,
     onMobileData: () -> Unit = {},
+    sizeMb: Int = br.gabriel.cochilo.ai.ModelDownload.APPROX_MB,
 ) {
     val c = CochiloTheme.colors
     val app = kind == ModelSource.Kind.APP_DOWNLOAD
+    val size = modelSize(sizeMb)
     Column(Modifier.fillMaxWidth()) {
         SheetTitle(stringResource(R.string.model_title))
         Text(stringResource(R.string.model_line), style = Type.body, color = c.ink)
         Spacer(Modifier.height(Spacing.space2))
-        Text(stringResource(R.string.model_cost), style = Type.meta, color = c.muted)
+        Text(stringResource(R.string.model_cost, size), style = Type.meta, color = c.muted)
         Spacer(Modifier.height(Spacing.space1))
         Text(stringResource(R.string.model_terms), style = Type.meta, color = c.muted)
         Spacer(Modifier.height(Spacing.space6))
@@ -108,7 +112,7 @@ fun ModelBody(
                     Text(stringResource(R.string.model_wifi_line), style = Type.meta, color = c.muted)
                     Spacer(Modifier.height(Spacing.space4))
                 }
-                Button(stringResource(R.string.model_download), onDownload, ButtonKind.PRIMARY, Modifier.fillMaxWidth())
+                Button(stringResource(R.string.model_download, size), onDownload, ButtonKind.PRIMARY, Modifier.fillMaxWidth())
                 Spacer(Modifier.height(Spacing.space2))
                 if (app) {
                     Button(stringResource(R.string.model_import), onImport, ButtonKind.SECONDARY, Modifier.fillMaxWidth())
@@ -129,3 +133,7 @@ private fun failedRes(r: ModelState.Reason): Int = when (r) {
     ModelState.Reason.CHECK -> R.string.model_failed_check
     ModelState.Reason.OTHER -> R.string.model_failed_other
 }
+
+/** "550 MB", "3.5 GB": the model's size in the phone's own units (0.55.0). */
+@Composable
+fun modelSize(mb: Int): String = android.text.format.Formatter.formatShortFileSize(androidx.compose.ui.platform.LocalContext.current, mb * 1_000_000L)
