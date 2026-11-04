@@ -103,15 +103,20 @@ the rules; the short version:
 
 ## Product rules
 
-- **The baby's data never leaves the phone.** No analytics, no account, no cloud backup. Data moves
-  only through Export/Import. Two builds ([docs/distribution.md](docs/distribution.md)): **play** has
+- **The baby's data never leaves the home.** No analytics, no account, no cloud backup. Data moves
+  only through Export/Import and, since 0.47.0, partner sync with the one phone the parents paired,
+  directly on the home Wi-Fi, sealed with a key only the two phones hold ([docs/sync.md](docs/sync.md)).
+  Never a server; the github build only (no new permission). Two builds ([docs/distribution.md](docs/distribution.md)): **play** has
   no INTERNET permission at all (since 0.30.0 it may run Play Asset Delivery's extraction for Ask
   Cochilo's model, whose permissions are listed in docs/distribution.md); **github** (the family
-  build) has INTERNET only for the design system's self-update and, since 0.37.0, the one-tap
-  download of Ask Cochilo's model from this repository's releases (no data in either request). Both may post notifications (`POST_NOTIFICATIONS`, the live notification,
+  build) has INTERNET only for the design system's self-update, since 0.37.0 the one-tap
+  download of Ask Cochilo's model from this repository's releases (no data in either request),
+  and since 0.47.0 partner sync on the home network (never the internet). Both may post notifications (`POST_NOTIFICATIONS`, the live notification,
   [docs/notifications.md](docs/notifications.md)). `check<Variant>Permissions` fails the build if
   either list grows.
-- **Import never deletes** and keeps the newest edit of an entry (`Backup.merge`). Changing the
+- **Import never deletes** and keeps the newest edit of an entry (`Backup.merge`). Partner sync
+  does delete: it carries deletions (the `deletions` table), and an edit newer than a deletion
+  wins (`SyncMerge`). A deletion always goes through `EventDao.delete`, which remembers it. Changing the
   backup format means bumping `BackupFile.VERSION` and still reading older files. A locked backup
   (`SealedFile`, [docs/backup.md](docs/backup.md)) wraps the same file and has its own `VERSION`;
   changing the lock means bumping that one.

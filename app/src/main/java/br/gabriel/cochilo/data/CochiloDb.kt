@@ -37,7 +37,29 @@ interface EventDao {
     suspend fun upsertAll(events: List<Event>)
 
     @Delete
-    suspend fun delete(event: Event)
+    suspend fun deleteRow(event: Event)
+
+    /**
+     * Deletes [event] and remembers that it was deleted (0.47.0), so a partner's phone deletes it
+     * too at the next sync, instead of bringing it back (docs/sync.md).
+     */
+    @androidx.room.Transaction
+    suspend fun delete(event: Event) {
+        deleteRow(event)
+        remember(Deletion(event.id, System.currentTimeMillis()))
+    }
+
+    @Upsert
+    suspend fun remember(deletion: Deletion)
+
+    @Query("SELECT * FROM deletions")
+    suspend fun deletions(): List<Deletion>
+
+    @Upsert
+    suspend fun rememberAll(deletions: List<Deletion>)
+
+    @Query("DELETE FROM events WHERE id IN (:ids)")
+    suspend fun deleteIds(ids: List<String>)
 
     @Query("DELETE FROM events")
     suspend fun deleteAll()
@@ -55,7 +77,7 @@ interface BabyDao {
     suspend fun upsert(baby: Baby)
 }
 
-@Database(entities = [Event::class, Baby::class], version = 4, exportSchema = true)
+@Database(entities = [Event::class, Baby::class, Deletion::class], version = 5, exportSchema = true)
 @TypeConverters(Converters::class)
 abstract class CochiloDb : RoomDatabase() {
     abstract fun events(): EventDao
@@ -64,7 +86,7 @@ abstract class CochiloDb : RoomDatabase() {
     companion object {
         fun create(context: Context): CochiloDb =
             Room.databaseBuilder(context, CochiloDb::class.java, "cochilo.db")
-                .addMigrations(MEDICINE_TYPE, BABY_LOOK, NIGHTS)
+                .addMigrations(MEDICINE_TYPE, BABY_LOOK, NIGHTS, DELETIONS)
                 .build()
 
         /**
@@ -102,6 +124,15 @@ abstract class CochiloDb : RoomDatabase() {
             "ALTER TABLE events ADD COLUMN night INTEGER",
             "ALTER TABLE events ADD COLUMN upForDay INTEGER",
         )
+
+        /** 4 → 5: deleted entries are remembered, so partner sync deletes them too (docs/sync.md, 0.47.0). */
+        val DELETIONS = object : Migration(4, 5) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(DELETIONS_SQL)
+            }
+        }
+
+        const val DELETIONS_SQL = "CREATE TABLE IF NOT EXISTS `deletions` (`id` TEXT NOT NULL, `deletedAt` INTEGER NOT NULL, PRIMARY KEY(`id`))"
 
         /** Kept as plain SQL so a JVM test can run it against SQLite. */
         const val MEDICINE_SQL = """

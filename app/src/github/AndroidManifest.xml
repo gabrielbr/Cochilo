@@ -3,8 +3,10 @@
 
     <!--
       The github (family) build updates itself from GitHub releases, the design system's
-      self-update. INTERNET is used for nothing else: one unauthenticated request to GitHub's
-      public releases API and the download of the new APK. The baby's data never leaves the phone.
+      self-update: one unauthenticated request to GitHub's public releases API and the download of
+      the new APK; also Ask Cochilo's model download (0.37.0). Since 0.47.0 INTERNET also opens the
+      socket for partner sync, on the home Wi-Fi only, sealed (docs/sync.md). The baby's data never
+      leaves the home.
       REQUEST_INSTALL_PACKAGES lets Android show "Do you want to update this app?".
       The play build has neither; app/build.gradle.kts checks both lists on every build.
     -->

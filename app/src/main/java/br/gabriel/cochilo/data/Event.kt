@@ -90,3 +90,15 @@ data class Baby(
     @androidx.room.ColumnInfo(defaultValue = "")
     val look: String = "",
 )
+
+/**
+ * An entry that was deleted, and when (0.47.0, docs/sync.md). Partner sync sends these, so a
+ * deletion on one phone deletes the entry on the other: an entry edited after its deletion wins
+ * (Undo, or an edit on the other phone), one edited before it goes.
+ */
+@kotlinx.serialization.Serializable
+@androidx.room.Entity(tableName = "deletions")
+data class Deletion(
+    @PrimaryKey val id: String,
+    val deletedAt: Long,
+)

@@ -154,6 +154,7 @@
     <string name="safe_sleep_meta">De barriga para cima em todo sono, superfície firme e plana, nada macio no berço (AAP 2022). O Cochilo não monitora segurança.</string>
     <string name="privacy">Privacidade</string>
     <string name="privacy_meta">Os registros ficam neste celular, a menos que você exporte.</string>
+    <string name="privacy_meta_sync">Os registros ficam neste celular e no celular pareado, pelo seu Wi-Fi. Sem servidor, sem conta.</string>
     <string name="version">Versão</string>
 
     <string name="exported">Exportado</string>
@@ -627,4 +628,27 @@
     <string name="age_note_m15_18">De 15 a 18 meses · Muitas crianças passam para uma soneca, muitas vezes depois do almoço. A mudança pode levar algumas semanas de vai e vem.</string>
     <string name="age_note_m18_21">De 18 a 21 meses · Chega a vontade de escolher. Duas pequenas escolhas na hora de dormir (qual pijama, qual livro) deixam a rotina tranquila.</string>
     <string name="age_note_m21_24">De 21 a 24 meses · Uma soneca e um horário regular de dormir são comuns agora. Luz do dia, movimento e uma noite calma ainda ajudam a noite.</string>
+    <string name="caption_sync">Sincronizar</string>
+    <string name="sync_pair">Parear um celular</string>
+    <string name="sync_pair_meta">O celular do outro responsável, no mesmo Wi-Fi, com o Cochilo aberto</string>
+    <string name="sync_with">Pareado com %1$s</string>
+    <string name="sync_last">Última vez: %1$s</string>
+    <string name="sync_never">Ainda não sincronizou</string>
+    <string name="sync_unreachable">Não está neste Wi-Fi. Abra o Cochilo em %1$s.</string>
+    <string name="sync_syncing">Sincronizando…</string>
+    <string name="sync_now">Sincronizar agora</string>
+    <string name="sync_unpair">Desfazer o pareamento</string>
+    <string name="sync_unpair_meta">Os dois celulares ficam com o que já têm</string>
+    <string name="pair_title">Parear um celular</string>
+    <string name="pair_looking">Procurando neste Wi-Fi. No outro celular, abra também Ajustes › Parear um celular.</string>
+    <string name="pair_pick_meta">Toque para parear</string>
+    <string name="pair_compare">%1$s mostra o mesmo número?</string>
+    <string name="pair_same">Mesmo número</string>
+    <string name="pair_different">Não é o mesmo</string>
+    <string name="pair_waiting">Esperando %1$s…</string>
+    <string name="pair_done">Pareado com %1$s. Com o Cochilo aberto nos dois celulares, cada mudança passa em segundos.</string>
+    <string name="pair_failed">Não pareou. Tente de novo com os dois no mesmo Wi-Fi.</string>
+    <string name="pair_try_again">Tentar de novo</string>
+    <string name="sync_got">De %1$s: %2$d novos ou alterados</string>
+    <string name="sync_got_removed">De %1$s: %2$d novos ou alterados, %3$d apagados</string>
 </resources>

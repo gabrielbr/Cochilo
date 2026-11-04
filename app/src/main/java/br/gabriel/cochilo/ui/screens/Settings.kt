@@ -50,6 +50,8 @@ fun SettingsScreen(
     onNightLight: (Boolean) -> Unit = {},
     /** Settings › Baby › Routine steps (docs/rituals.md). */
     onEditRitual: () -> Unit = {},
+    /** Settings › Sync (0.47.0, docs/sync.md): only in the build that can sync. */
+    sync: (@Composable () -> Unit)? = null,
     /** Settings › Data › Report (docs/report.md). */
     onExportReport: () -> Unit = {},
     /** Settings › Data › Protect backups (docs/backup.md). */
@@ -165,6 +167,8 @@ fun SettingsScreen(
             }
         }
 
+        sync?.invoke()
+
         Caption(stringResource(R.string.caption_data))
         RowGroup {
             ListRow(stringResource(R.string.export_json), meta = stringResource(R.string.export_json_meta), onClick = onExportJson, trailing = chevron)
@@ -188,7 +192,7 @@ fun SettingsScreen(
         RowGroup {
             ListRow(stringResource(R.string.safe_sleep), meta = stringResource(R.string.safe_sleep_meta))
             Hairline()
-            ListRow(stringResource(R.string.privacy), meta = stringResource(R.string.privacy_meta))
+            ListRow(stringResource(R.string.privacy), meta = stringResource(if (sync != null) R.string.privacy_meta_sync else R.string.privacy_meta))
             Hairline()
             val version = runCatching { context.packageManager.getPackageInfo(context.packageName, 0).versionName }.getOrNull() ?: ""
             ListRow(stringResource(R.string.version), value = version)
