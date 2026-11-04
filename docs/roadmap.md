@@ -35,9 +35,7 @@ Each is grounded in `docs/research.md` or the Tatá Slings plans (`docs/tata-sli
 ### 3.1 Onboarding: shipped in 0.13.0 ([onboarding.md](onboarding.md))
 
 ### 3.2 Logging, faster still
-- **Drag to adjust the start** too (0.27.0 moves the end; a late start is covered by the Earlier chips).
-- **Wear OS tile**: Start sleep / Woke up and the breasts from the wrist, for when both hands hold
-  the baby.
+- **The watch app on Play**, with the play build, so it installs with the phone's.
 
 ### 3.2b Ask Cochilo, next
 
@@ -66,6 +64,7 @@ only with Tatá.
 | **On-device checks with TalkBack** | Paparazzi checks pixels, not the reading order |
 
 ## Shipped from this plan
+- **0.53.0**: drag a sleep's start; the Wear OS tile.
 - **0.52.0**: who logged it; partner sync with the app closed.
 - **0.51.0**: Tatá's other three moments; one legend per screen; Settings' second lines; a quieter
   notification at night.
@@ -116,7 +115,6 @@ only with Tatá.
 
 | Release | What |
 |---|---|
-| 0.53.0 | Drag to adjust the start; the Wear OS tile |
 | 0.54.0 | The prediction's clock part |
 | 0.55.0 | Ask Cochilo on LiteRT-LM, after the Kotlin upgrade |
 

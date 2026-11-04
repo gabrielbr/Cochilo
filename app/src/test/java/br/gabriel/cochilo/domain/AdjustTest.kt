@@ -46,4 +46,24 @@ class AdjustTest {
         assertFalse(Adjust.canAdjust(nap.copy(type = EventType.FEED)))
         assertNull(Adjust.newEnd(nap.copy(end = null), 1, now, null))
     }
+
+    // The start (0.53.0).
+    @Test fun dragging_the_start_up_makes_it_begin_earlier_but_not_into_the_sleep_before() {
+        assertEquals(start - 15 * MINUTE, Adjust.newStart(nap, -3, now, null))
+        assertEquals(start - 10 * MINUTE, Adjust.newStart(nap, -100, now, start - 10 * MINUTE))
+    }
+
+    @Test fun dragging_the_start_down_never_leaves_under_five_minutes() {
+        assertEquals(start + 20 * MINUTE, Adjust.newStart(nap, 4, now, null))
+        assertEquals(start + 55 * MINUTE, Adjust.newStart(nap, 100, now, null))
+    }
+
+    @Test fun a_running_sleep_start_stops_five_minutes_before_now() {
+        val running = nap.copy(end = null)
+        val soon = start + 20 * MINUTE
+        assertEquals(soon - 5 * MINUTE, Adjust.newStart(running, 100, soon, null))
+        assertTrue(Adjust.canAdjustStart(running))
+        assertFalse(Adjust.canAdjustStart(Event(type = EventType.FEED, start = start)))
+        assertNull(Adjust.newStart(nap, 0, now, null))
+    }
 }

@@ -23,12 +23,17 @@ B = {  # screen key -> (blob url, natural w, natural h, caption)
  "fabric": ("/_blob/5378caf1ef8c79279facfe47ba79e9a3",461,1000,"Today · wrapped in a fabric"),
  "empty": ("/_blob/92ce4f340aeb4b83d91068a4856ee228",461,1000,"Today · empty, first day"),
  "today_full": ("/_blob/c01c42cdb5418f11239222688de4e80b",245,1000,"Today · whole page, Ask Cochilo at the end"),
- "day": ("/_blob/053783ca6e5d9aea5060406e5bac6cf7",461,1000,"Day · ring, yesterday"),
- "day_expected": ("/_blob/23e63ae90c6139730ba9ce4ab22aa597",461,1000,"Day · today, projected naps on the ring"),
- "day_block": ("/_blob/79ba761bcc556a4873367767dff2b0c7",461,1000,"Day · expected nap on the timeline"),
- "day_drag": ("/_blob/d27d10cdaf89f9bb113007d5cad33d0e",461,1000,"Day · dragging a sleep's end"),
- "day_all": ("/_blob/7887492e93e1e8667ae3281a3a09f11e",245,1000,"Day · whole page, two tracks"),
- "day_feed": ("/_blob/2710675bfcedfe31c954593ec1ac0e9f",245,1000,"Day · filtered to Feed"),
+ "day": ("/_blob/93d68c9ac51b89d8f628bbea27da4412",461,1000,"Day · ring, yesterday"),
+ "day_expected": ("/_blob/5548c5bf0285f54c3ae0ba493314009e",461,1000,"Day · today, projected naps on the ring"),
+ "day_block": ("/_blob/da1a61800dc5d1e9896d34664da2a85e",461,1000,"Day · expected nap on the timeline"),
+ "day_drag": ("/_blob/5131e0488e4983ef8a2f58c4858ed640",461,1000,"Day · dragging a sleep's end"),
+ "day_start": ("/_blob/1115c409f27326aefbd1aa2a5669d84b",461,1000,"Day · dragging a start"),
+ "tile_awake": ("/_blob/89bd552ae283938e3139e8bfe3a315c1",384,384,"Watch tile · awake"),
+ "tile_asleep": ("/_blob/144a3795b812a2889b5081f944ec242a",384,384,"Watch tile · asleep"),
+ "tile_feeding": ("/_blob/d4e88697cac6b25b3d4cc2202d938a81",384,384,"Watch tile · feeding"),
+ "tile_no_phone": ("/_blob/1cbc322081ba89f12c7c3298e4b145f7",384,384,"Watch tile · no phone"),
+ "day_all": ("/_blob/1df545a89d35535ee14714df618979c0",245,1000,"Day · whole page, two tracks"),
+ "day_feed": ("/_blob/81b1909521b5eb9bea6d5c6ff19ee508",245,1000,"Day · filtered to Feed"),
  "patterns": ("/_blob/dd93c069714821f92fa2e563ff95edc4",461,1000,"Patterns"),
  "patterns_changes": ("/_blob/1ae62f3e3c01c27b2c3e55e6f745e58a",461,1000,"Patterns · what changed"),
  "patterns_places": ("/_blob/009b127ccd55bb9416742ad1fd44ed5f",461,1000,"Patterns · where naps happened (pt-BR)"),
@@ -88,6 +93,12 @@ SNAP = {
  "day_expected": "ScreensSnapshotTest_day_today_expected_light",
  "day_block": "ScreensSnapshotTest_day_expected_block_light",
  "day_drag": "ScreensSnapshotTest_day_dragging_a_sleep_light",
+ "day_start": "ScreensSnapshotTest_day_dragging_a_start_light",
+ # The watch tile's screenshots are the wear module's: wear/src/test/snapshots/images/br.gabriel.cochilo.wear_TileSnapshotTest_<name>.png
+ "tile_awake": "wear:tile_awake",
+ "tile_asleep": "wear:tile_asleep",
+ "tile_feeding": "wear:tile_feeding",
+ "tile_no_phone": "wear:tile_no_phone",
  "day_all": "ScreensSnapshotTest_day_filter_all_light",
  "day_feed": "ScreensSnapshotTest_day_filter_feed_light",
  "patterns": "ScreensSnapshotTest_patterns_light",
@@ -175,7 +186,10 @@ FONT="font-family: 'Libre Franklin', system-ui, sans-serif"
 CW, CH, GAP = 230, 499, 170
 def card(key,x,y):
     u,w,h,cap = B[key]
-    return f'<img src="{u}" alt="{cap}" style="position: absolute; left: {x}px; top: {y}px; width: {CW}px; height: {CH}px; object-fit: cover; object-position: top; box-sizing: border-box; border: 1px solid {LINE}; border-radius: 12px; background: #ffffff">\n'
+    # A watch screen is square: shown whole, centred, on the watch's own dark.
+    fit = "object-fit: contain; object-position: center" if w == h else "object-fit: cover; object-position: top"
+    bg = "#1c1b1f" if w == h else "#ffffff"
+    return f'<img src="{u}" alt="{cap}" style="position: absolute; left: {x}px; top: {y}px; width: {CW}px; height: {CH}px; {fit}; box-sizing: border-box; border: 1px solid {LINE}; border-radius: 12px; background: {bg}">\n'
 def cap(text,x,y,w=CW):
     return f'<div style="position: absolute; left: {x}px; top: {y}px; width: {w}px; font-size: 14px; line-height: 18px; font-weight: 600; color: {INK}">{text}</div>\n'
 def label(text,x,y,w=150):
@@ -226,8 +240,12 @@ def main_map():
 def section(fname,title,keys):
     H_IMG=846; items=""; W=128
     for i,k in enumerate(keys):
-        u,w,h,c=B[k]; iw=round(H_IMG*w/h); W+=iw+(48 if i else 0)
-        items+=f'<div style="display: flex; flex-direction: column; gap: 12px; width: {iw}px; flex-shrink: 0"><div style="font-size: 14px; line-height: 18px; font-weight: 600; color: {INK}; min-height: 36px">{c}</div><img src="{u}" alt="{c}" style="width: {iw}px; height: {H_IMG}px; box-sizing: border-box; border: 1px solid {LINE}; border-radius: 12px; background: #ffffff"></div>\n'
+        u,w,h,c=B[k]
+        # A watch screen is square: about a phone's width, on the watch's own dark.
+        watch = w == h
+        iw = 390 if watch else round(H_IMG*w/h); ih = 390 if watch else H_IMG; W+=iw+(48 if i else 0)
+        bg = "#1c1b1f" if watch else "#ffffff"
+        items+=f'<div style="display: flex; flex-direction: column; gap: 12px; width: {iw}px; flex-shrink: 0"><div style="font-size: 14px; line-height: 18px; font-weight: 600; color: {INK}; min-height: 36px">{c}</div><img src="{u}" alt="{c}" style="width: {iw}px; height: {ih}px; box-sizing: border-box; border: 1px solid {LINE}; border-radius: 12px; background: {bg}"></div>\n'
     H=64+48+H_IMG+64
     body=f'<div style="width: {W}px; height: {H}px; box-sizing: border-box; padding: 64px; display: flex; gap: 48px; align-items: flex-start; background: {PAGE}; color: {INK}; {FONT}">\n'+items+'</div>\n'
     open(os.path.join(P,fname),"w").write(HEAD(title)+body+TAIL(W,H)); return W,H
@@ -251,13 +269,13 @@ for f in FLOWS:
     wh=flow(f[0],f[1],f[2],f[3],f[4]); add(f[0],f[1],"flows",0,y,wh); y+=wh[1]+120
 SECTIONS=[
  ("ScreensToday.dc.html","Today",["today","sleeping","night_sleeping","night_waking","short_nap","daylight","fabric","empty","today_full"]),
- ("ScreensDay.dc.html","Day",["day","day_expected","day_block","day_drag","day_all","day_feed"]),
+ ("ScreensDay.dc.html","Day",["day","day_expected","day_block","day_drag","day_start","day_all","day_feed"]),
  ("ScreensPatternsTata.dc.html","Patterns and From Tatá",["patterns","patterns_changes","patterns_places","tata","tata_week","age_note","tata_note"]),
  ("ScreensLog.dc.html","Logging and sheets",["log_open","log_feed","details_where","details_pumped","ticks","ritual"]),
  ("ScreensAsk.dc.html","Ask Cochilo",["ask","ask_answer","ask_not_sure","ask_model","chats","model_sheet"]),
  ("ScreensSettings.dc.html","Settings",["settings","sync","reminders","fabric_picker","passphrase","unlock","about","update","update_dl"]),
  ("ScreensPair.dc.html","Pairing and who logged it",["pair_looking","pair_compare","pair_waiting","pair_done","initial","logged_by"]),
- ("ScreensOutside.dc.html","First run and outside the app",["meet","look","notification","widget_awake","widget_asleep","report","celebration"]),
+ ("ScreensOutside.dc.html","First run, the watch and outside the app",["meet","look","notification","widget_awake","widget_asleep","tile_awake","tile_asleep","tile_feeding","tile_no_phone","report","celebration"]),
  ("ScreensBig.dc.html","Tablet and foldable",["tablet","foldable"]),
 ]
 y=0

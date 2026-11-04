@@ -60,7 +60,7 @@ jobs:
         run: >
           ./gradlew --no-daemon
           :app:testGithubDebugUnitTest :app:testPlayDebugUnitTest
-          :app:assembleGithubRelease :app:bundlePlayRelease
+          :app:assembleGithubRelease :app:bundlePlayRelease :wear:assembleRelease
           -PappVersionName="$NAME" -PappVersionCode="$CODE"
       # A full release (not a pre-release), so installed family builds offer it; SHA256SUMS.txt is
       # required, since self-update installs nothing whose checksum it can't match.
@@ -71,9 +71,11 @@ jobs:
         run: |
           cp app/build/outputs/apk/github/release/app-github-release.apk "cochilo-$NAME.apk"
           cp app/build/outputs/bundle/playRelease/app-play-release.aab "cochilo-play-$NAME.aab"
-          sha256sum "cochilo-$NAME.apk" "cochilo-play-$NAME.aab" > SHA256SUMS.txt
+          # The watch tile (docs/wear.md): its own APK, signed with the phone's key.
+          cp wear/build/outputs/apk/release/wear-release.apk "cochilo-wear-$NAME.apk"
+          sha256sum "cochilo-$NAME.apk" "cochilo-play-$NAME.aab" "cochilo-wear-$NAME.apk" > SHA256SUMS.txt
           cat SHA256SUMS.txt
           NOTES="${NOTES_INPUT:-Cochilo $NAME.}"
-          printf '%s\n\nInstall cochilo-%s.apk on the phone (allow installs from this source); after that, the app offers each new version itself. cochilo-play-%s.aab is the Google Play build, without internet access. The baby'"'"'s data stays on the phone.\n' "$NOTES" "$NAME" "$NAME" > notes.md
-          gh release create "$TAG" "cochilo-$NAME.apk" "cochilo-play-$NAME.aab" SHA256SUMS.txt \
+          printf '%s\n\nInstall cochilo-%s.apk on the phone (allow installs from this source); after that, the app offers each new version itself. cochilo-play-%s.aab is the Google Play build, without internet access. cochilo-wear-%s.apk is the watch tile (docs/wear.md). The baby'"'"'s data stays on the phone.\n' "$NOTES" "$NAME" "$NAME" "$NAME" > notes.md
+          gh release create "$TAG" "cochilo-$NAME.apk" "cochilo-play-$NAME.aab" "cochilo-wear-$NAME.apk" SHA256SUMS.txt \
             --target "$GITHUB_SHA" --title "Cochilo $NAME" --latest --notes-file notes.md

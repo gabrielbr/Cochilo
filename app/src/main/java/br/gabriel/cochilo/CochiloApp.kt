@@ -38,6 +38,8 @@ class CochiloApp : Application() {
                     // The home-screen widget follows the log the same way (docs/widget.md).
                     br.gabriel.cochilo.widget.CochiloWidget.refresh(this@CochiloApp)
                     br.gabriel.cochilo.tile.SleepTile.refresh(this@CochiloApp)
+                    // And the watch's tile, on a watch connected directly (0.53.0, docs/wear.md).
+                    br.gabriel.cochilo.wear.WearBridge.push(this@CochiloApp)
                 }
         }
     }

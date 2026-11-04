@@ -151,6 +151,9 @@ ksp {
 dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
+    // The watch tile (0.53.0, docs/wear.md): messages to a watch connected directly, never the cloud.
+    implementation("com.google.android.gms:play-services-wearable:19.0.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.9.0")
     implementation("androidx.core:core-ktx:1.15.0")
 
     val roomVersion = "2.6.1"

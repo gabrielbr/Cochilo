@@ -330,6 +330,7 @@ fun CochiloRoot(vm: MainViewModel) {
                                             expected = (prediction as? Predictor.Result.Awake)?.let { it.windowStart to it.windowEnd },
                                             plan = plan,
                                             onAdjust = vm::adjustEnd,
+                                            onAdjustStart = vm::adjustStart,
                                             showAdjustHint = !vm.adjustHintSeen.collectAsState().value,
                                         )
                                         2 -> PatternsScreen(log, now, zone, weeks)

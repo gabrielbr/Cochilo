@@ -128,6 +128,9 @@ the rules; the short version:
   notification). Both may post notifications (`POST_NOTIFICATIONS`, the live notification,
   [docs/notifications.md](docs/notifications.md)). `check<Variant>Permissions` fails the build if
   either list grows.
+- **The watch** (0.53.0, [docs/wear.md](docs/wear.md)) talks to the phone only when connected
+  directly (`isNearby`), with the Message API, never the Data Layer: nothing goes through Google's
+  cloud. The log stays on the phone; the watch holds only the last state it was sent.
 - **Import never deletes** and keeps the newest edit of an entry (`Backup.merge`). Partner sync
   does delete: it carries deletions (the `deletions` table), and an edit newer than a deletion
   wins (`SyncMerge`). A deletion always goes through `EventDao.delete`, which remembers it. Changing the
@@ -144,7 +147,8 @@ the rules; the short version:
 ```sh
 python3 design/build.py --check && python3 -m unittest discover -s design -p "test_*.py"
 ./gradlew :app:testGithubDebugUnitTest :app:testPlayDebugUnitTest \
-  :app:assembleGithubDebug :app:assemblePlayDebug :app:lintGithubDebug :app:lintPlayDebug
+  :app:assembleGithubDebug :app:assemblePlayDebug :app:lintGithubDebug :app:lintPlayDebug \
+  :wear:assembleDebug :wear:verifyPaparazziDebug :wear:lintDebug
 ```
 
 After a UI change, re-record the screenshots (`./gradlew :app:recordPaparazziGithubDebug`,

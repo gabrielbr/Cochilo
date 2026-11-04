@@ -14,6 +14,9 @@ Cochilo ships as two builds from the same code (`productFlavors` in `app/build.g
 In both, **the baby's data never leaves the home**: no account, no analytics, no cloud backup.
 It goes only where the parent sends it: an export, or (github build, 0.47.0) the one partner phone
 paired on the home Wi-Fi, sealed end to end ([sync.md](sync.md)).
+**The watch** (0.53.0, [wear.md](wear.md)): each release also carries `cochilo-wear-<version>.apk`,
+signed with the phone's key, with no permission. It's installed on the watch by hand.
+
 The permission lists are enforced on every build by `check<Variant>Permissions` (run by
 `assemble*` and `test*`); a library that adds a permission fails the build.
 
