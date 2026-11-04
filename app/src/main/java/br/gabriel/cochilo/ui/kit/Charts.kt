@@ -87,8 +87,9 @@ fun Timeline(events: List<Event>, from: Long, to: Long, now: Long?, zone: ZoneId
 
 /**
  * Sleep pressure today (0.54.0, docs/prediction.md): a line from midnight to now, on the same
- * 24-hour axis as the timeline, with a hairline at 100% (about when the baby usually falls
- * asleep). The line is `ink`, the guide `line`: it's a model, so no data colour. [summary] is what
+ * 24-hour axis as the timeline, with a dashed guide at 100% (about when the baby usually falls
+ * asleep). The line is `ink`, the guide `muted` (3:1 on surface, as a graphic that means
+ * something must be; 0.55.1 audit): it's a model, so no data colour. [summary] is what
  * TalkBack reads.
  */
 @Composable
@@ -105,7 +106,7 @@ fun PressureLine(points: List<br.gabriel.cochilo.domain.Pressure.Point>, from: L
         // 0% at the bottom, 125% at the top, so the 100% guide sits a fifth down.
         fun y(p: Int) = h - (p.coerceIn(0, 125) / 125f) * h
         fun x(t: Long) = ((t - from).coerceIn(0, to - from) / span) * w
-        drawRect(c.line, Offset(0f, y(100) - hair / 2), GSize(w, hair))
+        drawLine(c.muted, Offset(0f, y(100)), Offset(w, y(100)), strokeWidth = hair, pathEffect = expectedDash(dot * 2))
         if (points.size >= 2) {
             val path = androidx.compose.ui.graphics.Path()
             points.forEachIndexed { i, p -> if (i == 0) path.moveTo(x(p.at), y(p.percent)) else path.lineTo(x(p.at), y(p.percent)) }

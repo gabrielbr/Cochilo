@@ -129,7 +129,9 @@ Today's Day tab draws **Sleep pressure, today** under the legend: a line from mi
 - τw so that pressure goes from empty to the line in one usual window (this baby's median daytime
   window, else the age's); τs so that a usual nap drains it to a quarter;
 - shown as a share of the line: **100% is about when sleep usually comes**. Under it: "Now 75%,
-  rising". Its "i" says it's a model, not a measurement. TalkBack reads the same words.
+  rising · A model: 100% is about when sleep usually comes". TalkBack reads the same words.
+  Since 0.55.1 it has no "i" of its own (one per screen: the ring's), its guide is a dashed
+  `muted` line (3:1), and it hides from 19:00 to 07:00, when the night is quieter.
 
 The line is ink and the guide a hairline: it's a model, so it uses no data colour. It shows today
-only, and only once a sleep is logged.
+only, during the day, and only once a sleep is logged.

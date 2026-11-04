@@ -68,8 +68,7 @@
     <string name="caption_pressure">Sleep pressure, today</string>
     <string name="pressure_now_rising">Now %1$d%%, rising</string>
     <string name="pressure_now_falling">Now %1$d%%, going down</string>
-    <string name="pressure_meta">%1$d%% is about when sleep usually comes.</string>
-    <string name="info_pressure">A model, not a measurement. Pressure builds while the baby is awake and drains while asleep, at the pace of this baby\'s usual wake window and nap. It\'s what the predictions lean on.</string>
+    <string name="pressure_meta">A model: %1$d%% is about when sleep usually comes.</string>
     <string name="prediction_nap_shorter">Last nap %1$s, shorter than the usual %2$s, so %3$s sooner.</string>
     <string name="prediction_nap_longer">Last nap %1$s, longer than the usual %2$s, so %3$s later.</string>
     <string name="prediction_need_data">Predictions start once the first sleep is logged.</string>
@@ -685,7 +684,7 @@
     <string name="sync_initial_label">One letter</string>
     <string name="sync_initial_meta">Shown on what you log, on the other phone. Leave it empty to show nothing.</string>
     <string name="sync_background">Keep in sync when closed</string>
-    <string name="sync_background_meta">Uses the notification Cochilo already shows. A little more battery.</string>
+    <string name="sync_background_meta">Keeps Cochilo\'s notification on. A little more battery.</string>
     <string name="sync_by">by %1$s</string>
     <string name="sync_keep_title">In sync with %1$s</string>
     <string name="sync_unpair">Unpair</string>
