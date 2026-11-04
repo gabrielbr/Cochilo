@@ -3,6 +3,16 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.52.0 — 2026-11-04
+
+**Two parents, more in step.**
+- **Keep in sync when closed.** A new switch in Settings › Sync keeps the two phones in step
+  with Cochilo closed, on the same Wi-Fi. It uses the notification Cochilo already shows, so
+  there's no new one, and it costs a little battery. It's off until you turn it on.
+- **Who logged it.** Set your initial in Settings › Sync. On the other phone, what you log says
+  "by G" at the end of its line. Your own entries never show a letter.
+- Backups now carry who logged each entry (format 5). Older backups still import.
+
 ## 0.51.1 — 2026-11-04
 
 **No change in the app.** A fourth design skill from the Gabriel Design System 0.31.0,

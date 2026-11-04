@@ -54,6 +54,11 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     fun answerPairing(same: Boolean) = ctx.sync.answer(same)
     fun cancelPairing() = ctx.sync.cancelPairing()
     fun pairingSeen() = ctx.sync.pairingSeen()
+    fun setSyncInitial(letter: String?) = ctx.sync.setInitial(letter)
+    fun setSyncInBackground(on: Boolean) {
+        ctx.sync.setInBackground(on)
+        br.gabriel.cochilo.sync.SyncBackground.update(ctx)
+    }
     fun syncNow() = viewModelScope.launch { ctx.sync.syncNow() }
     fun unpair() = ctx.sync.unpair()
 

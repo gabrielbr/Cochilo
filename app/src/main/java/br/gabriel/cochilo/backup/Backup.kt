@@ -26,8 +26,9 @@ data class BackupFile(
          * means the default one.
          * 4: a sleep may say night or nap, and a night's last sleep that the baby was up for the day
          * (docs/nights.md, 0.42.0). Older files still read: those sleeps are told apart by the clock.
+         * 5: an entry may say who logged it (`loggedBy`, 0.52.0). Older files still read: unknown.
          */
-        const val VERSION = 4
+        const val VERSION = 5
     }
 }
 

@@ -43,9 +43,20 @@ class PartnerSync(context: Context, private val db: CochiloDb, private val link:
 
     val available get() = link.available
 
-    data class State(val partner: String?, val lastSyncedAt: Long?, val syncing: Boolean = false, val unreachable: Boolean = false)
+    /** Called after Unpair, so the background service stops (set by the app). */
+    var onUnpaired: () -> Unit = {}
 
-    private val _state = MutableStateFlow(State(sp.getString(PARTNER, null), sp.getLong(LAST, 0).takeIf { it > 0 }))
+    data class State(
+        val partner: String?, val lastSyncedAt: Long?, val syncing: Boolean = false, val unreachable: Boolean = false,
+        /** This parent's initial on entries (0.52.0), or null: shown on the partner's phone. */
+        val initial: String? = null,
+        /** Keep in sync with Cochilo closed (0.52.0): a service on the live notification. */
+        val inBackground: Boolean = false,
+    )
+
+    private val _state = MutableStateFlow(
+        State(sp.getString(PARTNER, null), sp.getLong(LAST, 0).takeIf { it > 0 }, initial = sp.getString(INITIAL, null), inBackground = sp.getBoolean(BACKGROUND, false))
+    )
     val state: StateFlow<State> = _state
 
     /** What a finished sync brought, for the snackbar. */
@@ -63,7 +74,8 @@ class PartnerSync(context: Context, private val db: CochiloDb, private val link:
 
     /** Cochilo came to the front: answer the partner, catch up, and send changes as they happen. */
     @OptIn(FlowPreview::class)
-    fun start() {
+    fun start(visible: Boolean = false) {
+        if (visible) onScreen = true
         val k = key() ?: return
         if (!link.available || serving != null) return
         serving = link.offer(SyncLink.Mode.SYNC, myName, SyncCrypto.pairId(k)) { wire -> serve(wire, k) }
@@ -73,8 +85,19 @@ class PartnerSync(context: Context, private val db: CochiloDb, private val link:
         }
     }
 
-    /** Cochilo went to the back: stop answering. */
+    /** Cochilo went to the back: stop answering, unless the background service keeps it on. */
     fun stop() {
+        onScreen = false
+        if (SyncBackground.running) return
+        halt()
+    }
+
+    /** The background service ended: stop too, unless Cochilo is on screen. */
+    fun stopUnlessOnScreen() { if (!onScreen) halt() }
+
+    @Volatile private var onScreen = false
+
+    private fun halt() {
         serving?.close(); serving = null
         watching?.cancel(); watching = null
     }
@@ -105,7 +128,28 @@ class PartnerSync(context: Context, private val db: CochiloDb, private val link:
 
     private fun canReach(p: Peer) = runCatching { link.connect(p).close(); true }.getOrDefault(false)
 
-    private suspend fun snapshot() = SyncData(baby = db.baby().get(), events = db.events().all(), deletions = db.events().deletions())
+    private suspend fun snapshot(): SyncData {
+        val me = _state.value.initial
+        // This phone's new entries say who logged them (0.52.0), from when the initial was set.
+        if (me != null) db.events().stampMine(me, sp.getLong(INITIAL_SINCE, 0))
+        return SyncData(baby = db.baby().get(), events = db.events().all(), deletions = db.events().deletions(), who = me)
+    }
+
+    /** Settings › Sync › Your initial: one letter, or null to leave entries unmarked. */
+    fun setInitial(letter: String?) {
+        val v = letter?.trim()?.take(1)?.uppercase()?.takeIf { it.isNotEmpty() }
+        sp.edit().apply { if (v == null) remove(INITIAL) else putString(INITIAL, v).putLong(INITIAL_SINCE, System.currentTimeMillis()) }.apply()
+        _state.value = _state.value.copy(initial = v)
+    }
+
+    /** Settings › Sync › Keep in sync when closed (0.52.0). The service follows this switch. */
+    fun setInBackground(on: Boolean) {
+        sp.edit().putBoolean(BACKGROUND, on).apply()
+        _state.value = _state.value.copy(inBackground = on)
+    }
+
+    /** Whether the background service should run: paired, switched on, and a link to use. */
+    val wantsBackground: Boolean get() = key() != null && link.available && _state.value.inBackground
 
     private suspend fun apply(remote: SyncData) = lock.withLock {
         val c = SyncMerge.changes(snapshot(), remote)
@@ -171,7 +215,7 @@ class PartnerSync(context: Context, private val db: CochiloDb, private val link:
         offering?.close(); offering = null
         if (result == null) { _pairing.value = Pairing.Failed; return }
         sp.edit().putString(KEY, Base64.encodeToString(result.key, Base64.NO_WRAP)).putString(PARTNER, result.partnerName).apply()
-        _state.value = State(result.partnerName, null)
+        _state.value = State(result.partnerName, null, initial = _state.value.initial, inBackground = _state.value.inBackground)
         _pairing.value = Pairing.Done(result.partnerName)
         scope.launch { syncNow() }
     }
@@ -190,16 +234,20 @@ class PartnerSync(context: Context, private val db: CochiloDb, private val link:
 
     /** Settings › Unpair: forget the key. Both phones keep the log they have. */
     fun unpair() {
-        stop()
+        halt()
         sp.edit().clear().apply()
         lastPeer = null
         _state.value = State(null, null)
+        onUnpaired()
     }
 
     companion object {
         private const val KEY = "key"
         private const val PARTNER = "partner"
         private const val LAST = "last"
+        private const val INITIAL = "initial"
+        private const val INITIAL_SINCE = "initial_since"
+        private const val BACKGROUND = "background"
         /** A change goes across this long after the last tap, so a burst of taps is one sync. */
         const val CHANGE_DEBOUNCE_MS = 3_000L
         /** How long to look for the partner on the Wi-Fi before saying it isn't there. */

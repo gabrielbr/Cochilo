@@ -34,7 +34,9 @@ Every screen and the main flows are on the [design canvas](docs/design-canvas.md
 - **Partner sync** (since 0.47.0, family build): pair the two parents' phones once (Settings ›
   Sync, compare six digits). While Cochilo is open on both on the home Wi-Fi, every change, a
   deletion included, goes across in seconds, directly between the phones, sealed. There's no
-  server and no account ([docs/sync.md](docs/sync.md)).
+  server and no account. Since 0.52.0 it can keep going with Cochilo closed (one switch, on the
+  notification Cochilo already shows), and each parent can set an initial, so the other phone
+  shows "by G" on what they logged ([docs/sync.md](docs/sync.md)).
 - **Nights** (since 0.42.0): each sleep is a nap or the night. Start sleep guesses which, and
   one tap changes it. Waking at night shows "Awake in the night" with **Back to sleep** and **Up
   for the day**, so a night with wakings is one night: bedtime, wakings and the morning are counted

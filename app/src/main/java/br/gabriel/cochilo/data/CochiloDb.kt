@@ -63,6 +63,13 @@ interface EventDao {
 
     @Query("DELETE FROM events")
     suspend fun deleteAll()
+
+    /**
+     * Marks this phone's own entries, changed since [since], with its parent's [initial] (0.52.0).
+     * Only rows with no author yet: an entry from the partner carries theirs (or "").
+     */
+    @Query("UPDATE events SET loggedBy = :initial WHERE loggedBy IS NULL AND updatedAt >= :since")
+    suspend fun stampMine(initial: String, since: Long)
 }
 
 @Dao
@@ -77,7 +84,7 @@ interface BabyDao {
     suspend fun upsert(baby: Baby)
 }
 
-@Database(entities = [Event::class, Baby::class, Deletion::class], version = 5, exportSchema = true)
+@Database(entities = [Event::class, Baby::class, Deletion::class], version = 6, exportSchema = true)
 @TypeConverters(Converters::class)
 abstract class CochiloDb : RoomDatabase() {
     abstract fun events(): EventDao
@@ -86,7 +93,7 @@ abstract class CochiloDb : RoomDatabase() {
     companion object {
         fun create(context: Context): CochiloDb =
             Room.databaseBuilder(context, CochiloDb::class.java, "cochilo.db")
-                .addMigrations(MEDICINE_TYPE, BABY_LOOK, NIGHTS, DELETIONS)
+                .addMigrations(MEDICINE_TYPE, BABY_LOOK, NIGHTS, DELETIONS, LOGGED_BY)
                 .build()
 
         /**
@@ -131,6 +138,15 @@ abstract class CochiloDb : RoomDatabase() {
                 db.execSQL(DELETIONS_SQL)
             }
         }
+
+        /** 5 → 6: who logged an entry, for two phones that sync (0.52.0). Existing rows: unknown. */
+        val LOGGED_BY = object : Migration(5, 6) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(LOGGED_BY_SQL)
+            }
+        }
+
+        const val LOGGED_BY_SQL = "ALTER TABLE events ADD COLUMN loggedBy TEXT"
 
         const val DELETIONS_SQL = "CREATE TABLE IF NOT EXISTS `deletions` (`id` TEXT NOT NULL, `deletedAt` INTEGER NOT NULL, PRIMARY KEY(`id`))"
 

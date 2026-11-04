@@ -393,10 +393,23 @@ class ScreensSnapshotTest {
         paparazzi.snapshot { SyncShot(false) {
             val f = Format(androidx.compose.ui.platform.LocalContext.current, zone, now)
             br.gabriel.cochilo.ui.screens.SyncSection(br.gabriel.cochilo.sync.PartnerSync.State(null, null), f, {}, {}, {})
-            br.gabriel.cochilo.ui.screens.SyncSection(br.gabriel.cochilo.sync.PartnerSync.State("Pixel da Ana", now - 4 * 60_000), f, {}, {}, {})
+            br.gabriel.cochilo.ui.screens.SyncSection(br.gabriel.cochilo.sync.PartnerSync.State("Pixel da Ana", now - 4 * 60_000, initial = "G", inBackground = true), f, {}, {}, {})
             br.gabriel.cochilo.ui.screens.SyncSection(br.gabriel.cochilo.sync.PartnerSync.State("Pixel da Ana", now - 3 * 3_600_000, unreachable = true), f, {}, {}, {})
         } }
     }
+    /** Who logged it (0.52.0): the partner's entries say "by A"; this parent's own say nothing. */
+    @Test fun entries_logged_by_partner_light() {
+        light()
+        paparazzi.snapshot { SyncShot(false) {
+            val f = Format(androidx.compose.ui.platform.LocalContext.current, zone, now)
+            val feeds = log.filter { it.type == br.gabriel.cochilo.data.EventType.FEED }.sortedByDescending { it.start }.take(4)
+                .mapIndexed { i, e -> e.copy(loggedBy = if (i % 2 == 0) "A" else "G") }
+            androidx.compose.runtime.CompositionLocalProvider(br.gabriel.cochilo.ui.screens.LocalSyncMe provides "G") {
+                br.gabriel.cochilo.ui.screens.EventList(feeds, now, f, zone) {}
+            }
+        } }
+    }
+    @Test fun initial_sheet_light() { light(); paparazzi.snapshot { SyncShot(false) { br.gabriel.cochilo.ui.screens.InitialBody("G", {}, {}) } } }
     @Test fun pair_looking_light() { light(); paparazzi.snapshot { SyncShot(false) { br.gabriel.cochilo.ui.screens.PairBody(br.gabriel.cochilo.sync.PartnerSync.Pairing.Looking(phones), {}, {}, {}, {}) } } }
     @Test fun pair_compare_ptBR_dark() { pt(true); paparazzi.snapshot { SyncShot(true) { br.gabriel.cochilo.ui.screens.PairBody(br.gabriel.cochilo.sync.PartnerSync.Pairing.Compare("482913", "Pixel da Ana"), {}, {}, {}, {}) } } }
     @Test fun pair_compare_light() { light(); paparazzi.snapshot { SyncShot(false) { br.gabriel.cochilo.ui.screens.PairBody(br.gabriel.cochilo.sync.PartnerSync.Pairing.Compare("482913", "Pixel da Ana"), {}, {}, {}, {}) } } }

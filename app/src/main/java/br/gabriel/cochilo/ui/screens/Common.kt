@@ -75,6 +75,20 @@ fun eventLabel(e: Event, f: Format, zone: ZoneId): String {
 }
 
 /** "07:00–07:20 · 20m", "08:00", or "07:00 · running". */
+/**
+ * This parent's own initial, when the phone syncs (0.52.0): entries logged by someone else show
+ * theirs ("by A"); this parent's own show nothing. Unpaired, nothing shows.
+ */
+val LocalSyncMe = androidx.compose.runtime.compositionLocalOf<String?> { null }
+
+/** "by A" for an entry the partner logged, or null (docs/sync.md, 0.52.0). */
+@Composable
+fun loggedByLabel(e: Event): String? {
+    val me = LocalSyncMe.current ?: return null
+    val by = e.loggedBy?.takeIf { it.isNotEmpty() && it != me } ?: return null
+    return stringResource(R.string.sync_by, by)
+}
+
 @Composable
 fun eventMeta(e: Event, now: Long, f: Format): String {
     val times = when {
@@ -82,7 +96,8 @@ fun eventMeta(e: Event, now: Long, f: Format): String {
         e.end == null -> stringResource(R.string.panel_since, f.time(e.start)) + " · " + f.duration(clockSpan(e.start, now))
         else -> f.time(e.start) + "–" + f.time(e.end) + " · " + f.duration(clockSpan(e.start, e.end))
     }
-    return if (e.note.isNullOrBlank()) times else "$times · ${e.note}"
+    val base = if (e.note.isNullOrBlank()) times else "$times · ${e.note}"
+    return loggedByLabel(e)?.let { "$base · $it" } ?: base
 }
 
 @Composable

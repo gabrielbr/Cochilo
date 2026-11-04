@@ -3,6 +3,7 @@ package br.gabriel.cochilo.ui.screens
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -31,7 +32,13 @@ import br.gabriel.cochilo.ui.theme.Type
  * last synced (or that the partner isn't on this Wi-Fi), "Sync now" and "Unpair".
  */
 @Composable
-fun SyncSection(state: PartnerSync.State, f: Format, onPair: () -> Unit, onSyncNow: () -> Unit, onUnpair: () -> Unit) {
+fun SyncSection(
+    state: PartnerSync.State, f: Format, onPair: () -> Unit, onSyncNow: () -> Unit, onUnpair: () -> Unit,
+    /** Opens the initial sheet (0.52.0). */
+    onInitial: () -> Unit = {},
+    /** Keep in sync when Cochilo is closed (0.52.0). */
+    onInBackground: (Boolean) -> Unit = {},
+) {
     val c = CochiloTheme.colors
     val chevron: @Composable androidx.compose.foundation.layout.RowScope.() -> Unit = { GIcon(R.drawable.gg_ic_chevron, null, c.muted) }
     Caption(stringResource(R.string.caption_sync))
@@ -49,6 +56,11 @@ fun SyncSection(state: PartnerSync.State, f: Format, onPair: () -> Unit, onSyncN
             ListRow(stringResource(R.string.sync_with, partner), meta = meta)
             Hairline()
             ListRow(stringResource(R.string.sync_now), onClick = onSyncNow, trailing = chevron)
+            Hairline()
+            // Who logged it (0.52.0): the partner's phone shows this letter on what you log.
+            ListRow(stringResource(R.string.sync_initial), value = state.initial ?: stringResource(R.string.not_set), onClick = onInitial, trailing = chevron)
+            Hairline()
+            br.gabriel.cochilo.ui.kit.SwitchRow(stringResource(R.string.sync_background), stringResource(R.string.sync_background_meta), state.inBackground, onInBackground)
             Hairline()
             ListRow(stringResource(R.string.sync_unpair), meta = stringResource(R.string.sync_unpair_meta), onClick = onUnpair)
         }
@@ -140,5 +152,29 @@ fun PairBody(
                 Button(stringResource(R.string.close), onClose, ButtonKind.SECONDARY, Modifier.fillMaxWidth())
             }
         }
+    }
+}
+
+/** Your initial (0.52.0): one letter the partner's phone shows on what you log. */
+@Composable
+fun InitialSheet(initial: String?, onSave: (String?) -> Unit, onDismiss: () -> Unit) {
+    Sheet(onDismiss) { InitialBody(initial, onSave, onDismiss) }
+}
+
+@Composable
+fun InitialBody(initial: String?, onSave: (String?) -> Unit, onDismiss: () -> Unit) {
+    val state = androidx.compose.runtime.saveable.rememberSaveable { androidx.compose.runtime.mutableStateOf(initial ?: "") }
+    val v = state.value
+    run {
+        SheetTitle(stringResource(R.string.sync_initial))
+        br.gabriel.cochilo.ui.kit.Field(
+            v, { state.value = it.trim().take(1).uppercase() }, stringResource(R.string.sync_initial_label),
+            keyboard = androidx.compose.foundation.text.KeyboardOptions(capitalization = androidx.compose.ui.text.input.KeyboardCapitalization.Characters),
+        )
+        Text(stringResource(R.string.sync_initial_meta), style = Type.meta, color = CochiloTheme.colors.muted, modifier = Modifier.padding(top = Spacing.space1))
+        Spacer(Modifier.height(Spacing.space6))
+        br.gabriel.cochilo.ui.kit.Button(stringResource(R.string.save), { onSave(v.ifBlank { null }) }, br.gabriel.cochilo.ui.kit.ButtonKind.PRIMARY, Modifier.fillMaxWidth())
+        Spacer(Modifier.height(Spacing.space2))
+        br.gabriel.cochilo.ui.kit.Button(stringResource(R.string.cancel), onDismiss, br.gabriel.cochilo.ui.kit.ButtonKind.SECONDARY, Modifier.fillMaxWidth())
     }
 }

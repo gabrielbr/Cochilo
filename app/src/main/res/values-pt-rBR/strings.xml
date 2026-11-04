@@ -643,6 +643,13 @@
     <string name="sync_unreachable">Não está neste Wi-Fi. Abra o Cochilo em %1$s.</string>
     <string name="sync_syncing">Sincronizando…</string>
     <string name="sync_now">Sincronizar agora</string>
+    <string name="sync_initial">Sua inicial nos registros</string>
+    <string name="sync_initial_label">Uma letra</string>
+    <string name="sync_initial_meta">Aparece no que você registra, no outro celular. Deixe vazio para não mostrar.</string>
+    <string name="sync_background">Sincronizar com o app fechado</string>
+    <string name="sync_background_meta">Usa a notificação que o Cochilo já mostra. Um pouco mais de bateria.</string>
+    <string name="sync_by">por %1$s</string>
+    <string name="sync_keep_title">Em sincronia com %1$s</string>
     <string name="sync_unpair">Desfazer o pareamento</string>
     <string name="sync_unpair_meta">Os dois celulares ficam com o que já têm</string>
     <string name="pair_title">Parear um celular</string>

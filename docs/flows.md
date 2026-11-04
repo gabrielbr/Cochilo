@@ -106,6 +106,11 @@ other with no tap at all.
 | A change reaches the other phone | 0 (both apps open, same Wi-Fi) |
 | Catch up | 0 (open Cochilo) |
 | Sync now | 2 (Settings › Sync now) |
+| A change reaches the other phone with Cochilo closed (0.52.0) | 0, once "Keep in sync when closed" is on (Settings › Sync, 2 taps, once) |
+| Set your initial (0.52.0, optional) | Settings › Your initial on entries (2), a letter, Save (1), once |
+
+Who logged it (0.52.0) adds no tap: an entry from the other phone says "by A" on its line.
+Remembers: the initial and the switch, per phone.
 
 ## The timeline shows how long things lasted (0.46.0)
 
