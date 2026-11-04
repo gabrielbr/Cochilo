@@ -331,6 +331,7 @@ fun CochiloRoot(vm: MainViewModel) {
                                             plan = plan,
                                             onAdjust = vm::adjustEnd,
                                             onAdjustStart = vm::adjustStart,
+                                            pressure = remember(log, now, weeks) { br.gabriel.cochilo.domain.Pressure.today(log, weeks, now, zone) },
                                             showAdjustHint = !vm.adjustHintSeen.collectAsState().value,
                                         )
                                         2 -> PatternsScreen(log, now, zone, weeks)

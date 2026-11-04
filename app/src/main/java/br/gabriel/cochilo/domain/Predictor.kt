@@ -18,6 +18,10 @@ import kotlin.math.roundToLong
  * and after a long one longer. How much, the predictor learns from this baby's own recent pairs
  * (the nap's length, the window after it) by weighted least squares, then shrinks it towards no
  * change like the windows themselves and caps it, and the card says what it did.
+ *
+ * The clock (0.54.0, [Clock]): process C. As the rhythm forms, the first nap of the day and
+ * bedtime lean towards the times this baby keeps, by how regular those times are and how far the
+ * rhythm has formed at this age, capped; the card says so.
  */
 class Predictor(
     private val zone: ZoneId = ZoneId.systemDefault(),
@@ -25,6 +29,8 @@ class Predictor(
     private val priorWeight: Double = 5.0,
     /** Whether the last nap's length moves the next window (phase 2); off only to compare in tests. */
     private val napEffect: Boolean = true,
+    /** Whether the baby's clock leans the first nap and bedtime (0.54.0); off only to compare in tests. */
+    private val clock: Boolean = true,
 ) {
     enum class Next { NAP, BEDTIME }
 
@@ -49,8 +55,13 @@ class Predictor(
             val samples: Int,
             /** How the last nap's length moved this window, or null when it didn't (phase 2). */
             val napEffect: NapEffect? = null,
+            /** How the baby's clock moved it, or null when it didn't (0.54.0). */
+            val clockEffect: ClockEffect? = null,
         ) : Result
     }
+
+    /** The clock moved [next] towards [towardsMinute] (minutes after midnight) by [shiftMinutes]; it holds [strengthPercent]% of the decision. */
+    data class ClockEffect(val towardsMinute: Int, val strengthPercent: Int, val shiftMinutes: Int)
 
     /** The last nap lasted [lastNapMinutes] against a usual [usualNapMinutes], so the window moved [shiftMinutes] (− = sooner). */
     data class NapEffect(val lastNapMinutes: Int, val usualNapMinutes: Int, val shiftMinutes: Int)
@@ -103,13 +114,34 @@ class Predictor(
         var next = Next.NAP
         var chosen = nextNapMinutes
         var at = awakeSince + (nextNapMinutes.minutes * MINUTE).roundToLong() + shift
+        // The clock (0.54.0): the first nap of the day leans towards the time it usually starts.
+        val fit = if (clock) Clock.fit(events, ageWeeks, now, zone, lookbackDays) else null
+        var clockEffect: ClockEffect? = null
+        if (fit?.firstNapMinute != null && last.isNightSleep(zone)) {
+            val clockAt = nextOccurrence(fit.firstNapMinute % (24 * 60), awakeSince)
+            val cap = (nextNapMinutes.minutes * MAX_CLOCK_SHIFT_FRACTION * MINUTE).roundToLong()
+            val leaned = Clock.lean(at, clockAt, fit.firstNapStrength, cap).coerceAtLeast(awakeSince + MIN_WINDOW_MINUTES * MINUTE)
+            if (Clock.meaningful(leaned - at)) {
+                clockEffect = ClockEffect(fit.firstNapMinute % (24 * 60), (fit.firstNapStrength * 100).toInt(), ((leaned - at) / MINUTE).toInt())
+                at = leaned
+            }
+        }
 
         if (bedtimeMinute != null && !last.isNightSleep(zone)) {
             val bedtimeAt = nextOccurrence(bedtimeMinute, awakeSince)
             // If the next nap would land within 45 minutes of bedtime, the next sleep is bedtime.
             if (at >= bedtimeAt - 45 * MINUTE || (maxNaps != null && slot >= maxNaps)) {
                 val lastWindow = blended(all.filter { it.beforeBed }, prior.wakeForSlot(slot, true), now)
-                val byWindow = awakeSince + (lastWindow.minutes * MINUTE).roundToLong() + shift
+                var byWindow = awakeSince + (lastWindow.minutes * MINUTE).roundToLong() + shift
+                // The clock (0.54.0): bedtime leans towards the time it usually is.
+                clockEffect = null
+                if (fit?.bedtimeMinute != null) {
+                    val leaned = Clock.lean(byWindow, bedtimeAt, fit.bedtimeStrength, 30 * MINUTE)
+                    if (Clock.meaningful(leaned - byWindow)) {
+                        clockEffect = ClockEffect(fit.bedtimeMinute % (24 * 60), (fit.bedtimeStrength * 100).toInt(), ((leaned - byWindow) / MINUTE).toInt())
+                        byWindow = leaned
+                    }
+                }
                 // Near the usual bedtime, but never sooner than half the usual last window after
                 // waking: a late nap that ends at bedtime still leaves the baby some time awake.
                 val earliest = awakeSince + (lastWindow.minutes * MIN_LAST_WINDOW_SHARE * MINUTE).roundToLong()
@@ -128,6 +160,7 @@ class Predictor(
             priorMinutes = chosen.prior,
             samples = chosen.samples,
             napEffect = effect,
+            clockEffect = clockEffect,
         )
     }
 
@@ -226,6 +259,10 @@ class Predictor(
         const val MIN_LAST_WINDOW_SHARE = 0.5
         /** Smaller shifts are noise: not applied, not shown. */
         const val MIN_SHIFT = 5.0
+        /** The clock never moves the first nap by more than this share of its usual window (0.54.0). */
+        const val MAX_CLOCK_SHIFT_FRACTION = 0.25
+        /** A first nap never comes sooner than this after waking, whatever the clock. */
+        const val MIN_WINDOW_MINUTES = 20
     }
 
     private fun nextOccurrence(minute: Int, after: Long): Long {

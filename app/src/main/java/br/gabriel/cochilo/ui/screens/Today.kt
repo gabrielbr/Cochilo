@@ -277,6 +277,18 @@ private fun PredictionCard(p: Predictor.Result.Awake, now: Long, f: Format, plan
             stringResource(if (plan.fromAge) R.string.plan_why_age else R.string.plan_why, f.durationMin(plan.napMinutes)),
             style = Type.meta, color = c.muted, modifier = Modifier.padding(top = Spacing.space1),
         )
+        // The clock (0.54.0) says what it did, with its numbers.
+        p.clockEffect?.let { e ->
+            val at = f.time(br.gabriel.cochilo.domain.startOfDay(br.gabriel.cochilo.domain.localDate(now, f.zone), f.zone) + e.towardsMinute * MINUTE)
+            val bed = p.next == Predictor.Next.BEDTIME
+            val res = when {
+                bed && e.shiftMinutes < 0 -> R.string.prediction_clock_bed_sooner
+                bed -> R.string.prediction_clock_bed_later
+                e.shiftMinutes < 0 -> R.string.prediction_clock_nap_sooner
+                else -> R.string.prediction_clock_nap_later
+            }
+            Text(stringResource(res, at, f.durationMin(kotlin.math.abs(e.shiftMinutes))), style = Type.meta, color = c.muted, modifier = Modifier.padding(top = Spacing.space1))
+        }
         // Phase 2 says what the last nap did, with its numbers (predictions explain themselves).
         p.napEffect?.let { e ->
             val words = stringResource(

@@ -28,6 +28,7 @@ B = {  # screen key -> (blob url, natural w, natural h, caption)
  "day_block": ("/_blob/da1a61800dc5d1e9896d34664da2a85e",461,1000,"Day · expected nap on the timeline"),
  "day_drag": ("/_blob/5131e0488e4983ef8a2f58c4858ed640",461,1000,"Day · dragging a sleep's end"),
  "day_start": ("/_blob/1115c409f27326aefbd1aa2a5669d84b",461,1000,"Day · dragging a start"),
+ "day_pressure": ("/_blob/1beae4fa7ec9aa1d06f7eedafa7b39fc",245,1000,"Day · sleep pressure, today (tall)"),
  "tile_awake": ("/_blob/89bd552ae283938e3139e8bfe3a315c1",384,384,"Watch tile · awake"),
  "tile_asleep": ("/_blob/144a3795b812a2889b5081f944ec242a",384,384,"Watch tile · asleep"),
  "tile_feeding": ("/_blob/d4e88697cac6b25b3d4cc2202d938a81",384,384,"Watch tile · feeding"),
@@ -94,6 +95,7 @@ SNAP = {
  "day_block": "ScreensSnapshotTest_day_expected_block_light",
  "day_drag": "ScreensSnapshotTest_day_dragging_a_sleep_light",
  "day_start": "ScreensSnapshotTest_day_dragging_a_start_light",
+ "day_pressure": "ScreensSnapshotTest_day_pressure_light",
  # The watch tile's screenshots are the wear module's: wear/src/test/snapshots/images/br.gabriel.cochilo.wear_TileSnapshotTest_<name>.png
  "tile_awake": "wear:tile_awake",
  "tile_asleep": "wear:tile_asleep",
@@ -269,7 +271,7 @@ for f in FLOWS:
     wh=flow(f[0],f[1],f[2],f[3],f[4]); add(f[0],f[1],"flows",0,y,wh); y+=wh[1]+120
 SECTIONS=[
  ("ScreensToday.dc.html","Today",["today","sleeping","night_sleeping","night_waking","short_nap","daylight","fabric","empty","today_full"]),
- ("ScreensDay.dc.html","Day",["day","day_expected","day_block","day_drag","day_start","day_all","day_feed"]),
+ ("ScreensDay.dc.html","Day",["day","day_expected","day_pressure","day_block","day_drag","day_start","day_all","day_feed"]),
  ("ScreensPatternsTata.dc.html","Patterns and From Tatá",["patterns","patterns_changes","patterns_places","tata","tata_week","age_note","tata_note"]),
  ("ScreensLog.dc.html","Logging and sheets",["log_open","log_feed","details_where","details_pumped","ticks","ritual"]),
  ("ScreensAsk.dc.html","Ask Cochilo",["ask","ask_answer","ask_not_sure","ask_model","chats","model_sheet"]),
