@@ -43,4 +43,55 @@ class ModelDownloadTest {
         assertEquals("https://github.com/gabrielbr/Cochilo/releases/download/assistant-model-v1/gemma-3n-E2B-it-int4.litertlm.sha256",
             ModelDownload.sumUrl("gabrielbr/Cochilo", ModelDownload.Choice.GEMMA_3N))
     }
+
+    /** 0.57.0: the model comes in pieces, and an interrupted download carries on from the first missing one. */
+    @Test fun reads_the_pieces_file_and_refuses_anything_else() {
+        val a = "a".repeat(64); val b = "b".repeat(64)
+        val p = ModelDownload.parsePieces("$a 104857600 gemma3-1b-it-int4.litertlm.p00\n$b 12 gemma3-1b-it-int4.litertlm.p01\n")!!
+        assertEquals(listOf(ModelDownload.Piece("gemma3-1b-it-int4.litertlm.p00", 104857600, a), ModelDownload.Piece("gemma3-1b-it-int4.litertlm.p01", 12, b)), p)
+        assertEquals(p, ModelDownload.decode(ModelDownload.encode(p)))
+        assertNull(ModelDownload.parsePieces("Not Found"))
+        assertNull(ModelDownload.parsePieces("<html>"))
+        assertNull(ModelDownload.parsePieces("$a 0 x.p00"))
+        assertNull(ModelDownload.parsePieces("$a 10 ../../evil"))
+        assertNull(ModelDownload.parsePieces(""))
+        assertEquals("https://github.com/gabrielbr/Cochilo/releases/download/assistant-model-v1/gemma3-1b-it-int4.litertlm.pieces",
+            ModelDownload.piecesUrl("gabrielbr/Cochilo", ModelDownload.Choice.GEMMA_1B))
+        // Before pieces were published: the model's own parts, sizes unknown, still round-trip.
+        val legacy = ModelDownload.legacyPieces(ModelDownload.Choice.GEMMA_3N)
+        assertEquals(legacy, ModelDownload.decode(ModelDownload.encode(legacy)))
+    }
+
+    @Test fun carries_on_from_the_first_missing_piece() {
+        val p = (0 until 4).map { ModelDownload.Piece("m.p0$it", 100, null) }
+        assertEquals(0, ModelDownload.resumeAt(p) { _, _ -> false })
+        assertEquals(2, ModelDownload.resumeAt(p) { i, _ -> i < 2 })
+        // A hole is fetched again, even when later pieces are there.
+        assertEquals(1, ModelDownload.resumeAt(p) { i, _ -> i != 1 })
+        assertEquals(4, ModelDownload.resumeAt(p) { _, _ -> true })
+    }
+
+    @Test fun progress_counts_the_kept_pieces() {
+        val p = listOf(ModelDownload.Piece("a", 300, null), ModelDownload.Piece("b", 100, null))
+        assertEquals(0.75f, ModelDownload.progress(p, 1, 0, 0)!!, 0.001f)
+        assertEquals(0.875f, ModelDownload.progress(p, 1, 50, 100)!!, 0.001f)
+        // Sizes unknown (legacy parts): each part counts the same.
+        val legacy = ModelDownload.legacyPieces(ModelDownload.Choice.GEMMA_3N)
+        assertEquals(0.75f, ModelDownload.progress(legacy, 1, 50, 100)!!, 0.001f)
+        assertEquals(0.5f, ModelDownload.progress(legacy, 1, 0, 0)!!, 0.001f)
+    }
+
+    @Test fun a_piece_is_good_only_whole_and_unchanged() {
+        val f = File.createTempFile("piece", ".p00")
+        try {
+            f.writeBytes(ByteArray(10) { it.toByte() })
+            val sha = ModelDownload.sha256(f)
+            assertTrue(ModelDownload.pieceIsGood(f, ModelDownload.Piece("x", 10, sha)))
+            assertFalse(ModelDownload.pieceIsGood(f, ModelDownload.Piece("x", 11, sha)))
+            assertFalse(ModelDownload.pieceIsGood(f, ModelDownload.Piece("x", 10, "0".repeat(64))))
+            assertTrue(ModelDownload.pieceIsGood(f, ModelDownload.Piece("x", -1, null)))
+            f.delete()
+            assertFalse(ModelDownload.pieceIsGood(f, ModelDownload.Piece("x", -1, null)))
+        } finally { f.delete() }
+    }
 }

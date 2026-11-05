@@ -18,6 +18,7 @@ Mark each one ✅ with the date and the phones when it passes, or open an issue 
 | 5 | The old `.task` model is offered for update and replaced cleanly | A migration with no undo | 0.56.0 |
 | 6 | Dragging a sleep's start (and end) feels right one-handed | Paparazzi can't feel a drag | 0.53.0, 0.55.1 |
 | 7 | TalkBack reads every new screen in a sensible order | Paparazzi checks pixels, not order (roadmap §4) | all |
+| 8 | An interrupted model download carries on from the last finished piece, and the result passes its check | The download manager's behaviour differs by phone maker; a restart mid-piece | 0.57.0 |
 
 ## How, and what passes
 
@@ -52,8 +53,16 @@ Mark each one ✅ with the date and the phones when it passes, or open an issue 
    - **Pass:** every control is announced with its name and state, in reading order, and every
      chart reads its summary.
 
+8. **Carrying on.**
+   - Setup: any phone; Download the model on Wi-Fi.
+   - At about 30%, turn the phone off and on. At about 60%, open Android's Downloads and remove
+     the Cochilo download.
+   - **Pass:** each time the sheet says "stopped at N%" with N no more than one piece (100 MB)
+     below where it was. Carry on downloading continues from there, the model is Ready, and Ask
+     answers.
+
 ## Results
 
 | # | Date | Devices | Result |
 |---|---|---|---|
-| 1–7 | — | — | ⬜ not yet run |
+| 1–8 | — | — | ⬜ not yet run |

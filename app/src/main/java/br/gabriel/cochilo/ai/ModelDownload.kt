@@ -37,6 +37,63 @@ object ModelDownload {
     fun url(repo: String, name: String) = "https://github.com/$repo/releases/download/$TAG/$name"
     fun sumUrl(repo: String, c: Choice) = url(repo, c.file) + ".sha256"
 
+    /**
+     * The pieces a model comes down in (0.57.0): about 100 MB each, so an interrupted download
+     * keeps every piece that finished and only fetches the rest. Published beside the model as
+     * `<file>.pieces`, one "<sha256> <bytes> <name>" line per piece, in order.
+     */
+    data class Piece(val name: String, val bytes: Long, val sha: String?)
+
+    fun piecesUrl(repo: String, c: Choice) = url(repo, c.file) + ".pieces"
+
+    /** The pieces in a `.pieces` file, or null when it isn't one. */
+    fun parsePieces(text: String): List<Piece>? {
+        val lines = text.lines().map { it.trim() }.filter { it.isNotEmpty() }
+        if (lines.isEmpty()) return null
+        return lines.map { line ->
+            val f = line.split(Regex("\\s+"))
+            if (f.size != 3) return null
+            val sha = parseSum(f[0]) ?: return null
+            val bytes = f[1].toLongOrNull()?.takeIf { it > 0 } ?: return null
+            if (!f[2].matches(Regex("[A-Za-z0-9._-]+"))) return null
+            Piece(f[2], bytes, sha)
+        }
+    }
+
+    /** Before pieces were published: the choice's own parts, sizes unknown. */
+    fun legacyPieces(c: Choice): List<Piece> = c.parts.map { Piece(it, -1, null) }
+
+    fun encode(pieces: List<Piece>): String = pieces.joinToString("\n") { "${it.sha ?: "-"} ${it.bytes} ${it.name}" }
+
+    fun decode(text: String?): List<Piece>? = text?.lines()?.filter { it.isNotBlank() }?.map { line ->
+        val f = line.trim().split(" ")
+        if (f.size != 3) return null
+        Piece(f[2], f[1].toLongOrNull() ?: return null, f[0].takeIf { it != "-" })
+    }?.takeIf { it.isNotEmpty() }
+
+    /**
+     * Where to carry on: the first piece not already kept. [kept] says whether piece i is on the
+     * phone whole (its size known and matched, or, for a legacy part, recorded as finished).
+     */
+    fun resumeAt(pieces: List<Piece>, kept: (Int, Piece) -> Boolean): Int =
+        pieces.indices.firstOrNull { !kept(it, pieces[it]) } ?: pieces.size
+
+    /** How far the whole model is, with piece [index] at [done] of [total] bytes. */
+    fun progress(pieces: List<Piece>, index: Int, done: Long, total: Long): Float? {
+        if (pieces.isEmpty()) return null
+        if (pieces.all { it.bytes > 0 }) {
+            val all = pieces.sumOf { it.bytes }.toFloat()
+            val before = pieces.take(index.coerceIn(0, pieces.size)).sumOf { it.bytes }
+            return ((before + done.coerceAtLeast(0)) / all).coerceIn(0f, 1f)
+        }
+        if (total <= 0) return (index.toFloat() / pieces.size).coerceIn(0f, 1f)
+        return ((index + done.toFloat() / total) / pieces.size).coerceIn(0f, 1f)
+    }
+
+    /** Whether a finished piece is the one we published (size, then hash when known). */
+    fun pieceIsGood(file: File, piece: Piece): Boolean =
+        file.exists() && (piece.bytes < 0 || file.length() == piece.bytes) && (piece.sha == null || sha256(file) == piece.sha)
+
     fun modelUrl(repo: String) = url(repo, FILE)
     fun sumUrl(repo: String) = modelUrl(repo) + ".sha256"
 

@@ -19,6 +19,10 @@ on:
         description: "Also publish Gemma 3n E2B (3.7 GB, for phones with 8 GB of memory)"
         type: boolean
         default: false
+      pieces_only:
+        description: "Only add the 100 MB pieces for resuming (0.57.0), from the models already on the pre-release"
+        type: boolean
+        default: false
 permissions:
   contents: write
 env:
@@ -34,6 +38,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download from Hugging Face
+        if: ${{ !inputs.pieces_only }}
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
@@ -56,7 +61,7 @@ jobs:
           Models, unmodified: litert-community/Gemma3-1B-IT (gemma3-1b-it-int4.task; Gemma3-1B-IT_multi-prefill-seq_q4_ekv4096.litertlm, published as gemma3-1b-it-int4.litertlm); google/gemma-3n-E2B-it-litert-lm (gemma-3n-E2B-it-int4.litertlm, in two parts joined by the app), when published.
           NOTICE
       - name: Gemma 3n, in two parts
-        if: ${{ inputs.gemma3n }}
+        if: ${{ inputs.gemma3n && !inputs.pieces_only }}
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
@@ -71,6 +76,39 @@ jobs:
           ls -la "$NANO".part*
           cat "$NANO.part1" "$NANO.part2" | sha256sum | grep -q "$(cut -d' ' -f1 "$NANO.sha256")" || { echo "::error::the parts don't join back"; exit 1; }
           echo "ASSETS=$ASSETS $NANO.part1 $NANO.part2 $NANO.sha256" >> "$GITHUB_ENV"
+      - name: The models already published
+        if: ${{ inputs.pieces_only }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          gh release download "$TAG" -p "$LITERT" -p "$LITERT.sha256"
+          sha256sum -c "$LITERT.sha256"
+          if gh release download "$TAG" -p "$NANO.part1" -p "$NANO.part2" -p "$NANO.sha256"; then
+            cat "$NANO.part1" "$NANO.part2" > "$NANO"; rm "$NANO.part1" "$NANO.part2"
+            sha256sum -c "$NANO.sha256"
+          fi
+          gh release download "$TAG" -p GEMMA-NOTICE.txt
+          echo "ASSETS=" >> "$GITHUB_ENV"
+      # 0.57.0: each LiteRT-LM model also goes up in 100 MB pieces with a "<sha256> <bytes> <name>"
+      # list (<file>.pieces), so an interrupted download in the app keeps every piece that finished
+      # (ModelDownload.Piece). The pieces join back to the published file; that's checked here.
+      - name: Pieces for resuming
+        run: |
+          PIECES=""
+          for M in "$LITERT" "$NANO"; do
+            [ -f "$M" ] || continue
+            split -b 100M -d -a 2 "$M" "$M.p"
+            : > "$M.pieces"
+            for P in "$M".p[0-9][0-9]; do
+              echo "$(sha256sum "$P" | cut -d' ' -f1) $(stat -c %s "$P") $P" >> "$M.pieces"
+              PIECES="$PIECES $P"
+            done
+            cat "$M".p[0-9][0-9] | sha256sum | grep -q "$(cut -d' ' -f1 "$M.sha256")" || { echo "::error::$M's pieces don't join back"; exit 1; }
+            echo "$M: $(wc -l < "$M.pieces") pieces"; cat "$M.pieces"
+            PIECES="$PIECES $M.pieces"
+          done
+          echo "ASSETS=$ASSETS $PIECES" >> "$GITHUB_ENV"
       - name: Publish the pre-release
         env:
           GH_TOKEN: ${{ github.token }}

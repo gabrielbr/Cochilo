@@ -68,6 +68,32 @@ Code: `lastOf`, `lastKind`, `lastKindAmong`, `Event.rememberedFrom` in `domain/Q
 (tested in `QuickLogTest`); the Log menu in `LogMenu.kt` (Today's rows until 0.39.0); the sheet's line in `Sheets.kt`.
 This replaced the earlier "next: other breast" suggestion: the app shows what happened, she decides.
 
+## The model download carries on (0.57.0)
+
+[assistant.md](assistant.md). Ask Cochilo's model can be 3.5 GB, and a download that starts over
+from zero after an interruption costs a parent hours and the phone's data.
+
+```mermaid
+flowchart TD
+  get([Settings › On-device AI › Download]) --> pieces[Pieces fetched one at a time<br/>each checked and kept]
+  pieces -- dropped connection --> pieces
+  pieces -- stops for good --> stopped[Stopped at N%<br/>what arrived is kept]
+  stopped -- Carry on downloading --> pieces
+  stopped -- Choose a file instead --> file([Copy the file])
+  pieces -- Stop and delete --> absent([Off, nothing kept])
+  pieces -- last piece --> join[Join, check the whole] --> ready([On, on this phone])
+  join -- check fails --> again([Download again from the start])
+```
+
+| Flow | Taps |
+|---|---|
+| Carry on an interrupted download | Settings › On-device AI ("Stopped at 42%") (1) › Carry on downloading (1): 2, the same as starting |
+| An interrupted download, from Ask | the row under a reply (1) › Carry on downloading (1): 2 |
+
+Every state: downloading (with progress across all the pieces), waiting for Wi-Fi, stopped (how
+far, and Carry on), damaged piece ("arrived damaged. Try again", which fetches only that piece),
+no space, ready. Nothing new to remember: the pieces are the memory.
+
 ## Every audit green (0.56.0)
 
 - **The watch tile:** the same taps; the Last mark is drawn; the running side reads "Finish".

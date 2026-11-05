@@ -16,8 +16,11 @@ sealed interface ModelState {
     data class Ready(val file: File, val bytes: Long) : ModelState
     /** This build can't get it (e.g. a Play build made without the model). */
     data object Unavailable : ModelState
-    /** The last try failed; [reason] is shown in plain words. */
-    data class Failed(val reason: Reason) : ModelState
+    /**
+     * The last try failed; [reason] is shown in plain words. [kept] (0.57.0): how much of an
+     * interrupted download is still on the phone, so getting it again carries on from there.
+     */
+    data class Failed(val reason: Reason, val kept: Float? = null) : ModelState
 
     /** [NOT_PUBLISHED]: the model isn't on Cochilo's releases yet. [CHECK]: it arrived, but its checksum didn't match. */
     /** [OUTDATED] (0.56.0): the phone has the older `.task` model, which the app no longer runs. */
