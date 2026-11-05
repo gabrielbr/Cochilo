@@ -72,7 +72,7 @@ Every screen and the main flows are on the [design canvas](docs/design-canvas.md
   and the app's research, on the phone, in English and Portuguese; health, medicines and the
   mother's wellbeing go to a person. Not medical advice. Optional since 0.30.0: a small AI model on
   the phone for questions beyond the list, downloaded in one tap when you want it (by the Play
-  Store, or since 0.37.0 by the family build itself, on Wi-Fi, in the background), given the whole log (each day, today's sleeps, this
+  Store, or since 0.37.0 by the family build itself, on Wi-Fi, in the background, carrying on from where it stopped since 0.57.0), given the whole log (each day, today's sleeps, this
   week, the age references) and checked before it's shown. Since 0.55.0 it runs on Google's
   LiteRT-LM (the only engine since 0.56.0), and an 8 GB phone gets the larger Gemma 3n. [docs/assistant.md](docs/assistant.md).
 - **Details after**: start a sleep (or a feed, pumping, daylight) in one tap; where she slept, which

@@ -28,7 +28,11 @@ fun modelStatus(state: ModelState): String = when (state) {
     is ModelState.Getting -> stringResource(R.string.model_status_getting)
     is ModelState.Ready -> stringResource(R.string.model_status_ready, megabytes(state.bytes))
     ModelState.Unavailable -> stringResource(R.string.model_status_unavailable)
-    is ModelState.Failed -> stringResource(if (state.reason == ModelState.Reason.OUTDATED) R.string.model_status_outdated else R.string.model_status_failed)
+    is ModelState.Failed -> when {
+        state.reason == ModelState.Reason.OUTDATED -> stringResource(R.string.model_status_outdated)
+        state.kept != null -> stringResource(R.string.model_status_stopped, (state.kept * 100).toInt())
+        else -> stringResource(R.string.model_status_failed)
+    }
 }
 
 private fun megabytes(bytes: Long) = (bytes / (1024 * 1024)).toInt()
@@ -105,14 +109,18 @@ fun ModelBody(
             }
             ModelState.Absent, is ModelState.Failed -> {
                 if (state is ModelState.Failed) {
-                    Text(stringResource(failedRes(state.reason)), style = Type.bodySmall, color = c.ink, modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite })
+                    // An interrupted download keeps what arrived (0.57.0): say how far, and carry on.
+                    val words = if (state.kept != null && state.reason == ModelState.Reason.DOWNLOAD) stringResource(R.string.model_stopped, (state.kept * 100).toInt())
+                        else stringResource(failedRes(state.reason))
+                    Text(words, style = Type.bodySmall, color = c.ink, modifier = Modifier.semantics { liveRegion = LiveRegionMode.Polite })
                     Spacer(Modifier.height(Spacing.space4))
                 }
                 if (app) {
                     Text(stringResource(R.string.model_wifi_line), style = Type.meta, color = c.muted)
                     Spacer(Modifier.height(Spacing.space4))
                 }
-                Button(stringResource(R.string.model_download, size), onDownload, ButtonKind.PRIMARY, Modifier.fillMaxWidth())
+                val resume = state is ModelState.Failed && state.kept != null
+                Button(if (resume) stringResource(R.string.model_carry_on) else stringResource(R.string.model_download, size), onDownload, ButtonKind.PRIMARY, Modifier.fillMaxWidth())
                 Spacer(Modifier.height(Spacing.space2))
                 if (app) {
                     Button(stringResource(R.string.model_import), onImport, ButtonKind.SECONDARY, Modifier.fillMaxWidth())

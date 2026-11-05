@@ -592,7 +592,7 @@
     <string name="model_waiting_wifi">Esperando o Wi-Fi para baixar.</string>
     <string name="model_background">Pode fechar. O download continua, e a notificação mostra o andamento.</string>
     <string name="model_mobile_data">Baixar agora pelos dados móveis</string>
-    <string name="model_stop">Parar o download</string>
+    <string name="model_stop">Parar e apagar o download</string>
     <string name="model_failed_not_published">O modelo ainda não está pronto para baixar. Você pode escolher um arquivo.</string>
     <string name="model_failed_check">O download chegou com defeito. Tente de novo.</string>
     <string name="model_notification_title">Cochilo: IA no celular</string>
@@ -678,4 +678,7 @@
     <string name="pair_try_again">Tentar de novo</string>
     <string name="sync_got">De %1$s: %2$d novos ou alterados</string>
     <string name="sync_got_removed">De %1$s: %2$d novos ou alterados, %3$d apagados</string>
+    <string name="model_status_stopped">Parou em %1$d%%. Toque para continuar.</string>
+    <string name="model_stopped">O download parou em %1$d%%. O que chegou fica guardado, e ele continua dali.</string>
+    <string name="model_carry_on">Continuar o download</string>
 </resources>

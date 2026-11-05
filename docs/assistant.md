@@ -89,15 +89,35 @@ Neither has permissions of its own. Kotlin went from 2.0.21 to 2.2.21 (KSP 2.2.2
 | Any | Gemma 3 1B, `.litertlm` | about 600 MB |
 
 GitHub takes at most 2 GB per file, so Gemma 3n is published in two parts (`.part1`, `.part2`)
-with the whole file's `.sha256`. The app downloads them one after the other through the download
-manager, joins them, and checks the whole. The sheet and Ask's row say the size of the model this
+with the whole file's `.sha256`.
+
+**Resuming (0.57.0).** Since 0.57.0 each model is also published in pieces of 100 MB
+(`<file>.p00`, `.p01`…), listed in `<file>.pieces`, one `<sha256> <bytes> <name>` line each: 6
+pieces for the 1B, 35 for Gemma 3n. The app reads the list with the checksum (one more small
+request, no data in it) and fetches the pieces one at a time through the download manager.
+- Inside a piece, the download manager resumes a dropped connection itself (GitHub's storage
+  answers `Range` requests and sends an ETag).
+- Each finished piece is checked (size and SHA-256) and kept. When anything stops the download
+  for good (the download manager gives up, the phone restarts, it's removed from Downloads, she
+  switches to mobile data), only the piece in flight is lost. "Carry on downloading" starts at the
+  first piece that's missing.
+- It starts over only when the published checksum changes (a new model), after Stop and delete,
+  Remove, or choosing a file instead.
+- The pieces are joined, each deleted as it's added, then the whole file is checked: the peak
+  space is the model plus one piece.
+- Before the pieces existed (or if the list can't be read), the parts above play the same role.
+
+Code: `ModelDownload.Piece`, `parsePieces`, `resumeAt`, `progress`, `pieceIsGood` (pure, in
+`ModelDownloadTest`); the github build's `ModelSources`. The sheet and Ask's row say the size of the model this
 phone would get: on an 8 GB phone the sheet reads which one is published when it opens, one
 request with no data in it, never at start.
 
 **Publishing:** the **Publish assistant model** workflow takes the 1B `.litertlm` and, with its
 "gemma3n" box ticked, Gemma 3n (which needs the HF token's account to accept Gemma's terms on its
 page too). Both were published on 2026-11-04: `gemma3-1b-it-int4.litertlm` (584,417,280 bytes) and
-Gemma 3n in two parts (1,992,294,400 + 1,663,533,056 bytes), each with its `.sha256`.
+Gemma 3n in two parts (1,992,294,400 + 1,663,533,056 bytes), each with its `.sha256`. The
+workflow's "pieces_only" box adds the 100 MB pieces and their lists from the files already
+published; it ran on 2026-11-04, and the full run makes them too.
 
 **On real phones:** the plan and what passes are in [testing-on-device.md](testing-on-device.md).
 
@@ -107,7 +127,7 @@ git and never inside the APK.
 
 | | **play** | **github** (family) |
 |---|---|---|
-| How the model arrives | An on-demand **Play asset pack** (`:assistant_model`): the Play Store downloads it; the app only asks for it | Since 0.37.0 the **app downloads it** with one tap (Settings › On-device AI › Download, or from Ask under a reply it couldn't give), through Android's download manager: Wi-Fi only unless she taps "Download now on mobile data", in the background, with the system's progress notification, resuming after a dropped connection. "Choose a file instead" still copies a file already on the phone |
+| How the model arrives | An on-demand **Play asset pack** (`:assistant_model`): the Play Store downloads it; the app only asks for it | Since 0.37.0 the **app downloads it** with one tap (Settings › On-device AI › Download, or from Ask under a reply it couldn't give), through Android's download manager: Wi-Fi only unless she taps "Download now on mobile data", in the background, with the system's progress notification, resuming after a dropped connection, and since 0.57.0 carrying on from the last finished 100 MB piece after anything worse. "Choose a file instead" still copies a file already on the phone |
 | Where it comes from | The Release workflow takes it from the `assistant-model-v1` pre-release (checked against its `.sha256`), or from the `ASSISTANT_MODEL_URL` secret; without either the pack ships empty and the app says "Not in this build" | This repository's `assistant-model-v1` **pre-release** (`gemma3-1b-it-int4.litertlm` and its `.sha256`; Gemma 3n in two parts; the older `.task` stays for phones not yet updated), put there once by the **Publish assistant model** workflow from Hugging Face (`litert-community/Gemma3-1B-IT`, which is gated: the workflow needs an `HF_TOKEN` from an account that accepted Gemma's terms). A pre-release, so self-update never offers it. Until it's published, Download says "The model isn't ready to download yet" |
 | Checks | The pack's file must exist | A download must not be text (an error page), be at least 50 MB, and match the published SHA-256 (`ai/ModelDownload.kt`, `ModelDownloadTest`); a chosen file must start with "LITERTLM" (an older `.task` is said to be outdated, 0.56.0), be at least 50 MB and fit in free space (`ai/ModelFile.kt`) |
 | Remove | Remove the model (the pack is removed) | Remove the model, or Stop the download (the file is deleted) |

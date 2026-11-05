@@ -617,7 +617,7 @@
     <string name="model_waiting_wifi">Waiting for Wi-Fi to download.</string>
     <string name="model_background">You can close this. The download goes on, and the notification shows how far it is.</string>
     <string name="model_mobile_data">Download now on mobile data</string>
-    <string name="model_stop">Stop the download</string>
+    <string name="model_stop">Stop and delete the download</string>
     <string name="model_failed_not_published">The model isn\'t ready to download yet. You can choose a file instead.</string>
     <string name="model_failed_check">The download arrived damaged. Try again.</string>
     <string name="model_notification_title">Cochilo: on-device AI</string>
@@ -703,4 +703,7 @@
     <string name="pair_try_again">Try again</string>
     <string name="sync_got">From %1$s: %2$d new or changed</string>
     <string name="sync_got_removed">From %1$s: %2$d new or changed, %3$d deleted</string>
+    <string name="model_status_stopped">Stopped at %1$d%%. Tap to carry on.</string>
+    <string name="model_stopped">The download stopped at %1$d%%. What arrived is kept, so it carries on from there.</string>
+    <string name="model_carry_on">Carry on downloading</string>
 </resources>

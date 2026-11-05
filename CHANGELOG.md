@@ -3,6 +3,22 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.57.0 — 2026-11-05
+
+**The AI model's download carries on after an interruption.**
+- The model now comes down in pieces of about 100 MB (6 for the 1B, 35 for Gemma 3n), and every
+  piece that finished stays on the phone. If the download stops (the connection gives up, the
+  phone restarts, the download is removed from Android's Downloads, or she switches to mobile
+  data), at most the piece in flight is lost.
+- The sheet then says "The download stopped at 42%. What arrived is kept, so it carries on from
+  there." and its button reads **Carry on downloading**. The Settings row reads "Stopped at 42%.
+  Tap to carry on." The same two taps as before.
+- Each piece is checked against its own SHA-256 as it lands, and the whole model against its own
+  at the end. A damaged piece is fetched again on its own.
+- Joining the pieces deletes each one as it's added, so Gemma 3n needs about 3.5 GB free instead
+  of 7 GB.
+- "Stop the download" is now "Stop and delete the download", because that is what it does.
+
 ## 0.56.0 — 2026-11-04
 
 **Every design review green.**
