@@ -3,6 +3,14 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.57.1 — 2026-11-05
+
+**The live notification no longer gets stuck on a past sleep.** On a paired phone that keeps sync
+on with Cochilo closed, the notification could stay on an old "Asleep since…" while the app was
+right, even after closing and opening Cochilo. Now one failed update can no longer stop the rest,
+updates take turns so an older one can't land last, and opening Cochilo always brings the
+notification up to date (docs/notifications.md).
+
 ## 0.57.0 — 2026-11-05
 
 **The AI model's download carries on after an interruption.**

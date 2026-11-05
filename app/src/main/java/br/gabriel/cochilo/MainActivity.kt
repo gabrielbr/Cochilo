@@ -66,6 +66,8 @@ class MainActivity : ComponentActivity() {
         // Keep in sync when closed (0.52.0): started from here, while Cochilo is on screen, as
         // Android requires of a foreground service.
         br.gabriel.cochilo.sync.SyncBackground.update(this)
+        // Opening Cochilo always brings the live notification up to date (0.57.1).
+        (application as CochiloApp).refreshNotifications()
     }
 
     override fun onStop() {
