@@ -61,6 +61,21 @@ shows the same timeline on every Android version (not just 16) in the app's own 
 toolchain moves to API 36, `ProgressStyle` can replace the bitmap and make the notification a
 "Live update" (status-bar chip) too.
 
+### Kept up to date (0.57.1)
+
+The owner's wife's phone, paired and keeping sync on with Cochilo closed, showed an old
+"Asleep since…" that never went away, while Today on the same phone was right. Two causes, both
+fixed:
+- **One loop updates the notification, the widget, the tile and the watch** (`CochiloApp`). It
+  lives as long as the process, which is days when sync runs with Cochilo closed. A failure in any
+  step used to end it for good, so the notification froze. Each step now runs on its own (a
+  failure is logged and the next update still runs), and the watch push gives up after 15 s.
+- **Refreshes now take turns** (`LiveNotifications.refresh`, a mutex). A sync, the 5-minute tick,
+  the tile and the buttons can all ask at once; one that read the log just before a sync landed
+  could post last and put back a sleep that had ended. Each now reads the log fresh, in turn.
+- **Opening Cochilo refreshes it** (`MainActivity.onStart`), so it is never wrong for longer than
+  it takes to open the app.
+
 ## Window reminders (0.33.0)
 
 The owner's request: a heads-up **30 and 15 minutes before each sleep window**, to bring

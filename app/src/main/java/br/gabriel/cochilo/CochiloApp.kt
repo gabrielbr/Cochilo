@@ -34,17 +34,29 @@ class CochiloApp : Application() {
             combine(db.events().observeAll(), db.baby().observe(), prefs.liveNotification, prefs.reminders, prefs.reminderLeads) { _, _, _, _, _ -> }
                 .debounce(300)
                 .collect {
-                    LiveNotifications.refresh(this@CochiloApp)
+                    // Each step on its own (0.57.1): this loop lives as long as the process (days,
+                    // with sync kept on when closed), and one failure used to end it for good,
+                    // leaving the notification frozen on an old "Asleep since…" while the app
+                    // itself was right.
+                    step { LiveNotifications.refresh(this@CochiloApp) }
                     // The home-screen widget follows the log the same way (docs/widget.md).
-                    br.gabriel.cochilo.widget.CochiloWidget.refresh(this@CochiloApp)
-                    br.gabriel.cochilo.tile.SleepTile.refresh(this@CochiloApp)
+                    step { br.gabriel.cochilo.widget.CochiloWidget.refresh(this@CochiloApp) }
+                    step { br.gabriel.cochilo.tile.SleepTile.refresh(this@CochiloApp) }
                     // And the watch's tile, on a watch connected directly (0.53.0, docs/wear.md).
-                    br.gabriel.cochilo.wear.WearBridge.push(this@CochiloApp)
+                    // Bounded, so a watch link that never answers can't hold the loop.
+                    step { kotlinx.coroutines.withTimeoutOrNull(15_000) { br.gabriel.cochilo.wear.WearBridge.push(this@CochiloApp) } }
                 }
         }
     }
 
-    /** After the person answers the notification permission. */
+    /** Runs one update; a failure is logged and the next update still runs. */
+    private suspend fun step(block: suspend () -> Unit) {
+        try { block() } catch (e: kotlinx.coroutines.CancellationException) { throw e } catch (e: Exception) {
+            android.util.Log.w("Cochilo", "update failed", e)
+        }
+    }
+
+    /** After the person answers the notification permission, and each time Cochilo comes on screen. */
     fun refreshNotifications() {
         scope.launch { LiveNotifications.refresh(this@CochiloApp) }
     }

@@ -29,6 +29,7 @@ import br.gabriel.cochilo.domain.otherBreast
 import br.gabriel.cochilo.ui.Format
 import br.gabriel.cochilo.ui.theme.CTokens
 import java.time.ZoneId
+import kotlinx.coroutines.sync.withLock
 
 /**
  * The live notification (docs/notifications.md), in the spirit of Napper's: while there is a log,
@@ -61,8 +62,18 @@ object LiveNotifications {
             ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) &&
             NotificationManagerCompat.from(context).areNotificationsEnabled()
 
+    /**
+     * One refresh at a time (0.57.1). A sync, the tick, the tile and the buttons can all ask at
+     * once; unserialised, one that read the log just before a sync landed could post last and
+     * put back a sleep that had already ended. In turn, each reads the log fresh, so the last
+     * one always shows the latest log.
+     */
+    private val refreshing = kotlinx.coroutines.sync.Mutex()
+
     /** Reads the log and brings every live notification up to date (posts, updates or clears). */
-    suspend fun refresh(context: Context) {
+    suspend fun refresh(context: Context) = refreshing.withLock { refreshNow(context) }
+
+    private suspend fun refreshNow(context: Context) {
         // Window reminders have their own setting and channel; they follow the log the same way.
         SleepReminders.refresh(context)
         val app = context.applicationContext as CochiloApp
