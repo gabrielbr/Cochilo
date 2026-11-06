@@ -61,6 +61,18 @@ shows the same timeline on every Android version (not just 16) in the app's own 
 toolchain moves to API 36, `ProgressStyle` can replace the bitmap and make the notification a
 "Live update" (status-bar chip) too.
 
+### Past its window (0.60.1)
+
+The owner's wife's phone (0.57.1 or newer, keeping sync on with Cochilo closed) still showed an
+"Awake · Start sleep" notification that looked stuck on a past event. Today on the same phone was
+right. The cause found is wording: once the nap or bedtime window had passed with nothing logged,
+the line still read "next nap 4:01 PM", a time already gone, while Today showed "Past window".
+The line now reads "Since 2:30 PM · nap was due 4:01 PM · past window" (bedtime alike).
+
+In case it isn't the whole story, a refresh that fails now records why
+(`LiveNotifications.lastFailure`), and Settings › Notifications shows it under the Live
+notification switch until the next refresh works.
+
 ### Play music (0.60.0)
 
 When a routine music link is saved ([rituals.md](rituals.md)), the live notification adds

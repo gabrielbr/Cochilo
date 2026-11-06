@@ -72,8 +72,24 @@ object LiveNotifications {
      */
     private val refreshing = kotlinx.coroutines.sync.Mutex()
 
+    /**
+     * The last update that failed, and why (0.60.1), or null. Shown under the switch in Settings,
+     * so a notification that stops following the log says so instead of going quietly stale.
+     */
+    val lastFailure = kotlinx.coroutines.flow.MutableStateFlow<String?>(null)
+
     /** Reads the log and brings every live notification up to date (posts, updates or clears). */
-    suspend fun refresh(context: Context) = refreshing.withLock { refreshNow(context) }
+    suspend fun refresh(context: Context) = refreshing.withLock {
+        try {
+            refreshNow(context)
+            lastFailure.value = null
+        } catch (e: kotlinx.coroutines.CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            lastFailure.value = "${java.text.SimpleDateFormat("HH:mm", java.util.Locale.ROOT).format(java.util.Date())} · ${e.javaClass.simpleName}: ${e.message.orEmpty().take(120)}"
+            android.util.Log.w("Cochilo", "live notification update failed", e)
+        }
+    }
 
     private suspend fun refreshNow(context: Context) {
         // Window reminders have their own setting and channel; they follow the log the same way.
@@ -166,7 +182,13 @@ object LiveNotifications {
             title = context.getString(R.string.notif_awake_title)
             // In the hour before bedtime the line adds the wind-down (research §2.3): dim the lights.
             val windDown = a.next == Predictor.Next.BEDTIME && a.at - now in 0..60 * 60_000L
-            text = context.getString(
+            // Past its window with nothing logged (0.60.1): said as Today says it, "past window",
+            // never a time that has gone by read as the next one, which looked like a stuck,
+            // old notification.
+            text = if (now > a.windowEnd) context.getString(
+                if (a.next == Predictor.Next.BEDTIME) R.string.notif_awake_bedtime_past else R.string.notif_awake_nap_past,
+                f.time(s.since), f.time(a.at),
+            ) else context.getString(
                 when {
                     windDown -> R.string.notif_wind_down
                     a.next == Predictor.Next.BEDTIME -> R.string.notif_awake_bedtime
