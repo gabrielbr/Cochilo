@@ -3,6 +3,14 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.60.1 — 2026-11-06
+
+**The live notification no longer shows a past nap as the next one.** When the nap or bedtime
+window has gone by and nothing was logged, the notification kept saying "next nap 4:01 PM" hours
+later, which looked like an old notification stuck on the phone. It now says "nap was due
+4:01 PM · past window", as Today does. If an update of the notification ever fails, Settings ›
+Notifications now says so under the switch, with the reason.
+
 ## 0.60.0 — 2026-11-06
 
 **The routine's music, one tap away.**

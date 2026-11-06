@@ -723,4 +723,7 @@
     <string name="music_kind_other">Link</string>
     <string name="music_today">Play sleep music</string>
     <string name="music_play_short">Play music</string>
+    <string name="notif_awake_nap_past">Since %1$s · nap was due %2$s · past window</string>
+    <string name="notif_awake_bedtime_past">Since %1$s · bedtime was %2$s · past window</string>
+    <string name="live_notification_failed">The notification couldn\'t update (%1$s). Tell us this line.</string>
 </resources>

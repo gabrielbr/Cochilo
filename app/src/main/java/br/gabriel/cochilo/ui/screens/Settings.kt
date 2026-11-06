@@ -22,6 +22,7 @@ import br.gabriel.cochilo.ui.kit.Hairline
 import br.gabriel.cochilo.ui.kit.ListRow
 import br.gabriel.cochilo.ui.kit.RowGroup
 import br.gabriel.cochilo.ui.theme.CTokens.Spacing
+import androidx.compose.runtime.collectAsState
 import br.gabriel.cochilo.ui.theme.CochiloTheme
 import java.time.ZoneId
 
@@ -152,6 +153,14 @@ fun SettingsScreen(
                 stringResource(R.string.live_notification), stringResource(R.string.live_notification_meta),
                 liveNotification, onLiveNotification,
             )
+            // An update that failed (0.60.1): said plainly, with the reason, until the next works.
+            val failed = br.gabriel.cochilo.notify.LiveNotifications.lastFailure.collectAsState().value
+            failed?.let {
+                androidx.compose.material3.Text(
+                    stringResource(R.string.live_notification_failed, it), style = br.gabriel.cochilo.ui.theme.Type.meta, color = br.gabriel.cochilo.ui.theme.CochiloTheme.colors.muted,
+                    modifier = Modifier.padding(start = Spacing.space4, end = Spacing.space4, bottom = Spacing.space3),
+                )
+            }
             Hairline()
             ReminderRows(reminders, onReminders, reminderLeads, onReminderLeads)
             Hairline()
