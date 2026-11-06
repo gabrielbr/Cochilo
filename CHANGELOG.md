@@ -3,6 +3,18 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.58.0 — 2026-11-06
+
+**A friendlier day ring, and music for the routine.**
+- **The day ring floats.** Each sleep is a wide rounded band with its moon floating on it, and its
+  start and end times run along the outside of the circle. Feeds, diapers, pumping and the rest
+  float inside the ring as their own icons, at the time they happened. Neighbours drift apart
+  so nothing overlaps; three or more at one spot become one icon with "+2".
+- **Routine music.** Settings › Routine music keeps up to five Spotify, YouTube Music or YouTube
+  links (a song or a playlist). A new routine's sheet has a Play button for each. It opens in the
+  music app, which keeps playing with the screen off. A player inside Cochilo would only play
+  30-second Spotify previews and would stop when the screen goes off (docs/rituals.md).
+
 ## 0.57.1 — 2026-11-05
 
 **The live notification no longer gets stuck on a past sleep.** On a paired phone that keeps sync

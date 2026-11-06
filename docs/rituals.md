@@ -17,3 +17,30 @@ tick them in the routine.
 
 Code: `domain/Ritual.kt` (`RitualTest`), `ui/screens/Rituals.kt`, `ui/kit/Kit.kt` `Checklist`,
 the routine part of `EventSheet`. Stored in `Prefs` (not in the backup: it's a setting).
+
+## Routine music (0.58.0)
+
+The owner asked for a place to keep the songs or playlist the family uses to put the baby to
+sleep, with a player for them.
+
+- **Save once:** Settings › Baby › **Routine music**. Paste a link from Spotify, YouTube Music or
+  YouTube (a song, a playlist, an album), and a name if you like. Up to 5 links. A pasted share
+  text works ("Listen on Spotify: https://…"); tracking parameters (`si=`, `utm_…`) are dropped.
+  Anything else gets "That isn't a Spotify, YouTube Music or YouTube link." and keeps the text.
+- **Play:** a new routine's sheet lists the music under its steps, one button each ("Play
+  Lullabies"). The tap opens the link in its own app (Spotify, YouTube Music or YouTube), or in
+  whatever opens links when that app isn't installed. Each row in Settings › Routine music plays
+  too.
+- **Why it opens the music app instead of a player inside Cochilo** (researched 2026-11-06):
+  - [Spotify's embedded player plays only 30-second previews inside an Android app](https://community.spotify.com/t5/Spotify-for-Developers/Only-30s-preview-on-Android-WebView-embeds/td-p/5386262),
+    even for logged-in Premium users.
+  - YouTube Music has no official embed.
+  - A player inside the app stops when the screen goes off, which is exactly when a bedtime
+    routine needs it.
+  - The play build has no INTERNET permission at all (AGENTS.md). Opening another app needs none.
+    The music app plays the whole playlist in the background, and Cochilo sends nothing.
+  - [Spotify's own Android guidance](https://developer.spotify.com/documentation/android/tutorials/content-linking)
+    is the same: an `ACTION_VIEW` intent on the link, to the Spotify app when it's there.
+
+Code: `domain/Music.kt` (`MusicTest`), `ui/screens/RoutineMusic.kt` (`MusicOpener`, the sheet,
+`RoutineMusicButtons`). Stored in `Prefs`, like the steps (a setting, so not in the backup).

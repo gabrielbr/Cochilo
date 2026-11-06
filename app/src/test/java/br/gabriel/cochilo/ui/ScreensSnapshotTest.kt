@@ -332,6 +332,26 @@ class ScreensSnapshotTest {
         val withPlaces = log.map { if (it.type == EventType.SLEEP && !it.isNightSleep(zone)) it.copy(kind = places[i++ % places.size]) else it }
         paparazzi.snapshot { Chrome(false, 2, withPlaces) }
     }
+    private val music = listOf(
+        br.gabriel.cochilo.domain.Music.parse("https://open.spotify.com/playlist/37i9dQZF1DWZd79rJ6a7lp", "Canções de ninar")!!,
+        br.gabriel.cochilo.domain.Music.parse("https://music.youtube.com/watch?v=dQw4w9WgXcQ")!!,
+    )
+    @androidx.compose.runtime.Composable
+    private fun Padded(dark: Boolean, content: @androidx.compose.runtime.Composable () -> Unit) =
+        CochiloTheme(dark) { br.gabriel.cochilo.ui.kit.Frame { androidx.compose.foundation.layout.Column(Modifier.padding(br.gabriel.cochilo.ui.theme.CTokens.Spacing.space6)) { content() } } }
+    /** Settings › Routine music (0.58.0): two links saved, one with a name. */
+    @Test fun routine_music_light() { light(); paparazzi.snapshot { Padded(false) { br.gabriel.cochilo.ui.screens.RoutineMusicBody(music, {}, {}) } } }
+    /** A pasted link that isn't music: said plainly, the text kept. */
+    @Test fun routine_music_wrong_ptBR_dark() { pt(true); paparazzi.snapshot { Padded(true) { br.gabriel.cochilo.ui.screens.RoutineMusicBody(emptyList(), {}, {}, startUrl = "https://example.com/ninar", startWrong = true) } } }
+    /** In a new routine's sheet: the steps, then the music, one tap each. */
+    @Test fun routine_with_music_light() {
+        light()
+        paparazzi.snapshot { Padded(false) {
+            br.gabriel.cochilo.ui.kit.Checklist(listOf("Bath", "Pyjamas", "Feed", "Lights low"), setOf(0, 1)) {}
+            androidx.compose.foundation.layout.Spacer(Modifier.padding(br.gabriel.cochilo.ui.theme.CTokens.Spacing.space2))
+            br.gabriel.cochilo.ui.screens.RoutineMusicButtons(music)
+        } }
+    }
     @Test fun ticks_sheet_light() {
         light()
         paparazzi.snapshot { CochiloTheme(false) { br.gabriel.cochilo.ui.kit.Frame { androidx.compose.foundation.layout.Column(Modifier.padding(br.gabriel.cochilo.ui.theme.CTokens.Spacing.space6)) { TicksBody() } } } }

@@ -88,6 +88,16 @@ class Prefs(context: Context) {
         _rituals.value = _rituals.value + (kind to text)
     }
 
+    /** Routine music (0.58.0, docs/rituals.md): up to five links, opened in the music app. */
+    private val _routineMusic = MutableStateFlow(br.gabriel.cochilo.domain.Music.decode(sp.getString("routine_music", null)))
+    val routineMusic: StateFlow<List<br.gabriel.cochilo.domain.Music.Link>> = _routineMusic
+
+    fun setRoutineMusic(links: List<br.gabriel.cochilo.domain.Music.Link>) {
+        val kept = links.take(br.gabriel.cochilo.domain.Music.MAX_LINKS)
+        sp.edit { putString("routine_music", br.gabriel.cochilo.domain.Music.encode(kept)) }
+        _routineMusic.value = kept
+    }
+
     private val _passphrase = MutableStateFlow(sp.getString("backup_passphrase", null))
     /**
      * The backup passphrase (docs/backup.md), or null: exports are then plain JSON. Kept in the

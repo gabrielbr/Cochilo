@@ -1,6 +1,9 @@
 package br.gabriel.cochilo.ui.kit
 
 import androidx.compose.foundation.Canvas
+import br.gabriel.cochilo.domain.RingLayout
+import androidx.compose.foundation.layout.offset
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -94,8 +97,16 @@ fun InfoButton(topic: String, text: String, tint: Color = CochiloTheme.colors.mu
 }
 
 /**
- * One day as a clock: midnight at the top, clockwise. Sleep fills the outer ring (night and nap
- * colours); feeds, pumping and daylight the inner ring; diapers are dots on the inner ring.
+ * One day as a clock: midnight at the top, clockwise (0.58.0, the owner: "more user-friendly, the
+ * elements float and it's less crowded").
+ *
+ * - **The sleep ring:** one wide track; each sleep is a rounded band in the night or nap colour,
+ *   with its moon floating on it, and its start and end times along the outside of the circle.
+ * - **Everything else** (feeds, diapers, pumping, daylight, medicine…) floats inside the ring as
+ *   its own icon in its round, at the time it happened. Neighbours drift apart so none overlap;
+ *   three or more at one spot become one round with "+2" (RingLayout, tested).
+ * - The expected window and the rest of today's plan stay faint or dashed: never data.
+ *
  * [middle] sits in the middle; [summary] is what TalkBack reads instead of the picture.
  */
 @Composable
@@ -109,66 +120,145 @@ fun DayRing(
      * the night's until midnight.
      */
     planned: List<br.gabriel.cochilo.domain.DayPlan.Sleep> = emptyList(),
+    /** A clock time as the app writes it (Format.time). */
+    time: (Long) -> String = { java.time.Instant.ofEpochMilli(it).atZone(zone).toLocalTime().toString().take(5) },
     middle: @Composable () -> Unit,
 ) {
     val c = CochiloTheme.colors
     val density = LocalDensity.current
-    val outerW = with(density) { Spacing.space4.toPx() }
-    val innerW = with(density) { Spacing.space2.toPx() }
-    val gap = with(density) { Spacing.space2.toPx() }
-    val dot = with(density) { Spacing.space1.toPx() }
-    val hair = with(density) { Size.hairline.toPx() }
-    val diameter: Dp = Spacing.space16 * 4
-    // The hour ticks' band widens with their (capped) font size, so "06" never touches the ring.
-    val labelBand = Spacing.space6 * density.fontScale.coerceIn(1f, LABEL_SCALE_CAP)
-    Box(Modifier.size(diameter + labelBand * 2).semantics(mergeDescendants = true) { contentDescription = summary }, contentAlignment = Alignment.Center) {
-        Canvas(Modifier.size(diameter)) {
-            val span = (to - from).toFloat()
-            fun angle(t: Long) = -90f + 360f * ((t - from).coerceIn(0, to - from) / span)
-            val rOuter = size.minDimension / 2 - outerW / 2
-            val rInner = rOuter - outerW / 2 - gap - innerW / 2
-            fun arc(color: Color, start: Long, end: Long, r: Float, w: Float) {
-                val a0 = angle(start)
-                val sweep = maxOf(angle(end) - a0, 1.5f)
-                drawArc(color, a0, sweep, useCenter = false, topLeft = Offset(center.x - r, center.y - r), size = GSize(r * 2, r * 2), style = Stroke(w, cap = StrokeCap.Butt))
-            }
-            drawCircle(c.line, rOuter, style = Stroke(outerW))
-            drawCircle(c.line, rInner, style = Stroke(innerW))
-            // Where the next sleep is expected: a faint band of the nap colour, under the real sleeps.
-            if (expected != null) arc(c.eventNap.copy(alpha = EXPECTED_ALPHA), expected.first, expected.second, rOuter, outerW)
-            // The projection, dashed along the sleep ring's two edges and closed at both ends.
-            val dash = expectedDash(dot)
-            for (s in planned) {
-                val col = if (s.next == br.gabriel.cochilo.domain.Predictor.Next.BEDTIME) c.eventNight else c.eventNap
-                val a0 = angle(s.at)
-                val sweep = maxOf(angle(s.end) - a0, 1.5f)
-                for (r in listOf(rOuter - outerW / 2, rOuter + outerW / 2)) {
-                    drawArc(col, a0, sweep, useCenter = false, topLeft = Offset(center.x - r, center.y - r), size = GSize(r * 2, r * 2), style = Stroke(hair * 2, pathEffect = dash))
-                }
-                tick(a0, rOuter - outerW / 2, rOuter + outerW / 2, col, hair * 2)
-                tick(a0 + sweep, rOuter - outerW / 2, rOuter + outerW / 2, col, hair * 2)
-            }
-            for (e in events) {
-                if (!e.type.hasDuration) continue
-                val end = e.end ?: now ?: continue
-                if (end < from || e.start >= to) continue
-                val col = c.eventColor(e, zone)
-                if (e.type == EventType.SLEEP) arc(col, e.start, end, rOuter, outerW) else arc(col, e.start, end, rInner, innerW)
-            }
-            for (e in events) {
-                if (e.type != EventType.DIAPER || e.start !in from until to) continue
-                val a = Math.toRadians(angle(e.start).toDouble())
-                drawCircle(c.eventDiaper, dot * 1.5f, Offset(center.x + rInner * kotlin.math.cos(a).toFloat(), center.y + rInner * kotlin.math.sin(a).toFloat()))
-            }
-            // Six-hour ticks across both rings, and "now" as an ink hand on the outer ring.
-            for (h in 0 until 4) tick(angle(from + (to - from) * h / 4), rInner - innerW, rOuter + outerW / 2, c.page, hair * 2)
-            if (now != null && now in from until to) tick(angle(now), rOuter - outerW / 2, rOuter + outerW / 2, c.ink, hair * 3)
+    androidx.compose.foundation.layout.BoxWithConstraints(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+        // Times run along the outside: one line of meta text, its height capped like an axis.
+        val labelBand = Spacing.space6 * density.fontScale.coerceIn(1f, LABEL_SCALE_CAP)
+        val diameter = minOf(maxWidth - labelBand * 2, Spacing.space16 * 5)
+        val track = Spacing.space6
+        val badge = Size.kindBadge
+        val gap = Spacing.space2
+        val span = (to - from).toDouble()
+        fun deg(t: Long) = 360.0 * ((t - from).coerceIn(0, to - from) / span)
+        val rTrack = diameter / 2 - track / 2
+        val rBubbles = rTrack - track / 2 - gap - badge / 2
+        val rLabels = diameter / 2 + labelBand / 2
+        val rTrackPx = with(density) { rTrack.toPx() }
+        val rBubblesPx = with(density) { rBubbles.toPx() }
+        val rLabelsPx = with(density) { rLabels.toPx() }
+        val sepTrack = Math.toDegrees(with(density) { (badge + Spacing.space1).toPx() } / rTrackPx.toDouble())
+        val sepInside = Math.toDegrees(with(density) { (badge + Spacing.space1).toPx() } / rBubblesPx.toDouble())
+
+        val inDay = events.filter { (it.end ?: now ?: it.start) >= from && it.start < to }
+        val sleeps = inDay.filter { it.type == EventType.SLEEP }
+        val others = inDay.filter { it.type != EventType.SLEEP }.sortedBy { it.start }
+        val byId = inDay.associateBy { it.id }
+        // A sleep's moon floats on its band, at its middle.
+        val sleepMarks = sleeps.map { e ->
+            val end = minOf(e.end ?: now ?: e.start, to)
+            RingLayout.Mark(e.id, (deg(maxOf(e.start, from)) + deg(end)) / 2)
         }
-        HourLabel("00", Alignment.TopCenter)
-        HourLabel("06", Alignment.CenterEnd)
-        HourLabel("12", Alignment.BottomCenter)
-        HourLabel("18", Alignment.CenterStart)
-        Box(Modifier.size(diameter - Spacing.space16), contentAlignment = Alignment.Center) { middle() }
+        val sleepBubbles = remember(sleepMarks, sepTrack) { RingLayout.bubbles(sleepMarks, sepTrack) }
+        val otherBubbles = remember(others, from, to, sepInside) { RingLayout.bubbles(others.map { RingLayout.Mark(it.id, deg(it.start)) }, sepInside) }
+
+        // The times along the outside: each sleep's start and end first, then the four hours.
+        val measurer = androidx.compose.ui.text.rememberTextMeasurer()
+        val labelStyle = Type.meta
+        val capped = androidx.compose.ui.unit.Density(density.density, density.fontScale.coerceAtMost(LABEL_SCALE_CAP))
+        fun widthDeg(text: String) = Math.toDegrees(measurer.measure(text, labelStyle, density = capped).size.width.toDouble() / rLabelsPx)
+        val texts = buildList {
+            sleeps.forEach { e ->
+                if (e.start >= from) add(Triple("s" + e.id, e.start, 0))
+                e.end?.takeIf { it <= to }?.let { add(Triple("e" + e.id, it, 1)) }
+            }
+            for (h in 0 until 4) add(Triple("h$h", from + (to - from) * h / 4, 2))
+        }
+        val labelText = texts.associate { (id, t, _) -> id to if (id.startsWith("h")) "%02d".format(h(id)) else time(t) }
+        val labels = RingLayout.labels(texts.map { (id, t, p) -> RingLayout.Label(id, deg(t), widthDeg(labelText.getValue(id)), p) }, gap = 2.0)
+
+        Box(Modifier.size(diameter + labelBand * 2).semantics(mergeDescendants = true) { contentDescription = summary }, contentAlignment = Alignment.Center) {
+            Canvas(Modifier.size(diameter)) {
+                val w = track.toPx()
+                val r = rTrackPx
+                fun angle(t: Long) = (-90.0 + deg(t)).toFloat()
+                fun band(color: Color, start: Long, end: Long, width: Float = w, cap: StrokeCap = StrokeCap.Round) {
+                    val a0 = angle(start)
+                    val sweep = maxOf(angle(end) - a0, 1.5f)
+                    drawArc(color, a0, sweep, useCenter = false, topLeft = Offset(center.x - r, center.y - r), size = GSize(r * 2, r * 2), style = Stroke(width, cap = cap))
+                }
+                drawCircle(c.line, r, style = Stroke(w))
+                // Where the next sleep is expected: a faint band of the nap colour, under the real sleeps.
+                if (expected != null) band(c.eventNap.copy(alpha = EXPECTED_ALPHA), expected.first, expected.second)
+                // The projection, dashed along the track's two edges and closed at both ends.
+                val hair = Size.hairline.toPx()
+                val dash = expectedDash(Spacing.space1.toPx())
+                for (s in planned) {
+                    val col = if (s.next == br.gabriel.cochilo.domain.Predictor.Next.BEDTIME) c.eventNight else c.eventNap
+                    val a0 = angle(s.at)
+                    val sweep = maxOf(angle(s.end) - a0, 1.5f)
+                    for (rr in listOf(r - w / 2, r + w / 2)) {
+                        drawArc(col, a0, sweep, useCenter = false, topLeft = Offset(center.x - rr, center.y - rr), size = GSize(rr * 2, rr * 2), style = Stroke(hair * 2, pathEffect = dash))
+                    }
+                    tick(a0, r - w / 2, r + w / 2, col, hair * 2)
+                    tick(a0 + sweep, r - w / 2, r + w / 2, col, hair * 2)
+                }
+                for (e in sleeps) band(c.eventColor(e, zone), maxOf(e.start, from), minOf(e.end ?: now ?: e.start, to))
+                // Now: an ink hand across the track.
+                if (now != null && now in from until to) tick(angle(now), r - w / 2, r + w / 2, c.ink, hair * 3)
+            }
+            for (b in sleepBubbles) RingBubble(b, byId, rTrackPx, zone)
+            for (b in otherBubbles) RingBubble(b, byId, rBubblesPx, zone)
+            CappedFontScale(LABEL_SCALE_CAP) {
+                for (l in labels) {
+                    val hour = l.id.startsWith("h")
+                    RingPlaced(l.angle, rLabelsPx) {
+                        Text(
+                            labelText.getValue(l.id), style = labelStyle, maxLines = 1, softWrap = false,
+                            color = if (hour) c.muted else c.ink,
+                            // Times run along the circle; the four hours stay upright, so "06" never reads "90".
+                            modifier = Modifier.graphicsLayer { rotationZ = if (hour) 0f else RingLayout.labelRotation(l.angle).toFloat() },
+                        )
+                    }
+                }
+            }
+            // The middle grows with the font only as far as the ring's own labels, so it never
+            // runs into the floating marks.
+            Box(Modifier.size((rBubbles - badge / 2 - gap) * 2), contentAlignment = Alignment.Center) { CappedFontScale(LABEL_SCALE_CAP) { middle() } }
+        }
+    }
+}
+
+private fun h(id: String) = (id.removePrefix("h").toInt()) * 6
+
+/** Places [content] centred on the point at [angle] degrees and [radiusPx] from the middle. */
+@Composable
+private fun androidx.compose.foundation.layout.BoxScope.RingPlaced(angle: Double, radiusPx: Float, content: @Composable () -> Unit) {
+    val a = Math.toRadians(angle - 90.0)
+    val x = (radiusPx * kotlin.math.cos(a)).toFloat()
+    val y = (radiusPx * kotlin.math.sin(a)).toFloat()
+    Box(Modifier.align(Alignment.Center).offset { androidx.compose.ui.unit.IntOffset(x.toInt(), y.toInt()) }) { content() }
+}
+
+/**
+ * A floating mark on the ring: the entry's icon in its round, ringed in the card's colour so it
+ * lifts off what's under it. A stack shows the newest entry and how many more ("+2").
+ */
+@Composable
+private fun androidx.compose.foundation.layout.BoxScope.RingBubble(b: RingLayout.Bubble, byId: Map<String, Event>, radiusPx: Float, zone: ZoneId) {
+    val c = CochiloTheme.colors
+    val newest = b.ids.mapNotNull { byId[it] }.maxByOrNull { it.start } ?: return
+    RingPlaced(b.angle, radiusPx) {
+        Box {
+            KindIcon(
+                newest, zone,
+                Modifier.size(Size.kindBadge).clip(RoundedCornerShape(Radius.radiusRound))
+                    .border(Size.outline, c.surface, RoundedCornerShape(Radius.radiusRound)),
+            )
+            if (b.ids.size > 1) {
+                Text(
+                    "+${b.ids.size - 1}", style = Type.meta, color = c.ink, maxLines = 1,
+                    modifier = Modifier.align(Alignment.BottomEnd).offset(Spacing.space2, Spacing.space1)
+                        .clip(RoundedCornerShape(Radius.radiusRound)).background(c.surface)
+                        .border(Size.hairline, c.line, RoundedCornerShape(Radius.radiusRound))
+                        .padding(horizontal = Spacing.space1),
+                )
+            }
+        }
     }
 }
 
@@ -177,14 +267,6 @@ private fun DrawScope.tick(deg: Float, r0: Float, r1: Float, color: Color, width
     val cos = kotlin.math.cos(a).toFloat()
     val sin = kotlin.math.sin(a).toFloat()
     drawLine(color, Offset(center.x + r0 * cos, center.y + r0 * sin), Offset(center.x + r1 * cos, center.y + r1 * sin), width)
-}
-
-@Composable
-private fun androidx.compose.foundation.layout.BoxScope.HourLabel(text: String, at: Alignment) {
-    // Clock ticks, like a chart's axis: they grow only to LABEL_SCALE_CAP so they stay outside the ring.
-    CappedFontScale(LABEL_SCALE_CAP) {
-        Text(text, style = Type.meta, color = CochiloTheme.colors.muted, maxLines = 1, softWrap = false, modifier = Modifier.align(at))
-    }
 }
 
 /**

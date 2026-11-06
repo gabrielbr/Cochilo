@@ -64,6 +64,7 @@ only with Tatá.
 | **On-device checks with TalkBack** | Paparazzi checks pixels, not the reading order |
 
 ## Shipped from this plan
+- **0.58.0**: the day ring floats (bigger marks, times along the circle); routine music (the owner's asks).
 - **0.57.0**: the model download carries on after an interruption (100 MB pieces, the owner's ask).
 - **0.56.0**: one AI runtime (MediaPipe removed); the watch tile's Last mark; every audit green.
 - **0.55.0**: Kotlin 2.2; Ask Cochilo on LiteRT-LM; Gemma 3n for 8 GB phones.

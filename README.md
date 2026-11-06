@@ -65,6 +65,8 @@ Every screen and the main flows are on the [design canvas](docs/design-canvas.md
 - **Report for the doctor**: a one-page PDF of the last two weeks, made on the phone.
   [docs/report.md](docs/report.md).
 - **Routine steps**: write the nap and bedtime steps once, tick them each time.
+- **Routine music** (0.58.0): keep the Spotify or YouTube Music songs and playlists you use to put
+  the baby to sleep; a routine plays them in the music app with one tap.
   [docs/rituals.md](docs/rituals.md).
 - **What changed**: real changes in the last week, in neutral words; day / night milk.
   [docs/changes.md](docs/changes.md).
