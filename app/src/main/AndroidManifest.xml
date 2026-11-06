@@ -44,11 +44,17 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="text/csv" />
                 <data android:mimeType="text/comma-separated-values" />
-                <data android:mimeType="text/plain" />
                 <data android:mimeType="application/csv" />
                 <data android:mimeType="application/json" />
                 <data android:mimeType="application/vnd.ms-excel" />
                 <data android:mimeType="application/octet-stream" />
+            </intent-filter>
+            <!-- Shared text (0.63.0): a Spotify or YouTube Music song or playlist goes into Routine
+                 music; anything else (a CSV's text) goes through the import, as before. -->
+            <intent-filter android:label="@string/share_add_label">
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
             </intent-filter>
             <!-- "Open with Cochilo" from a file manager or a downloads list: the same import. -->
             <intent-filter android:label="@string/share_import_label">

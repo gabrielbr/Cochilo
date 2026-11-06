@@ -40,7 +40,12 @@ class DayPlan(private val zone: ZoneId, private val lookbackDays: Int = 14) {
         var t = now
         var widen = 0L
         var fromAge = false
-        var r = predictor.predict(sim, ageWeeks, t, prior.naps)
+        // The first sleep is always the live guess, the one Today's card shows (0.62.0): no cap on
+        // the day's naps for it. Capped, a baby who had more naps than the age's usual got bedtime
+        // projected while the card said "next nap", and the ring breathed the night's moon.
+        var r = predictor.predict(sim, ageWeeks, t)
+        // After it, the cap: the age's naps, or one more than already happened today.
+        var cap = prior.naps
         for (step in 0 until prior.naps + 2) {
             when (val p = r) {
                 Predictor.Result.NeedData -> return null
@@ -55,7 +60,8 @@ class DayPlan(private val zone: ZoneId, private val lookbackDays: Int = 14) {
                 is Predictor.Result.Awake -> {
                     if (step == 0 || out.isEmpty()) fromAge = p.personalMinutes == null
                     if (p.at >= dayEnd) break
-                    if (p.next == Predictor.Next.NAP && p.slot >= prior.naps && prior.bedtimeMinute == null) break
+                    if (out.isNotEmpty() && p.next == Predictor.Next.NAP && p.slot >= cap && prior.bedtimeMinute == null) break
+                    if (out.isEmpty() && p.next == Predictor.Next.NAP) cap = maxOf(cap, p.slot + 1)
                     val half = (p.windowEnd - p.windowStart) / 2
                     if (p.next == Predictor.Next.BEDTIME) {
                         out += Sleep(p.next, p.at, p.windowStart - widen, p.windowEnd + widen, dayEnd)
@@ -68,7 +74,7 @@ class DayPlan(private val zone: ZoneId, private val lookbackDays: Int = 14) {
                     t = p.at + len
                 }
             }
-            r = predictor.predict(sim, ageWeeks, t, prior.naps)
+            r = predictor.predict(sim, ageWeeks, t, cap)
         }
         return if (out.isEmpty()) null else Plan(out, napMinutes(sim, 0, ageWeeks).toInt(), fromAge)
     }

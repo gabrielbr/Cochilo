@@ -32,6 +32,7 @@ B = {  # screen key -> (blob url, natural w, natural h, caption)
  "day_start": ("/_blob/dc3dd6c1080e27e593521e3ae930cc23",461,1000,"Day · dragging a start"),
  "day_morning": ("/_blob/4a12ccd2dd0e4035ab78defe9dcfffcc",461,1000,"Day · this morning, the day planned"),
  "day_plan_list": ("/_blob/842d9aba48224b35593a6ff70469867f",461,1000,"Day · hour by hour, the day planned"),
+ "day_many_naps": ("/_blob/708989539a3044d43612864d691a9b0b",461,1000,"Day · many naps, the next one first"),
  "day_pressure": ("/_blob/8d5a9bd217b4aa6991cfbcfa7255f0a8",245,1000,"Day · sleep pressure, today (tall)"),
  "tile_awake": ("/_blob/f814c243c001724194b812d526c829ed",384,384,"Watch tile · awake"),
  "tile_asleep": ("/_blob/9294b1def25a78097a94899fae3bf532",384,384,"Watch tile · asleep"),
@@ -109,6 +110,7 @@ SNAP = {
  "day_start": "ScreensSnapshotTest_day_dragging_a_start_light",
  "day_morning": "ScreensSnapshotTest_day_morning_projection_light",
  "day_plan_list": "ScreensSnapshotTest_day_timeline_projection_light",
+ "day_many_naps": "ScreensSnapshotTest_day_many_naps_light",
  "day_pressure": "ScreensSnapshotTest_day_pressure_light",
  # The watch tile's screenshots are the wear module's: wear/src/test/snapshots/images/br.gabriel.cochilo.wear_TileSnapshotTest_<name>.png
  "tile_awake": "wear:tile_awake",
@@ -291,7 +293,7 @@ for f in FLOWS:
     wh=flow(f[0],f[1],f[2],f[3],f[4]); add(f[0],f[1],"flows",0,y,wh); y+=wh[1]+120
 SECTIONS=[
  ("ScreensToday.dc.html","Today",["today","today_music","sleeping","night_sleeping","night_waking","waking_music","short_nap","daylight","fabric","empty","today_full"]),
- ("ScreensDay.dc.html","Day",["day","day_expected","day_morning","day_plan_list","day_pressure","day_block","day_drag","day_start","day_all","day_feed"]),
+ ("ScreensDay.dc.html","Day",["day","day_expected","day_morning","day_plan_list","day_many_naps","day_pressure","day_block","day_drag","day_start","day_all","day_feed"]),
  ("ScreensPatternsTata.dc.html","Patterns and From Tatá",["patterns","patterns_changes","patterns_places","tata","tata_week","age_note","tata_note"]),
  ("ScreensLog.dc.html","Logging and sheets",["log_open","log_feed","details_where","details_pumped","ticks","ritual"]),
  ("ScreensAsk.dc.html","Ask Cochilo",["ask","ask_answer","ask_not_sure","ask_model","chats","model_sheet","model_downloading","model_stopped","model_outdated"]),

@@ -86,7 +86,9 @@ class MainActivity : ComponentActivity() {
         val shared = br.gabriel.cochilo.backup.ShareImport.from(intent) ?: return
         when (shared) {
             is br.gabriel.cochilo.backup.ShareImport.Shared.File -> vm.importFile(shared.uri)
-            is br.gabriel.cochilo.backup.ShareImport.Shared.Text -> vm.importText(shared.text)
+            // A music link goes to Routine music (0.63.0); any other text to the import.
+            is br.gabriel.cochilo.backup.ShareImport.Shared.Text ->
+                if (!vm.addSharedMusic(shared.text, intent?.getStringExtra(android.content.Intent.EXTRA_SUBJECT))) vm.importText(shared.text)
         }
         // Handled: a later rotation or return mustn't import it again.
         intent?.action = null

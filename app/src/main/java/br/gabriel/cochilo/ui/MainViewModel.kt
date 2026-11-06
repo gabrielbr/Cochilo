@@ -380,6 +380,27 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     /** Text shared to Cochilo (0.41.0): a Napper CSV or a backup pasted as text, imported like a file. */
+    /**
+     * A song or playlist shared from Spotify or YouTube Music (0.63.0): added to Routine music, with
+     * Undo. Returns false when [text] isn't a music link, so it goes to the import instead.
+     */
+    fun addSharedMusic(text: String, subject: String?): Boolean {
+        val link = br.gabriel.cochilo.domain.Music.parse(text, br.gabriel.cochilo.domain.Music.nameFromSubject(subject)) ?: return false
+        val before = ctx.prefs.routineMusic.value
+        val (after, result) = br.gabriel.cochilo.domain.Music.add(before, link)
+        viewModelScope.launch {
+            when (result) {
+                br.gabriel.cochilo.domain.Music.Added.ADDED -> {
+                    ctx.prefs.setRoutineMusic(after)
+                    _messages.send(UiMessage(str(R.string.music_shared_added), str(R.string.undo)) { ctx.prefs.setRoutineMusic(before) })
+                }
+                br.gabriel.cochilo.domain.Music.Added.ALREADY_THERE -> _messages.send(UiMessage(str(R.string.music_shared_already)))
+                br.gabriel.cochilo.domain.Music.Added.FULL -> _messages.send(UiMessage(str(R.string.music_shared_full, br.gabriel.cochilo.domain.Music.MAX_LINKS)))
+            }
+        }
+        return true
+    }
+
     fun importText(text: String) = viewModelScope.launch {
         val msg = withContext(Dispatchers.IO) { importContent(text) } ?: return@launch
         refreshNow()

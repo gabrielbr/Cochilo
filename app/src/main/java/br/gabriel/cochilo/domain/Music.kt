@@ -70,6 +70,26 @@ object Music {
         return link.copy(name = clean(name))
     }
 
+    /** What adding a shared link did (0.63.0). */
+    enum class Added { ADDED, ALREADY_THERE, FULL }
+
+    /**
+     * Adds [link] at the end of [links] (0.63.0, shared from the music app): never twice (the
+     * same cleaned url), never past [MAX_LINKS].
+     */
+    fun add(links: List<Link>, link: Link): Pair<List<Link>, Added> = when {
+        links.any { it.url == link.url } -> links to Added.ALREADY_THERE
+        links.size >= MAX_LINKS -> links to Added.FULL
+        else -> (links + link) to Added.ADDED
+    }
+
+    /**
+     * A name from a share's subject, when it's a short title ("Lullabies for babies"), not a
+     * sentence or a link.
+     */
+    fun nameFromSubject(subject: String?): String? = subject?.trim()
+        ?.removeSurrounding("\"")?.takeIf { it.isNotEmpty() && it.length <= MAX_NAME && !it.contains("://") }
+
     /** One link per line, stored as "name<TAB>url". */
     fun encode(links: List<Link>): String = links.take(MAX_LINKS).joinToString("\n") { "${it.name.orEmpty()}\t${it.url}" }
 

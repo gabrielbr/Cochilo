@@ -636,6 +636,28 @@ class ScreensSnapshotTest {
             } }
         }
     }
+    /**
+     * The owner's screenshot (0.62.0): many short naps, awake since 14:20 at 15:10. The next is a
+     * nap, teal and breathing with its time; then bedtime, dotted. The list shows both.
+     */
+    @Test fun day_many_naps_light() {
+        light()
+        val night = log.filter { it.type == EventType.SLEEP && it.start < at(31, 0) }
+        val many = night + listOf(
+            Event(type = EventType.SLEEP, start = at(31, 7, 20), end = at(31, 7, 55)),
+            Event(type = EventType.SLEEP, start = at(31, 9, 8), end = at(31, 9, 45)),
+            Event(type = EventType.SLEEP, start = at(31, 10, 56), end = at(31, 11, 35)),
+            Event(type = EventType.SLEEP, start = at(31, 12, 5), end = at(31, 12, 40)),
+            Event(type = EventType.SLEEP, start = at(31, 13, 15), end = at(31, 13, 50)),
+            Event(type = EventType.SLEEP, start = at(31, 14, 0), end = at(31, 14, 20)),
+        )
+        paparazzi.snapshot {
+            CochiloTheme(false) { br.gabriel.cochilo.ui.kit.Frame {
+                val p = Predictor(zone).predict(many, ageWeeks(baby.birthDate, null, now), now) as? Predictor.Result.Awake
+                DayScreen(many, now, zone, onOpen = {}, expected = p?.let { it.windowStart to it.windowEnd }, plan = br.gabriel.cochilo.domain.DayPlan(zone).of(many, ageWeeks(baby.birthDate, null, now), now))
+            } }
+        }
+    }
     @Test fun day_morning_projection_light() {
         light()
         val morning = at(31, 8, 0)

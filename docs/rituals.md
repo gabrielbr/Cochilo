@@ -42,6 +42,17 @@ sleep, with a player for them.
   - [Spotify's own Android guidance](https://developer.spotify.com/documentation/android/tutorials/content-linking)
     is the same: an `ACTION_VIEW` intent on the link, to the Spotify app when it's there.
 
+**Share it from the music app (0.63.0).** In Spotify or YouTube Music, Share › **Add to Cochilo**:
+- Cochilo opens on what it was showing.
+- It adds the link at the end of Routine music and says "Added to routine music", with Undo.
+- It names the link from the share's subject when that's a short title.
+- The same link shared again ("Already in routine music"), even with a new tracking tag, isn't
+  added twice.
+- With five saved, it says the list is full and where to remove one.
+- Shared text that isn't a music link goes to the import as before. The share sheet's other entry,
+  "Import into Cochilo", now takes only files. (`Music.add`, `Music.nameFromSubject`, tested;
+  `MainViewModel.addSharedMusic`.)
+
 **One tap away (0.60.0).** The first saved link is also played from:
 - **Today's card:** "Play sleep music", a secondary pill under Start sleep, and under the night
   waking's two buttons (to settle back). Not while asleep: the notification has it then.
