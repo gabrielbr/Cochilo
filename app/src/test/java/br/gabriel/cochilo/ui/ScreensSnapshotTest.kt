@@ -100,6 +100,8 @@ class ScreensSnapshotTest {
         logHover: br.gabriel.cochilo.ui.kit.LogHover? = null,
         night: Boolean = false,
         dayFilter: EventType? = null,
+        /** A routine music link is saved (0.60.0): Today shows Play sleep music. */
+        music: Boolean = false,
     ) {
         CochiloTheme(dark, night) {
             val weeks = ageWeeks(baby.birthDate, null, now)
@@ -132,7 +134,7 @@ class ScreensSnapshotTest {
                                 val facts = br.gabriel.cochilo.domain.assistant.Assistant.facts(log, weeks, now, zone, p)
                                 TodayScreen(log, p, now, zone, {}, {}, {}, {}, {}, plan = br.gabriel.cochilo.domain.DayPlan(zone).of(log, weeks, now), glimpse = br.gabriel.cochilo.ui.screens.glimpse(facts, br.gabriel.cochilo.domain.localDate(now, zone).toEpochDay()).let { g ->
                                     { br.gabriel.cochilo.ui.screens.AskGlimpse(g, facts, f) {} }
-                                })
+                                }, onMusic = if (music) ({}) else null)
                             }
                             1 -> DayScreen(log, now, zone, onOpen = {}, initialDay = LocalDateTime.of(2026, 10, 30, 12, 0).toLocalDate(), initialFilter = dayFilter)
                             2 -> PatternsScreen(log, now, zone, weeks)
@@ -239,6 +241,15 @@ class ScreensSnapshotTest {
         paparazzi.snapshot { Chrome(false, 0, waking) }
     }
     @Test fun today_light() { light(); paparazzi.snapshot { Chrome(false, 0) } }
+    /** Routine music saved (0.60.0): Play sleep music under Start sleep. */
+    @Test fun today_music_light() { light(); paparazzi.snapshot { Chrome(false, 0, music = true) } }
+    /** And under Back to sleep in a night waking, to settle back. */
+    @Test fun today_night_waking_music_ptBR_light() {
+        pt(false)
+        val waking = log.filter { it.type != EventType.SLEEP || it.start < now - 3 * 3_600_000L }.filter { it.end != null } +
+            Event(type = EventType.SLEEP, start = now - 150 * 60_000L, end = now - 40 * 60_000L, night = true)
+        paparazzi.snapshot { Chrome(false, 0, waking, music = true) }
+    }
     @Test fun today_dark() { dark(); paparazzi.snapshot { Chrome(true, 0) } }
     @Test fun today_sleeping_dark() { dark(); paparazzi.snapshot { Chrome(true, 0, sleepingLog) } }
     @Test fun today_ptBR_light() { pt(false); paparazzi.snapshot { Chrome(false, 0) } }

@@ -32,6 +32,8 @@ class CochiloApp : Application() {
         // from an import, or from the notification's own buttons) updates it.
         scope.launch {
             combine(db.events().observeAll(), db.baby().observe(), prefs.liveNotification, prefs.reminders, prefs.reminderLeads) { _, _, _, _, _ -> }
+                // The music on the notification follows the saved links (0.60.0).
+                .let { log -> combine(log, prefs.routineMusic) { _, _ -> } }
                 .debounce(300)
                 .collect {
                     // Each step on its own (0.57.1): this loop lives as long as the process (days,

@@ -3,6 +3,15 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.60.0 — 2026-11-06
+
+**The routine's music, one tap away.**
+- **Today:** "Play sleep music" under Start sleep, and under the night waking's buttons, when a
+  link is saved in Settings › Routine music. It plays the first link in the list.
+- **Notifications:** "Play music" on the nap and bedtime reminder, and on the live notification
+  while the baby sleeps, in a night waking, and in the half hour before the next sleep window.
+  It opens the music app straight away.
+
 ## 0.59.0 — 2026-11-06
 
 **The next sleep stands out, and the whole day is planned on the ring.**

@@ -43,6 +43,8 @@ object LiveNotifications {
     const val CHANNEL = "live"
     const val ID_STRETCH = 1
     private const val TIMER_BASE = 100
+    /** How long before the next window opens the notification offers the music (0.60.0). */
+    private const val MUSIC_LEAD_MS = 30 * 60_000L
     /** How often the bar moves while something is live. The header's chronometer ticks by itself. */
     private const val TICK_MS = 5 * 60_000L
     /** The notification's side margins and icon column, so the bar's bitmap is about its real width. */
@@ -96,7 +98,9 @@ object LiveNotifications {
 
         val stretch = liveStretch(events, prediction, zone, now)
         val waking = br.gabriel.cochilo.domain.Nights.openNight(events, now)?.takeIf { stretch?.asleep == false }
-        if (stretch != null) post(nm) { stretchNotification(context, stretch, prediction, f, palette, zone, now, waking) }
+        // Routine music (0.60.0): the first saved link, a button on the notification when sleep is near.
+        val music = app.prefs.routineMusic.value.firstOrNull()
+        if (stretch != null) post(nm) { stretchNotification(context, stretch, prediction, f, palette, zone, now, waking, music) }
         else if (br.gabriel.cochilo.sync.SyncBackground.running) post(nm) { ID_STRETCH to keepNotification(context, app.sync.state.value.partner) }
         else nm.cancel(ID_STRETCH)
 
@@ -139,6 +143,8 @@ object LiveNotifications {
         context: Context, s: LiveStretch, p: Predictor.Result, f: Format, c: CTokens.Palette, zone: ZoneId, now: Long,
         /** A night waking (docs/nights.md): the night's last sleep before it. */
         waking: Event? = null,
+        /** The first routine music link, if one is saved (0.60.0). */
+        music: br.gabriel.cochilo.domain.Music.Link? = null,
     ): Pair<Int, android.app.Notification> {
         val title: String
         val text: String
@@ -170,6 +176,12 @@ object LiveNotifications {
             )
             action = NotificationCompat.Action(0, context.getString(R.string.action_start_sleep), actionIntent(context, NotificationActions.START_SLEEP))
         }
+        // Play music (0.60.0): asleep (to keep the music going or start it), in a night waking (to
+        // settle back), and awake in the half hour before the next window opens. Opens the app directly.
+        val nearSleep = p is Predictor.Result.Awake && now >= p.windowStart - MUSIC_LEAD_MS
+        val play = music?.takeIf { s.asleep || waking != null || nearSleep }?.let {
+            NotificationCompat.Action(0, context.getString(R.string.music_play_short), br.gabriel.cochilo.music.MusicOpener.pending(context, it))
+        }
         // Title, line and the timeline bar in a custom view; Android adds the header (with the
         // running chronometer) and the button. Title and text are also set plainly, for watches,
         // the lock screen's public version and screen readers.
@@ -198,6 +210,7 @@ object LiveNotifications {
             .setCustomBigContentView(view)
             .addAction(action)
             .apply { second?.let { addAction(it) } }
+            .apply { play?.let { addAction(it) } }
             .build()
         return ID_STRETCH to n
     }

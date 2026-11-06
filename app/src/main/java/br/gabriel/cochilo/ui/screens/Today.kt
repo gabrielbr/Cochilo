@@ -78,6 +78,8 @@ fun TodayScreen(
     plan: br.gabriel.cochilo.domain.DayPlan.Plan? = null,
     /** The glimpse from Ask Cochilo at the end (0.45.0); by day only, never in a night waking. */
     glimpse: (@Composable () -> Unit)? = null,
+    /** Play the routine's music (0.60.0), or null when none is saved. */
+    onMusic: (() -> Unit)? = null,
 ) {
     val f = Format(LocalContext.current, zone, now)
     val today = localDate(now, zone)
@@ -89,7 +91,7 @@ fun TodayScreen(
         // No "Today" title (0.43.0, less is more): the tab and the header already name it; the card leads.
         // Awake in the night (docs/nights.md): between two sleeps of one night, no next-nap guess.
         val openNight = if (prediction is Predictor.Result.Awake) br.gabriel.cochilo.domain.Nights.openNight(log, now) else null
-        SleepPanel(prediction, now, f, log, onStartSleep, onWokeUp, onPlace, openNight, onUpForDay, onSetNight)
+        SleepPanel(prediction, now, f, log, onStartSleep, onWokeUp, onPlace, openNight, onUpForDay, onSetNight, onMusic)
 
         if (prediction is Predictor.Result.Awake && openNight == null) {
             Spacer(Modifier.height(Spacing.space4))
@@ -156,6 +158,7 @@ fun TodayScreen(
 private fun SleepPanel(
     p: Predictor.Result, now: Long, f: Format, log: List<Event>, onStart: (Int) -> Unit, onWoke: (Int) -> Unit, onPlace: (Event, String) -> Unit,
     openNight: Event? = null, onUpForDay: (Int) -> Unit = {}, onSetNight: (Event, Boolean) -> Unit = { _, _ -> },
+    onMusic: (() -> Unit)? = null,
 ) {
     val c = CochiloTheme.colors
     val sleeping = p as? Predictor.Result.Sleeping
@@ -212,9 +215,13 @@ private fun SleepPanel(
             val up: @Composable (ButtonKind) -> Unit = { k -> Button(stringResource(R.string.action_up_for_day), { onUpForDay(0) }, k, Modifier.fillMaxWidth(), icon = R.drawable.gg_ic_sun) }
             if (morning) { up(ButtonKind.PRIMARY); Spacer(Modifier.height(Spacing.space2)); back(ButtonKind.SECONDARY) }
             else { back(ButtonKind.PRIMARY); Spacer(Modifier.height(Spacing.space2)); up(ButtonKind.SECONDARY) }
+            // Settling back in the night: the music, one tap (0.60.0).
+            if (onMusic != null) { Spacer(Modifier.height(Spacing.space2)); MusicButton(onMusic) }
             return@FabricFrame
         } else {
             Button(stringResource(R.string.action_start_sleep), { onStart(0) }, ButtonKind.PRIMARY, Modifier.fillMaxWidth(), icon = R.drawable.gg_ic_moon)
+            // The routine's music under Start sleep (0.60.0, the owner): one tap, then Start sleep.
+            if (onMusic != null) { Spacer(Modifier.height(Spacing.space2)); MusicButton(onMusic) }
         }
         // Earlier: the baby fell asleep (or woke) before you reached the phone. One tap, 5/10/15 min ago.
         val earlier = if (sleeping != null) br.gabriel.cochilo.domain.Earlier.forWake(log, now) else br.gabriel.cochilo.domain.Earlier.forStart(log, now)
@@ -230,6 +237,12 @@ private fun SleepPanel(
             ) { m -> if (sleeping != null) onWoke(m) else onStart(m) }
         }
     }
+}
+
+/** Play sleep music (0.60.0): a secondary pill under the card's sleep action. */
+@Composable
+private fun MusicButton(onMusic: () -> Unit) {
+    Button(stringResource(R.string.music_today), onMusic, ButtonKind.SECONDARY, Modifier.fillMaxWidth())
 }
 
 /** A day plan's sleeps as one line: "13:50 · 16:05 · bed 18:45" (0.49.0). */

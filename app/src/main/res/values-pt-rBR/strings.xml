@@ -696,4 +696,6 @@
     <string name="music_kind_album">Álbum</string>
     <string name="music_kind_artist">Artista</string>
     <string name="music_kind_other">Link</string>
+    <string name="music_today">Tocar música de ninar</string>
+    <string name="music_play_short">Tocar música</string>
 </resources>

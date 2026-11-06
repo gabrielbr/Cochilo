@@ -721,4 +721,6 @@
     <string name="music_kind_album">Album</string>
     <string name="music_kind_artist">Artist</string>
     <string name="music_kind_other">Link</string>
+    <string name="music_today">Play sleep music</string>
+    <string name="music_play_short">Play music</string>
 </resources>

@@ -8,6 +8,14 @@
          timers. Android 13+ asks the person first. Both builds; app/build.gradle.kts allows it. -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
+    <!-- Routine music (0.58.0, docs/rituals.md): lets Cochilo see whether these music apps are
+         installed, so a Play button opens the link in its own app. Not a permission. -->
+    <queries>
+        <package android:name="com.spotify.music" />
+        <package android:name="com.google.android.apps.youtube.music" />
+        <package android:name="com.google.android.youtube" />
+    </queries>
+
     <application
         android:name=".CochiloApp"
         android:allowBackup="false"

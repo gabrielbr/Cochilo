@@ -93,6 +93,12 @@ object SleepReminders {
                 )
             )
             .addAction(0, context.getString(R.string.reminder_start_routine), routineIntent(context, routine))
+            // The routine's music, one tap from the heads-up (0.60.0), when a link is saved.
+            .apply {
+                app.prefs.routineMusic.value.firstOrNull()?.let {
+                    addAction(0, context.getString(R.string.music_play_short), br.gabriel.cochilo.music.MusicOpener.pending(context, it))
+                }
+            }
             .build()
         NotificationManagerCompat.from(context).notify(ID, n)
         app.prefs.remindersSent = (app.prefs.remindersSent + Reminders.Sent(due.lead, due.windowStart)).takeLast(SENT_KEPT)

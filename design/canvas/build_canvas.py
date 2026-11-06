@@ -15,6 +15,8 @@ ROOT = sys.argv[1] if len(sys.argv) > 1 else "build/design-canvas"
 P = os.path.join(ROOT, "project"); os.makedirs(P, exist_ok=True)
 B = {  # screen key -> (blob url, natural w, natural h, caption)
  "today": ("/_blob/4caae3324529861142e1700a471e407d",461,1000,"Today · awake"),
+ "today_music": ("/_blob/e56be82291c92ae56e07510e175a8204",461,1000,"Today · Play sleep music"),
+ "waking_music": ("/_blob/cd55e599d45ea73532b81385ff652b94",461,1000,"Night waking · music (pt-BR)"),
  "sleeping": ("/_blob/53bcc6eea3ed3a052f9487c66c5f935f",461,1000,"Today · napping (dark)"),
  "night_sleeping": ("/_blob/c409c71d48847afb31585924a64a2c5b",461,1000,"Today · asleep for the night (night light)"),
  "night_waking": ("/_blob/4933e60d4946cc29a2fb5115493cccd2",461,1000,"Today · awake in the night (pt-BR)"),
@@ -89,6 +91,8 @@ B = {  # screen key -> (blob url, natural w, natural h, caption)
 # Each screen's source: app/src/test/snapshots/images/br.gabriel.cochilo.ui_<value>.png
 SNAP = {
  "today": "ScreensSnapshotTest_today_light",
+ "today_music": "ScreensSnapshotTest_today_music_light",
+ "waking_music": "ScreensSnapshotTest_today_night_waking_music_ptBR_light",
  "sleeping": "ScreensSnapshotTest_today_sleeping_dark",
  "night_sleeping": "ScreensSnapshotTest_today_night_light_sleeping",
  "night_waking": "ScreensSnapshotTest_today_night_waking_ptBR_light",
@@ -284,7 +288,7 @@ FLOWS=[
 for f in FLOWS:
     wh=flow(f[0],f[1],f[2],f[3],f[4]); add(f[0],f[1],"flows",0,y,wh); y+=wh[1]+120
 SECTIONS=[
- ("ScreensToday.dc.html","Today",["today","sleeping","night_sleeping","night_waking","short_nap","daylight","fabric","empty","today_full"]),
+ ("ScreensToday.dc.html","Today",["today","today_music","sleeping","night_sleeping","night_waking","waking_music","short_nap","daylight","fabric","empty","today_full"]),
  ("ScreensDay.dc.html","Day",["day","day_expected","day_morning","day_pressure","day_block","day_drag","day_start","day_all","day_feed"]),
  ("ScreensPatternsTata.dc.html","Patterns and From Tatá",["patterns","patterns_changes","patterns_places","tata","tata_week","age_note","tata_note"]),
  ("ScreensLog.dc.html","Logging and sheets",["log_open","log_feed","details_where","details_pumped","ticks","ritual"]),

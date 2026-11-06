@@ -68,6 +68,38 @@ Code: `lastOf`, `lastKind`, `lastKindAmong`, `Event.rememberedFrom` in `domain/Q
 (tested in `QuickLogTest`); the Log menu in `LogMenu.kt` (Today's rows until 0.39.0); the sheet's line in `Sheets.kt`.
 This replaced the earlier "next: other breast" suggestion: the app shows what happened, she decides.
 
+## Music one tap away (0.60.0)
+
+The owner: "we need to have a quick access to the music." His asks are the reminder, the
+notification while the baby sleeps, and a button on Today's card under Start sleep.
+
+**Intent** (ux-user-flows, job story): when I'm about to put the baby down, or she stirs, I want
+the lullabies playing at once, one-handed and often in the dark, so I can keep my hands for her.
+The moment is the start of sleep or a resettle, never "in Settings".
+
+| Where she is | Play the music | Taps |
+|---|---|---|
+| Today, awake | Play sleep music, under Start sleep | 1 (then Start sleep, 1) |
+| Today, night waking | Play sleep music, under Back to sleep | 1 |
+| The nap or bedtime reminder | Play music | 1, from the lock screen |
+| The live notification, asleep or in a waking, or 30 min before the window | Play music | 1, from the shade |
+| A new routine's sheet | Play <name>, for each link | 3 (Log › Routine › Play) |
+| Settings › Routine music | the row | 3 |
+
+The first link in Settings is the one these buttons play; the routine's sheet lists them all.
+Every state: no link saved (no button anywhere, Settings says "Not set"), the app not installed
+(the link opens in the browser), asleep on Today (no button: the card stays calm and the
+notification has it).
+
+**Other places considered, not built yet** (in [roadmap.md](roadmap.md), for the owner):
+- **The home-screen widget:** a Play music button beside Start sleep. One tap from the home screen.
+- **The watch tile:** Play music, for a parent holding the baby with the phone across the room. It
+  needs a way to open the music app on the phone from the watch, which Android limits.
+- **Play with Start sleep:** a setting to start the music whenever a sleep starts, from anywhere.
+  It's off unless she turns it on, because music that starts by itself is a surprise.
+- **Start routine plays it:** the reminder's Start routine could also start the music. That's the
+  same choice as the line above.
+
 ## The next sleep first (0.59.0)
 
 No tap added: the Day ring shows the next expected sleep in breathing teal with its bold time,
