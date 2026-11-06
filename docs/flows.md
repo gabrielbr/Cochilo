@@ -68,6 +68,12 @@ Code: `lastOf`, `lastKind`, `lastKindAmong`, `Event.rememberedFrom` in `domain/Q
 (tested in `QuickLogTest`); the Log menu in `LogMenu.kt` (Today's rows until 0.39.0); the sheet's line in `Sheets.kt`.
 This replaced the earlier "next: other breast" suggestion: the app shows what happened, she decides.
 
+## The plan on the list, dotted (0.61.0)
+
+No tap added. Hour by hour lists every sleep still expected today above what's happening now
+(it showed only the next one before), so the list and the ring tell the same plan. Everything
+expected is dotted; the next sleep breathes (to 25%, with a halo on the ring).
+
 ## Music one tap away (0.60.0)
 
 The owner: "we need to have a quick access to the music." His asks are the reminder, the

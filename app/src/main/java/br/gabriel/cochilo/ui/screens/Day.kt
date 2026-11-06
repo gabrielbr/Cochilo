@@ -184,8 +184,8 @@ fun DayScreen(
         VerticalTimeline(
             events, now, f, zone, onOpen, onAdjust = { e, end -> onAdjust(e, end) }, allSleeps = log, previewDrag = previewDrag,
             onAdjustStart = { e, start -> onAdjustStart(e, start) }, previewStartDrag = previewStartDrag,
-            // The next expected sleep, today only, on top (0.50.0): the plan's first, like Today's card.
-            expected = plan?.sleeps?.firstOrNull()?.takeIf { day == today },
+            // Every sleep still expected today, on top (0.61.0): the plan, like the ring.
+            planned = plan?.sleeps?.takeIf { day == today }.orEmpty(),
         )
     }
 }
@@ -199,8 +199,13 @@ internal fun VerticalTimeline(
     previewDrag: Pair<Int, Int>? = null,
     onAdjustStart: ((Event, Long) -> Unit)? = null,
     previewStartDrag: Pair<Int, Int>? = null,
-    /** The next expected sleep (DayPlan), drawn dashed above what's happening now (0.50.0). */
-    expected: br.gabriel.cochilo.domain.DayPlan.Sleep? = null,
+    /**
+     * The rest of today, projected (DayPlan): every expected sleep above what's happening now,
+     * latest at the top (0.61.0; only the next one before). The next one is teal and breathes.
+     */
+    planned: List<br.gabriel.cochilo.domain.DayPlan.Sleep> = emptyList(),
+    /** For the screenshot test: the next one's breath, still at this point. */
+    breathOverride: Float? = null,
 ) {
     val c = CochiloTheme.colors
     val sleepsSorted = allSleeps.filter { it.type == EventType.SLEEP }.sortedBy { it.start }
@@ -289,15 +294,18 @@ internal fun VerticalTimeline(
         Modifier.fillMaxWidth().clip(RoundedCornerShape(Radius.radiusM)).background(c.surface)
             .padding(vertical = Spacing.space3)
     ) {
-        if (expected != null) {
+        for ((i, expected) in planned.withIndex().reversed()) {
+            val next = i == 0
             val bed = expected.next == br.gabriel.cochilo.domain.Predictor.Next.BEDTIME
             val minutes = ((expected.end - expected.at) / br.gabriel.cochilo.domain.MINUTE).toInt()
             val window = if (bed) stringResource(R.string.expected_meta_bed, f.time(expected.windowStart), f.time(expected.windowEnd))
             else stringResource(R.string.expected_meta, f.time(expected.windowStart), f.time(expected.windowEnd), f.durationMin(minutes))
             br.gabriel.cochilo.ui.kit.TimelineExpected(
                 time = stringResource(R.string.expected_time, f.time(expected.at)),
-                // The next sleep is the brand's teal, as on the ring (0.59.0).
-                color = c.mint,
+                // The next sleep is the brand's teal, as on the ring (0.59.0); the later ones keep
+                // their own colour, dotted (0.61.0).
+                color = if (next) c.mint else if (bed) c.eventNight else c.eventNap,
+                breathes = next, breathOverride = breathOverride,
                 // Bedtime's bar is short: the night's length isn't the point here.
                 barHeight = if (bed) Spacing.space6 else bar(minutes * br.gabriel.cochilo.domain.MINUTE),
                 label = stringResource(if (bed) R.string.expected_bedtime else R.string.expected_nap),

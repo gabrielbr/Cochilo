@@ -52,6 +52,7 @@ of the day earlier.
 **Where it shows:**
 - **Today's card:** "Then: 13:50 · 16:05 · bed 18:45" under the window. "How it's guessed" adds
   how the later ones come about, and says when they come from the age alone.
+- **Hour by hour, today (0.61.0):** every projected sleep above what is happening now, latest at the top, each with its "~" time and window; the next one teal and breathing, the rest dotted in their own colour.
 - **The Day ring, today (0.59.0):** the next expected sleep is teal and breathes, its time in bold; every later one keeps its dashed outline and gets its "~" time along the circle, so the day can be planned ahead. Before 0.59.0: each projected sleep as a dashed outline on the sleep ring, never
   filled, so it never reads as data. Bedtime is in the night colour until midnight. Under the
   counts: "Expected today: …", which TalkBack reads with the ring.
