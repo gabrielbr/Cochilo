@@ -701,4 +701,8 @@
     <string name="notif_awake_nap_past">Desde %1$s · a soneca era %2$s · passou da janela</string>
     <string name="notif_awake_bedtime_past">Desde %1$s · a hora de dormir era %2$s · passou da janela</string>
     <string name="live_notification_failed">A notificação não conseguiu atualizar (%1$s). Conte pra gente esta linha.</string>
+    <string name="share_add_label">Adicionar ao Cochilo</string>
+    <string name="music_shared_added">Adicionada à música da rotina</string>
+    <string name="music_shared_already">Já está na música da rotina</string>
+    <string name="music_shared_full">A música da rotina está cheia (%1$d). Tire uma em Ajustes › Música da rotina.</string>
 </resources>

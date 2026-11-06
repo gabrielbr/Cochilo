@@ -3,9 +3,14 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
-## 0.62.0 — 2026-11-06
+## 0.63.0 — 2026-11-06
 
-**The next nap is the next nap, everywhere.** On a day with more naps than usual for the baby's
+**Share a playlist straight to Cochilo.** In Spotify or YouTube Music, Share › **Add to
+Cochilo** puts the song or playlist in Settings › Routine music. Cochilo opens, says "Added to
+routine music", and offers Undo. The same link isn't added twice. When the list is full (five), it
+says so. Any other shared text still goes to the import, as before.
+
+**The next nap is the next nap, everywhere** (built as 0.62.0, released with 0.63.0). On a day with more naps than usual for the baby's
 age, the plan used to stop counting naps and jump to bedtime. Today's card said "next nap", but
 the Day ring breathed the night's moon from 18:30, the nap due now had no time, and hour by hour
 showed only bedtime. Now the plan always starts with the same guess as Today's card. The nap

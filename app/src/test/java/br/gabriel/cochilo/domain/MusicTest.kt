@@ -53,4 +53,24 @@ class MusicTest {
         assertEquals(Music.MAX_LINKS, Music.decode(Music.encode(many)).size)
         assertEquals(Music.MAX_NAME, Music.parse("https://youtu.be/abc", "x".repeat(99))!!.name!!.length)
     }
+
+    /** Shared from the music app (0.63.0): added at the end, never twice, never past five. */
+    @Test fun a_shared_link_is_added_once_and_only_while_theres_room() {
+        val a = Music.parse("https://open.spotify.com/playlist/aaa")!!
+        val b = Music.parse("https://music.youtube.com/playlist?list=PLRPNA3Ine-Lw&si=x")!!
+        val (one, r1) = Music.add(listOf(a), b)
+        assertEquals(Music.Added.ADDED, r1)
+        assertEquals(listOf(a, b), one)
+        // The same playlist shared again, with a different tracking tag: already there.
+        assertEquals(Music.Added.ALREADY_THERE, Music.add(one, Music.parse("https://music.youtube.com/playlist?list=PLRPNA3Ine-Lw&si=y")!!).second)
+        val full = (1..5).map { Music.parse("https://open.spotify.com/track/t$it")!! }
+        assertEquals(Music.Added.FULL, Music.add(full, a).second)
+    }
+
+    @Test fun a_shares_subject_names_the_link_only_when_its_a_short_title() {
+        assertEquals("Canções de ninar", Music.nameFromSubject("Canções de ninar"))
+        assertNull(Music.nameFromSubject("https://open.spotify.com/playlist/aaa"))
+        assertNull(Music.nameFromSubject("x".repeat(80)))
+        assertNull(Music.nameFromSubject("  "))
+    }
 }

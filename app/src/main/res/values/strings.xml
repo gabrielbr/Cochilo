@@ -726,4 +726,8 @@
     <string name="notif_awake_nap_past">Since %1$s · nap was due %2$s · past window</string>
     <string name="notif_awake_bedtime_past">Since %1$s · bedtime was %2$s · past window</string>
     <string name="live_notification_failed">The notification couldn\'t update (%1$s). Tell us this line.</string>
+    <string name="share_add_label">Add to Cochilo</string>
+    <string name="music_shared_added">Added to routine music</string>
+    <string name="music_shared_already">Already in routine music</string>
+    <string name="music_shared_full">Routine music is full (%1$d). Remove one in Settings › Routine music.</string>
 </resources>

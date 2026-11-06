@@ -68,6 +68,17 @@ Code: `lastOf`, `lastKind`, `lastKindAmong`, `Event.rememberedFrom` in `domain/Q
 (tested in `QuickLogTest`); the Log menu in `LogMenu.kt` (Today's rows until 0.39.0); the sheet's line in `Sheets.kt`.
 This replaced the earlier "next: other breast" suggestion: the app shows what happened, she decides.
 
+## Share a playlist to Cochilo (0.63.0)
+
+**Job:** when I find the lullaby playlist in my music app, I want to keep it for the routine
+without copying a link. ([rituals.md](rituals.md))
+
+| Flow | Taps |
+|---|---|
+| Save a playlist from the music app | Share (1) › Add to Cochilo (1): 2, and Undo if it was a mistake. Pasting in Settings took 5 |
+| Shared twice | the same 2 taps; "Already in routine music", nothing added |
+| Full | the same 2 taps; "Routine music is full (5)…", nothing added |
+
 ## One next sleep (0.62.0)
 
 The card, the ring and the list now agree on what comes next, because the plan starts from the
