@@ -123,6 +123,8 @@ fun DayRing(
     planned: List<br.gabriel.cochilo.domain.DayPlan.Sleep> = emptyList(),
     /** A clock time as the app writes it (Format.time). */
     time: (Long) -> String = { java.time.Instant.ofEpochMilli(it).atZone(zone).toLocalTime().toString().take(5) },
+    /** For the screenshot test: draw the breath at this point (1 full, 0.25 soft) instead of moving. */
+    breathOverride: Float? = null,
     middle: @Composable () -> Unit,
 ) {
     val c = CochiloTheme.colors
@@ -145,7 +147,8 @@ fun DayRing(
         val sepTrack = Math.toDegrees(with(density) { (badge + Spacing.space1).toPx() } / rTrackPx.toDouble())
         val sepInside = Math.toDegrees(with(density) { (badge + Spacing.space1).toPx() } / rBubblesPx.toDouble())
 
-        val inDay = events.filter { (it.end ?: now ?: it.start) >= from && it.start < to }
+        // An instant entry (a diaper) is at its start; only a running timer reaches now.
+        val inDay = events.filter { (if (it.type.hasDuration) it.end ?: now ?: it.start else it.start) >= from && it.start < to }
         val sleeps = inDay.filter { it.type == EventType.SLEEP }
         val others = inDay.filter { it.type != EventType.SLEEP }.sortedBy { it.start }
         val byId = inDay.associateBy { it.id }
@@ -185,7 +188,8 @@ fun DayRing(
 
         // The next expected sleep: the plan's first, else the predictor's window.
         val next: Pair<Long, Long>? = planned.firstOrNull()?.let { it.at to it.end } ?: expected
-        val breath = breathing(still = LocalInspectionMode.current)
+        // The breath runs from full to a quarter (0.61.0: at 45% the owner couldn't see it).
+        val breath = breathOverride ?: breathing(soft = 0.25f, still = LocalInspectionMode.current)
         Box(Modifier.size(diameter + labelBand * 2).semantics(mergeDescendants = true) { contentDescription = summary }, contentAlignment = Alignment.Center) {
             Canvas(Modifier.size(diameter)) {
                 val w = track.toPx()
@@ -205,13 +209,14 @@ fun DayRing(
                 }
                 // The rest of today's projection, dashed along the track's two edges and closed at both ends.
                 val hair = Size.hairline.toPx()
-                val dash = expectedDash(Spacing.space1.toPx())
+                val dash = expectedDash(Spacing.space2.toPx())
+                val dotW = EXPECTED_DOT.toPx()
                 for (s in planned.drop(if (next != null) 1 else 0)) {
                     val col = if (s.next == br.gabriel.cochilo.domain.Predictor.Next.BEDTIME) c.eventNight else c.eventNap
                     val a0 = angle(s.at)
                     val sweep = maxOf(angle(s.end) - a0, 1.5f)
                     for (rr in listOf(r - w / 2, r + w / 2)) {
-                        drawArc(col, a0, sweep, useCenter = false, topLeft = Offset(center.x - rr, center.y - rr), size = GSize(rr * 2, rr * 2), style = Stroke(hair * 2, pathEffect = dash))
+                        drawArc(col, a0, sweep, useCenter = false, topLeft = Offset(center.x - rr, center.y - rr), size = GSize(rr * 2, rr * 2), style = Stroke(dotW, cap = StrokeCap.Round, pathEffect = dash))
                     }
                     tick(a0, r - w / 2, r + w / 2, col, hair * 2)
                     tick(a0 + sweep, r - w / 2, r + w / 2, col, hair * 2)
@@ -251,12 +256,21 @@ private fun h(id: String) = (id.removePrefix("h").toInt()) * 6
 private fun androidx.compose.foundation.layout.BoxScope.NextMoon(angle: Double, radiusPx: Float, breath: Float) {
     val c = CochiloTheme.colors
     RingPlaced(angle, radiusPx) {
-        KindIcon(
-            typeIcon(EventType.SLEEP), c.eventNap, c.eventNapSoft,
-            Modifier.size(Size.kindBadge).clip(RoundedCornerShape(Radius.radiusRound))
-                .border(Size.outline, c.mint.copy(alpha = breath), RoundedCornerShape(Radius.radiusRound)),
-            size = Size.kindBadge,
-        )
+        // A teal halo that swells as the band softens, so the breath reads even on a short nap
+        // whose band hides under the moon (0.61.0).
+        val out = 1f - breath
+        Box(contentAlignment = Alignment.Center) {
+            Box(
+                Modifier.size(Size.kindBadge).graphicsLayer { val s = 1f + out * 0.6f; scaleX = s; scaleY = s }
+                    .clip(RoundedCornerShape(Radius.radiusRound)).background(c.mint.copy(alpha = 0.15f + out * 0.35f)),
+            )
+            KindIcon(
+                typeIcon(EventType.SLEEP), c.eventNap, c.eventNapSoft,
+                Modifier.size(Size.kindBadge).clip(RoundedCornerShape(Radius.radiusRound))
+                    .border(Size.outline, c.mint, RoundedCornerShape(Radius.radiusRound)),
+                size = Size.kindBadge,
+            )
+        }
     }
 }
 
@@ -472,10 +486,14 @@ fun TimelineStretch(
 }
 
 /**
- * The dash of anything expected, not logged (0.49.0 ring, 0.50.0 timeline): [on] drawn, [on] off.
- * Callers pass `space1` in pixels, so the ring and the timeline dash the same way.
+ * The line of anything expected, not logged (0.49.0 ring, 0.50.0 timeline): since 0.61.0 dotted, not
+ * dashed (the owner: "easier"). Round dots [gap] apart, centre to centre; draw with
+ * `StrokeCap.Round` and [EXPECTED_DOT] wide so every caller dots the same way.
  */
-fun expectedDash(on: Float) = androidx.compose.ui.graphics.PathEffect.dashPathEffect(floatArrayOf(on, on))
+fun expectedDash(gap: Float) = androidx.compose.ui.graphics.PathEffect.dashPathEffect(floatArrayOf(0.01f, gap))
+
+/** How wide an expected dot is (0.61.0): three hairlines. */
+val EXPECTED_DOT = Size.hairline * 3
 
 /**
  * The next expected sleep on the timeline's main track (0.50.0, docs/prediction.md): today only,
@@ -485,11 +503,13 @@ fun expectedDash(on: Float) = androidx.compose.ui.graphics.PathEffect.dashPathEf
  * heading.
  */
 @Composable
-fun TimelineExpected(time: String, color: Color, barHeight: Dp, label: String, meta: String) {
+fun TimelineExpected(time: String, color: Color, barHeight: Dp, label: String, meta: String, breathes: Boolean = false, breathOverride: Float? = null) {
     val c = CochiloTheme.colors
     val density = LocalDensity.current
-    val on = with(density) { Spacing.space1.toPx() }
-    val stroke = with(density) { (Size.hairline * 2).toPx() }
+    val on = with(density) { Spacing.space2.toPx() }
+    val stroke = with(density) { EXPECTED_DOT.toPx() }
+    // The next one breathes, as on the ring (0.61.0); the later ones stay still.
+    val breath = if (breathes) breathOverride ?: breathing(soft = 0.25f, still = LocalInspectionMode.current) else 1f
     val radius = with(density) { Radius.radiusS.toPx() }
     Row(
         Modifier.fillMaxWidth()
@@ -504,9 +524,10 @@ fun TimelineExpected(time: String, color: Color, barHeight: Dp, label: String, m
                 Modifier.padding(vertical = Spacing.space1).width(Spacing.space3).height(barHeight)
                     .background(c.surface)
                     .drawBehind {
+                        if (breathes) drawRoundRect(color.copy(alpha = 0.35f * (1f - breath)), cornerRadius = androidx.compose.ui.geometry.CornerRadius(radius, radius))
                         drawRoundRect(
-                            color, cornerRadius = androidx.compose.ui.geometry.CornerRadius(radius, radius),
-                            style = Stroke(stroke, pathEffect = expectedDash(on)),
+                            color.copy(alpha = breath), cornerRadius = androidx.compose.ui.geometry.CornerRadius(radius, radius),
+                            style = Stroke(stroke, cap = StrokeCap.Round, pathEffect = expectedDash(on)),
                         )
                     }
             )

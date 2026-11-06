@@ -106,7 +106,7 @@ fun PressureLine(points: List<br.gabriel.cochilo.domain.Pressure.Point>, from: L
         // 0% at the bottom, 125% at the top, so the 100% guide sits a fifth down.
         fun y(p: Int) = h - (p.coerceIn(0, 125) / 125f) * h
         fun x(t: Long) = ((t - from).coerceIn(0, to - from) / span) * w
-        drawLine(c.muted, Offset(0f, y(100)), Offset(w, y(100)), strokeWidth = hair, pathEffect = expectedDash(dot * 2))
+        drawLine(c.muted, Offset(0f, y(100)), Offset(w, y(100)), strokeWidth = EXPECTED_DOT.toPx(), cap = androidx.compose.ui.graphics.StrokeCap.Round, pathEffect = expectedDash(dot * 2))
         if (points.size >= 2) {
             val path = androidx.compose.ui.graphics.Path()
             points.forEachIndexed { i, p -> if (i == 0) path.moveTo(x(p.at), y(p.percent)) else path.lineTo(x(p.at), y(p.percent)) }

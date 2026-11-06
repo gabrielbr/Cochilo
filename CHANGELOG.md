@@ -3,6 +3,19 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.61.0 — 2026-11-06
+
+**The whole day planned on the hour-by-hour list too, in dots.**
+- **Hour by hour** shows every sleep still expected today, not only the next one: each nap and
+  bedtime with its "~" time and window, latest at the top. The next one is teal and breathes, as
+  on the ring.
+- **Dotted, not dashed:** everything expected is drawn with round dots, on the ring, on the
+  hour-by-hour list and on the sleep pressure's 100% line.
+- **Easier to see the breathing.** The next sleep now fades from full down to a quarter (it was
+  45%), and a teal halo swells round its moon on the ring, so even a short nap's band shows it.
+- Fixed: the ring could gather diapers from other days into one "+55" bubble when it was given
+  more than one day's entries.
+
 ## 0.60.1 — 2026-11-06
 
 **The live notification no longer shows a past nap as the next one.** When the nap or bedtime

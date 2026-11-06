@@ -577,23 +577,34 @@ class ScreensSnapshotTest {
         }
         paparazzi.snapshot { Chrome(false, 2, synthetic) }
     }
-    // The expected block on the timeline (0.50.0): the next sleep, dashed, above what's happening now.
+    // The expected blocks on the timeline (0.61.0): every projected sleep, dotted, above what's
+    // happening now; the next in teal.
     @Composable
-    private fun ExpectedShot(dark: Boolean, log: List<Event>, expected: (br.gabriel.cochilo.domain.DayPlan.Plan?) -> br.gabriel.cochilo.domain.DayPlan.Sleep? = { it?.sleeps?.firstOrNull() }) {
+    private fun ExpectedShot(
+        dark: Boolean, log: List<Event>,
+        expected: (br.gabriel.cochilo.domain.DayPlan.Plan?) -> List<br.gabriel.cochilo.domain.DayPlan.Sleep> = { it?.sleeps.orEmpty() },
+        nowAt: Long = now, breath: Float? = null,
+    ) {
         CochiloTheme(dark) { br.gabriel.cochilo.ui.kit.Frame { br.gabriel.cochilo.ui.screens.ScrollPage {
             val f = Format(androidx.compose.ui.platform.LocalContext.current, zone, now)
             val today = br.gabriel.cochilo.domain.localDate(now, zone)
             val from = br.gabriel.cochilo.domain.startOfDay(today, zone)
             val to = br.gabriel.cochilo.domain.startOfDay(today.plusDays(1), zone)
-            val plan = br.gabriel.cochilo.domain.DayPlan(zone).of(log, ageWeeks(baby.birthDate, null, now), now)
-            br.gabriel.cochilo.ui.screens.VerticalTimeline(log.filter { it.overlaps(from, to, now) }.sortedBy { it.start }, now, f, zone, {}, allSleeps = log, expected = expected(plan))
+            val plan = br.gabriel.cochilo.domain.DayPlan(zone).of(log, ageWeeks(baby.birthDate, null, nowAt), nowAt)
+            br.gabriel.cochilo.ui.screens.VerticalTimeline(log.filter { it.overlaps(from, to, nowAt) }.sortedBy { it.start }, nowAt, f, zone, {}, allSleeps = log, planned = expected(plan), breathOverride = breath)
         } } }
     }
     @Test fun day_expected_block_light() { light(); paparazzi.snapshot { ExpectedShot(false, log) } }
     @Test fun day_expected_block_ptBR_dark() { pt(true); paparazzi.snapshot { ExpectedShot(true, log) } }
     @Test fun day_expected_past_light() {
         light()
-        paparazzi.snapshot { ExpectedShot(false, log) { p -> p?.sleeps?.firstOrNull()?.let { it.copy(at = now - 30 * 60_000, windowStart = now - 40 * 60_000, windowEnd = now - 20 * 60_000, end = now + 15 * 60_000) } } }
+        paparazzi.snapshot { ExpectedShot(false, log, { p -> listOfNotNull(p?.sleeps?.firstOrNull()?.let { it.copy(at = now - 30 * 60_000, windowStart = now - 40 * 60_000, windowEnd = now - 20 * 60_000, end = now + 15 * 60_000) }) }) }
+    }
+    /** The morning (0.61.0): every nap and bedtime still expected today, the next one breathing (soft frame). */
+    @Test fun day_timeline_projection_light() {
+        light()
+        val morning = at(31, 8, 0)
+        paparazzi.snapshot { ExpectedShot(false, log.filter { (it.end ?: it.start) <= morning }, nowAt = morning, breath = 0.25f) }
     }
     @Test fun day_expected_while_napping_light() { light(); paparazzi.snapshot { ExpectedShot(false, sleepingLog) } }
 
@@ -612,6 +623,19 @@ class ScreensSnapshotTest {
      * The morning (0.59.0): the night and the first wake only, so the rest of the day is projected.
      * The next nap is teal and its time bold; every later nap and bedtime has its "~" time.
      */
+    /** The ring's next sleep at the soft end of its breath (0.61.0): the halo has swelled round the moon. */
+    @Test fun ring_breath_soft_light() {
+        light()
+        val morning = at(31, 8, 0)
+        val early = log.filter { (it.end ?: it.start) <= morning }
+        paparazzi.snapshot {
+            CochiloTheme(false) { br.gabriel.cochilo.ui.kit.Frame {
+                val plan = br.gabriel.cochilo.domain.DayPlan(zone).of(early, ageWeeks(baby.birthDate, null, morning), morning)
+                val from = br.gabriel.cochilo.domain.startOfDay(br.gabriel.cochilo.domain.localDate(morning, zone), zone)
+                br.gabriel.cochilo.ui.kit.DayRing(early, from, from + 24 * 3_600_000L, morning, zone, "", planned = plan?.sleeps.orEmpty(), breathOverride = 0.25f) {}
+            } }
+        }
+    }
     @Test fun day_morning_projection_light() {
         light()
         val morning = at(31, 8, 0)
