@@ -68,6 +68,13 @@ Code: `lastOf`, `lastKind`, `lastKindAmong`, `Event.rememberedFrom` in `domain/Q
 (tested in `QuickLogTest`); the Log menu in `LogMenu.kt` (Today's rows until 0.39.0); the sheet's line in `Sheets.kt`.
 This replaced the earlier "next: other breast" suggestion: the app shows what happened, she decides.
 
+## The next sleep first (0.59.0)
+
+No tap added: the Day ring shows the next expected sleep in breathing teal with its bold time,
+and every later projected sleep with its "~" time. The line under the counts ("Expected today:
+8:05 AM · 10:43 AM · …") stays, because the ring drops a label it has no room for and the line
+never does.
+
 ## The floating day ring and routine music (0.58.0)
 
 **The day ring** ([components.md](../design/product/cochilo/components.md)): no tap added or

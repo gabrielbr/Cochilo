@@ -281,6 +281,7 @@ object CTokens {
         const val motionStandard = 150
         const val motionEmphasised = 250
         const val motionStagger = 35
+        const val motionBreathe = 2400
     }
 
     /** The brand this app is dressed in (docs/brands.md): its name, and the one type family it uses. */

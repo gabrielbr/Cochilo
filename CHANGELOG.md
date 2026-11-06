@@ -3,6 +3,16 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.59.0 — 2026-11-06
+
+**The next sleep stands out, and the whole day is planned on the ring.**
+- **The next expected sleep is Tatá's teal**, and it breathes: it fades slowly between full and
+  soft, so it's the first thing you see. Its moon is ringed in teal and its time is bolder. With
+  Remove animations on, it stays still. The hour-by-hour list shows it in teal too.
+- **Every sleep still expected today has its time** along the ring ("~10:43 AM", "~1:23 PM",
+  bed "~7:41 PM"), so the day can be planned ahead. They move as the day goes, when naps run
+  longer or shorter.
+
 ## 0.58.0 — 2026-11-06
 
 **A friendlier day ring, and music for the routine.**

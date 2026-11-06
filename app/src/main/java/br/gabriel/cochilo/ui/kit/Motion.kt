@@ -7,6 +7,7 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.FiniteAnimationSpec
 import androidx.compose.animation.core.snap
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -75,3 +76,22 @@ fun fadeInMotion(): EnterTransition = if (CochiloTheme.reduceMotion) EnterTransi
 
 @Composable
 fun fadeOutMotion(): ExitTransition = if (CochiloTheme.reduceMotion) ExitTransition.None else fadeOut(motionSpec())
+
+/**
+ * A slow breath (0.59.0, `motion-breathe`): 1 → [soft] → 1, again and again, with the system
+ * easing. Only the day ring's next expected sleep breathes, so the eye finds it first. With
+ * Remove animations (or [still], for a screenshot) it stays at full.
+ */
+@Composable
+fun breathing(soft: Float = 0.45f, still: Boolean = false): Float {
+    if (still || CochiloTheme.reduceMotion) return 1f
+    val t = androidx.compose.animation.core.rememberInfiniteTransition(label = "breathe")
+    return t.animateFloat(
+        1f, soft,
+        androidx.compose.animation.core.infiniteRepeatable<Float>(
+            tween<Float>(CTokens.Motion.motionBreathe, easing = SystemEasing),
+            androidx.compose.animation.core.RepeatMode.Reverse,
+        ),
+        label = "breathe",
+    ).value
+}

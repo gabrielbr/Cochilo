@@ -40,6 +40,7 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.heading
@@ -160,17 +161,31 @@ fun DayRing(
         val measurer = androidx.compose.ui.text.rememberTextMeasurer()
         val labelStyle = Type.meta
         val capped = androidx.compose.ui.unit.Density(density.density, density.fontScale.coerceAtMost(LABEL_SCALE_CAP))
-        fun widthDeg(text: String) = Math.toDegrees(measurer.measure(text, labelStyle, density = capped).size.width.toDouble() / rLabelsPx)
+        // The next sleep's time is the one to read first: in the label role, bolder.
+        val nextStyle = Type.label
+        fun widthDeg(text: String, style: androidx.compose.ui.text.TextStyle = labelStyle) =
+            Math.toDegrees(measurer.measure(text, style, density = capped).size.width.toDouble() / rLabelsPx)
         val texts = buildList {
             sleeps.forEach { e ->
                 if (e.start >= from) add(Triple("s" + e.id, e.start, 0))
                 e.end?.takeIf { it <= to }?.let { add(Triple("e" + e.id, it, 1)) }
             }
+            // What's still expected today (0.59.0): each projected sleep's time, the next one first.
+            planned.forEachIndexed { i, s -> if (s.at in from until to) add(Triple("p$i", s.at, if (i == 0) -1 else 0)) }
             for (h in 0 until 4) add(Triple("h$h", from + (to - from) * h / 4, 2))
         }
-        val labelText = texts.associate { (id, t, _) -> id to if (id.startsWith("h")) "%02d".format(h(id)) else time(t) }
-        val labels = RingLayout.labels(texts.map { (id, t, p) -> RingLayout.Label(id, deg(t), widthDeg(labelText.getValue(id)), p) }, gap = 2.0)
+        val labelText = texts.associate { (id, t, _) ->
+            id to when {
+                id.startsWith("h") -> "%02d".format(h(id))
+                id.startsWith("p") -> "~" + time(t)
+                else -> time(t)
+            }
+        }
+        val labels = RingLayout.labels(texts.map { (id, t, p) -> RingLayout.Label(id, deg(t), widthDeg(labelText.getValue(id), if (id == "p0") nextStyle else labelStyle), p) }, gap = 2.0)
 
+        // The next expected sleep: the plan's first, else the predictor's window.
+        val next: Pair<Long, Long>? = planned.firstOrNull()?.let { it.at to it.end } ?: expected
+        val breath = breathing(still = LocalInspectionMode.current)
         Box(Modifier.size(diameter + labelBand * 2).semantics(mergeDescendants = true) { contentDescription = summary }, contentAlignment = Alignment.Center) {
             Canvas(Modifier.size(diameter)) {
                 val w = track.toPx()
@@ -182,12 +197,16 @@ fun DayRing(
                     drawArc(color, a0, sweep, useCenter = false, topLeft = Offset(center.x - r, center.y - r), size = GSize(r * 2, r * 2), style = Stroke(width, cap = cap))
                 }
                 drawCircle(c.line, r, style = Stroke(w))
-                // Where the next sleep is expected: a faint band of the nap colour, under the real sleeps.
-                if (expected != null) band(c.eventNap.copy(alpha = EXPECTED_ALPHA), expected.first, expected.second)
-                // The projection, dashed along the track's two edges and closed at both ends.
+                // The next sleep (0.59.0, the owner: "the main information the user wants"): in the
+                // brand's teal, breathing. Its window, when it's wider, is a soft teal under it.
+                if (expected != null) band(c.mint.copy(alpha = EXPECTED_ALPHA * breath), expected.first, expected.second)
+                next?.let { (a, b) ->
+                    band(c.mint.copy(alpha = breath), a, b)
+                }
+                // The rest of today's projection, dashed along the track's two edges and closed at both ends.
                 val hair = Size.hairline.toPx()
                 val dash = expectedDash(Spacing.space1.toPx())
-                for (s in planned) {
+                for (s in planned.drop(if (next != null) 1 else 0)) {
                     val col = if (s.next == br.gabriel.cochilo.domain.Predictor.Next.BEDTIME) c.eventNight else c.eventNap
                     val a0 = angle(s.at)
                     val sweep = maxOf(angle(s.end) - a0, 1.5f)
@@ -202,13 +221,15 @@ fun DayRing(
                 if (now != null && now in from until to) tick(angle(now), r - w / 2, r + w / 2, c.ink, hair * 3)
             }
             for (b in sleepBubbles) RingBubble(b, byId, rTrackPx, zone)
+            // The next sleep's moon floats on its teal band, ringed in teal.
+            next?.let { (a, b) -> NextMoon((deg(a) + deg(b)) / 2, rTrackPx, breath) }
             for (b in otherBubbles) RingBubble(b, byId, rBubblesPx, zone)
             CappedFontScale(LABEL_SCALE_CAP) {
                 for (l in labels) {
                     val hour = l.id.startsWith("h")
                     RingPlaced(l.angle, rLabelsPx) {
                         Text(
-                            labelText.getValue(l.id), style = labelStyle, maxLines = 1, softWrap = false,
+                            labelText.getValue(l.id), style = if (l.id == "p0") nextStyle else labelStyle, maxLines = 1, softWrap = false,
                             color = if (hour) c.muted else c.ink,
                             // Times run along the circle; the four hours stay upright, so "06" never reads "90".
                             modifier = Modifier.graphicsLayer { rotationZ = if (hour) 0f else RingLayout.labelRotation(l.angle).toFloat() },
@@ -224,6 +245,20 @@ fun DayRing(
 }
 
 private fun h(id: String) = (id.removePrefix("h").toInt()) * 6
+
+/** The next expected sleep's mark: the moon in its round, ringed in the brand's teal, breathing. */
+@Composable
+private fun androidx.compose.foundation.layout.BoxScope.NextMoon(angle: Double, radiusPx: Float, breath: Float) {
+    val c = CochiloTheme.colors
+    RingPlaced(angle, radiusPx) {
+        KindIcon(
+            typeIcon(EventType.SLEEP), c.eventNap, c.eventNapSoft,
+            Modifier.size(Size.kindBadge).clip(RoundedCornerShape(Radius.radiusRound))
+                .border(Size.outline, c.mint.copy(alpha = breath), RoundedCornerShape(Radius.radiusRound)),
+            size = Size.kindBadge,
+        )
+    }
+}
 
 /** Places [content] centred on the point at [angle] degrees and [radiusPx] from the middle. */
 @Composable

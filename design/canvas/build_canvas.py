@@ -24,11 +24,12 @@ B = {  # screen key -> (blob url, natural w, natural h, caption)
  "empty": ("/_blob/92ce4f340aeb4b83d91068a4856ee228",461,1000,"Today · empty, first day"),
  "today_full": ("/_blob/c01c42cdb5418f11239222688de4e80b",245,1000,"Today · whole page, Ask Cochilo at the end"),
  "day": ("/_blob/bf05358d017151cd251de9f801f4a759",461,1000,"Day · ring, yesterday"),
- "day_expected": ("/_blob/0d690f384eb50175ce02ef4921eaf16b",461,1000,"Day · today, projected naps on the ring"),
- "day_block": ("/_blob/da1a61800dc5d1e9896d34664da2a85e",461,1000,"Day · expected nap on the timeline"),
+ "day_expected": ("/_blob/d340c3d481f71a22ba39bec0d51daeea",461,1000,"Day · today, projected naps on the ring"),
+ "day_block": ("/_blob/a5cd6f0341eff898d7e2b58fa446d23a",461,1000,"Day · expected nap on the timeline"),
  "day_drag": ("/_blob/5131e0488e4983ef8a2f58c4858ed640",461,1000,"Day · dragging a sleep's end"),
  "day_start": ("/_blob/dc3dd6c1080e27e593521e3ae930cc23",461,1000,"Day · dragging a start"),
- "day_pressure": ("/_blob/63a85a24861d3e2b3336115167a58b7d",245,1000,"Day · sleep pressure, today (tall)"),
+ "day_morning": ("/_blob/cd417b8522062ccb0f3f4fee999b7ff4",461,1000,"Day · this morning, the day planned"),
+ "day_pressure": ("/_blob/4a62fe0f58afc8fef98ad0665ad283cc",245,1000,"Day · sleep pressure, today (tall)"),
  "tile_awake": ("/_blob/f814c243c001724194b812d526c829ed",384,384,"Watch tile · awake"),
  "tile_asleep": ("/_blob/9294b1def25a78097a94899fae3bf532",384,384,"Watch tile · asleep"),
  "tile_feeding": ("/_blob/133eae172dc589495371f2143dea7c0e",384,384,"Watch tile · feeding"),
@@ -101,6 +102,7 @@ SNAP = {
  "day_block": "ScreensSnapshotTest_day_expected_block_light",
  "day_drag": "ScreensSnapshotTest_day_dragging_a_sleep_light",
  "day_start": "ScreensSnapshotTest_day_dragging_a_start_light",
+ "day_morning": "ScreensSnapshotTest_day_morning_projection_light",
  "day_pressure": "ScreensSnapshotTest_day_pressure_light",
  # The watch tile's screenshots are the wear module's: wear/src/test/snapshots/images/br.gabriel.cochilo.wear_TileSnapshotTest_<name>.png
  "tile_awake": "wear:tile_awake",
@@ -283,7 +285,7 @@ for f in FLOWS:
     wh=flow(f[0],f[1],f[2],f[3],f[4]); add(f[0],f[1],"flows",0,y,wh); y+=wh[1]+120
 SECTIONS=[
  ("ScreensToday.dc.html","Today",["today","sleeping","night_sleeping","night_waking","short_nap","daylight","fabric","empty","today_full"]),
- ("ScreensDay.dc.html","Day",["day","day_expected","day_pressure","day_block","day_drag","day_start","day_all","day_feed"]),
+ ("ScreensDay.dc.html","Day",["day","day_expected","day_morning","day_pressure","day_block","day_drag","day_start","day_all","day_feed"]),
  ("ScreensPatternsTata.dc.html","Patterns and From Tatá",["patterns","patterns_changes","patterns_places","tata","tata_week","age_note","tata_note"]),
  ("ScreensLog.dc.html","Logging and sheets",["log_open","log_feed","details_where","details_pumped","ticks","ritual"]),
  ("ScreensAsk.dc.html","Ask Cochilo",["ask","ask_answer","ask_not_sure","ask_model","chats","model_sheet","model_downloading","model_stopped","model_outdated"]),

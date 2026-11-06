@@ -597,6 +597,23 @@ class ScreensSnapshotTest {
             }
         }
     }
+    /**
+     * The morning (0.59.0): the night and the first wake only, so the rest of the day is projected.
+     * The next nap is teal and its time bold; every later nap and bedtime has its "~" time.
+     */
+    @Test fun day_morning_projection_light() {
+        light()
+        val morning = at(31, 8, 0)
+        val early = log.filter { (it.end ?: it.start) <= morning }
+        paparazzi.snapshot {
+            CochiloTheme(false) {
+                br.gabriel.cochilo.ui.kit.Frame {
+                    val p = Predictor(zone).predict(early, ageWeeks(baby.birthDate, null, morning), morning) as Predictor.Result.Awake
+                    DayScreen(early, morning, zone, onOpen = {}, expected = p.windowStart to p.windowEnd, plan = br.gabriel.cochilo.domain.DayPlan(zone).of(early, ageWeeks(baby.birthDate, null, morning), morning))
+                }
+            }
+        }
+    }
     /** Sleep pressure (0.54.0): today's line under the ring, on a tall screen to show it. */
     @Test fun day_pressure_light() {
         tall()
