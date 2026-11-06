@@ -19,6 +19,7 @@ Mark each one ✅ with the date and the phones when it passes, or open an issue 
 | 6 | Dragging a sleep's start (and end) feels right one-handed | Paparazzi can't feel a drag | 0.53.0, 0.55.1 |
 | 7 | TalkBack reads every new screen in a sensible order | Paparazzi checks pixels, not order (roadmap §4) | all |
 | 8 | An interrupted model download carries on from the last finished piece, and the result passes its check | The download manager's behaviour differs by phone maker; a restart mid-piece | 0.57.0 |
+| 9 | Routine music opens and keeps playing with the screen off | Each music app handles links its own way | 0.58.0 |
 
 ## How, and what passes
 
@@ -61,8 +62,14 @@ Mark each one ✅ with the date and the phones when it passes, or open an issue 
      below where it was. Carry on downloading continues from there, the model is Ready, and Ask
      answers.
 
+9. **Routine music.**
+   - Setup: save a Spotify playlist and a YouTube Music song in Settings › Routine music.
+   - Open a new routine and tap each Play, with the apps installed and then with one removed.
+   - **Pass:** each opens in its app and starts playing; with the screen off it keeps playing;
+     without the app the link opens in the browser.
+
 ## Results
 
 | # | Date | Devices | Result |
 |---|---|---|---|
-| 1–8 | — | — | ⬜ not yet run |
+| 1–9 | — | — | ⬜ not yet run |

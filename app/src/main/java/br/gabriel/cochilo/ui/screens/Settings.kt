@@ -50,6 +50,8 @@ fun SettingsScreen(
     onNightLight: (Boolean) -> Unit = {},
     /** Settings › Baby › Routine steps (docs/rituals.md). */
     onEditRitual: () -> Unit = {},
+    onEditMusic: () -> Unit = {},
+    musicCount: Int = 0,
     /** Settings › Sync (0.47.0, docs/sync.md): only in the build that can sync. */
     sync: (@Composable () -> Unit)? = null,
     /** Settings › Data › Report (docs/report.md). */
@@ -88,6 +90,12 @@ fun SettingsScreen(
                 )
                 Hairline()
                 ListRow(stringResource(R.string.ritual_title), onClick = onEditRitual, trailing = chevron)
+                Hairline()
+                ListRow(
+                    stringResource(R.string.music_title),
+                    value = if (musicCount > 0) stringResource(R.string.music_count, musicCount) else stringResource(R.string.not_set),
+                    onClick = onEditMusic, trailing = chevron,
+                )
             }
             Hairline()
             ListRow(stringResource(R.string.birth_date), value = baby?.let { f.day(localDate(it.birthDate, zone)) } ?: stringResource(R.string.not_set), onClick = onEditBaby, trailing = chevron)

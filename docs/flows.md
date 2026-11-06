@@ -68,6 +68,33 @@ Code: `lastOf`, `lastKind`, `lastKindAmong`, `Event.rememberedFrom` in `domain/Q
 (tested in `QuickLogTest`); the Log menu in `LogMenu.kt` (Today's rows until 0.39.0); the sheet's line in `Sheets.kt`.
 This replaced the earlier "next: other breast" suggestion: the app shows what happened, she decides.
 
+## The floating day ring and routine music (0.58.0)
+
+**The day ring** ([components.md](../design/product/cochilo/components.md)): no tap added or
+removed. It reads at a glance, so nothing on it is tappable. The hour-by-hour list under it
+stays where entries are opened and edited.
+
+**Routine music** ([rituals.md](rituals.md)):
+
+```mermaid
+flowchart TD
+  set([Settings › Routine music]) --> paste[Paste a link · name optional] --> add{A music link?}
+  add -- No --> wrong[That isn't a Spotify, YouTube Music or YouTube link · text kept] --> paste
+  add -- Yes --> list[In the list · Play or Remove] --> save([Save])
+  routine([Log › Routine]) --> sheet[Steps, then Music] --> play[Play Lullabies] --> app([The music app plays it])
+```
+
+| Flow | Taps |
+|---|---|
+| Save a link, once | Settings (1) › Routine music (1) › paste (1) › Add the link (1) › Save (1): 5, once |
+| Play it at bedtime | Log › Routine (2) › Play (1): 3. Then the music app plays with the screen off |
+| Play it without logging | Settings › Routine music › the row: 3 |
+
+What it remembers: the links, their order and names. The routine's sheet always shows all of
+them, so there's nothing to choose. Every state: none saved (no Music part in the routine, and
+the row says "Not set"), not a music link (said plainly, text kept), five saved (the field goes),
+the music app missing (the link opens in the browser).
+
 ## The model download carries on (0.57.0)
 
 [assistant.md](assistant.md). Ask Cochilo's model can be 3.5 GB, and a download that starts over

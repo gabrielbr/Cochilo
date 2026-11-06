@@ -249,7 +249,7 @@
     <string name="info_daylight">Luz do dia: tempo ao ar livre ou perto de uma janela clara. A luz do começo da tarde ajuda o relógio do corpo e o sono da noite.</string>
     <string name="info_routine">Rotina: os passos antes da soneca ou da noite, como banho, mamada, música. Os mesmos passos a cada vez avisam o bebê que é hora de dormir.</string>
     <string name="info_note">Nota: qualquer coisa que valha lembrar, como remédio, resfriado, dentes nascendo ou um lugar novo.</string>
-    <string name="info_ring">A meia-noite fica no topo e o dia gira no sentido horário. O sono é o anel de fora; mamadas, ordenha e luz do dia ficam dentro; os pontos marcam as fraldas.</string>
+    <string name="info_ring">A meia-noite fica no topo e o dia gira no sentido horário. O sono é o anel, com os horários por fora; mamadas, fraldas e o resto flutuam dentro, na sua hora. Um círculo com +2 guarda mais registros da mesma hora.</string>
     <!-- Atalhos de deslizar nas linhas de registro. -->
     <string name="slide_left">Esquerdo</string>
     <string name="slide_right">Direito</string>
@@ -681,4 +681,19 @@
     <string name="model_status_stopped">Parou em %1$d%%. Toque para continuar.</string>
     <string name="model_stopped">O download parou em %1$d%%. O que chegou fica guardado, e ele continua dali.</string>
     <string name="model_carry_on">Continuar o download</string>
+    <string name="music_title">Música da rotina</string>
+    <string name="music_line">Músicas ou playlists que vocês usam para fazer o bebê dormir. Cole um link do Spotify ou do YouTube Music; ele abre lá e toca com a tela apagada.</string>
+    <string name="music_link">Link</string>
+    <string name="music_link_hint">https://open.spotify.com/playlist/…</string>
+    <string name="music_name">Nome (opcional)</string>
+    <string name="music_add">Adicionar o link</string>
+    <string name="music_wrong">Esse não é um link do Spotify, do YouTube Music ou do YouTube.</string>
+    <string name="music_count">Links: %1$d</string>
+    <string name="music_in_routine">Música</string>
+    <string name="music_play">Tocar %1$s</string>
+    <string name="music_kind_track">Música</string>
+    <string name="music_kind_playlist">Playlist</string>
+    <string name="music_kind_album">Álbum</string>
+    <string name="music_kind_artist">Artista</string>
+    <string name="music_kind_other">Link</string>
 </resources>

@@ -116,9 +116,9 @@ fun DayScreen(
             val spoken = daySummary(f, day, events, from, to, now, zone) +
                 (window?.let { " " + stringResource(R.string.ring_expected_spoken, f.time(it.first), f.time(it.second)) } ?: "") +
                 (if (planned.size > 1) " " + stringResource(R.string.plan_spoken, planLine(planned.drop(1), f)) else "")
-            DayRing(events, from, to, dayNow, zone, spoken, expected = window, planned = planned) {
+            DayRing(events, from, to, dayNow, zone, spoken, expected = window, planned = planned, time = { f.time(it) }) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(f.duration(sleepMs), style = Type.title, color = CochiloTheme.colors.ink)
+                    Text(f.duration(sleepMs), style = Type.title, color = CochiloTheme.colors.ink, maxLines = 1, softWrap = false)
                     Text(stringResource(R.string.ring_sleep), style = Type.meta, color = CochiloTheme.colors.muted)
                 }
             }

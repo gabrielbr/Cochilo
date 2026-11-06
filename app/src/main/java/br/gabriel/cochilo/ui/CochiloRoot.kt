@@ -91,6 +91,7 @@ fun CochiloRoot(vm: MainViewModel) {
     var editingBaby by remember { mutableStateOf(false) }
     var editingLook by remember { mutableStateOf(false) }
     var editingRitual by remember { mutableStateOf(false) }
+    var editingMusic by remember { mutableStateOf(false) }
     var editingPassphrase by remember { mutableStateOf(false) }
     var asking by rememberSaveable { mutableStateOf(false) }
     // Ask's chats (0.40.0): the open one (a new id until its first question), and the list.
@@ -230,6 +231,8 @@ fun CochiloRoot(vm: MainViewModel) {
                             onEditBaby = { editingBaby = true },
                             onEditLook = { editingLook = true },
                             onEditRitual = { editingRitual = true },
+                            onEditMusic = { editingMusic = true },
+                            musicCount = vm.routineMusic.collectAsState().value.size,
                             onExportReport = { exportReport.launch("cochilo-report-${LocalDate.now(zone)}.pdf") },
                             // Partner sync (0.47.0): only the family build can, so only it shows the section.
                             sync = if (vm.syncAvailable) ({
@@ -440,6 +443,7 @@ fun CochiloRoot(vm: MainViewModel) {
             initial = ed.event, isNew = ed.isNew, zone = zone,
             last = if (ed.isNew) lastOf(log, ed.event.type) else null,
             rituals = vm.rituals.collectAsState().value,
+            music = vm.routineMusic.collectAsState().value,
             onSave = { vm.save(it); editing = null },
             onDelete = { vm.delete(it); editing = null },
             onDismiss = { editing = null },
@@ -490,6 +494,9 @@ fun CochiloRoot(vm: MainViewModel) {
     }
     vm.sealedImport.collectAsState().value?.let { pending ->
         br.gabriel.cochilo.ui.screens.UnlockSheet(pending.wrong, onOpen = vm::openSealed, onDismiss = vm::cancelSealed)
+    }
+    if (editingMusic) {
+        br.gabriel.cochilo.ui.screens.RoutineMusicSheet(vm.routineMusic.collectAsState().value, onSave = vm::setRoutineMusic, onDismiss = { editingMusic = false })
     }
     if (editingRitual) {
         br.gabriel.cochilo.ui.screens.RitualSheet(vm.rituals.collectAsState().value, onSave = vm::setRitual, onDismiss = { editingRitual = false })

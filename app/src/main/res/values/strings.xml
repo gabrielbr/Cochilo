@@ -263,7 +263,7 @@
     <string name="info_daylight">Daylight: time outdoors or by a bright window. Light in the early afternoon helps the body clock and night sleep.</string>
     <string name="info_routine">Routine: the steps before a nap or bedtime, like a bath, a feed, a song. The same steps each time tell the baby sleep is coming.</string>
     <string name="info_note">Note: anything else worth remembering, such as medicine, a cold, teething or a new place.</string>
-    <string name="info_ring">Midnight is at the top and the day goes round clockwise. Sleep is the outer ring; feeds, pumping and daylight are inside; dots mark diapers.</string>
+    <string name="info_ring">Midnight is at the top and the day goes round clockwise. Sleep is the ring, with its times outside; feeds, diapers and the rest float inside, at their time. A round with +2 holds more entries from around the same time.</string>
     <!-- Slide-to-log shortcuts on the log rows. -->
     <string name="slide_left">Left</string>
     <string name="slide_right">Right</string>
@@ -706,4 +706,19 @@
     <string name="model_status_stopped">Stopped at %1$d%%. Tap to carry on.</string>
     <string name="model_stopped">The download stopped at %1$d%%. What arrived is kept, so it carries on from there.</string>
     <string name="model_carry_on">Carry on downloading</string>
+    <string name="music_title">Routine music</string>
+    <string name="music_line">Songs or playlists you use to put the baby to sleep. Paste a link from Spotify or YouTube Music; it opens there and plays with the screen off.</string>
+    <string name="music_link">Link</string>
+    <string name="music_link_hint">https://open.spotify.com/playlist/…</string>
+    <string name="music_name">Name (optional)</string>
+    <string name="music_add">Add the link</string>
+    <string name="music_wrong">That isn\'t a Spotify, YouTube Music or YouTube link.</string>
+    <string name="music_count">Links: %1$d</string>
+    <string name="music_in_routine">Music</string>
+    <string name="music_play">Play %1$s</string>
+    <string name="music_kind_track">Song</string>
+    <string name="music_kind_playlist">Playlist</string>
+    <string name="music_kind_album">Album</string>
+    <string name="music_kind_artist">Artist</string>
+    <string name="music_kind_other">Link</string>
 </resources>

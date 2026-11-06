@@ -113,6 +113,8 @@ fun EventSheet(
     last: Event? = null,
     /** The routine steps the parent wrote (docs/rituals.md), ticked in a new routine. */
     rituals: Map<String, String?> = emptyMap(),
+    /** Routine music (0.58.0): played from a routine's sheet. */
+    music: List<br.gabriel.cochilo.domain.Music.Link> = emptyList(),
     onSave: (Event) -> Unit,
     onDelete: (Event) -> Unit,
     onDismiss: () -> Unit,
@@ -181,6 +183,10 @@ fun EventSheet(
             Text(stringResource(R.string.ritual_steps), style = Type.meta, color = CochiloTheme.colors.muted)
             br.gabriel.cochilo.ui.kit.Checklist(ritualSteps, ticked) { i -> ticked = if (i in ticked) ticked - i else ticked + i }
             Spacer(Modifier.height(Spacing.space4))
+        }
+        if (t == EventType.ROUTINE && isNew && music.isNotEmpty()) {
+            RoutineMusicButtons(music)
+            Spacer(Modifier.height(Spacing.space2))
         }
 
         PickerField(stringResource(R.string.field_date), f.day(date), { picking = "date" }, Modifier.fillMaxWidth())
