@@ -170,7 +170,7 @@ fun EventLegend(events: List<Event>, zone: ZoneId, expected: Boolean = false) {
         if (EventType.PUMP in types) LegendItem(stringResource(R.string.type_pump), c.eventPump) else null,
         if (EventType.DIAPER in types) LegendItem(stringResource(R.string.type_diaper), c.eventDiaper) else null,
         if (EventType.DAYLIGHT in types) LegendItem(stringResource(R.string.type_daylight), c.eventDaylight) else null,
-        if (expected) LegendItem(stringResource(R.string.ring_expected), c.eventNap.copy(alpha = 0.35f)) else null,
+        if (expected) LegendItem(stringResource(R.string.ring_expected), c.mint) else null,
     )
     if (items.isNotEmpty()) Legend(items)
 }

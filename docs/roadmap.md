@@ -64,6 +64,7 @@ only with Tatá.
 | **On-device checks with TalkBack** | Paparazzi checks pixels, not the reading order |
 
 ## Shipped from this plan
+- **0.59.0**: the next sleep in breathing teal; every projected sleep's time on the ring (the owner's ask).
 - **0.58.0**: the day ring floats (bigger marks, times along the circle); routine music (the owner's asks).
 - **0.57.0**: the model download carries on after an interruption (100 MB pieces, the owner's ask).
 - **0.56.0**: one AI runtime (MediaPipe removed); the watch tile's Last mark; every audit green.

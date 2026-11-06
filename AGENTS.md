@@ -84,7 +84,9 @@ the rules; the short version:
 - **Never edit `CTokens.kt` by hand.** `python3 design/build.py` writes it from the three layers
   with the core's own generator; `python3 design/build.py --check` (CI runs it) fails if it
   differs, or if a check fails (scale, type floor, brand limits, contrast in all three themes).
-- **Teal is the one action, nothing else.** No highlighter behind titles; the active tab and a
+- **Teal is the one action, nothing else**, with one exception the owner asked for (0.59.0): the
+  **next expected sleep** is teal on the Day ring (breathing, `motion-breathe`) and on the
+  hour-by-hour list, because it's what she looks for first. Never as text. No highlighter behind titles; the active tab and a
   picked chip use `selected` (a blush), the screen's edge uses `frame-line` (a soft hem). Captions
   are sentence case; buttons are pills. Why: [docs/design-review.md](docs/design-review.md).
 - **One mint action per screen** (Start sleep / Woke up on Today; Save in a sheet). Under the brand

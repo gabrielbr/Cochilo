@@ -549,6 +549,11 @@
         "name": "motion-stagger",
         "value": "35ms",
         "usage": "The delay between one item and the next when a list opens in a cascade (the Log menu), nearest the finger first. Each item still moves for motion-emphasised; snaps with Remove animations."
+      },
+      {
+        "name": "motion-breathe",
+        "value": "2400ms",
+        "usage": "One slow breath, in or out: the next expected sleep on the day ring fades between full and soft so the eye finds it (0.59.0). The only looping motion; still at full with Remove animations."
       }
     ]
   },

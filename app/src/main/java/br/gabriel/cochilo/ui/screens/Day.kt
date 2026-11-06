@@ -296,7 +296,8 @@ internal fun VerticalTimeline(
             else stringResource(R.string.expected_meta, f.time(expected.windowStart), f.time(expected.windowEnd), f.durationMin(minutes))
             br.gabriel.cochilo.ui.kit.TimelineExpected(
                 time = stringResource(R.string.expected_time, f.time(expected.at)),
-                color = if (bed) c.eventNight else c.eventNap,
+                // The next sleep is the brand's teal, as on the ring (0.59.0).
+                color = c.mint,
                 // Bedtime's bar is short: the night's length isn't the point here.
                 barHeight = if (bed) Spacing.space6 else bar(minutes * br.gabriel.cochilo.domain.MINUTE),
                 label = stringResource(if (bed) R.string.expected_bedtime else R.string.expected_nap),
