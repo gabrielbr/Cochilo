@@ -328,6 +328,9 @@ fun CochiloRoot(vm: MainViewModel) {
                                             onQuick = { type, kind -> vm.quickLog(type, kind) },
                                             onSwitch = vm::switchSide,
                                             onOpen = { editing = Editing(it, false) },
+                                            onMusic = vm.routineMusic.collectAsState().value.firstOrNull()?.let { l ->
+                                                { br.gabriel.cochilo.music.MusicOpener.open(context, l); Unit }
+                                            },
                                         )
                                         1 -> DayScreen(
                                             log, now, zone, onOpen = { editing = Editing(it, false) },

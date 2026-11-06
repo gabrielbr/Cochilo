@@ -61,6 +61,14 @@ shows the same timeline on every Android version (not just 16) in the app's own 
 toolchain moves to API 36, `ProgressStyle` can replace the bitmap and make the notification a
 "Live update" (status-bar chip) too.
 
+### Play music (0.60.0)
+
+When a routine music link is saved ([rituals.md](rituals.md)), the live notification adds
+**Play music** while the baby sleeps, in a night waking (beside Back to sleep and Up for the day),
+and while awake in the 30 minutes before the next window opens. The window reminder adds it beside
+Start routine. The button opens the first link in its music app. The notification follows the
+saved links: adding or removing one refreshes it.
+
 ### Kept up to date (0.57.1)
 
 The owner's wife's phone, paired and keeping sync on with Cochilo closed, showed an old

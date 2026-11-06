@@ -1,9 +1,5 @@
 package br.gabriel.cochilo.ui.screens
 
-import android.content.ActivityNotFoundException
-import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -19,6 +15,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import br.gabriel.cochilo.R
 import br.gabriel.cochilo.domain.Music
+import br.gabriel.cochilo.music.MusicOpener
 import br.gabriel.cochilo.ui.kit.Button
 import br.gabriel.cochilo.ui.kit.ButtonKind
 import br.gabriel.cochilo.ui.kit.Field
@@ -28,19 +25,6 @@ import br.gabriel.cochilo.ui.kit.RowGroup
 import br.gabriel.cochilo.ui.theme.CTokens.Spacing
 import br.gabriel.cochilo.ui.theme.CochiloTheme
 import br.gabriel.cochilo.ui.theme.Type
-
-/**
- * Opens a routine link in its music app (0.58.0): Spotify, YouTube Music or YouTube, which plays
- * it whole, in the background, with the screen off. Without the app, whatever opens links does.
- * Nothing goes through Cochilo, and neither build needs a permission for this.
- */
-object MusicOpener {
-    fun open(context: Context, link: Music.Link): Boolean {
-        val view = Intent(Intent.ACTION_VIEW, Uri.parse(link.url)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        return runCatching { context.startActivity(Intent(view).setPackage(link.service.packageName)) }.isSuccess ||
-            runCatching { context.startActivity(view) }.isSuccess
-    }
-}
 
 /** "Spotify · Playlist", what a link is, when the parent gave it no name. */
 @Composable

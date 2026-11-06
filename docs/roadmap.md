@@ -57,6 +57,12 @@ only with Tatá.
 
 ### 3.4 Reading the data
 
+### Routine music, more places (0.60.0 suggestions, ux-user-flows)
+- A Play music button on the home-screen widget.
+- Play music on the watch tile (needs the phone to open the app from a watch message).
+- An opt-in "Play music when sleep starts" (Start sleep, the tile, the widget, the reminder's Start
+  routine).
+
 ## 4. Betterments (quality)
 
 | Item | Why |
@@ -64,6 +70,7 @@ only with Tatá.
 | **On-device checks with TalkBack** | Paparazzi checks pixels, not the reading order |
 
 ## Shipped from this plan
+- **0.60.0**: the routine music one tap away: Today, the live notification, the reminder.
 - **0.59.0**: the next sleep in breathing teal; every projected sleep's time on the ring (the owner's ask).
 - **0.58.0**: the day ring floats (bigger marks, times along the circle); routine music (the owner's asks).
 - **0.57.0**: the model download carries on after an interruption (100 MB pieces, the owner's ask).

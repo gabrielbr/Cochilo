@@ -29,6 +29,14 @@ class MusicTest {
         assertEquals(Service.YOUTUBE, Music.parse("https://m.youtube.com/watch?v=dQw4w9WgXcQ")!!.service)
     }
 
+    /** The owner's own playlist link (2026-11-06). */
+    @Test fun the_owners_youtube_music_playlist_works() {
+        val l = Music.parse("https://music.youtube.com/playlist?list=PLRPNA3Ine-Lw&si=MiiJYZRXVUoAMfZm")!!
+        assertEquals("https://music.youtube.com/playlist?list=PLRPNA3Ine-Lw", l.url)
+        assertEquals(Service.YOUTUBE_MUSIC, l.service)
+        assertEquals(Kind.PLAYLIST, l.kind)
+    }
+
     @Test fun anything_else_is_refused() {
         assertNull(Music.parse("a lullaby"))
         assertNull(Music.parse("https://example.com/playlist/abc"))

@@ -42,5 +42,17 @@ sleep, with a player for them.
   - [Spotify's own Android guidance](https://developer.spotify.com/documentation/android/tutorials/content-linking)
     is the same: an `ACTION_VIEW` intent on the link, to the Spotify app when it's there.
 
-Code: `domain/Music.kt` (`MusicTest`), `ui/screens/RoutineMusic.kt` (`MusicOpener`, the sheet,
-`RoutineMusicButtons`). Stored in `Prefs`, like the steps (a setting, so not in the backup).
+**One tap away (0.60.0).** The first saved link is also played from:
+- **Today's card:** "Play sleep music", a secondary pill under Start sleep, and under the night
+  waking's two buttons (to settle back). Not while asleep: the notification has it then.
+- **The live notification:** "Play music" while the baby sleeps, in a night waking, and in the 30
+  minutes before the next sleep window opens.
+- **The nap and bedtime reminder:** "Play music" beside Start routine.
+
+A notification button opens the music app directly (`PendingIntent.getActivity`). That's
+allowed from a notification even with Cochilo closed, where a background start isn't. The
+manifest lists the three music apps in `<queries>`, so Cochilo can see whether each is
+installed. That isn't a permission.
+
+Code: `domain/Music.kt` (`MusicTest`), `music/MusicOpener.kt`, `ui/screens/RoutineMusic.kt` (the
+sheet, `RoutineMusicButtons`). Stored in `Prefs`, like the steps (a setting, so not in the backup).
