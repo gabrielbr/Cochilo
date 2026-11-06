@@ -70,6 +70,7 @@ only with Tatá.
 | **On-device checks with TalkBack** | Paparazzi checks pixels, not the reading order |
 
 ## Shipped from this plan
+- **0.62.0**: the plan starts with the live guess, so the next nap shows on the ring and the list.
 - **0.61.0**: every projected sleep on the hour-by-hour list; dotted expected lines; stronger breathing.
 - **0.60.0**: the routine music one tap away: Today, the live notification, the reminder.
 - **0.59.0**: the next sleep in breathing teal; every projected sleep's time on the ring (the owner's ask).

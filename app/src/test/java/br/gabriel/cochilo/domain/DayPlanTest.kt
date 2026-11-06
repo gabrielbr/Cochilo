@@ -50,6 +50,24 @@ class DayPlanTest {
         assertTrue(widths.last() > widths.first())
     }
 
+    /**
+     * The owner's screenshot (2026-11-06): more naps than the age's usual, awake at 16:31. The plan's
+     * first sleep is the live guess Today shows (a nap), not bedtime.
+     */
+    @Test fun the_plan_starts_with_the_live_guess_even_after_many_naps() {
+        val log = regularDays(10..19) + listOf(
+            sleep(20, 7, 30, 20, 8, 10), sleep(20, 9, 10, 20, 9, 50), sleep(20, 10, 56, 20, 11, 40),
+            sleep(20, 12, 5, 20, 12, 50), sleep(20, 13, 15, 20, 14, 0), sleep(20, 14, 50, 20, 15, 20),
+        )
+        val now = at(20, 16, 31)
+        val live = Predictor(zone).predict(log, weeks, now) as Predictor.Result.Awake
+        val p = plan.of(log, weeks, now)!!
+        assertEquals(live.next, p.sleeps.first().next)
+        assertEquals(live.at, p.sleeps.first().at)
+        assertEquals("the screenshot's case: a nap is next", Predictor.Next.NAP, live.next)
+        assertNotNull("bedtime still follows", p.bedtime)
+    }
+
     @Test fun later_in_the_day_only_whats_left() {
         val log = regularDays(10..19) + listOf(sleep(20, 8, 0, 20, 9, 0), sleep(20, 10, 30, 20, 11, 30), sleep(20, 13, 0, 20, 14, 30))
         val p = plan.of(log, weeks, at(20, 15, 0))!!

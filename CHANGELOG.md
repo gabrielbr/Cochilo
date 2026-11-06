@@ -3,6 +3,15 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.62.0 — 2026-11-06
+
+**The next nap is the next nap, everywhere.** On a day with more naps than usual for the baby's
+age, the plan used to stop counting naps and jump to bedtime. Today's card said "next nap", but
+the Day ring breathed the night's moon from 18:30, the nap due now had no time, and hour by hour
+showed only bedtime. Now the plan always starts with the same guess as Today's card. The nap
+coming up gets its teal band, its time and its moon on the ring and the list, and bedtime follows
+it. The breathing moon is the night's only when bedtime really is next.
+
 ## 0.61.0 — 2026-11-06
 
 **The whole day planned on the hour-by-hour list too, in dots.**

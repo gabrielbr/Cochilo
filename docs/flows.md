@@ -68,6 +68,11 @@ Code: `lastOf`, `lastKind`, `lastKindAmong`, `Event.rememberedFrom` in `domain/Q
 (tested in `QuickLogTest`); the Log menu in `LogMenu.kt` (Today's rows until 0.39.0); the sheet's line in `Sheets.kt`.
 This replaced the earlier "next: other breast" suggestion: the app shows what happened, she decides.
 
+## One next sleep (0.62.0)
+
+The card, the ring and the list now agree on what comes next, because the plan starts from the
+card's own guess. No tap changes.
+
 ## The plan on the list, dotted (0.61.0)
 
 No tap added. Hour by hour lists every sleep still expected today above what's happening now

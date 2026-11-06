@@ -227,7 +227,10 @@ fun DayRing(
             }
             for (b in sleepBubbles) RingBubble(b, byId, rTrackPx, zone)
             // The next sleep's moon floats on its teal band, ringed in teal.
-            next?.let { (a, b) -> NextMoon((deg(a) + deg(b)) / 2, rTrackPx, breath) }
+            next?.let { (a, b) ->
+                val bed = planned.firstOrNull()?.next == br.gabriel.cochilo.domain.Predictor.Next.BEDTIME
+                NextMoon((deg(a) + deg(b)) / 2, rTrackPx, breath, bed)
+            }
             for (b in otherBubbles) RingBubble(b, byId, rBubblesPx, zone)
             CappedFontScale(LABEL_SCALE_CAP) {
                 for (l in labels) {
@@ -253,7 +256,7 @@ private fun h(id: String) = (id.removePrefix("h").toInt()) * 6
 
 /** The next expected sleep's mark: the moon in its round, ringed in the brand's teal, breathing. */
 @Composable
-private fun androidx.compose.foundation.layout.BoxScope.NextMoon(angle: Double, radiusPx: Float, breath: Float) {
+private fun androidx.compose.foundation.layout.BoxScope.NextMoon(angle: Double, radiusPx: Float, breath: Float, bed: Boolean = false) {
     val c = CochiloTheme.colors
     RingPlaced(angle, radiusPx) {
         // A teal halo that swells as the band softens, so the breath reads even on a short nap
@@ -264,8 +267,9 @@ private fun androidx.compose.foundation.layout.BoxScope.NextMoon(angle: Double, 
                 Modifier.size(Size.kindBadge).graphicsLayer { val s = 1f + out * 0.6f; scaleX = s; scaleY = s }
                     .clip(RoundedCornerShape(Radius.radiusRound)).background(c.mint.copy(alpha = 0.15f + out * 0.35f)),
             )
+            // The night's moon only when bedtime is next; a nap's otherwise (0.62.0).
             KindIcon(
-                typeIcon(EventType.SLEEP), c.eventNap, c.eventNapSoft,
+                typeIcon(EventType.SLEEP), if (bed) c.eventNight else c.eventNap, if (bed) c.eventNightSoft else c.eventNapSoft,
                 Modifier.size(Size.kindBadge).clip(RoundedCornerShape(Radius.radiusRound))
                     .border(Size.outline, c.mint, RoundedCornerShape(Radius.radiusRound)),
                 size = Size.kindBadge,

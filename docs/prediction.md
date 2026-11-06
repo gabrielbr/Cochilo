@@ -52,6 +52,7 @@ of the day earlier.
 **Where it shows:**
 - **Today's card:** "Then: 13:50 · 16:05 · bed 18:45" under the window. "How it's guessed" adds
   how the later ones come about, and says when they come from the age alone.
+- **The plan starts with the live guess (0.62.0):** `DayPlan.of` asks the predictor for the first sleep with no cap on the day's naps, exactly as Today's card does. The age's nap count applies only after it (or one more than already happened). Before, a baby with more naps than the age's usual got bedtime projected while the card said "next nap" (the owner's screenshot, `DayPlanTest.the_plan_starts_with_the_live_guess_even_after_many_naps`).
 - **Hour by hour, today (0.61.0):** every projected sleep above what is happening now, latest at the top, each with its "~" time and window; the next one teal and breathing, the rest dotted in their own colour.
 - **The Day ring, today (0.59.0):** the next expected sleep is teal and breathes, its time in bold; every later one keeps its dashed outline and gets its "~" time along the circle, so the day can be planned ahead. Before 0.59.0: each projected sleep as a dashed outline on the sleep ring, never
   filled, so it never reads as data. Bedtime is in the night colour until midnight. Under the
