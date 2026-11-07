@@ -157,6 +157,9 @@ class PartnerSync(context: Context, private val db: CochiloDb, private val link:
         if (c.delete.isNotEmpty()) db.events().deleteIds(c.delete)
         if (c.deletions.isNotEmpty()) db.events().rememberAll(c.deletions)
         c.baby?.let { db.baby().upsert(it) }
+        // Both phones may have started the same sleep (0.64.0): keep one, end the stuck one.
+        // The repair is itself a change, so it goes back to the partner at the next sync.
+        br.gabriel.cochilo.data.Entries(db.events()).repair()
         val now = System.currentTimeMillis()
         sp.edit().putLong(LAST, now).apply()
         _state.value = _state.value.copy(lastSyncedAt = now, unreachable = false)

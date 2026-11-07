@@ -102,7 +102,8 @@ fun DayScreen(
 
         // No caption over the ring (0.43.0): the ring says what it is; its "i" explains it.
         Spacer(Modifier.height(Spacing.space6))
-        val sleepMs = events.filter { it.type == EventType.SLEEP }.sumOf { (minOf(it.end ?: now, to) - maxOf(it.start, from)).coerceAtLeast(0) }
+        // Overlapping sleeps count once (0.64.0): two phones' copies of one night read 25 hours.
+        val sleepMs = br.gabriel.cochilo.domain.SleepRepair.sleptIn(events, from, to, now)
         val naps = events.count { it.type == EventType.SLEEP && !it.isNightSleep(zone) && it.start >= from }
         val feeds = events.count { it.type == EventType.FEED && it.start >= from }
         val diapers = events.count { it.type == EventType.DIAPER && it.start >= from }

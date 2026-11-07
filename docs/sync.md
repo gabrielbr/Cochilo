@@ -79,6 +79,21 @@ Those belong to each phone.
 - **Nothing hand-rolled but HKDF**, a few lines over the platform's HMAC-SHA256 (RFC 5869). The
   rest is `java.security`: EC, ECDH, AES-GCM, SHA-256.
 
+## When both phones logged the same sleep (0.64.0)
+
+If both parents tap Start sleep before the phones meet, the merged log holds two sleeps for one
+night. One gets its Woke up, the other stays open, and Cochilo used to say the baby had slept 21
+hours (the Day ring summed 25). After every sync, and once when the app starts, `SleepRepair`
+cleans this up:
+- **Twins:** two sleeps that start within 5 minutes of each other and overlap are one sleep. The
+  finished one stays; if both are finished, the more recently edited one. The other is deleted
+  through `EventDao.delete`, so the deletion syncs and both phones keep the same one.
+- **Stuck:** a sleep still open after a later sleep has started ends where the later one begins.
+- **Totals:** the Day ring and its spoken summary count overlapping sleeps once, so a day never
+  reads more than 24 hours.
+
+A quick second nap a few minutes after a short one isn't a twin: they don't overlap.
+
 ## Limits, said plainly
 
 - Without "Keep in sync when closed", both phones need Cochilo open for a change to go across.
@@ -99,6 +114,7 @@ Those belong to each phone.
 | Pairing and session, over any two streams | `sync/SyncProtocol.kt` | `SyncProtocolTest` (two phones over pipes) |
 | Finding phones and sockets | `app/src/github/.../sync/SyncLinks.kt` (NSD); the play build's is a stub | — |
 | State, pairing, auto-sync | `sync/PartnerSync.kt` | — |
+| Twin and stuck sleeps, the day's total | `domain/SleepRepair.kt`, `Entries.repair` | `SleepRepairTest` |
 | Deletions table | `data/CochiloDb.kt` (`DELETIONS`) | `DeletionsMigrationTest` |
 | Who logged it (`events.loggedBy`, Room 5 → 6) | `data/CochiloDb.kt` (`LOGGED_BY`), `SyncMerge`, `PartnerSync.snapshot` | `DeletionsMigrationTest`, `SyncMergeTest` |
 | With Cochilo closed | `app/src/github/.../sync/SyncBackground.kt` (`SyncService`); the play build's is a stub | — |
