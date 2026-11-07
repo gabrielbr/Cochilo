@@ -3,6 +3,17 @@
 Every release of Cochilo, newest first. Releases are on
 [GitHub](https://github.com/gabrielbr/Cochilo/releases); the family build updates itself from them.
 
+## 0.64.0 — 2026-11-07
+
+**No more 25-hour days when both phones logged the same night.** If both parents tapped Start
+sleep before the phones synced, Cochilo kept two copies of the night: one ended, the other still
+running. Today then said the baby had been asleep for 21 hours, and the Day ring added both copies
+into 25 hours. Now, after every sync and when the app opens:
+- two sleeps that start within 5 minutes of each other and overlap become one (the finished one
+  stays, on both phones);
+- a sleep still running after a later sleep began ends where that one starts;
+- the Day ring counts overlapping sleeps once, so a day never passes 24 hours.
+
 ## 0.63.0 — 2026-11-06
 
 **Share a playlist straight to Cochilo.** In Spotify or YouTube Music, Share › **Add to

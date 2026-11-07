@@ -36,7 +36,8 @@ Every screen and the main flows are on the [design canvas](docs/design-canvas.md
   deletion included, goes across in seconds, directly between the phones, sealed. There's no
   server and no account. Since 0.52.0 it can keep going with Cochilo closed (one switch, on the
   notification Cochilo already shows), and each parent can set an initial, so the other phone
-  shows "by G" on what they logged ([docs/sync.md](docs/sync.md)).
+  shows "by G" on what they logged ([docs/sync.md](docs/sync.md)). Since 0.64.0, a sleep both
+  phones started is kept once, and a day never reads more than 24 hours.
 - **Nights** (since 0.42.0): each sleep is a nap or the night. Start sleep guesses which, and
   one tap changes it. Waking at night shows "Awake in the night" with **Back to sleep** and **Up
   for the day**, so a night with wakings is one night: bedtime, wakings and the morning are counted

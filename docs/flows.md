@@ -68,6 +68,21 @@ Code: `lastOf`, `lastKind`, `lastKindAmong`, `Event.rememberedFrom` in `domain/Q
 (tested in `QuickLogTest`); the Log menu in `LogMenu.kt` (Today's rows until 0.39.0); the sheet's line in `Sheets.kt`.
 This replaced the earlier "next: other breast" suggestion: the app shows what happened, she decides.
 
+## Both phones started the same sleep (0.64.0)
+
+**Job:** when we both tapped Start sleep, I want one night in the log, with the right total, so I
+can trust the day's hours without fixing anything. ([sync.md](sync.md))
+
+| Flow | Taps |
+|---|---|
+| Twin sleeps after a sync | 0: the repair keeps the finished one on both phones. It used to take 3 (open the entry, Delete, confirm with Undo) and knowing which one to delete |
+| A sleep left running behind a later one | 0: it ends where the later one starts |
+| The Day ring's total | 0: overlaps count once |
+
+States: no twins (nothing changes); twins, one finished (the finished one stays); both finished
+(the newer edit stays); both open (one stays running). Nothing is shown: the log is simply right.
+Memory: nothing new to remember.
+
 ## Share a playlist to Cochilo (0.63.0)
 
 **Job:** when I find the lullaby playlist in my music app, I want to keep it for the routine

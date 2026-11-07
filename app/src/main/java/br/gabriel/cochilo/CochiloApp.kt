@@ -28,6 +28,8 @@ class CochiloApp : Application() {
     @OptIn(FlowPreview::class)
     override fun onCreate() {
         super.onCreate()
+        // A log that met another phone before 0.64.0 may hold twin or stuck sleeps: repair once.
+        scope.launch { step { br.gabriel.cochilo.data.Entries(db.events()).repair() } }
         // The live notification and the widget follow the log: any entry saved, edited or deleted (in the app,
         // from an import, or from the notification's own buttons) updates it.
         scope.launch {

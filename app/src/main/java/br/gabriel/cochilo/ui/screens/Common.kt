@@ -178,9 +178,8 @@ fun EventLegend(events: List<Event>, zone: ZoneId, expected: Boolean = false) {
 /** What TalkBack reads for a day's timeline. */
 @Composable
 fun daySummary(f: Format, date: LocalDate, events: List<Event>, from: Long, to: Long, now: Long, zone: ZoneId): String {
-    val sleepMs = events.filter { it.type == EventType.SLEEP }.sumOf { e ->
-        (minOf(e.end ?: now, to) - maxOf(e.start, from)).coerceAtLeast(0)
-    }
+    // Overlapping sleeps count once (0.64.0), so a day never passes 24 hours.
+    val sleepMs = br.gabriel.cochilo.domain.SleepRepair.sleptIn(events, from, to, now)
     val naps = events.count { it.type == EventType.SLEEP && !it.isNightSleep(zone) && it.start >= from }
     val feeds = events.count { it.type == EventType.FEED && it.start >= from }
     val diapers = events.count { it.type == EventType.DIAPER && it.start >= from }

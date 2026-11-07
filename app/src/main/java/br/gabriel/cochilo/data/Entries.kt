@@ -9,6 +9,17 @@ import br.gabriel.cochilo.domain.otherBreast
 class Entries(private val events: EventDao) {
 
     /**
+     * Repairs twin and stuck sleeps (0.64.0, SleepRepair): after a sync and when the app starts.
+     * A twin goes through [EventDao.delete], so the partner's phone drops it too.
+     */
+    suspend fun repair(now: Long = System.currentTimeMillis()): Boolean {
+        val fix = br.gabriel.cochilo.domain.SleepRepair.fix(events.all(), now)
+        fix.delete.forEach { events.delete(it) }
+        if (fix.update.isNotEmpty()) events.upsertAll(fix.update)
+        return !fix.none
+    }
+
+    /**
      * Starts a sleep now, unless one is already running (only one sleep runs at a time). Nothing
      * else is asked: where it happened is asked when the baby wakes (details after, 0.28.0).
      */
